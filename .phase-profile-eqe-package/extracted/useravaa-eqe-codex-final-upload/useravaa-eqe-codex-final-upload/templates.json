@@ -1,0 +1,461 @@
+[
+  {
+    "id": "EQE-T-001",
+    "category": "hidden_role_reality",
+    "templateText": "در نقش {current_role}، کدام بخش کار از بیرون ساده به نظر می‌رسد اما در عمل بیشترین انرژی را می‌گیرد؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-002",
+    "category": "hidden_role_reality",
+    "templateText": "در {current_role}، چه چیزی واقعاً جزو اختیار توست و چه چیزی فقط ظاهراً به نقش تو مربوط است؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-003",
+    "category": "hidden_role_reality",
+    "templateText": "در کار روزمره {current_role}، بیشتر وقتت صرف چه کاری می‌شود که در شرح شغلی رسمی دیده نمی‌شود؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-004",
+    "category": "hidden_role_reality",
+    "templateText": "در {current_role}، کدام بخش کار بیشتر از چیزی که فکر می‌کردی به تیم‌های دیگر وابسته است؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-005",
+    "category": "hidden_role_reality",
+    "templateText": "اگر کسی فقط عنوان {current_role} را ببیند، احتمالاً چه بخش مهمی از واقعیت کار را اشتباه می‌فهمد؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-006",
+    "category": "hidden_role_reality",
+    "templateText": "در {current_role}، سخت‌ترین بخش کار «مهارت تخصصی» نیست؛ پس چیست؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-007",
+    "category": "hidden_role_reality",
+    "templateText": "در نقش {current_role}، کدام بخش کار بیشتر به هماهنگی با دیگران وابسته است تا انجام مستقیم توسط خودت؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-008",
+    "category": "hidden_role_reality",
+    "templateText": "در {current_role}، چه چیزی باعث می‌شود یک روز کاری واقعاً سخت شود؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-009",
+    "category": "hidden_role_reality",
+    "templateText": "در این نقش، کدام مسئله‌ها تکراری‌اند اما هیچ‌وقت کاملاً حل‌شده نیستند؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-010",
+    "category": "hidden_role_reality",
+    "templateText": "در {current_role}، چه چیزی را فقط بعد از چند پروژه واقعی می‌شود فهمید؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-011",
+    "category": "seniority_difference",
+    "templateText": "در سطح {current_seniority}، چه چیزی از «انجام دادن کار» به «ساختن روش انجام کار» تغییر می‌کند؟",
+    "requiredFields": [
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-012",
+    "category": "seniority_difference",
+    "templateText": "وقتی به سطح {current_seniority} رسیدی، کدام نوع تصمیم‌ها بیشتر به تو منتقل شد؟",
+    "requiredFields": [
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-013",
+    "category": "seniority_difference",
+    "templateText": "در سطح {current_seniority}، کدام مسئولیت‌ها رسمی نیستند اما عملاً از تو انتظار می‌روند؟",
+    "requiredFields": [
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-014",
+    "category": "seniority_difference",
+    "templateText": "در سطح {current_seniority}، چه چیزی بیشتر از مهارت فنی روی کیفیت کارت اثر می‌گذارد؟",
+    "requiredFields": [
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-015",
+    "category": "seniority_difference",
+    "templateText": "در حرکت از {previous_seniority} به {current_seniority}، بیشترین تغییر در نوع پاسخ‌گویی تو چه بود؟",
+    "requiredFields": [
+      "previous_seniority",
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-016",
+    "category": "seniority_difference",
+    "templateText": "در سطح {current_seniority}، چه چیزی باعث می‌شود آدم‌ها تو را قابل اعتمادتر بدانند؟",
+    "requiredFields": [
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-017",
+    "category": "seniority_difference",
+    "templateText": "در سطح {current_seniority}، کدام اشتباه کوچک می‌تواند اثر بزرگ‌تری نسبت به سطح‌های پایین‌تر داشته باشد؟",
+    "requiredFields": [
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-018",
+    "category": "seniority_difference",
+    "templateText": "وقتی از {previous_seniority} به {current_seniority} رسیدی، کدام بخش کارت کمتر قابل اندازه‌گیری اما مهم‌تر شد؟",
+    "requiredFields": [
+      "previous_seniority",
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-019",
+    "category": "seniority_difference",
+    "templateText": "در سطح {current_seniority}، چه نوع مسئله‌هایی را دیگر نمی‌شود فقط با انجام سریع کار حل کرد؟",
+    "requiredFields": [
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-020",
+    "category": "seniority_difference",
+    "templateText": "برای رسیدن به سطح {current_seniority}، چه چیزی باید در رفتار کاری فرد تغییر کند، نه فقط در مهارت‌هایش؟",
+    "requiredFields": [
+      "current_seniority"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-021",
+    "category": "company_environment",
+    "templateText": "کار در {previous_company} و {current_company} از نظر سرعت تصمیم‌گیری چه تفاوت عملی داشت؟",
+    "requiredFields": [
+      "previous_company",
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-022",
+    "category": "company_environment",
+    "templateText": "در {current_company}، کدام تیم‌ها بیشترین اثر را روی کار {current_role} می‌گذارند؟",
+    "requiredFields": [
+      "current_company",
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-023",
+    "category": "company_environment",
+    "templateText": "کار در {previous_company} و {current_company} از نظر نحوه تصمیم‌گیری و پیش‌بردن کارها چه تفاوتی داشت؟",
+    "requiredFields": [
+      "previous_company",
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-024",
+    "category": "company_environment",
+    "templateText": "در {current_company}، کدام محدودیت‌ها بیشتر روی کیفیت خروجی کارت اثر می‌گذارند؟",
+    "requiredFields": [
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-025",
+    "category": "company_environment",
+    "templateText": "در {previous_company} چه چیزی یاد گرفتی که در {current_company} بدون آن سخت‌تر کار می‌کردی؟",
+    "requiredFields": [
+      "previous_company",
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-026",
+    "category": "company_environment",
+    "templateText": "تفاوت همکاری بین تیم‌ها در {previous_company} و {current_company} در عمل چگونه خودش را نشان می‌داد؟",
+    "requiredFields": [
+      "previous_company",
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-027",
+    "category": "company_environment",
+    "templateText": "در {current_company}، چه چیزی درباره فرهنگ تصمیم‌گیری از بیرون قابل تشخیص نیست؟",
+    "requiredFields": [
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-028",
+    "category": "company_environment",
+    "templateText": "اگر کسی بخواهد وارد شرکتی شبیه {current_company} شود، باید خودش را برای چه نوع فشار کاری آماده کند؟",
+    "requiredFields": [
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-029",
+    "category": "company_environment",
+    "templateText": "در مقایسه {previous_company} و {current_company}، کجا اختیار واقعی بیشتری داشتی و چرا؟",
+    "requiredFields": [
+      "previous_company",
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-030",
+    "category": "company_environment",
+    "templateText": "در کدام شرکت، برای پیش بردن کارها بیشتر به تیم‌های دیگر وابسته بودی و چرا؟",
+    "requiredFields": [
+      "previous_company",
+      "current_company"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-031",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، کدام مهارت کمتر درباره‌اش حرف زده می‌شود اما در عمل تعیین‌کننده است؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-032",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، تازه‌واردها معمولاً کدام بخش کار را بیش از حد ساده می‌بینند؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-033",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، چه چیزی بین کار خوب و کار قابل دفاع تفاوت ایجاد می‌کند؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-034",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، معمولاً چه چیزی بیشتر از همه باعث کند شدن یا سخت شدن کار می‌شود؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-035",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، کدام نوع مسئله‌ها فقط با تجربه واقعی قابل فهم‌اند؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-036",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، چه چیزی باعث می‌شود خروجی کارت در سازمان جدی گرفته شود؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-037",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، کدام بخش کار بیشتر از چیزی که فکر می‌کردی به هماهنگی با دیگران نیاز دارد؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-038",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، چه تصمیم‌هایی معمولاً باید قبل از کامل شدن همه اطلاعات گرفته شوند؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-039",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، چه چیزی اگر ضعیف باشد، حتی کار تخصصی خوب هم دیده نمی‌شود؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-040",
+    "category": "job_category_nature",
+    "templateText": "در {job_category}، بزرگ‌ترین فاصله بین چیزی که آموزش داده می‌شود و چیزی که در شرکت اتفاق می‌افتد چیست؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-041",
+    "category": "decision_pressure_mistake",
+    "templateText": "در کار {current_role}، سخت‌ترین انتخابی که مرتب با آن روبه‌رو می‌شوی چیست؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-042",
+    "category": "decision_pressure_mistake",
+    "templateText": "در نقش {current_role}، معمولاً کجا مجبور می‌شوی بین سریع‌تر جلو رفتن و دقیق‌تر انجام دادن کار یکی را انتخاب کنی؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-043",
+    "category": "decision_pressure_mistake",
+    "templateText": "در نقش {current_role}، چه نوع تصمیمی برایت سخت‌تر از بقیه تصمیم‌هاست؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-044",
+    "category": "decision_pressure_mistake",
+    "templateText": "در این نقش، کدام اشتباه تازه‌واردها بیشترین هزینه را برای تیم ایجاد می‌کند؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-045",
+    "category": "decision_pressure_mistake",
+    "templateText": "اگر کسی بخواهد وارد {job_category} شود، چه نشانه‌ای می‌گوید تصورش از این کار غیرواقعی است؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-046",
+    "category": "decision_pressure_mistake",
+    "templateText": "در {current_role}، چه چیزی را اگر زود نفهمی، بعداً در کار روزمره اذیتت می‌کند؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-047",
+    "category": "decision_pressure_mistake",
+    "templateText": "در {job_category}، کدام رفتار حرفه‌ای باعث می‌شود آدم‌ها زودتر به تو اعتماد کنند؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-048",
+    "category": "decision_pressure_mistake",
+    "templateText": "در نقش {current_role}، کدام بخش کار بیشتر از چیزی که بیرون دیده می‌شود به رابطه با تیم‌های دیگر وابسته است؟",
+    "requiredFields": [
+      "current_role"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-049",
+    "category": "decision_pressure_mistake",
+    "templateText": "اگر کسی بین دو مسیر نزدیک به {job_category} مردد باشد، چه چیزی باید قبل از انتخاب از خودش بپرسد؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  },
+  {
+    "id": "EQE-T-050",
+    "category": "decision_pressure_mistake",
+    "templateText": "در تجربه تو، چه چیزی باعث می‌شود یک نفر در {job_category} ظاهراً خوب باشد اما در کار واقعی کم بیاورد؟",
+    "requiredFields": [
+      "job_category"
+    ],
+    "isActive": true
+  }
+]

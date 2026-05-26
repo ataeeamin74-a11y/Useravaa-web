@@ -1,0 +1,280 @@
+.topbar {
+  position: sticky;
+  top: 14px;
+  z-index: var(--z-header);
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 8px 12px;
+  border: 1px solid rgb(228 234 244 / 92%);
+  border-radius: 24px;
+  background: rgb(255 255 255 / 91%);
+  box-shadow: 0 10px 26px rgb(7 27 78 / 4.5%);
+  backdrop-filter: blur(20px);
+}
+
+.brand {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  min-width: max-content;
+}
+
+.logo {
+  width: 138px;
+  height: 38px;
+  display: block;
+  object-fit: contain;
+  object-position: right center;
+}
+
+.mainNav {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.mainNavLink {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 850;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+.mainNavLink.active {
+  background: var(--blue-soft);
+  box-shadow: inset 0 0 0 1px rgb(36 87 255 / 6%);
+  color: var(--blue);
+}
+
+.utilities {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  min-width: max-content;
+}
+
+.authLink,
+.accountTrigger {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 13px;
+  font-size: 12.5px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.authLink {
+  padding: 0 13px;
+}
+
+.loginLink {
+  border: 1px solid var(--line-2);
+  background: #fff;
+  color: var(--navy);
+}
+
+.registerLink {
+  border: 1px solid var(--navy);
+  background: var(--navy);
+  color: #fff;
+}
+
+.accountMenu {
+  position: relative;
+}
+
+.accountTrigger {
+  gap: 7px;
+  min-width: 104px;
+  border: 1px solid var(--line-2);
+  background: #fff;
+  color: var(--navy);
+  cursor: pointer;
+  list-style: none;
+  padding: 0 8px;
+}
+
+.accountTrigger::-webkit-details-marker {
+  display: none;
+}
+
+.accountAvatar {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--teal-soft), var(--blue-soft));
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 950;
+}
+
+.accountDropdown {
+  position: absolute;
+  inset-block-start: calc(100% + 8px);
+  inset-inline-end: 0;
+  z-index: var(--z-popover, 120);
+  min-width: 220px;
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 18px 44px rgb(7 27 78 / 12%);
+  padding: 8px;
+}
+
+.accountDropdown a,
+.accountDropdown button {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--navy);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 850;
+  padding: 8px 10px;
+  text-align: right;
+}
+
+.accountTrigger svg,
+.accountDropdown svg {
+  flex: none;
+}
+
+.accountDropdown a:hover,
+.accountDropdown button:hover {
+  background: #f4f7fb;
+  color: var(--blue);
+}
+
+.utilityLink {
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 760;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+
+.utilityPlain {
+  color: var(--muted);
+}
+
+.utilityPlain:hover,
+.utilityPlain.active {
+  background: #f2f5fa;
+  color: var(--navy);
+}
+
+.utilityPill {
+  gap: 6px;
+  border: 1px solid var(--line-2);
+  background: #fff;
+  color: var(--navy);
+  padding: 0 11px;
+}
+
+.utilityPill.active,
+.utilityWallet.active {
+  border-color: #dde6ff;
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.utilityWallet {
+  border: 1px solid var(--line-2);
+  background: #fff;
+  color: var(--navy);
+  font-weight: 900;
+  padding: 0 13px;
+}
+
+.badge {
+  min-width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  transform: translateY(-1px);
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 11px;
+  font-weight: 900;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    height: auto;
+    display: grid;
+    grid-template-areas:
+      "brand utils"
+      "nav nav";
+    grid-template-columns: 1fr auto;
+    row-gap: 8px;
+  }
+
+  .brand {
+    grid-area: brand;
+  }
+
+  .mainNav {
+    grid-area: nav;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-top: 2px;
+  }
+
+  .utilities {
+    grid-area: utils;
+  }
+}
+
+@media (max-width: 560px) {
+  .logo {
+    width: 116px;
+    height: 34px;
+  }
+
+  .utilityPlain {
+    display: none;
+  }
+
+  .utilityPill {
+    padding: 0 9px;
+  }
+
+  .utilityWallet {
+    padding: 0 10px;
+  }
+
+  .mainNavLink {
+    padding: 0 11px;
+  }
+}

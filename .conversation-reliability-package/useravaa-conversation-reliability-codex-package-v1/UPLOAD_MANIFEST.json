@@ -1,0 +1,11 @@
+{
+  "packageName": "useravaa-conversation-reliability-codex-package-v1",
+  "sourceOfTruth": [
+    "conversation-request-reliability-system.prd.md",
+    "CODEX_PROMPT_START_CONVERSATION_RELIABILITY.txt"
+  ],
+  "recoveryPrompt": "CODEX_PROMPT_RECOVER_IF_INTERRUPTED.txt",
+  "manualReviewGate": true,
+  "doNotCreateCheckpoint": true,
+  "doNotStartNextPhase": true
+}

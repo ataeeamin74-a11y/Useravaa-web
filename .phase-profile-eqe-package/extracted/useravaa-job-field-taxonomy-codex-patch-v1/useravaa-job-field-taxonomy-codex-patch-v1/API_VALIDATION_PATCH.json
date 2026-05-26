@@ -1,0 +1,45 @@
+{
+  "jobTitle": {
+    "fieldFa": "عنوان شغلی",
+    "type": "string",
+    "input": "free_text",
+    "required": true,
+    "minLength": 2,
+    "maxLength": 100,
+    "allowCustomValues": true,
+    "errorKey": "jobTitle.invalid"
+  },
+  "jobField": {
+    "fieldFa": "حوزه شغلی",
+    "type": "enum",
+    "input": "select_or_multiselect",
+    "required": true,
+    "allowCustomValues": false,
+    "allowedValuesFa": [
+      "محصول و تجربه کاربر",
+      "طراحی گرافیک و هویت بصری",
+      "فنی و مهندسی نرم‌افزار",
+      "علوم داده و هوش مصنوعی",
+      "مارکتینگ و برند",
+      "تحلیل و توسعه کسب‌وکار",
+      "عملیات",
+      "تجربه مشتری",
+      "پشتیبانی مشتریان",
+      "فروش و بازرگانی",
+      "استراتژی و مدل کسب‌وکار",
+      "مالی، حقوقی و سرمایه‌گذاری",
+      "منابع انسانی و فرهنگ سازمانی",
+      "مدیریت، رهبری و کارآفرینی"
+    ],
+    "errorKey": "jobField.invalid"
+  },
+  "timelineItem": {
+    "jobTitle": "free text, required",
+    "jobField": "fixed taxonomy, required",
+    "orgLevel": "fixed org level enum, required",
+    "companyName": "free text/searchable, required",
+    "companyCountry": "required",
+    "companyIndustry": "optional unless product explicitly requires it"
+  },
+  "serverRule": "Any jobField value outside the fixed taxonomy must be rejected with jobField.invalid."
+}

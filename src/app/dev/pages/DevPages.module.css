@@ -1,0 +1,166 @@
+.page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top right, rgba(1, 190, 183, 0.08), transparent 30rem),
+    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  color: #0f1d43;
+  padding: 48px min(5vw, 72px) 72px;
+}
+
+.hero {
+  display: grid;
+  gap: 12px;
+  margin: 0 auto 28px;
+  max-width: 1180px;
+}
+
+.eyebrow {
+  color: #01a8a2;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.25;
+  margin: 0;
+}
+
+.hero p {
+  color: #58657d;
+  font-size: 1rem;
+  line-height: 1.9;
+  margin: 0;
+  max-width: 760px;
+}
+
+.content {
+  display: grid;
+  gap: 28px;
+  margin: 0 auto;
+  max-width: 1180px;
+}
+
+.group {
+  display: grid;
+  gap: 16px;
+}
+
+.groupHeader {
+  display: grid;
+  gap: 6px;
+}
+
+.groupHeader h2 {
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.groupHeader p {
+  color: #6b768c;
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.card,
+.missingCard {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #e4e7ec;
+  border-radius: 22px;
+  box-shadow: 0 18px 44px rgba(15, 29, 67, 0.07);
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px;
+}
+
+.cardHeader {
+  display: grid;
+  gap: 8px;
+}
+
+.card h3,
+.missingCard h3 {
+  font-size: 1.04rem;
+  margin: 0;
+}
+
+.path {
+  direction: ltr;
+  color: #01a8a2;
+  font-family: var(--font-en), "Manrope", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-align: left;
+}
+
+.note {
+  color: #58657d;
+  font-size: 0.94rem;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.link {
+  align-items: center;
+  background: #0f1d43;
+  border-radius: 999px;
+  color: #ffffff;
+  display: inline-flex;
+  font-weight: 800;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 18px;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+  width: fit-content;
+}
+
+.link:hover {
+  background: #081838;
+  transform: translateY(-1px);
+}
+
+.missing {
+  border-top: 1px solid #e4e7ec;
+  padding-top: 24px;
+}
+
+.missingCard {
+  background: #fbfcfe;
+  box-shadow: none;
+}
+
+.badge {
+  align-items: center;
+  background: #eef4ff;
+  border: 1px solid #d8e6ff;
+  border-radius: 999px;
+  color: #34548a;
+  display: inline-flex;
+  font-family: var(--font-en), "Manrope", ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  justify-content: center;
+  padding: 5px 10px;
+  width: fit-content;
+}
+
+@media (max-width: 720px) {
+  .page {
+    padding: 32px 18px 48px;
+  }
+
+  .card,
+  .missingCard {
+    border-radius: 18px;
+  }
+}

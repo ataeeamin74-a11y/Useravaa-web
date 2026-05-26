@@ -1,0 +1,27 @@
+Apply this patch on top of all previous Useravaa and Experience Question Engine packages.
+
+Final rules:
+
+1. `عنوان شغلی` is manual free text everywhere.
+2. `حوزه شغلی` is fixed taxonomy everywhere.
+3. Do not use old inconsistent job category labels.
+4. Do not allow arbitrary حوزه شغلی values.
+5. In timeline items:
+   - jobTitle = free text
+   - jobField = fixed taxonomy
+   - companyIndustry = separate optional field if needed
+6. In Experience Question Engine:
+   - {current_role} uses jobTitle
+   - {job_category} uses jobField
+7. Update:
+   - profile build/edit form
+   - timeline editor
+   - public profile
+   - discovery filters
+   - fixtures/seed data
+   - API validation
+   - schema/types
+   - Question Engine eligibility
+   - tests
+
+Do not change no-admin rule for Experience Question Engine.

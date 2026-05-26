@@ -1,0 +1,124 @@
+{
+  "walletPayment": {
+    "initialState": "checkout_created",
+    "states": [
+      "checkout_created",
+      "requires_gateway_payment",
+      "wallet_sufficient",
+      "payment_processing",
+      "paid",
+      "failed",
+      "cancelled",
+      "refunded"
+    ],
+    "allowedTransitions": [
+      {
+        "from": "checkout_created",
+        "to": "wallet_sufficient",
+        "actor": "system",
+        "condition": "walletBalance >= conversationPrice"
+      },
+      {
+        "from": "checkout_created",
+        "to": "requires_gateway_payment",
+        "actor": "system",
+        "condition": "walletBalance < conversationPrice"
+      },
+      {
+        "from": "wallet_sufficient",
+        "to": "payment_processing",
+        "actor": "seeker",
+        "action": "confirm_payment"
+      },
+      {
+        "from": "requires_gateway_payment",
+        "to": "payment_processing",
+        "actor": "seeker",
+        "action": "confirm_gateway_payment"
+      },
+      {
+        "from": "payment_processing",
+        "to": "paid",
+        "actor": "payment_service",
+        "action": "payment_success"
+      },
+      {
+        "from": "payment_processing",
+        "to": "failed",
+        "actor": "payment_service",
+        "action": "payment_failed"
+      },
+      {
+        "from": "checkout_created",
+        "to": "cancelled",
+        "actor": "seeker",
+        "action": "cancel_checkout"
+      },
+      {
+        "from": "paid",
+        "to": "refunded",
+        "actor": "admin_or_system",
+        "action": "refund"
+      }
+    ],
+    "invalidTransitionBehavior": {
+      "httpStatus": 409,
+      "errorCode": "INVALID_PAYMENT_STATE",
+      "messageKey": "error.invalidPaymentState"
+    }
+  },
+  "payout": {
+    "initialState": "not_requested",
+    "states": [
+      "not_requested",
+      "blocked_missing_settlement_info",
+      "requested",
+      "processing",
+      "paid",
+      "failed"
+    ],
+    "allowedTransitions": [
+      {
+        "from": "not_requested",
+        "to": "blocked_missing_settlement_info",
+        "actor": "provider",
+        "condition": "settlementInfoMissing"
+      },
+      {
+        "from": "not_requested",
+        "to": "requested",
+        "actor": "provider",
+        "condition": "settlementInfoValid"
+      },
+      {
+        "from": "blocked_missing_settlement_info",
+        "to": "requested",
+        "actor": "provider",
+        "action": "submit_valid_settlement_info_and_request"
+      },
+      {
+        "from": "requested",
+        "to": "processing",
+        "actor": "system_or_admin",
+        "action": "start_payout_processing"
+      },
+      {
+        "from": "processing",
+        "to": "paid",
+        "actor": "system_or_admin",
+        "action": "mark_payout_paid"
+      },
+      {
+        "from": "processing",
+        "to": "failed",
+        "actor": "system_or_admin",
+        "action": "mark_payout_failed"
+      }
+    ],
+    "invalidTransitionBehavior": {
+      "httpStatus": 409,
+      "errorCode": "INVALID_PAYOUT_STATE",
+      "messageKey": "error.invalidPayoutState"
+    }
+  }
+}

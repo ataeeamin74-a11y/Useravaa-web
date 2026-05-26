@@ -1,0 +1,17 @@
+{
+  "payoutRequiresSettlementInfo": true,
+  "requiredFields": [
+    "accountOwner",
+    "iban"
+  ],
+  "ibanFormat": "^IR[0-9]{24}$",
+  "settlementInfoLocation": "profile/account settings area and wallet payout flow",
+  "payoutBlockedBehavior": "If settlement info is missing, payout action opens settlement info form instead of creating payout.",
+  "knownUnspecified": [
+    "commission_rate",
+    "payout_timing",
+    "refund_policy",
+    "cancellation_policy",
+    "KYC_provider"
+  ]
+}

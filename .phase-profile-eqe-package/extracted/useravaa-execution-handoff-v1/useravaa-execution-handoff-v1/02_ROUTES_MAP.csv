@@ -1,0 +1,17 @@
+﻿route,page_name,auth_required,user_role,purpose
+/discover,کشف تجربه‌ها,false,"guest,authenticated_user",Search and filter experience profiles.
+/guide,راهنما,false,"guest,authenticated_user",Explain Useravaa at product level without operational journey notes.
+/profiles/{profileId},پروفایل تجربه,false,"guest,authenticated_user",View an experience profile and start request flow if authenticated.
+/requests/new?profileId={profileId}&duration={30|60},درخواست گفت‌وگو,true,seeker,Create a conversation request for a selected duration.
+/conversations,گفت‌وگوها,true,"authenticated_user,seeker,provider",Manage sent and received conversation requests by status group.
+/conversations/{conversationId},جزئیات گفت‌وگو,true,"seeker,provider",View and act on a single conversation request.
+/conversations/{conversationId}/propose-times,پیشنهاد زمان,true,provider,Provider selects 3 to 6 Shamsi date/time options.
+/conversations/{conversationId}/select-time,انتخاب زمان,true,seeker,Seeker selects one proposed time or cancels.
+/checkout/{conversationId},پرداخت و نهایی‌سازی,true,seeker,"Pay using wallet and/or gateway payable amount, then finalize scheduled conversation."
+/profile,پروفایل من,true,"authenticated_user,profile_owner",User profile/account control center.
+/profile/build,ساخت پروفایل تجربه,true,profile_owner,Create/edit experience profile and submit for review.
+/profile/network,شبکه من,true,"authenticated_user,profile_owner","Manage following, saved profiles and followers."
+/profile/feedback,بازخوردهای دریافتی,true,profile_owner,View received feedback summary and list.
+/profile/settings,تنظیمات حساب,true,authenticated_user,"Edit account, notification, privacy and settlement settings."
+/wallet,کیف پول و پرداخت‌ها,true,"authenticated_user,provider,seeker","Wallet balance, transactions, top-up and payout initiation."
+/notifications,اعلان‌ها,true,authenticated_user,List notifications and deep link to related pages.

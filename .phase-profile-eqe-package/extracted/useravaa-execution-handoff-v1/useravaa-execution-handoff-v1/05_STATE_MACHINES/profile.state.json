@@ -1,0 +1,68 @@
+{
+  "experienceProfile": {
+    "initialState": "draft",
+    "states": [
+      "draft",
+      "pending_review",
+      "needs_changes",
+      "active",
+      "inactive"
+    ],
+    "publicVisibility": {
+      "draft": false,
+      "pending_review": false,
+      "needs_changes": false,
+      "active": true,
+      "inactive": false
+    },
+    "allowedTransitions": [
+      {
+        "from": "draft",
+        "to": "pending_review",
+        "actor": "profile_owner",
+        "action": "submit_for_review"
+      },
+      {
+        "from": "needs_changes",
+        "to": "pending_review",
+        "actor": "profile_owner",
+        "action": "resubmit_for_review"
+      },
+      {
+        "from": "pending_review",
+        "to": "active",
+        "actor": "admin",
+        "action": "approve_profile"
+      },
+      {
+        "from": "pending_review",
+        "to": "needs_changes",
+        "actor": "admin",
+        "action": "request_changes"
+      },
+      {
+        "from": "active",
+        "to": "inactive",
+        "actor": "profile_owner_or_admin",
+        "action": "deactivate_profile"
+      },
+      {
+        "from": "inactive",
+        "to": "pending_review",
+        "actor": "profile_owner",
+        "action": "reactivate_requires_review"
+      },
+      {
+        "from": "active",
+        "to": "pending_review",
+        "actor": "profile_owner",
+        "action": "submit_material_changes"
+      }
+    ],
+    "invalidTransitionBehavior": {
+      "httpStatus": 409,
+      "errorCode": "INVALID_PROFILE_STATE",
+      "messageKey": "error.invalidProfileState"
+    }
+  }
+}

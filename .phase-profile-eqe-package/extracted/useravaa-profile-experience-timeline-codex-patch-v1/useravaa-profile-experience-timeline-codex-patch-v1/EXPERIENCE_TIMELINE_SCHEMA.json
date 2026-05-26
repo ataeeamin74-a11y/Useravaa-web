@@ -1,0 +1,93 @@
+{
+  "entity": "ExperienceTimelineItem",
+  "purpose": "Structured work history for Provider profile and Experience Question Engine eligibility.",
+  "fields": {
+    "id": {
+      "type": "string",
+      "required": true
+    },
+    "profileId": {
+      "type": "string",
+      "required": true
+    },
+    "jobTitle": {
+      "type": "string",
+      "required": true,
+      "minLength": 2,
+      "maxLength": 100
+    },
+    "orgLevel": {
+      "type": "enum",
+      "required": true,
+      "allowedValuesFa": [
+        "کارآموز",
+        "کارشناس",
+        "کارشناس ارشد",
+        "مدیر میانی",
+        "مدیر ارشد",
+        "معاونت",
+        "مدیر کسب و کار"
+      ]
+    },
+    "companyName": {
+      "type": "string",
+      "required": true,
+      "minLength": 2,
+      "maxLength": 120
+    },
+    "companyField": {
+      "type": "string",
+      "required": true,
+      "minLength": 2,
+      "maxLength": 80
+    },
+    "companyCountry": {
+      "type": "string",
+      "required": true,
+      "format": "country_label_or_iso_code"
+    },
+    "startYear": {
+      "type": "integer",
+      "required": true,
+      "min": 1970
+    },
+    "startMonth": {
+      "type": "integer",
+      "required": false,
+      "min": 1,
+      "max": 12
+    },
+    "endYear": {
+      "type": "integer",
+      "required": "required_if_isCurrent_false",
+      "min": 1970
+    },
+    "endMonth": {
+      "type": "integer",
+      "required": false,
+      "min": 1,
+      "max": 12
+    },
+    "isCurrent": {
+      "type": "boolean",
+      "required": true
+    },
+    "description": {
+      "type": "string",
+      "required": false,
+      "maxLength": 280
+    },
+    "sortOrder": {
+      "type": "integer",
+      "required": false
+    }
+  },
+  "businessRules": [
+    "At least one timeline item is required for Provider profile publication.",
+    "At most one item should be marked isCurrent=true; if multiple exist, use latest start date for derivation and show warning.",
+    "If isCurrent=false, endYear is required.",
+    "end date must be after start date.",
+    "Timeline should cover at least last 5 years where Provider has 5+ years experience.",
+    "Question Engine must derive current/previous fields from timeline items, not free-text companies."
+  ]
+}

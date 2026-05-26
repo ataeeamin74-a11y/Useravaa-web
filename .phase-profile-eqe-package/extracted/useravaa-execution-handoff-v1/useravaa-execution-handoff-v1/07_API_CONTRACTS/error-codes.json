@@ -1,0 +1,72 @@
+{
+  "UNAUTHORIZED": {
+    "httpStatus": 401,
+    "messageKey": "error.unauthorized",
+    "condition": "missing_or_invalid_authentication"
+  },
+  "FORBIDDEN": {
+    "httpStatus": 403,
+    "messageKey": "error.forbidden",
+    "condition": "actor_not_allowed_for_resource_or_transition"
+  },
+  "NOT_FOUND": {
+    "httpStatus": 404,
+    "messageKey": "error.notFound",
+    "condition": "resource_id_does_not_exist_or_not_visible"
+  },
+  "VALIDATION_ERROR": {
+    "httpStatus": 400,
+    "messageKey": "error.validation",
+    "condition": "request_body_or_query_invalid"
+  },
+  "INVALID_STATE_TRANSITION": {
+    "httpStatus": 409,
+    "messageKey": "error.invalidStateTransition",
+    "condition": "transition_not_allowed_by_state_machine"
+  },
+  "INVALID_PROFILE_STATE": {
+    "httpStatus": 409,
+    "messageKey": "error.invalidProfileState",
+    "condition": "profile_state_does_not_allow_action"
+  },
+  "PRICE_CAP_EXCEEDED": {
+    "httpStatus": 400,
+    "messageKey": "error.priceCapExceeded",
+    "condition": "price_above_org_level_cap"
+  },
+  "PROFILE_NOT_ACTIVE": {
+    "httpStatus": 400,
+    "messageKey": "error.profileNotActive",
+    "condition": "conversation_request_created_for_non_active_profile"
+  },
+  "INVALID_IBAN": {
+    "httpStatus": 400,
+    "messageKey": "error.invalidIban",
+    "condition": "iban_does_not_match_IR_plus_24_digits"
+  },
+  "SETTLEMENT_INFO_REQUIRED": {
+    "httpStatus": 409,
+    "messageKey": "error.settlementInfoRequired",
+    "condition": "provider_requests_payout_without_valid_settlement_info"
+  },
+  "PAYMENT_FAILED": {
+    "httpStatus": 402,
+    "messageKey": "error.paymentFailed",
+    "condition": "gateway_or_wallet_payment_failed"
+  },
+  "DUPLICATE_TIME_OPTION": {
+    "httpStatus": 400,
+    "messageKey": "error.duplicateTimeOption",
+    "condition": "provider_submits_duplicate_proposed_time"
+  },
+  "TIME_OPTION_COUNT_INVALID": {
+    "httpStatus": 400,
+    "messageKey": "error.timeOptionCountInvalid",
+    "condition": "proposed_time_count_not_between_3_and_6"
+  },
+  "FEEDBACK_NOT_ALLOWED": {
+    "httpStatus": 409,
+    "messageKey": "error.feedbackNotAllowed",
+    "condition": "feedback_submitted_before_successful_conversation_or_duplicate_feedback"
+  }
+}

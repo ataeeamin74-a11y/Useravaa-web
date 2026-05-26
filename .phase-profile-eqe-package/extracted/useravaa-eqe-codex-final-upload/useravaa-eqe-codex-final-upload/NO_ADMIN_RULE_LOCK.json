@@ -1,0 +1,27 @@
+{
+  "feature": "Experience Question Engine",
+  "adminReview": false,
+  "adminApprove": false,
+  "adminReject": false,
+  "adminHide": false,
+  "providerResponsibility": true,
+  "answerStatuses": [
+    "draft",
+    "published",
+    "retracted"
+  ],
+  "forbiddenStatuses": [
+    "pending_review",
+    "rejected",
+    "hidden"
+  ],
+  "publishFlow": {
+    "actor": "provider",
+    "requiresResponsibilityConfirmation": true,
+    "resultStatus": "published"
+  },
+  "retractFlow": {
+    "actor": "provider",
+    "resultStatus": "retracted"
+  }
+}

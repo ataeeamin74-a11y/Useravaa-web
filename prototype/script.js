@@ -1,0 +1,4426 @@
+const profiles = [
+      {id:"ali",name:"علی ر.",initials:"ع",roleFa:"مدیر محصول",orgLevel:"مدیر میانی",yearsOfExperience:8,csat:4.8,followers:186,conversations:42,lastActiveDays:1,previousCompaniesFa:["اسنپ","دیجی‌کالا"],jobCategoriesFa:["محصول","هوش تجاری","تحلیل داده"],professionalSummary:"تجربه در تیم‌های محصول و تحلیل داده، با تمرکز بر تصمیم‌سازی محصولی.",languages:["فارسی"],pricing:{30:1000000,60:1800000},review:"گفت‌وگو دقیق، کاربردی و متناسب با تجربه کاری‌اش بود.",isFollowing:false,isSaved:false},
+      {id:"sara",name:"سارا م.",initials:"س",roleFa:"طراح محصول",orgLevel:"کارشناس ارشد",yearsOfExperience:6,csat:4.7,followers:143,conversations:36,lastActiveDays:3,previousCompaniesFa:["کافه‌بازار","دیوار"],jobCategoriesFa:["طراحی محصول","تجربه کاربر","پورتفولیو"],professionalSummary:"تجربه طراحی محصول، طراحی تجربه کاربر، ساخت پورتفولیو و همکاری با تیم‌های محصول.",languages:["فارسی","انگلیسی"],pricing:{30:500000,60:900000},review:"درک خوبی از فضای طراحی محصول و همکاری با تیم‌های محصول داشت.",isFollowing:false,isSaved:false},
+      {id:"nazanin",name:"نازنین ک.",initials:"ن",roleFa:"راهبر هوش تجاری",orgLevel:"مدیر ارشد",yearsOfExperience:10,csat:4.9,followers:212,conversations:58,lastActiveDays:0,previousCompaniesFa:["دیجی‌کالا","علی‌بابا"],jobCategoriesFa:["هوش تجاری","تحلیل داده","داشبورد"],professionalSummary:"تجربه کار با داده، داشبوردهای تصمیم‌ساز و مدیریت فعالیت‌های BI.",languages:["فارسی","انگلیسی"],pricing:{30:1000000,60:1800000},review:"تجربه‌اش در BI و تحلیل داده برای تصمیم‌گیری شغلی روشن‌کننده بود.",isFollowing:false,isSaved:false},
+      {id:"mina",name:"مینا پ.",initials:"م",roleFa:"کارشناس رشد",orgLevel:"کارشناس",yearsOfExperience:4,csat:4.6,followers:98,conversations:21,lastActiveDays:6,previousCompaniesFa:["اسنپ","تپسی"],jobCategoriesFa:["رشد","مارکتینگ","جذب کاربر"],professionalSummary:"تجربه در Growth Marketing، کمپین‌های رشد، تحلیل داده و قیف جذب کاربر.",languages:["فارسی"],pricing:{30:300000,60:500000},review:"شناخت خوبی از Growth، کمپین و کار با داده داشت.",isFollowing:false,isSaved:false},
+      {id:"reza",name:"رضا الف.",initials:"ر",roleFa:"مدیر مهندسی",orgLevel:"مدیر ارشد",yearsOfExperience:15,csat:4.9,followers:304,conversations:74,lastActiveDays:2,previousCompaniesFa:["دیجی‌کالا","اسنپ"],jobCategoriesFa:["مهندسی","رهبری تیم","محصول"],professionalSummary:"تجربه مدیریت تیم‌های فنی، همکاری با محصول و ساختاردهی تیم‌های رشدپذیر.",languages:["فارسی","انگلیسی"],pricing:{30:1000000,60:1800000},review:"درک خوبی از رشد تیم فنی و تصمیم‌های مدیریتی داشت.",isFollowing:false,isSaved:false},
+      {id:"niloofar",name:"نیلوفر ج.",initials:"ن",roleFa:"شریک منابع انسانی",orgLevel:"مدیر میانی",yearsOfExperience:2,csat:null,followers:76,conversations:0,lastActiveDays:8,previousCompaniesFa:["تپسی","دیوار"],jobCategoriesFa:["منابع انسانی","افراد","مسیر شغلی","مصاحبه"],professionalSummary:"تجربه در مسیرهای رشد شغلی، گفت‌وگوهای عملکردی و همکاری با تیم‌های کسب‌وکار.",languages:["فارسی"],pricing:{30:1000000,60:1800000},review:"هنوز بازخوردی ثبت نشده است.",isFollowing:false,isSaved:false},
+      {id:"hamid",name:"حمید ص.",initials:"ح",roleFa:"تحلیل‌گر داده",orgLevel:"کارشناس",yearsOfExperience:1,csat:null,followers:18,conversations:0,lastActiveDays:12,previousCompaniesFa:[],jobCategoriesFa:["تحلیل داده","داشبورد","SQL","گزارش‌سازی"],professionalSummary:"تجربه شروع مسیر در تحلیل داده، گزارش‌سازی و ساخت داشبوردهای عملیاتی.",languages:["فارسی"],pricing:{30:300000,60:500000},review:"هنوز بازخوردی ثبت نشده است.",isFollowing:false,isSaved:false}
+    ];
+
+    const formatter = new Intl.NumberFormat("fa-IR");
+    const $ = id => document.getElementById(id);
+    const toman = v => v == null ? "نیاز به تعیین" : formatter.format(v) + " تومان";
+    const toFaDecimal = n => String(n).replace(".", "٫");
+    const bookmarkIcon = saved => `
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 4.75C7 3.78 7.78 3 8.75 3h6.5C16.22 3 17 3.78 17 4.75V21l-5-3-5 3V4.75Z"></path>
+      </svg>`;
+
+    let selectedProfile = profiles[0];
+    let selectedDuration = 30;
+    let requests = [];
+    let selectedRequest = null;
+    let selectedProposal = null;
+    let wallet = 100000;
+    let discoveryState = new URLSearchParams(location.search).get("state") || "ready";
+    const analyticsLog = [];
+
+    function track(eventName, properties = {}){
+      const payload = {
+        event: eventName,
+        timestamp: new Date().toISOString(),
+        source_page: document.querySelector(".page.active")?.id || "unknown",
+        ...properties
+      };
+      analyticsLog.push(payload);
+      console.info("[Useravaa analytics]", payload);
+    }
+
+    function toast(message){
+      const t = $("toast");
+      t.textContent = message;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 2200);
+    }
+
+    function openFilterDrawer(){
+      document.body.classList.add("filter-drawer-open");
+      track("mobile_filter_drawer_opened");
+    }
+
+    function closeFilterDrawer(){
+      document.body.classList.remove("filter-drawer-open");
+    }
+
+    function retryDiscovery(){
+      discoveryState = "ready";
+      renderCards();
+      track("discovery_retry_clicked");
+    }
+
+    function renderSkeletonCards(){
+      const markup = Array.from({length:8}).map(() => `
+        <div class="skeleton-card">
+          <div class="skeleton-avatar"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+          <span class="skeleton-chip"></span><span class="skeleton-chip"></span><span class="skeleton-chip"></span>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line medium"></div>
+          <span class="skeleton-button"></span><span class="skeleton-button"></span>
+        </div>
+      `).join("");
+      $("loadingState").innerHTML = markup;
+    }
+
+    window.openFilterDrawer = openFilterDrawer;
+    window.closeFilterDrawer = closeFilterDrawer;
+    window.retryDiscovery = retryDiscovery;
+
+    function navigate(page){
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      $(page).classList.add("active");
+      document.querySelectorAll("[data-nav]").forEach(b => b.classList.toggle("active", b.dataset.nav === page));
+      window.scrollTo({top:0, behavior:"smooth"});
+      if(page === "discover") renderCards();
+      if(page === "how" && typeof track === "function") track("how_page_viewed");
+      if(page === "profile") renderProfile();
+      if(page === "request") renderRequest();
+      if(page === "conversations") renderConversations();
+      if(page === "conversationDetail") renderConversationDetail();
+      if(page === "conversationProposals") renderConversationProposals();
+      if(page === "conversationFeedback") renderConversationFeedback();
+      if(page === "timeProposal") setTimeout(hydrateTimeProposalSelects, 0);
+      if(page === "proposals") renderProposals();
+      if(page === "checkout") renderCheckout();
+      if(page === "myExperience") renderMyExperience();
+      if(page === "buildExperience") setTimeout(updateBuildPricing, 0);
+    }
+    document.addEventListener("click", e => {
+      const nav = e.target.closest("[data-nav]");
+      if(nav) navigate(nav.dataset.nav);
+    });
+
+
+    function hydrateFilters(){
+      [...new Set(profiles.map(p => p.roleFa))].forEach(x => $("roleFilter").insertAdjacentHTML("beforeend", `<option>${x}</option>`));
+      [...new Set(profiles.flatMap(p => p.jobCategoriesFa))].forEach(x => $("categoryFilter").insertAdjacentHTML("beforeend", `<option>${x}</option>`));
+      [...new Set(profiles.flatMap(p => p.previousCompaniesFa))].forEach(x => $("companyFilter").insertAdjacentHTML("beforeend", `<option>${x}</option>`));
+    }
+
+    function yearsInRange(years, range){
+      if(!range) return true;
+      if(range === "0-2") return years >= 0 && years <= 2;
+      if(range === "3-5") return years >= 3 && years <= 5;
+      if(range === "6-9") return years >= 6 && years <= 9;
+      if(range === "10-14") return years >= 10 && years <= 14;
+      if(range === "15+") return years >= 15;
+      return true;
+    }
+
+    function profileMatches(p){
+      const q = $("searchQuery").value.trim().toLowerCase();
+      const role = $("roleFilter").value;
+      const category = $("categoryFilter").value;
+      const level = $("levelFilter").value;
+      const company = $("companyFilter").value;
+      const exp = $("experienceFilter").value;
+      const lang = $("languageFilter").value;
+      const hay = [p.name,p.roleFa,p.orgLevel,p.professionalSummary,...p.previousCompaniesFa,...p.jobCategoriesFa].join(" ").toLowerCase();
+
+      return (!q || hay.includes(q))
+        && (!role || p.roleFa === role)
+        && (!category || p.jobCategoriesFa.includes(category))
+        && (!level || p.orgLevel === level)
+        && (!company || p.previousCompaniesFa.includes(company))
+        && yearsInRange(p.yearsOfExperience, exp)
+        && (!lang || p.languages.includes(lang));
+    }
+
+    function applySort(items){
+      const sort = $("sortFilter").value;
+      const sorted = [...items];
+      if(sort === "experience_desc") sorted.sort((a,b) => b.yearsOfExperience - a.yearsOfExperience);
+      if(sort === "csat_desc") sorted.sort((a,b) => (b.csat || 0) - (a.csat || 0));
+      if(sort === "recent_activity") sorted.sort((a,b) => a.lastActiveDays - b.lastActiveDays);
+      return sorted;
+    }
+
+    function setActiveClass(){
+      const pairs = [
+        ["fieldSearch", $("searchQuery").value],
+        ["fieldRole", $("roleFilter").value],
+        ["fieldCategory", $("categoryFilter").value],
+        ["fieldLevel", $("levelFilter").value],
+        ["fieldCompany", $("companyFilter").value],
+        ["fieldExperience", $("experienceFilter").value],
+        ["fieldLanguage", $("languageFilter").value]
+      ];
+      pairs.forEach(([id,val]) => $(id).classList.toggle("active", !!val));
+    }
+
+    function activeFilterItems(){
+      const items = [];
+      if($("searchQuery").value.trim()) items.push({key:"searchQuery", label:"جستجو: " + $("searchQuery").value.trim()});
+      if($("roleFilter").value) items.push({key:"roleFilter", label:$("roleFilter").value});
+      if($("categoryFilter").value) items.push({key:"categoryFilter", label:$("categoryFilter").value});
+      if($("levelFilter").value) items.push({key:"levelFilter", label:$("levelFilter").value});
+      if($("companyFilter").value) items.push({key:"companyFilter", label:$("companyFilter").value});
+      if($("experienceFilter").value) items.push({key:"experienceFilter", label:$("experienceFilter").selectedOptions[0].textContent});
+      if($("languageFilter").value) items.push({key:"languageFilter", label:$("languageFilter").value});
+      return items;
+    }
+
+    function removeFilter(key){
+      $(key).value = "";
+      renderCards();
+      closeFilterDrawer();
+      track("filters_cleared");
+    }
+    window.removeFilter = removeFilter;
+
+    function renderActiveFilters(){
+      const items = activeFilterItems();
+      $("activeFilterRow").classList.toggle("show", items.length > 0);
+      $("activeFilters").innerHTML = items.map(item => `
+        <span class="active-chip">${item.label}<button onclick="removeFilter('${item.key}')" aria-label="حذف ${item.label}">×</button></span>
+      `).join("");
+    }
+
+    function renderCards(){
+      setActiveClass();
+      renderActiveFilters();
+      updateMobileFilterCount();
+
+      $("profileGrid").style.display = "grid";
+      $("emptyState").style.display = "none";
+      $("errorState").classList.remove("show");
+      $("loadingState").classList.remove("show");
+
+      if(discoveryState === "loading"){
+        $("profileGrid").style.display = "none";
+        renderSkeletonCards();
+        $("loadingState").classList.add("show");
+        $("resultCount").textContent = "در حال بارگذاری..";
+        return;
+      }
+
+      if(discoveryState === "error"){
+        $("profileGrid").style.display = "none";
+        $("errorState").classList.add("show");
+        $("resultCount").textContent = "";
+        track("discovery_error_seen");
+        return;
+      }
+
+      const results = applySort(profiles.filter(profileMatches));
+      $("resultCount").textContent = results.length ? formatter.format(results.length) + " نتیجه" : "";
+      $("emptyState").style.display = results.length ? "none" : "block";
+      if(!results.length) track("empty_state_seen", {selected_filters: activeFilterItems().map(i => i.label), sort_type: $("sortFilter").value});
+
+      $("profileGrid").innerHTML = results.map((p, index) => `
+        <article class="card" aria-label="کارت تجربه ${p.name}، ${p.roleFa}">
+          <button class="bookmark ${p.isSaved ? "saved" : ""}" aria-label="ذخیره برای بعد" onclick="saveProfile('${p.id}')">${bookmarkIcon(p.isSaved)}</button>
+
+          <header class="head">
+            <div class="avatar">${p.initials}</div>
+            <div class="identity">
+              <h3 class="name">${p.name}</h3>
+              <p class="role">${p.roleFa}</p>
+            </div>
+          </header>
+
+          <div class="trust">
+            <span class="chip level">${p.orgLevel}</span>
+            <span class="chip">${formatter.format(p.yearsOfExperience)} سال</span>
+            ${p.csat ? `<span class="chip csat" aria-label="رضایت گفت‌وگوها ${toFaDecimal(p.csat)} از ۵"><span class="star">★</span>${toFaDecimal(p.csat)}</span>` : ""}
+          </div>
+
+          <div class="inline-taxonomy">${p.jobCategoriesFa.slice(0,3).join(" · ")}${p.jobCategoriesFa.length > 3 ? " +" + formatter.format(p.jobCategoriesFa.length - 3) : ""}</div>
+          ${p.previousCompaniesFa.length ? `<div class="companies">${p.previousCompaniesFa.join(" · ")}</div>` : ""}
+          <p class="summary">${p.professionalSummary}</p>
+
+          <div class="divider"></div>
+
+          <div class="actions">
+            <button class="cta secondary" aria-pressed="${p.isFollowing}" onclick="followProfile('${p.id}')">${p.isFollowing ? "دنبال‌شده" : "دنبال کردن"}</button>
+            <button class="cta primary" onclick="openProfile('${p.id}')">دیدن تجربه</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function openProfile(id){
+      selectedProfile = profiles.find(p => p.id === id) || profiles[0];
+      selectedDuration = 30;
+      track("profile_opened", {profile_id:selectedProfile.id, role:selectedProfile.roleFa, org_level:selectedProfile.orgLevel, years_of_experience:selectedProfile.yearsOfExperience, csat:selectedProfile.csat});
+      navigate("profile");
+    }
+    function followProfile(id){
+      const p = profiles.find(x => x.id === id);
+      p.isFollowing = !p.isFollowing;
+      toast(p.isFollowing ? "دنبال شد." : "از دنبال‌شده‌ها حذف شد.");
+      track(p.isFollowing ? "profile_followed" : "profile_unfollowed", {profile_id:p.id, role:p.roleFa});
+      renderCards();
+    }
+    function saveProfile(id){
+      const p = profiles.find(x => x.id === id);
+      p.isSaved = !p.isSaved;
+      toast(p.isSaved ? "برای بعد ذخیره شد." : "از ذخیره‌شده‌ها حذف شد.");
+      track(p.isSaved ? "profile_saved" : "profile_unsaved", {profile_id:p.id, role:p.roleFa});
+      renderCards();
+    }
+    window.openProfile = openProfile; window.followProfile = followProfile; window.saveProfile = saveProfile;
+
+    function renderProfile(){
+      const p = selectedProfile;
+      $("profileContent").innerHTML = `
+        <div class="layout">
+          <div>
+            <div class="hero-profile">
+              <div class="profile-avatar">${p.initials}</div>
+              <div>
+                <h1 class="profile-name">${p.name}</h1>
+                <div style="color:var(--blue);font-weight:850">${p.roleFa}</div>
+                <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+                  <span class="chip level">${p.orgLevel}</span>
+                  <span class="chip">${formatter.format(p.yearsOfExperience)} سال سابقه</span>
+                  ${p.csat ? `<span class="chip csat"><span class="star">★</span>${toFaDecimal(p.csat)}</span>` : ""}
+                </div>
+              </div>
+            </div>
+            <div class="panel" style="margin-top:14px">
+              <h2>معرفی حرفه‌ای</h2><p>${p.professionalSummary}</p>
+            </div>
+            <div class="panel" style="margin-top:14px">
+              <h2>اطلاعات حرفه‌ای</h2>
+              <div class="row"><span class="k">رده سازمانی</span><span class="v">${p.orgLevel}</span></div>
+              <div class="row"><span class="k">سابقه کار</span><span class="v">${formatter.format(p.yearsOfExperience)} سال</span></div>
+              <div class="row"><span class="k">دسته‌بندی شغلی</span><span class="v">${p.jobCategoriesFa.join("، ")}</span></div>
+              <div class="row"><span class="k">شرکت‌های قبلی</span><span class="v">${p.previousCompaniesFa.length ? p.previousCompaniesFa.join("، ") : "شرکت قبلی ثبت نشده است"}</span></div>
+              <div class="row"><span class="k">زبان گفت‌وگو</span><span class="v">${p.languages.join("، ")}</span></div>
+            </div>
+            <div class="panel" style="margin-top:14px">
+              <h2>رضایت گفت‌وگوها</h2><p>${p.csat ? "★ " + toFaDecimal(p.csat) + " از ۵" : "هنوز بازخوردی ثبت نشده است."}</p><p>${p.review}</p>
+            </div>
+          </div>
+          <aside class="panel sticky">
+            <h2>درخواست گفت‌وگو</h2>
+            <p class="muted">زمان‌های آزاد در پروفایل نمایش داده نمی‌شود. بعد از ثبت درخواست، ارائه‌دهنده حداقل سه زمان پیشنهادی اعلام می‌کند.</p>
+            <div class="price-grid">
+              <div class="price-card"><span>۳۰ دقیقه</span><b>${toman(p.pricing[30])}</b></div>
+              <div class="price-card"><span>۱ ساعت</span><b>${toman(p.pricing[60])}</b></div>
+            </div>
+            <button class="btn primary" style="width:100%;margin-top:14px" onclick="navigate('request')">درخواست گفت‌وگو</button>
+          </aside>
+        </div>`;
+    }
+
+    document.addEventListener("click", e => {
+      const d = e.target.closest("[data-duration]");
+      if(!d) return;
+      selectedDuration = Number(d.dataset.duration);
+      document.querySelectorAll("[data-duration]").forEach(x => x.classList.toggle("selected", Number(x.dataset.duration) === selectedDuration));
+      renderRequestSummary();
+    });
+
+    function renderRequest(){ selectedDuration = 30; setTimeout(() => renderRequestSummary(), 0); }
+    function renderRequestSummary(){
+      const p = selectedProfile;
+      $("requestSummary").innerHTML = `
+        <h2>خلاصه درخواست</h2>
+        <div class="row"><span class="k">فرد</span><span class="v">${p.name}</span></div>
+        <div class="row"><span class="k">زمان گفت‌وگو</span><span class="v">${selectedDuration === 30 ? "۳۰ دقیقه" : "۱ ساعت"}</span></div>
+        <div class="row"><span class="k">هزینه</span><span class="v">${toman(p.pricing[selectedDuration])}</span></div>
+        <div class="req-box">بعد از ارسال درخواست، ارائه‌دهنده باید حداقل سه زمان پیشنهادی شامل روز و ساعت اعلام کند.</div>
+        <button class="btn primary" style="width:100%;margin-top:12px" onclick="submitRequest()">ارسال درخواست گفت‌وگو</button>`;
+    }
+    function submitRequest(){
+      const note = $("requestNote").value.trim();
+      requests.unshift({id:Date.now(),profile:selectedProfile,duration:selectedDuration,note,status:"pending",proposals:null});
+      toast("درخواست گفت‌وگو ارسال شد.");
+      track("conversation_request_started", {profile_id:selectedProfile.id, duration:selectedDuration});
+      navigate("conversations");
+    }
+    function renderConversations(){
+      if(!requests.length){
+        $("emptyConversations").style.display = "block";
+        $("conversationList").innerHTML = "";
+        return;
+      }
+      $("emptyConversations").style.display = "none";
+      $("conversationList").innerHTML = requests.map(r => `
+        <article class="panel">
+          <span class="chip ${r.status === "proposed" ? "level" : ""}">${r.status === "proposed" ? "زمان‌های پیشنهادی دریافت شده" : "در انتظار پیشنهاد زمان"}</span>
+          <h3 style="margin-top:12px">درخواست گفت‌وگو با ${r.profile.name}</h3>
+          <p style="color:var(--blue);font-weight:850">${r.profile.roleFa}</p>
+          <div class="row"><span class="k">زمان گفت‌وگو</span><span class="v">${r.duration === 30 ? "۳۰ دقیقه" : "۱ ساعت"}</span></div>
+          ${r.status === "pending" ? `<p class="muted">ارائه‌دهنده باید حداقل سه زمان پیشنهادی اعلام کند.</p><button class="btn secondary" onclick="simulateProposal(${r.id})">شبیه‌سازی دریافت زمان</button>` : `<button class="btn primary" onclick="openProposals(${r.id})">انتخاب زمان</button>`}
+          <button class="btn danger" onclick="cancelRequest(${r.id})" style="margin-top:8px">لغو درخواست</button>
+        </article>`).join("");
+    }
+    function simulateProposal(id){
+      const r = requests.find(x => x.id === id);
+      r.status = "proposed";
+      r.proposals = ["شنبه، ۱۰:۰۰", "دوشنبه، ۱۶:۰۰", "چهارشنبه، ۱۸:۳۰"];
+      toast("سه زمان پیشنهادی دریافت شد.");
+      renderConversations();
+    }
+    function openProposals(id){ selectedRequest = requests.find(x => x.id === id); selectedProposal = null; navigate("proposals"); }
+    function renderProposals(){
+      const r = selectedRequest; if(!r) return navigate("conversations");
+      $("proposalContent").innerHTML = `
+        <h2>درخواست گفت‌وگو با ${r.profile.name}</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          ${r.proposals.map(t => `<button class="choice ${selectedProposal === t ? "selected" : ""}" onclick="selectProposal('${t}')">${t}</button>`).join("")}
+        </div>
+        <div class="btns">
+          <button class="btn primary" ${selectedProposal ? "" : "disabled"} onclick="navigate('checkout')">ادامه به پرداخت</button>
+          <button class="btn danger" onclick="cancelRequest(${r.id})">لغو درخواست</button>
+        </div>`;
+    }
+    function selectProposal(time){ selectedProposal = time; renderProposals(); }
+    function cancelRequest(id){ requests = requests.filter(x => x.id !== id); toast("درخواست لغو شد."); navigate("conversations"); }
+    function renderCheckout(){
+      const r = selectedRequest, p = r.profile;
+      const price = p.pricing[r.duration];
+      const walletDeduction = Math.min(wallet, price);
+      const payable = Math.max(0, price - walletDeduction);
+      $("checkoutSummary").innerHTML = `
+        <div class="row"><span class="k">فرد</span><span class="v">${p.name}</span></div>
+        <div class="row"><span class="k">زمان انتخاب‌شده</span><span class="v">${selectedProposal}</span></div>
+        <div class="row"><span class="k">زمان گفت‌وگو</span><span class="v">${r.duration === 30 ? "۳۰ دقیقه" : "۱ ساعت"}</span></div>
+        <div class="row"><span class="k">توضیح تو</span><span class="v">${r.note || "ثبت نشده"}</span></div>
+        <div class="row"><span class="k">هزینه گفت‌وگو</span><span class="v">${toman(price)}</span></div>
+        <div class="row"><span class="k">پرداخت از کیف پول</span><span class="v">${toman(walletDeduction)}</span></div>
+        <div class="row"><span class="k">مبلغ پرداختی</span><span class="v">${toman(payable)}</span></div>`;
+      $("payBtn").onclick = () => { r.status = "scheduled"; r.finalTime = selectedProposal; wallet = Math.max(0, wallet - walletDeduction); toast("گفت‌وگو ثبت شد."); navigate("conversations"); };
+    }
+
+    function updateMobileFilterCount(){
+      const count = activeFilterItems().length;
+      const el = $("mobileFilterCount");
+      if(!el) return;
+      el.textContent = formatter.format(count);
+      el.classList.toggle("show", count > 0);
+    }
+
+    function renderMyExperience(){
+      const followed = profiles.filter(p => p.isFollowing);
+      const saved = profiles.filter(p => p.isSaved);
+      const cards = [
+        ...followed.map(p => ({...p, type:"دنبال‌شده"})),
+        ...saved.filter(p => !followed.some(f => f.id === p.id)).map(p => ({...p, type:"ذخیره‌شده"}))
+      ];
+
+      const grid = $("networkGrid");
+      const empty = $("networkEmpty");
+      if(!grid || !empty) return;
+
+      grid.innerHTML = cards.map(p => `
+        <div class="network-card">
+          <b>${p.name}</b>
+          <span>${p.type} · ${p.roleFa}</span>
+        </div>
+      `).join("");
+
+      empty.style.display = cards.length ? "none" : "block";
+    }
+
+    function clearAllFilters(){
+      const previousFilters = activeFilterItems().map(i => i.label);
+      $("searchQuery").value = "";
+      $("roleFilter").value = "";
+      $("categoryFilter").value = "";
+      $("levelFilter").value = "";
+      $("companyFilter").value = "";
+      $("experienceFilter").value = "";
+      $("languageFilter").value = "";
+      $("sortFilter").value = "relevant";
+      renderCards();
+      closeFilterDrawer();
+      track("filters_cleared", {selected_filters_before_clear: previousFilters});
+    }
+
+    window.navigate = navigate; window.submitRequest = submitRequest; window.simulateProposal = simulateProposal; window.renderMyExperience = renderMyExperience;
+    window.openProposals = openProposals; window.selectProposal = selectProposal; window.cancelRequest = cancelRequest; window.clearAllFilters = clearAllFilters;
+
+    ["searchQuery","roleFilter","categoryFilter","levelFilter","companyFilter","experienceFilter","languageFilter","sortFilter"].forEach(id => {
+      document.addEventListener("input", e => {
+        if(e.target && e.target.id === id){
+          if(id === "searchQuery") track("search_submitted", {query:e.target.value});
+          renderCards();
+        }
+      });
+      document.addEventListener("change", e => {
+        if(e.target && e.target.id === id){
+          if(id === "sortFilter") track("sort_changed", {sort_type:e.target.value});
+          else track("filter_applied", {filter_name:id, filter_value:e.target.value});
+          renderCards();
+        }
+      });
+    });
+
+
+    document.addEventListener("click", e => {
+      const howCta = e.target.closest("#how [data-nav]");
+      if(howCta && typeof track === "function"){
+        track(howCta.dataset.nav === "discover" ? "how_primary_cta_clicked" : "how_build_profile_clicked", {
+          target: howCta.dataset.nav
+        });
+      }
+    });
+
+
+    let myExperienceTab = "overview";
+    let experienceProfileStatus = "active";
+
+    const buildPricingByLevel = {
+      "کارآموز": {30:100000, 60:250000},
+      "کارشناس": {30:300000, 60:500000},
+      "کارشناس ارشد": {30:500000, 60:900000},
+      "مدیر میانی": {30:1000000, 60:1800000},
+      "مدیر ارشد": {30:1000000, 60:1800000},
+      "مدیر کسب و کار": {30:4000000, 60:7000000},
+      "معاونت": {30:2500000, 60:4000000}
+    };
+
+    const myExperienceProfile = {
+      id:"me",
+      name:"تجربه تو",
+      initials:"ت",
+      roleFa:"مدیر محصول",
+      orgLevel:"مدیر میانی",
+      yearsOfExperience:8,
+      csat:4.8,
+      followers:186,
+      conversations:12,
+      lastActiveDays:0,
+      previousCompaniesFa:["اسنپ","دیجی‌کالا"],
+      jobCategoriesFa:["محصول","تحلیل داده","تصمیم‌سازی"],
+      professionalSummary:"تجربه در تیم‌های محصول و تحلیل داده، با تمرکز بر تصمیم‌سازی محصولی.",
+      languages:["فارسی"],
+      pricing:{30:1000000,60:1800000},
+      review:"بازخوردها نشان می‌دهند گفت‌وگوها روشن و کاربردی بوده‌اند.",
+      isFollowing:false,
+      isSaved:false
+    };
+
+    const myExperienceStats = {
+      profileViews:248,
+      followers:186,
+      incomingRequests:2,
+      completedTalks:12,
+      csat:4.8,
+      availableEarnings:8400000,
+      pendingSettlement:1800000,
+      totalEarnings:14200000
+    };
+
+    function updateBuildPricing(){
+      const level = $("buildOrgLevel")?.value;
+      const price = buildPricingByLevel[level] || {30:null, 60:null};
+      if($("buildPrice30")) $("buildPrice30").textContent = price[30] ? toman(price[30]) : "بعداً تعیین می‌شود";
+      if($("buildPrice60")) $("buildPrice60").textContent = price[60] ? toman(price[60]) : "بعداً تعیین می‌شود";
+    }
+
+    function submitBuildProfile(){
+      updateBuildPricing();
+      experienceProfileStatus = "pending_review";
+      toast("پروفایل تجربه برای بررسی ارسال شد.");
+      navigate("myExperience");
+    }
+
+    function myExperienceStatusCopy(){
+      const map = {
+        none:{label:"پروفایل تجربه ساخته نشده", title:"تجربه‌ات می‌تواند به تصمیم کسی کمک کند.", body:"پروفایل تجربه بساز تا آدم‌هایی که به مسیر تو نیاز دارند بتوانند پیدایت کنند."},
+        pending_review:{label:"در انتظار بررسی", title:"پروفایل تجربه تو در انتظار بررسی است.", body:"بعد از تأیید، در کشف تجربه‌ها نمایش داده می‌شود."},
+        active:{label:"پروفایل تجربه فعال", title:"پروفایل تجربه تو فعال است.", body:"آدم‌ها می‌توانند تجربه‌ات را در کشف تجربه‌ها ببینند، دنبالت کنند و برای گفت‌وگو درخواست بدهند."},
+        inactive:{label:"غیرفعال", title:"پروفایل تجربه تو غیرفعال است.", body:"فعلاً در کشف تجربه‌ها نمایش داده نمی‌شوی، اما هر زمان خواستی می‌توانی دوباره فعالش کنی."}
+      };
+      return map[experienceProfileStatus] || map.active;
+    }
+
+    function renderMyExperience(){
+      renderMyExperienceStatus();
+      renderMyExperienceSummary();
+      renderMyExperienceTabs();
+      renderMyExperienceMain();
+    }
+
+    function renderMyExperienceStatus(){
+      const copy = myExperienceStatusCopy();
+      if($("myExperienceHeaderStatus")) $("myExperienceHeaderStatus").textContent = copy.label;
+      $("myExperienceStatusCard").innerHTML = `
+        <div class="myexp-status-card-v21">
+          <div class="myexp-status-main-v21">
+            <h2>${copy.title}</h2>
+            <p>${copy.body}</p>
+            <div class="myexp-status-actions-v21">
+              ${experienceProfileStatus === "none" ? `<button class="btn primary" data-nav="buildExperience">ساخت پروفایل تجربه</button>` : `<button class="btn primary" data-nav="buildExperience">ویرایش پروفایل تجربه</button>`}
+              ${experienceProfileStatus === "active" ? `<button class="btn secondary" onclick="previewMyExperienceProfile()">مشاهده پروفایل تجربه</button>` : ""}
+              ${experienceProfileStatus === "active" ? `<button class="btn secondary" onclick="deactivateExperienceProfile()">غیرفعال کردن موقت</button>` : ""}
+              ${experienceProfileStatus === "inactive" ? `<button class="btn secondary" onclick="reactivateExperienceProfile()">فعال‌سازی دوباره</button>` : ""}
+            </div>
+          </div>
+          <div class="myexp-profile-preview-v21">
+            <div class="myexp-profile-head-v21">
+              <div class="myexp-avatar-v21">${myExperienceProfile.initials}</div>
+              <div><b>${myExperienceProfile.name}</b><span>${myExperienceProfile.roleFa} · ${myExperienceProfile.orgLevel}</span></div>
+            </div>
+            <div class="myexp-mini-badges-v21">
+              <span>${formatter.format(myExperienceProfile.yearsOfExperience)} سال سابقه</span>
+              <span>★ ${toFaDecimal(myExperienceProfile.csat)}</span>
+              <span>${myExperienceProfile.jobCategoriesFa[0]}</span>
+            </div>
+            <p>${myExperienceProfile.professionalSummary}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMyExperienceSummary(){
+      $("myExperienceSummary").innerHTML = `
+        <div class="myexp-summary-card-v21"><span>وضعیت پروفایل</span><b>${experienceProfileStatus === "active" ? "فعال" : "—"}</b><small>${experienceProfileStatus === "active" ? "در کشف تجربه‌ها دیده می‌شوی." : "نیازمند بررسی یا فعال‌سازی."}</small></div>
+        <div class="myexp-summary-card-v21"><span>درخواست‌های جدید</span><b>${formatter.format(2)}</b><small>درخواست‌هایی که برای تجربه تو آمده‌اند.</small></div>
+        <div class="myexp-summary-card-v21"><span>دنبال‌کننده‌ها</span><b>${formatter.format(myExperienceStats.followers)}</b><small>آدم‌هایی که تجربه تو را دنبال می‌کنند.</small></div>
+        <div class="myexp-summary-card-v21"><span>درآمد قابل برداشت</span><b>${formatter.format(myExperienceStats.availableEarnings)}</b><small>تومان، از گفت‌وگوهای انجام‌شده.</small></div>
+      `;
+    }
+
+    function renderMyExperienceTabs(){
+      document.querySelectorAll("[data-myexp-tab]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.myexpTab === myExperienceTab);
+      });
+    }
+
+    function renderMyExperienceMain(){
+      if(myExperienceTab === "overview") return renderMyExperienceOverview();
+      if(myExperienceTab === "profile") return renderMyExperienceProfileTab();
+      if(myExperienceTab === "requests") return renderMyExperienceRequestsTab();
+      if(myExperienceTab === "network") return renderMyExperienceNetworkTab();
+      if(myExperienceTab === "earnings") return renderMyExperienceEarningsTab();
+      if(myExperienceTab === "reviews") return renderMyExperienceReviewsTab();
+    }
+
+    function renderMyExperienceOverview(){
+      $("myExperienceMain").innerHTML = `
+        <div class="myexp-card-v21">
+          <h2>درخواست‌های جدید برای تجربه من</h2>
+          <p>درخواست‌هایی که دیگران برای گفت‌وگو با تو فرستاده‌اند.</p>
+          ${renderIncomingRequestsMini()}
+        </div>
+        <div class="myexp-card-v21">
+          <h2>عملکرد تجربه من</h2>
+          <p>نمای کلی از بازدید، درخواست‌ها، رضایت و درآمد گفت‌وگوها.</p>
+          ${renderPerformanceGrid()}
+        </div>
+        <div class="myexp-card-v21">
+          <h2>شبکه تجربه من</h2>
+          <p>آدم‌هایی که دنبال کرده‌ای با پروفایل‌هایی که فقط برای بعد ذخیره کرده‌ای فرق دارند.</p>
+          ${renderNetworkPreview()}
+        </div>
+        <div class="myexp-card-v21">
+          <h2>درآمد گفت‌وگوها</h2>
+          <p>درآمد فقط برای گفت‌وگوهای انجام‌شده و قابل تسویه محاسبه می‌شود.</p>
+          ${renderEarningsGrid()}
+          <div class="myexp-status-actions-v21"><button class="btn secondary" onclick="setMyExperienceTab('earnings')">دیدن جزئیات درآمد</button></div>
+        </div>
+      `;
+    }
+
+    function renderMyExperienceProfileTab(){
+      $("myExperienceMain").innerHTML = `
+        <div class="myexp-card-v21">
+          <h2>پروفایل تجربه</h2>
+          <p>این اطلاعات مشخص می‌کند تجربه تو در کشف تجربه‌ها چطور دیده شود.</p>
+          <div class="row"><span class="k">نقش</span><span class="v">${myExperienceProfile.roleFa}</span></div>
+          <div class="row"><span class="k">رده سازمانی</span><span class="v">${myExperienceProfile.orgLevel}</span></div>
+          <div class="row"><span class="k">سابقه کار</span><span class="v">${formatter.format(myExperienceProfile.yearsOfExperience)} سال</span></div>
+          <div class="row"><span class="k">دسته‌بندی شغلی</span><span class="v">${myExperienceProfile.jobCategoriesFa.join("، ")}</span></div>
+          <div class="row"><span class="k">شرکت‌های قبلی</span><span class="v">${myExperienceProfile.previousCompaniesFa.join("، ")}</span></div>
+          <div class="myexp-status-actions-v21"><button class="btn primary" data-nav="buildExperience">ویرایش پروفایل تجربه</button><button class="btn secondary" onclick="previewMyExperienceProfile()">مشاهده پروفایل تجربه</button></div>
+        </div>
+      `;
+    }
+
+    function renderIncomingRequestsMini(){
+      return `
+        <div class="myexp-request-list-v21">
+          <div class="myexp-request-card-v21">
+            <div><b>سارا م. برای گفت‌وگو با تو درخواست داده است.</b><span>طراح محصول · ۳۰ دقیقه · می‌خواهد درباره مسیر رشد از طراحی به Product بیشتر بداند.</span></div>
+            <div class="myexp-request-actions-v21"><button class="btn primary" onclick="toast('برای این درخواست، پیشنهاد زمان ثبت شد.')">پیشنهاد زمان</button><button class="btn secondary" onclick="navigate('conversations')">جزئیات</button></div>
+          </div>
+          <div class="myexp-request-card-v21">
+            <div><b>مینا پ. برای گفت‌وگو با تو درخواست داده است.</b><span>کارشناس رشد · ۱ ساعت · می‌خواهد درباره تصمیم بین Growth و Product گفت‌وگو کند.</span></div>
+            <div class="myexp-request-actions-v21"><button class="btn primary" onclick="toast('برای این درخواست، پیشنهاد زمان ثبت شد.')">پیشنهاد زمان</button><button class="btn secondary" onclick="navigate('conversations')">جزئیات</button></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMyExperienceRequestsTab(){
+      $("myExperienceMain").innerHTML = `<div class="myexp-card-v21"><h2>درخواست‌های مربوط به تجربه من</h2><p>برای هر درخواست باید حداقل سه زمان پیشنهاد بدهی یا آن را رد کنی.</p>${renderIncomingRequestsMini()}</div>`;
+    }
+
+    function renderMyExperienceNetworkTab(){
+      const followed = profiles.filter(p => p.isFollowing);
+      const saved = profiles.filter(p => p.isSaved);
+      $("myExperienceMain").innerHTML = `
+        <div class="myexp-card-v21"><h2>دنبال‌شده‌ها</h2><p>آدم‌هایی که تجربه‌شان به مسیرت مرتبط است.</p><div class="myexp-network-list-v21">${followed.length ? followed.map(p => renderNetworkPersonCard(p, "دنبال‌شده")).join("") : `<div class="myexp-empty-v21">هنوز کسی را دنبال نکرده‌ای.</div>`}</div></div>
+        <div class="myexp-card-v21"><h2>ذخیره‌شده‌ها</h2><p>پروفایل‌هایی که می‌خواهی بعداً بررسی کنی.</p><div class="myexp-network-list-v21">${saved.length ? saved.map(p => renderNetworkPersonCard(p, "ذخیره‌شده")).join("") : `<div class="myexp-empty-v21">هنوز پروفایلی را ذخیره نکرده‌ای.</div>`}</div></div>
+      `;
+    }
+
+    function renderNetworkPreview(){
+      const followed = profiles.filter(p => p.isFollowing).slice(0,2);
+      const saved = profiles.filter(p => p.isSaved).slice(0,2);
+      const combined = [...followed.map(p => ({...p, networkLabel:"دنبال‌شده"})), ...saved.filter(p => !followed.some(f => f.id === p.id)).map(p => ({...p, networkLabel:"ذخیره‌شده"}))].slice(0,3);
+      if(!combined.length) return `<div class="myexp-empty-v21">هنوز کسی را دنبال یا ذخیره نکرده‌ای. از کشف تجربه‌ها شروع کن.</div>`;
+      return `<div class="myexp-network-list-v21">${combined.map(p => renderNetworkPersonCard(p, p.networkLabel)).join("")}</div>`;
+    }
+
+    function renderNetworkPersonCard(p, label){
+      return `<div class="myexp-network-card-v21"><div class="myexp-network-person-v21"><div class="myexp-avatar-v21">${p.initials}</div><div><b>${p.name}</b><span>${label} · ${p.roleFa}</span></div></div><button class="btn secondary" onclick="openProfile('${p.id}')">دیدن تجربه</button></div>`;
+    }
+
+    function renderPerformanceGrid(){
+      return `<div class="myexp-performance-grid-v21"><div class="myexp-performance-item-v21"><span>بازدید پروفایل</span><b>${formatter.format(myExperienceStats.profileViews)}</b></div><div class="myexp-performance-item-v21"><span>دنبال‌کننده</span><b>${formatter.format(myExperienceStats.followers)}</b></div><div class="myexp-performance-item-v21"><span>درخواست گفت‌وگو</span><b>${formatter.format(myExperienceStats.incomingRequests)}</b></div><div class="myexp-performance-item-v21"><span>رضایت گفت‌وگوها</span><b>★ ${toFaDecimal(myExperienceStats.csat)}</b></div></div>`;
+    }
+
+    function renderEarningsGrid(){
+      return `<div class="myexp-earnings-grid-v21"><div class="myexp-earning-card-v21"><span>قابل برداشت</span><b>${toman(myExperienceStats.availableEarnings)}</b></div><div class="myexp-earning-card-v21"><span>در حال تسویه</span><b>${toman(myExperienceStats.pendingSettlement)}</b></div><div class="myexp-earning-card-v21"><span>کل درآمد</span><b>${toman(myExperienceStats.totalEarnings)}</b></div></div>`;
+    }
+
+    function renderMyExperienceEarningsTab(){
+      $("myExperienceMain").innerHTML = `<div class="myexp-card-v21"><h2>درآمد گفت‌وگوها</h2><p>درآمد این بخش مربوط به گفت‌وگوهای انجام‌شده است.</p>${renderEarningsGrid()}<div class="myexp-status-actions-v21"><button class="btn primary" onclick="toast('درخواست برداشت ثبت شد.')">درخواست برداشت</button><button class="btn secondary" onclick="toast('جزئیات تسویه در نسخه بعدی تکمیل می‌شود.')">جزئیات تسویه</button></div></div>`;
+    }
+
+    function renderMyExperienceReviewsTab(){
+      $("myExperienceMain").innerHTML = `<div class="myexp-card-v21"><h2>بازخوردهای گفت‌وگوها</h2><p>بازخوردها به دیگران کمک می‌کند تجربه تو را بهتر بسنجند.</p><div class="myexp-review-list-v21"><div class="myexp-review-card-v21"><b>گفت‌وگو درباره مسیر Product</b><span>★ ۵ از ۵</span><p>گفت‌وگو روشن، کاربردی و دقیق بود.</p></div><div class="myexp-review-card-v21"><b>تصمیم بین Product و BI</b><span>★ ۴ از ۵</span><p>کمک کرد مسیر بعدی را واقع‌بینانه‌تر ببینم.</p></div></div></div>`;
+    }
+
+    function setMyExperienceTab(tab){
+      myExperienceTab = tab;
+      renderMyExperience();
+    }
+
+    function previewMyExperienceProfile(){
+      selectedProfile = myExperienceProfile;
+      navigate("profile");
+    }
+
+    function deactivateExperienceProfile(){
+      if(!confirm("پروفایل تجربه موقتاً غیرفعال شود؟")) return;
+      experienceProfileStatus = "inactive";
+      toast("پروفایل تجربه غیرفعال شد.");
+      renderMyExperience();
+    }
+
+    function reactivateExperienceProfile(){
+      experienceProfileStatus = "active";
+      toast("پروفایل تجربه دوباره فعال شد.");
+      renderMyExperience();
+    }
+
+    document.addEventListener("click", e => {
+      const tab = e.target.closest("[data-myexp-tab]");
+      if(!tab) return;
+      setMyExperienceTab(tab.dataset.myexpTab);
+    });
+
+    window.updateBuildPricing = updateBuildPricing;
+    window.submitBuildProfile = submitBuildProfile;
+    window.setMyExperienceTab = setMyExperienceTab;
+    window.previewMyExperienceProfile = previewMyExperienceProfile;
+    window.deactivateExperienceProfile = deactivateExperienceProfile;
+    window.reactivateExperienceProfile = reactivateExperienceProfile;
+
+
+    // V22 Conversation Center and cross-page interaction mapping
+    let conversationTab = "all";
+    let selectedConversation = null;
+    let selectedConversationTime = null;
+    let feedbackRating = 0;
+    let conversationPageState = new URLSearchParams(location.search).get("convState") || "ready";
+
+    const conversationStatus = {
+      pending_provider_response: {label:"در انتظار پیشنهاد زمان", tone:"neutral", next:"منتظر زمان‌های پیشنهادی هستی. وقتی زمان‌ها ارسال شوند، می‌توانی یکی را انتخاب کنی یا درخواست را لغو کنی."},
+      incoming_request: {label:"درخواست دریافتی", tone:"incoming", next:"این فرد برای گفت‌وگو با تو درخواست داده است. حداقل سه زمان پیشنهاد بده یا درخواست را رد کن."},
+      time_options_sent: {label:"زمان‌های پیشنهادی دریافت شده", tone:"action", next:"سه زمان پیشنهادی دریافت شده است. یکی را انتخاب کن یا درخواست را لغو کن."},
+      provider_time_options_sent: {label:"زمان‌ها ارسال شدند", tone:"neutral", next:"زمان‌ها را پیشنهاد داده‌ای. حالا منتظر انتخاب درخواست‌دهنده هستی."},
+      payment_pending: {label:"در انتظار نهایی‌سازی", tone:"action", next:"زمان انتخاب شده است. برای نهایی‌شدن گفت‌وگو، پرداخت را کامل کن."},
+      scheduled: {label:"گفت‌وگوی آینده", tone:"scheduled", next:"گفت‌وگو نهایی شده و در برنامه تو قرار گرفته است."},
+      feedback_pending: {label:"تمام‌شده", tone:"done", next:"این گفت‌وگو تمام شده است. اگر خواستی، می‌توانی بازخورد ثبت کنی."},
+      completed: {label:"انجام‌شده", tone:"done", next:"این گفت‌وگو کامل شده و بازخورد ثبت شده است."},
+      cancelled: {label:"لغو شده", tone:"done", next:"این درخواست لغو شده است."},
+      rejected: {label:"رد شده", tone:"done", next:"این درخواست رد شده است."},
+      expired: {label:"منقضی شده", tone:"done", next:"زمان پاسخ به این درخواست گذشته است."}
+    };
+
+    const seededConversations = [
+      {
+        id:"conv-1",
+        direction:"outgoing",
+        status:"time_options_sent",
+        profile:profiles[0],
+        duration:30,
+        note:"می‌خواهم درباره ورود جدی‌تر به Product و تصمیم بین چند مسیر حرف بزنم.",
+        proposedTimes:["شنبه، ۱۰:۰۰","دوشنبه، ۱۶:۰۰","چهارشنبه، ۱۸:۳۰"],
+        createdAt:"امروز"
+      },
+      {
+        id:"conv-2",
+        direction:"incoming",
+        status:"incoming_request",
+        requester:{name:"سارا م.", initials:"س", roleFa:"طراح محصول"},
+        profile:{name:"تجربه تو", initials:"ت", roleFa:"مدیر محصول", orgLevel:"مدیر میانی"},
+        duration:30,
+        note:"می‌خواهم درباره مسیر رشد از طراحی به Product بیشتر بدانم.",
+        createdAt:"دیروز"
+      },
+      {
+        id:"conv-3",
+        direction:"outgoing",
+        status:"scheduled",
+        profile:profiles[2],
+        duration:60,
+        note:"گفت‌وگو درباره BI و تصمیم‌گیری داده‌محور.",
+        selectedTime:"دوشنبه، ۱۶:۰۰",
+        createdAt:"۲ روز پیش"
+      },
+      {
+        id:"conv-4",
+        direction:"outgoing",
+        status:"feedback_pending",
+        profile:profiles[1],
+        duration:30,
+        note:"بررسی پورتفولیو و مسیر طراحی محصول.",
+        selectedTime:"چهارشنبه گذشته، ۱۸:۳۰",
+        createdAt:"هفته گذشته"
+      },
+      {
+        id:"conv-5",
+        direction:"outgoing",
+        status:"pending_provider_response",
+        profile:profiles[4],
+        duration:60,
+        note:"می‌خواهم درباره مدیریت تیم فنی و همکاری با محصول حرف بزنم.",
+        createdAt:"امروز"
+      }
+    ];
+
+    let conversationStore = [...seededConversations];
+
+    function convParticipant(c){ return c.direction === "incoming" ? c.requester : c.profile; }
+    function convDirectionLabel(c){ return c.direction === "incoming" ? "درخواست دریافتی" : "درخواست من"; }
+    function convRequiresAction(c){ return ["incoming_request","time_options_sent","payment_pending","feedback_pending"].includes(c.status); }
+    function convIsScheduled(c){ return ["scheduled","payment_pending"].includes(c.status); }
+    function convIsCompleted(c){ return ["feedback_pending","completed"].includes(c.status); }
+
+    function filteredConversations(){
+      const items = [...conversationStore];
+      if(conversationTab === "action") return items.filter(convRequiresAction);
+      if(conversationTab === "outgoing") return items.filter(c => c.direction === "outgoing");
+      if(conversationTab === "incoming") return items.filter(c => c.direction === "incoming");
+      if(conversationTab === "scheduled") return items.filter(convIsScheduled);
+      if(conversationTab === "completed") return items.filter(convIsCompleted);
+      return items;
+    }
+
+    function renderConversationSummary(){
+      const actionCount = conversationStore.filter(convRequiresAction).length;
+      const proposalCount = conversationStore.filter(c => c.status === "time_options_sent").length;
+      const scheduledCount = conversationStore.filter(c => c.status === "scheduled").length;
+      const feedbackCount = conversationStore.filter(c => c.status === "feedback_pending").length;
+
+      $("conversationSummary").innerHTML = `
+        <div class="conv-summary-card-v22"><span>نیازمند اقدام</span><b>${formatter.format(actionCount)}</b><small>درخواست‌هایی که باید به آن‌ها پاسخ بدهی.</small></div>
+        <div class="conv-summary-card-v22"><span>زمان پیشنهادی</span><b>${formatter.format(proposalCount)}</b><small>درخواست‌هایی که آماده انتخاب زمان هستند.</small></div>
+        <div class="conv-summary-card-v22"><span>گفت‌وگوی آینده</span><b>${formatter.format(scheduledCount)}</b><small>گفت‌وگوهایی که نهایی شده‌اند.</small></div>
+        <div class="conv-summary-card-v22"><span>بازخورد در انتظار</span><b>${formatter.format(feedbackCount)}</b><small>گفت‌وگوهایی که نیاز به بازخورد دارند.</small></div>
+      `;
+    }
+
+    function renderConversationLoading(){
+      $("conversationLoading").innerHTML = Array.from({length:4}).map(() => `<div class="conv-skeleton-v22"></div>`).join("");
+    }
+
+    function renderConversations(){
+      renderConversationSummary();
+
+      document.querySelectorAll("[data-conv-tab]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.convTab === conversationTab);
+      });
+
+      $("conversationList").innerHTML = "";
+      $("conversationLoading").classList.remove("show");
+      $("conversationError").classList.remove("show");
+      $("emptyConversations").classList.remove("show");
+
+      if(conversationPageState === "loading"){
+        renderConversationLoading();
+        $("conversationLoading").classList.add("show");
+        return;
+      }
+
+      if(conversationPageState === "error"){
+        $("conversationError").classList.add("show");
+        return;
+      }
+
+      const items = filteredConversations();
+      if(!items.length){
+        $("emptyConversations").classList.add("show");
+        return;
+      }
+
+      $("conversationList").innerHTML = items.map(c => renderConversationCard(c)).join("");
+    }
+
+    function renderConversationCard(c){
+      const st = conversationStatus[c.status] || conversationStatus.pending_provider_response;
+      const p = convParticipant(c);
+      const metaTime = c.selectedTime ? `<span>${c.selectedTime}</span>` : "";
+      return `
+        <article class="conv-card-v22" aria-label="گفت‌وگو با ${p.name}">
+          <div class="conv-card-main-v22">
+            <div class="conv-card-top-v22">
+              <span class="conv-status-v22 ${st.tone}">${st.label}</span>
+              <span class="conv-direction-v22">${convDirectionLabel(c)}</span>
+              ${convRequiresAction(c) ? `<span class="conv-status-v22 action">نیازمند اقدام</span>` : ""}
+            </div>
+            <div class="conv-person-row-v22">
+              <div class="conv-avatar-v22">${p.initials || "?"}</div>
+              <div>
+                <h3>${p.name}</h3>
+                <p>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</p>
+              </div>
+            </div>
+            <div class="conv-meta-v22">
+              <span>${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              <span>${c.createdAt || ""}</span>
+              ${metaTime}
+            </div>
+            <p class="conv-next-v22">${st.next}</p>
+          </div>
+          <div class="conv-actions-v22">
+            ${renderPrimaryConversationAction(c)}
+            <div class="conv-secondary-row-v22">
+              <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+              ${canCancelConversation(c) ? `<button class="btn danger" onclick="cancelConversation('${c.id}')">لغو</button>` : ""}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderPrimaryConversationAction(c){
+      if(c.status === "incoming_request") return `<button class="btn primary" onclick="openTimeProposal('${c.id}')">پیشنهاد زمان</button><button class="btn secondary" onclick="rejectConversation('${c.id}')">رد درخواست</button>`;
+      if(c.status === "time_options_sent") return `<button class="btn primary" onclick="openConversationProposals('${c.id}')">انتخاب زمان</button>`;
+      if(c.status === "payment_pending") return `<button class="btn primary" onclick="payConversation('${c.id}')">پرداخت و نهایی‌سازی</button>`;
+      if(c.status === "feedback_pending") return `<button class="btn primary" onclick="openConversationFeedback('${c.id}')">ثبت بازخورد</button>`;
+      if(c.status === "scheduled") return `<button class="btn primary" onclick="openConversationDetail('${c.id}')">دیدن جزئیات</button>`;
+      return `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری درخواست</button>`;
+    }
+
+    function canCancelConversation(c){ return ["pending_provider_response","time_options_sent","payment_pending","incoming_request"].includes(c.status); }
+
+    function openConversationDetail(id){
+      selectedConversation = conversationStore.find(c => c.id === id);
+      navigate("conversationDetail");
+    }
+
+    function renderConversationDetail(){
+      const c = selectedConversation;
+      if(!c) return navigate("conversations");
+      const p = convParticipant(c);
+      const st = conversationStatus[c.status] || conversationStatus.pending_provider_response;
+
+      $("conversationDetailContent").innerHTML = `
+        <div class="conv-detail-grid-v22">
+          <div>
+            <div class="conv-detail-hero-v22">
+              <div class="conv-card-top-v22">
+                <span class="conv-status-v22 ${st.tone}">${st.label}</span>
+                <span class="conv-direction-v22">${convDirectionLabel(c)}</span>
+                ${convRequiresAction(c) ? `<span class="conv-status-v22 action">نیازمند اقدام</span>` : ""}
+              </div>
+              <div class="conv-person-row-v22">
+                <div class="conv-avatar-v22">${p.initials || "?"}</div>
+                <div>
+                  <h3>${p.name}</h3>
+                  <p>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</p>
+                </div>
+              </div>
+              <p class="conv-next-v22">${st.next}</p>
+            </div>
+
+            <div class="panel">
+              <h2>جزئیات درخواست</h2>
+              <div class="row"><span class="k">مدت گفت‌وگو</span><span class="v">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span></div>
+              <div class="row"><span class="k">زمان انتخاب‌شده</span><span class="v">${c.selectedTime || "هنوز انتخاب نشده است"}</span></div>
+              <div class="row"><span class="k">توضیح</span><span class="v">${c.note || "ثبت نشده"}</span></div>
+            </div>
+
+            <div class="panel" style="margin-top:14px">
+              <h2>جریان گفت‌وگو</h2>
+              <div class="conv-timeline-v22">
+                <div class="conv-timeline-step-v22"><i>۱</i><div><b>درخواست ثبت شد</b><span>درخواست گفت‌وگو ساخته شد.</span></div></div>
+                <div class="conv-timeline-step-v22"><i>۲</i><div><b>زمان هماهنگ می‌شود</b><span>ارائه‌دهنده حداقل سه زمان پیشنهاد می‌دهد.</span></div></div>
+                <div class="conv-timeline-step-v22"><i>۳</i><div><b>نهایی‌سازی</b><span>بعد از انتخاب زمان، پرداخت انجام می‌شود.</span></div></div>
+                <div class="conv-timeline-step-v22"><i>۴</i><div><b>گفت‌وگو و بازخورد</b><span>بعد از گفت‌وگو، بازخورد ثبت می‌شود.</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="panel sticky">
+            <h2>اقدام بعدی</h2>
+            <p class="muted">${st.next}</p>
+            <div class="btns">${renderPrimaryConversationAction(c)}</div>
+            <button class="btn secondary" style="width:100%;margin-top:8px" onclick="navigate('conversations')">بازگشت به گفت‌وگوها</button>
+          </aside>
+        </div>
+      `;
+    }
+
+    function openTimeProposal(id){
+      selectedConversation = conversationStore.find(c => c.id === id);
+      navigate("timeProposal");
+    }
+
+    function submitTimeOptions(){
+      if(!selectedConversation) return navigate("conversations");
+      const times = [
+        `${$("timeDay1").value}، ${$("timeHour1").value}`,
+        `${$("timeDay2").value}، ${$("timeHour2").value}`,
+        `${$("timeDay3").value}، ${$("timeHour3").value}`
+      ].filter(Boolean);
+      selectedConversation.proposedTimes = times;
+      selectedConversation.status = "provider_time_options_sent";
+      toast("زمان‌های پیشنهادی ارسال شدند.");
+      navigate("conversations");
+    }
+
+    function openConversationProposals(id){
+      selectedConversation = conversationStore.find(c => c.id === id);
+      selectedConversationTime = null;
+      navigate("conversationProposals");
+    }
+
+    function renderConversationProposals(){
+      const c = selectedConversation;
+      if(!c) return navigate("conversations");
+      $("conversationProposalContent").innerHTML = `
+        <h2>زمان‌های پیشنهادی</h2>
+        <div class="proposal-options-v22">
+          ${(c.proposedTimes || []).map(t => `<button class="proposal-option-v22 ${selectedConversationTime === t ? "selected" : ""}" onclick="selectConversationTime('${t}')">${t}</button>`).join("")}
+        </div>
+        <div class="btns">
+          <button class="btn primary" ${selectedConversationTime ? "" : "disabled"} onclick="confirmConversationTime()">ادامه به نهایی‌سازی</button>
+          <button class="btn danger" onclick="cancelConversation('${c.id}')">لغو درخواست</button>
+        </div>
+      `;
+    }
+
+    function selectConversationTime(time){
+      selectedConversationTime = time;
+      renderConversationProposals();
+    }
+
+    function confirmConversationTime(){
+      if(!selectedConversation || !selectedConversationTime) return;
+      selectedConversation.selectedTime = selectedConversationTime;
+      selectedConversation.status = "payment_pending";
+      toast("زمان انتخاب شد. گفت‌وگو آماده نهایی‌سازی است.");
+      navigate("conversations");
+    }
+
+    function payConversation(id){
+      const c = conversationStore.find(x => x.id === id);
+      if(!c) return;
+      c.status = "scheduled";
+      c.selectedTime = c.selectedTime || "دوشنبه، ۱۶:۰۰";
+      toast("گفت‌وگو نهایی شد.");
+      renderConversations();
+    }
+
+    function openConversationFeedback(id){
+      selectedConversation = conversationStore.find(c => c.id === id);
+      feedbackRating = 0;
+      navigate("conversationFeedback");
+    }
+
+    function renderConversationFeedback(){
+      const c = selectedConversation;
+      if(!c) return navigate("conversations");
+      const p = convParticipant(c);
+      $("conversationFeedbackContent").innerHTML = `
+        <h2>گفت‌وگو با ${p.name}</h2>
+        <p class="muted">از ۱ تا ۵ به کیفیت گفت‌وگو امتیاز بده.</p>
+        <div class="feedback-stars-v22">
+          ${[1,2,3,4,5].map(n => `<button class="feedback-star-v22 ${feedbackRating === n ? "selected" : ""}" onclick="selectFeedbackRating(${n})">★</button>`).join("")}
+        </div>
+        <textarea class="feedback-note-v22" id="feedbackNote" placeholder="اگر خواستی، کوتاه بنویس این گفت‌وگو چقدر به تصمیم تو کمک کرد."></textarea>
+        <div class="btns">
+          <button class="btn secondary" onclick="navigate('conversations')">بعداً</button>
+          <button class="btn primary" ${feedbackRating ? "" : "disabled"} onclick="submitConversationFeedback()">ثبت بازخورد</button>
+        </div>
+      `;
+    }
+
+    function selectFeedbackRating(n){
+      feedbackRating = n;
+      renderConversationFeedback();
+    }
+
+    function submitConversationFeedback(){
+      if(!selectedConversation || !feedbackRating) return;
+      selectedConversation.status = "completed";
+      selectedConversation.feedbackRating = feedbackRating;
+      selectedConversation.feedbackNote = $("feedbackNote")?.value || "";
+      toast("بازخورد ثبت شد.");
+      navigate("conversations");
+    }
+
+    function cancelConversation(id){
+      const c = conversationStore.find(x => x.id === id);
+      if(!c) return;
+      if(!confirm("این درخواست لغو شود؟")) return;
+      c.status = "cancelled";
+      toast("درخواست لغو شد.");
+      navigate("conversations");
+    }
+
+    function rejectConversation(id){
+      const c = conversationStore.find(x => x.id === id);
+      if(!c) return;
+      if(!confirm("این درخواست رد شود؟")) return;
+      c.status = "rejected";
+      toast("درخواست رد شد.");
+      navigate("conversations");
+    }
+
+    function retryConversations(){
+      conversationPageState = "ready";
+      renderConversations();
+    }
+
+    document.addEventListener("click", e => {
+      const tab = e.target.closest("[data-conv-tab]");
+      if(!tab) return;
+      conversationTab = tab.dataset.convTab;
+      renderConversations();
+    });
+
+    // Override old request submission: profile request now feeds the redesigned conversation center.
+    function submitRequest(){
+      const note = $("requestNote")?.value?.trim() || "";
+      conversationStore.unshift({
+        id:"conv-" + Date.now(),
+        direction:"outgoing",
+        status:"pending_provider_response",
+        profile:selectedProfile,
+        duration:selectedDuration,
+        note,
+        createdAt:"اکنون"
+      });
+      toast("درخواست گفت‌وگو ارسال شد.");
+      navigate("conversations");
+    }
+
+    // Override My Experience incoming request renderer so actions connect to the real conversation flows.
+    function renderIncomingRequestsMini(limit = 20){
+      const incoming = conversationStore.filter(c => c.direction === "incoming" && ["incoming_request","provider_time_options_sent"].includes(c.status)).slice(0, limit);
+      if(!incoming.length) return `<div class="myexp-empty-v21">درخواست جدیدی برای تجربه تو وجود ندارد.</div>`;
+      return `
+        <div class="myexp-request-list-v21">
+          ${incoming.map(c => {
+            const p = c.requester || {name:"کاربر", roleFa:"درخواست‌دهنده"};
+            return `
+              <div class="myexp-request-card-v21">
+                <div>
+                  <b>${p.name} برای گفت‌وگو با تو درخواست داده است.</b>
+                  <span>${p.roleFa || ""} · ${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"} · ${c.note || "بدون توضیح"}</span>
+                </div>
+                <div class="myexp-request-actions-v21">
+                  ${c.status === "incoming_request" ? `<button class="btn primary" onclick="openTimeProposal('${c.id}')">پیشنهاد زمان</button>` : `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`}
+                  <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderMyExperienceSummary(){
+      const incomingCount = conversationStore.filter(c => c.direction === "incoming" && c.status === "incoming_request").length;
+      $("myExperienceSummary").innerHTML = `
+        <div class="myexp-summary-card-v21"><span>وضعیت پروفایل</span><b>${experienceProfileStatus === "active" ? "فعال" : "—"}</b><small>${experienceProfileStatus === "active" ? "در کشف تجربه‌ها دیده می‌شوی." : "نیازمند بررسی یا فعال‌سازی."}</small></div>
+        <div class="myexp-summary-card-v21"><span>درخواست‌های جدید</span><b>${formatter.format(incomingCount)}</b><small>درخواست‌هایی که برای تجربه تو آمده‌اند.</small></div>
+        <div class="myexp-summary-card-v21"><span>دنبال‌کننده‌ها</span><b>${formatter.format(myExperienceStats.followers)}</b><small>آدم‌هایی که تجربه تو را دنبال می‌کنند.</small></div>
+        <div class="myexp-summary-card-v21"><span>درآمد قابل برداشت</span><b>${formatter.format(myExperienceStats.availableEarnings)}</b><small>تومان، از گفت‌وگوهای انجام‌شده.</small></div>
+      `;
+    }
+
+    window.openConversationDetail = openConversationDetail;
+    window.openTimeProposal = openTimeProposal;
+    window.submitTimeOptions = submitTimeOptions;
+    window.openConversationProposals = openConversationProposals;
+    window.selectConversationTime = selectConversationTime;
+    window.confirmConversationTime = confirmConversationTime;
+    window.payConversation = payConversation;
+    window.openConversationFeedback = openConversationFeedback;
+    window.selectFeedbackRating = selectFeedbackRating;
+    window.submitConversationFeedback = submitConversationFeedback;
+    window.cancelConversation = cancelConversation;
+    window.rejectConversation = rejectConversation;
+    window.retryConversations = retryConversations;
+
+
+    // V23 simplified My Experience: less confusing, two-zone architecture.
+    function renderMyExperience(){
+      const incomingCount = conversationStore ? conversationStore.filter(c => c.direction === "incoming" && c.status === "incoming_request").length : 0;
+      if($("myexp23ActionCount")) $("myexp23ActionCount").textContent = `${formatter.format(incomingCount)} مورد نیازمند اقدام`;
+      renderMyExperienceProfileMini();
+      renderMyExperienceIncoming();
+      renderMyExperienceNetwork();
+      renderMyExperiencePerformance();
+      renderMyExperienceReviews();
+    }
+
+    function renderMyExperienceProfileMini(){
+      const statusText = experienceProfileStatus === "active" ? "فعال" : experienceProfileStatus === "inactive" ? "غیرفعال" : "در انتظار بررسی";
+      if($("myexp23ProfileStatus")) $("myexp23ProfileStatus").textContent = statusText;
+
+      $("myexp23ProfilePreview").innerHTML = `
+        <div class="myexp23-profile-mini">
+          <div class="myexp23-profile-head">
+            <div class="myexp23-avatar">${myExperienceProfile.initials}</div>
+            <div>
+              <b>${myExperienceProfile.name}</b>
+              <span>${myExperienceProfile.roleFa} · ${myExperienceProfile.orgLevel}</span>
+            </div>
+          </div>
+          <div class="myexp23-badges">
+            <span>${formatter.format(myExperienceProfile.yearsOfExperience)} سال سابقه</span>
+            <span>★ ${toFaDecimal(myExperienceProfile.csat)}</span>
+            <span>${myExperienceProfile.jobCategoriesFa[0]}</span>
+          </div>
+          <p>${myExperienceProfile.professionalSummary}</p>
+        </div>
+      `;
+    }
+
+    function getMyIncomingRequests(){
+      return conversationStore.filter(c => c.direction === "incoming" && ["incoming_request","provider_time_options_sent"].includes(c.status));
+    }
+
+    function renderMyExperienceIncoming(){
+      const requests = getMyIncomingRequests();
+      if(!$("myexp23IncomingRequests")) return;
+
+      if(!requests.length){
+        $("myexp23IncomingRequests").innerHTML = `<div class="myexp23-empty">فعلاً درخواست جدیدی برای تجربه تو وجود ندارد.</div>`;
+        return;
+      }
+
+      $("myexp23IncomingRequests").innerHTML = `
+        <div class="myexp23-request-list">
+          ${requests.slice(0,3).map(c => {
+            const p = c.requester || {name:"کاربر", roleFa:"درخواست‌دهنده"};
+            return `
+              <div class="myexp23-request">
+                <div>
+                  <b>${p.name} برای گفت‌وگو با تو درخواست داده است.</b>
+                  <span>${p.roleFa || ""} · ${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"} · ${c.note || "بدون توضیح"}</span>
+                </div>
+                <div class="myexp23-request-actions">
+                  ${c.status === "incoming_request" ? `<button class="btn primary" onclick="openTimeProposal('${c.id}')">پیشنهاد زمان</button>` : `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`}
+                  <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    function renderMyExperienceNetwork(){
+      const followed = profiles.filter(p => p.isFollowing).slice(0,3);
+      const saved = profiles.filter(p => p.isSaved).slice(0,3);
+
+      $("myexp23FollowedList").innerHTML = followed.length
+        ? followed.map(p => renderMyExperiencePerson(p, "دنبال‌شده")).join("")
+        : `<div class="myexp23-empty">هنوز کسی را دنبال نکرده‌ای.</div>`;
+
+      $("myexp23SavedList").innerHTML = saved.length
+        ? saved.map(p => renderMyExperiencePerson(p, "ذخیره‌شده")).join("")
+        : `<div class="myexp23-empty">هنوز پروفایلی را ذخیره نکرده‌ای.</div>`;
+    }
+
+    function renderMyExperiencePerson(p, label){
+      return `
+        <div class="myexp23-person">
+          <div class="myexp23-person-main">
+            <div class="myexp23-avatar">${p.initials}</div>
+            <div>
+              <b>${p.name}</b>
+              <span>${label} · ${p.roleFa}</span>
+            </div>
+          </div>
+          <button class="btn secondary" onclick="openProfile('${p.id}')">دیدن تجربه</button>
+        </div>
+      `;
+    }
+
+    function renderMyExperiencePerformance(){
+      $("myexp23Performance").innerHTML = `
+        <div class="myexp23-metrics">
+          <div class="myexp23-metric"><span>بازدید پروفایل</span><b>${formatter.format(myExperienceStats.profileViews)}</b></div>
+          <div class="myexp23-metric"><span>دنبال‌کننده</span><b>${formatter.format(myExperienceStats.followers)}</b></div>
+          <div class="myexp23-metric"><span>درخواست گفت‌وگو</span><b>${formatter.format(myExperienceStats.incomingRequests)}</b></div>
+          <div class="myexp23-metric"><span>رضایت گفت‌وگوها</span><b>★ ${toFaDecimal(myExperienceStats.csat)}</b></div>
+          <div class="myexp23-metric"><span>قابل برداشت</span><b>${toman(myExperienceStats.availableEarnings)}</b></div>
+          <div class="myexp23-metric"><span>در حال تسویه</span><b>${toman(myExperienceStats.pendingSettlement)}</b></div>
+          <div class="myexp23-metric"><span>گفت‌وگوی انجام‌شده</span><b>${formatter.format(myExperienceStats.completedTalks)}</b></div>
+          <div class="myexp23-metric"><span>کل درآمد</span><b>${toman(myExperienceStats.totalEarnings)}</b></div>
+        </div>
+        <div class="myexp23-revenue-note">درآمد گفت‌وگوهای انجام‌شده را اینجا می‌بینی.</div>
+      `;
+    }
+
+    function renderMyExperienceReviews(){
+      $("myexp23Reviews").innerHTML = `
+        <div class="myexp23-review-list">
+          <div class="myexp23-review">
+            <b>گفت‌وگو درباره مسیر Product</b>
+            <span>★ ۵ از ۵</span>
+            <p>گفت‌وگو روشن، کاربردی و دقیق بود.</p>
+          </div>
+          <div class="myexp23-review">
+            <b>تصمیم بین Product و BI</b>
+            <span>★ ۴ از ۵</span>
+            <p>کمک کرد مسیر بعدی را واقع‌بینانه‌تر ببینم.</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Override status actions to keep the simplified page consistent.
+    function deactivateExperienceProfile(){
+      if(!confirm("پروفایل تجربه موقتاً غیرفعال شود؟")) return;
+      experienceProfileStatus = "inactive";
+      toast("پروفایل تجربه غیرفعال شد.");
+      renderMyExperience();
+    }
+
+    function reactivateExperienceProfile(){
+      experienceProfileStatus = "active";
+      toast("پروفایل تجربه دوباره فعال شد.");
+      renderMyExperience();
+    }
+
+
+    // V24 clean time proposal validation
+    function submitTimeOptions(){
+      if(!selectedConversation) return navigate("conversations");
+
+      const rows = [
+        {day:$("timeDay1")?.value?.trim(), hour:$("timeHour1")?.value?.trim()},
+        {day:$("timeDay2")?.value?.trim(), hour:$("timeHour2")?.value?.trim()},
+        {day:$("timeDay3")?.value?.trim(), hour:$("timeHour3")?.value?.trim()}
+      ];
+
+      const validRows = rows.filter(r => r.day && r.hour);
+      if(validRows.length < 3){
+        toast("حداقل سه زمان کامل وارد کن.");
+        return;
+      }
+
+      selectedConversation.proposedTimes = validRows.map(r => `${r.day}، ${r.hour}`);
+      selectedConversation.status = "provider_time_options_sent";
+      toast("زمان‌های پیشنهادی ارسال شدند.");
+      navigate("conversations");
+    }
+
+
+    // V26 simplified conversations: grouped by what the user needs to do.
+    conversationTab = "action";
+
+    function getConversationGroup(c){
+      if(["incoming_request","time_options_sent","payment_pending","feedback_pending"].includes(c.status)) return "action";
+      if(c.status === "scheduled") return "upcoming";
+      if(["pending_provider_response","provider_time_options_sent"].includes(c.status)) return "waiting";
+      return "history";
+    }
+
+    function conversationGroupConfig(group){
+      const configs = {
+        action:{
+          title:"نیازمند اقدام",
+          desc:"اینجا فقط چیزهایی را می‌بینی که باید کاری برایشان انجام بدهی.",
+          empty:"الان کاری برای انجام دادن نداری.",
+          sections:[
+            {key:"incoming", title:"درخواست‌هایی که برای تو آمده", desc:"برای این درخواست‌ها باید زمان پیشنهاد بدهی.", filter:c=>c.status==="incoming_request"},
+            {key:"choose", title:"زمان‌هایی که باید انتخاب کنی", desc:"طرف مقابل زمان پیشنهاد داده؛ یکی را انتخاب کن.", filter:c=>c.status==="time_options_sent"},
+            {key:"pay", title:"آماده نهایی‌سازی", desc:"زمان انتخاب شده و باید پرداخت را کامل کنی.", filter:c=>c.status==="payment_pending"},
+            {key:"feedback", title:"بازخورد در انتظار", desc:"گفت‌وگو انجام شده و می‌توانی بازخورد بدهی.", filter:c=>c.status==="feedback_pending"}
+          ]
+        },
+        upcoming:{
+          title:"گفت‌وگوهای پیش‌رو",
+          desc:"گفت‌وگوهایی که زمانشان قطعی شده است.",
+          empty:"گفت‌وگوی قطعی‌شده‌ای نداری.",
+          sections:[
+            {key:"scheduled", title:"برنامه‌ریزی‌شده", desc:"زمان این گفت‌وگوها مشخص شده است.", filter:c=>c.status==="scheduled"}
+          ]
+        },
+        waiting:{
+          title:"در انتظار پاسخ",
+          desc:"درخواست‌هایی که فعلاً باید منتظر بمانی.",
+          empty:"درخواستی در انتظار پاسخ نداری.",
+          sections:[
+            {key:"sent", title:"درخواست‌های ارسالی", desc:"منتظر زمان پیشنهادی طرف مقابل هستی.", filter:c=>c.status==="pending_provider_response"},
+            {key:"sent-times", title:"زمان‌هایی که پیشنهاد داده‌ای", desc:"منتظر انتخاب زمان توسط طرف مقابل هستی.", filter:c=>c.status==="provider_time_options_sent"}
+          ]
+        },
+        history:{
+          title:"سوابق",
+          desc:"گفت‌وگوها و درخواست‌های قبلی.",
+          empty:"سابقه‌ای وجود ندارد.",
+          sections:[
+            {key:"completed", title:"انجام‌شده", desc:"گفت‌وگوهایی که کامل شده‌اند.", filter:c=>c.status==="completed"},
+            {key:"closed", title:"لغو یا رد شده", desc:"درخواست‌هایی که دیگر فعال نیستند.", filter:c=>["cancelled","rejected","expired"].includes(c.status)}
+          ]
+        },
+        all:{
+          title:"همه گفت‌وگوها",
+          desc:"نمای کامل همه درخواست‌ها و گفت‌وگوها.",
+          empty:"هنوز گفت‌وگویی نداری.",
+          sections:[
+            {key:"action", title:"نیازمند اقدام", desc:"مواردی که باید به آن‌ها رسیدگی کنی.", filter:c=>getConversationGroup(c)==="action"},
+            {key:"upcoming", title:"گفت‌وگوهای پیش‌رو", desc:"گفت‌وگوهای قطعی‌شده.", filter:c=>getConversationGroup(c)==="upcoming"},
+            {key:"waiting", title:"در انتظار پاسخ", desc:"مواردی که فعلاً باید منتظر بمانی.", filter:c=>getConversationGroup(c)==="waiting"},
+            {key:"history", title:"سوابق", desc:"موارد انجام‌شده، لغو شده یا بسته‌شده.", filter:c=>getConversationGroup(c)==="history"}
+          ]
+        }
+      };
+      return configs[group] || configs.action;
+    }
+
+    function renderConversationSummary(){
+      const actionCount = conversationStore.filter(c => getConversationGroup(c)==="action").length;
+      const incomingCount = conversationStore.filter(c => c.status==="incoming_request").length;
+      const chooseCount = conversationStore.filter(c => c.status==="time_options_sent").length;
+      const feedbackCount = conversationStore.filter(c => c.status==="feedback_pending").length;
+
+      $("conversationFocus").innerHTML = `
+        <div class="conv26-focus-card">
+          <div>
+            <span>اولویت امروز</span>
+            <h2>${formatter.format(actionCount)} مورد نیازمند اقدام</h2>
+            <p>${incomingCount ? formatter.format(incomingCount) + " درخواست جدید داری. " : ""}${chooseCount ? formatter.format(chooseCount) + " زمان برای انتخاب داری. " : ""}${feedbackCount ? formatter.format(feedbackCount) + " بازخورد در انتظار داری." : "همه چیز مرتب است."}</p>
+          </div>
+          <div class="conv26-focus-count">${formatter.format(actionCount)}</div>
+        </div>
+      `;
+    }
+
+    function renderConversations(){
+      renderConversationSummary();
+
+      document.querySelectorAll("[data-conv-tab]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.convTab === conversationTab);
+      });
+
+      $("conversationList").innerHTML = "";
+      $("conversationLoading").innerHTML = "";
+      $("conversationError").innerHTML = "";
+      $("emptyConversations").innerHTML = "";
+
+      if(conversationPageState === "loading"){
+        $("conversationLoading").innerHTML = "در حال بارگذاری گفت‌وگوها...";
+        return;
+      }
+
+      if(conversationPageState === "error"){
+        $("conversationError").innerHTML = `<h2>گفت‌وگوها بارگذاری نشد.</h2><button class="btn primary" onclick="retryConversations()">تلاش دوباره</button>`;
+        return;
+      }
+
+      const config = conversationGroupConfig(conversationTab);
+      const sections = config.sections
+        .map(section => ({
+          ...section,
+          items: conversationStore.filter(section.filter)
+        }))
+        .filter(section => section.items.length);
+
+      if(!sections.length){
+        $("emptyConversations").innerHTML = `<h2>${config.empty}</h2><button class="btn primary" data-nav="discover">کشف تجربه‌ها</button>`;
+        return;
+      }
+
+      $("conversationList").innerHTML = sections.map(renderConversationSection26).join("");
+    }
+
+    function renderConversationSection26(section){
+      return `
+        <section class="conv26-section">
+          <div class="conv26-section-head">
+            <div>
+              <h2>${section.title}</h2>
+              <p>${section.desc}</p>
+            </div>
+            <span class="conv26-count">${formatter.format(section.items.length)}</span>
+          </div>
+          <div class="conv26-list">
+            ${section.items.map(renderConversationCard26).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderConversationCard26(c){
+      const p = convParticipant(c);
+      const st = conversationStatus[c.status] || conversationStatus.pending_provider_response;
+      const time = c.selectedTime ? `<span class="conv26-pill green">${c.selectedTime}</span>` : "";
+      const role = c.direction === "incoming" ? "درخواست دریافتی" : "درخواست من";
+
+      return `
+        <article class="conv26-card">
+          <div class="conv26-main">
+            <div class="conv26-person">
+              <div class="conv26-avatar">${p.initials || "؟"}</div>
+              <div>
+                <b>${p.name}</b>
+                <span>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+              </div>
+            </div>
+            <div class="conv26-meta">
+              <span class="conv26-pill">${role}</span>
+              <span class="conv26-pill">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              <span class="conv26-pill warn">${st.label}</span>
+              ${time}
+            </div>
+            <p class="conv26-next">${st.next}</p>
+          </div>
+          <div class="conv26-actions">
+            ${renderPrimaryConversationAction(c)}
+            <div class="conv26-action-row">
+              <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+              ${canCancelConversation(c) ? `<button class="btn danger" onclick="cancelConversation('${c.id}')">لغو</button>` : `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+
+    // V27 Conversations: no tabs, inbox model.
+    function convActionGroups(){
+      return [
+        {
+          key:"incoming",
+          title:"برای تو درخواست آمده",
+          filter:c=>c.status==="incoming_request"
+        },
+        {
+          key:"choose",
+          title:"باید زمان انتخاب کنی",
+          filter:c=>c.status==="time_options_sent"
+        },
+        {
+          key:"pay",
+          title:"باید نهایی کنی",
+          filter:c=>c.status==="payment_pending"
+        },
+        {
+          key:"feedback",
+          title:"باید بازخورد بدهی",
+          filter:c=>c.status==="feedback_pending"
+        }
+      ];
+    }
+
+    function renderConversations(){
+      ensureShamsiConversationDates();
+      $("conversationLoading").innerHTML = "";
+      $("conversationError").innerHTML = "";
+      $("emptyConversations").innerHTML = "";
+
+      if(conversationPageState === "loading"){
+        $("conversationLoading").innerHTML = "در حال بارگذاری گفت‌وگوها...";
+        return;
+      }
+
+      if(conversationPageState === "error"){
+        $("conversationError").innerHTML = `<h2>گفت‌وگوها بارگذاری نشد.</h2><button class="btn primary" onclick="retryConversations()">تلاش دوباره</button>`;
+        return;
+      }
+
+      renderConv27Actions();
+      renderConv27Waiting();
+      renderConv27Scheduled();
+      renderConv27History();
+    }
+
+    function renderConv27Actions(){
+      const groups = convActionGroups().map(g => ({...g, items:conversationStore.filter(g.filter)})).filter(g => g.items.length);
+      const count = groups.reduce((sum,g)=>sum+g.items.length,0);
+      if($("conv27ActionCount")) $("conv27ActionCount").textContent = formatter.format(count);
+
+      if(!groups.length){
+        $("conv27ActionList").innerHTML = `<div class="conv27-empty">فعلاً کاری برای انجام دادن نداری.</div>`;
+        return;
+      }
+
+      $("conv27ActionList").innerHTML = groups.map(g => `
+        <div class="conv27-action-group">
+          <div class="conv27-action-title">
+            <h3>${g.title}</h3>
+            <span>${formatter.format(g.items.length)}</span>
+          </div>
+          <div class="conv27-list">
+            ${g.items.map(c => renderConv27Card(c)).join("")}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderConv27Waiting(){
+      const waiting = conversationStore.filter(c => ["pending_provider_response","provider_time_options_sent"].includes(c.status));
+      $("conv27WaitingList").innerHTML = waiting.length
+        ? waiting.map(c => renderConv27MiniCard(c)).join("")
+        : `<div class="conv27-empty">درخواستی در انتظار پاسخ نداری.</div>`;
+    }
+
+    function renderConv27Scheduled(){
+      const scheduled = conversationStore.filter(c => c.status === "scheduled");
+      $("conv27ScheduledList").innerHTML = scheduled.length
+        ? scheduled.map(c => renderConv27MiniCard(c)).join("")
+        : `<div class="conv27-empty">گفت‌وگوی قطعی‌شده‌ای نداری.</div>`;
+    }
+
+    function renderConv27History(){
+      const history = conversationStore.filter(c => ["completed","cancelled","rejected","expired"].includes(c.status));
+      $("conv27HistoryList").innerHTML = history.length
+        ? history.map(c => renderConv27MiniCard(c)).join("")
+        : `<div class="conv27-empty">هنوز سابقه‌ای وجود ندارد.</div>`;
+    }
+
+    function renderConv27Card(c){
+      const p = convParticipant(c);
+      const st = conversationStatus[c.status] || conversationStatus.pending_provider_response;
+      return `
+        <article class="conv27-card">
+          <div>
+            <div class="conv27-person">
+              <div class="conv27-avatar">${p.initials || "؟"}</div>
+              <div>
+                <b>${p.name}</b>
+                <span>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+              </div>
+            </div>
+            <div class="conv27-meta">
+              <span class="conv27-pill">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              <span class="conv27-pill">${st.label}</span>
+              ${c.selectedTime ? `<span class="conv27-pill">${c.selectedTime}</span>` : ""}
+            </div>
+            <p class="conv27-next">${st.next}</p>
+          </div>
+          <div class="conv27-actions">
+            ${renderPrimaryConversationAction(c)}
+            <div class="conv27-action-row">
+              <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+              ${canCancelConversation(c) ? `<button class="btn danger" onclick="cancelConversation('${c.id}')">لغو</button>` : `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderConv27MiniCard(c){
+      const p = convParticipant(c);
+      const st = conversationStatus[c.status] || conversationStatus.pending_provider_response;
+      return `
+        <article class="conv27-card compact">
+          <div class="conv27-person">
+            <div class="conv27-avatar">${p.initials || "؟"}</div>
+            <div>
+              <b>${p.name}</b>
+              <span>${p.roleFa || ""}</span>
+            </div>
+          </div>
+          <div class="conv27-meta">
+            <span class="conv27-pill">${st.label}</span>
+            ${c.selectedTime ? `<span class="conv27-pill">${c.selectedTime}</span>` : ""}
+          </div>
+          <div class="conv27-action-row">
+            <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+            ${c.status === "scheduled" ? `<button class="btn primary" onclick="openConversationDetail('${c.id}')">باز کردن</button>` : `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`}
+          </div>
+        </article>
+      `;
+    }
+
+
+    // V28: feedback is not a top-priority action. It lives under finished conversations.
+    function convActionGroups(){
+      return [
+        {
+          key:"incoming",
+          title:"برای تو درخواست آمده",
+          filter:c=>c.status==="incoming_request"
+        },
+        {
+          key:"choose",
+          title:"باید زمان انتخاب کنی",
+          filter:c=>c.status==="time_options_sent"
+        },
+        {
+          key:"pay",
+          title:"باید نهایی کنی",
+          filter:c=>c.status==="payment_pending"
+        }
+      ];
+    }
+
+    function getConversationGroup(c){
+      if(["incoming_request","time_options_sent","payment_pending"].includes(c.status)) return "action";
+      if(c.status === "scheduled") return "upcoming";
+      if(["pending_provider_response","provider_time_options_sent"].includes(c.status)) return "waiting";
+      return "history";
+    }
+
+    function renderConv27Actions(){
+      const groups = convActionGroups().map(g => ({...g, items:conversationStore.filter(g.filter)})).filter(g => g.items.length);
+      const count = groups.reduce((sum,g)=>sum+g.items.length,0);
+      if($("conv27ActionCount")) $("conv27ActionCount").textContent = formatter.format(count);
+
+      if(!groups.length){
+        $("conv27ActionList").innerHTML = `<div class="conv27-empty">فعلاً کاری برای انجام دادن نداری.</div>`;
+        return;
+      }
+
+      $("conv27ActionList").innerHTML = groups.map(g => `
+        <div class="conv27-action-group">
+          <div class="conv27-action-title">
+            <h3>${g.title}</h3>
+            <span>${formatter.format(g.items.length)}</span>
+          </div>
+          <div class="conv27-list">
+            ${g.items.map(c => renderConv27Card(c)).join("")}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderConv27History(){
+      const history = conversationStore.filter(c => ["feedback_pending","completed","cancelled","rejected","expired"].includes(c.status));
+      $("conv27HistoryList").innerHTML = history.length
+        ? history.map(c => renderConv27HistoryCard(c)).join("")
+        : `<div class="conv27-empty">هنوز سابقه‌ای وجود ندارد.</div>`;
+    }
+
+    function renderConv27HistoryCard(c){
+      const p = convParticipant(c);
+      const st = conversationStatus[c.status] || conversationStatus.completed;
+      const isFeedback = c.status === "feedback_pending";
+      return `
+        <article class="conv27-card compact">
+          <div class="conv27-person">
+            <div class="conv27-avatar">${p.initials || "؟"}</div>
+            <div>
+              <b>${p.name}</b>
+              <span>${p.roleFa || ""}</span>
+            </div>
+          </div>
+          <div class="conv27-meta">
+            <span class="conv27-pill">${isFeedback ? "تمام‌شده" : st.label}</span>
+            ${c.selectedTime ? `<span class="conv27-pill">${c.selectedTime}</span>` : ""}
+          </div>
+          <div class="conv27-action-row">
+            <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+            ${isFeedback ? `<button class="btn primary" onclick="openConversationFeedback('${c.id}')">ثبت بازخورد</button>` : `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderConv27Card(c){
+      const p = convParticipant(c);
+      const st = conversationStatus[c.status] || conversationStatus.pending_provider_response;
+      return `
+        <article class="conv27-card">
+          <div>
+            <div class="conv27-person">
+              <div class="conv27-avatar">${p.initials || "؟"}</div>
+              <div>
+                <b>${p.name}</b>
+                <span>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+              </div>
+            </div>
+            <div class="conv27-meta">
+              <span class="conv27-pill">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              <span class="conv27-pill">${st.label}</span>
+              ${c.selectedTime ? `<span class="conv27-pill">${c.selectedTime}</span>` : ""}
+            </div>
+            <p class="conv27-next">${st.next}</p>
+          </div>
+          <div class="conv27-actions">
+            ${renderPrimaryConversationAction(c)}
+            <div class="conv27-action-row">
+              <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+              ${canCancelConversation(c) ? `<button class="btn danger" onclick="cancelConversation('${c.id}')">لغو</button>` : `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderConversationSummary(){
+      // kept for backward compatibility with older code paths; no UI dependency in V28
+    }
+
+
+    // V29 Conversations: ultra-simple columns.
+    function conv29Bucket(c){
+      if(c.direction === "incoming" && ["incoming_request","provider_time_options_sent"].includes(c.status)) return "forMe";
+      if(["pending_provider_response","time_options_sent","payment_pending","scheduled"].includes(c.status)) return "fromMe";
+      return "done";
+    }
+
+    function conv29NeedsAction(c){
+      return ["incoming_request","time_options_sent","payment_pending"].includes(c.status);
+    }
+
+    function renderConversations(){
+      ensureShamsiConversationDates();
+      $("conversationLoading").innerHTML = "";
+      $("conversationError").innerHTML = "";
+      $("emptyConversations").innerHTML = "";
+
+      if(conversationPageState === "loading"){
+        $("conversationLoading").innerHTML = "در حال بارگذاری گفت‌وگوها...";
+        return;
+      }
+
+      if(conversationPageState === "error"){
+        $("conversationError").innerHTML = `<h2>گفت‌وگوها بارگذاری نشد.</h2><button class="btn primary" onclick="retryConversations()">تلاش دوباره</button>`;
+        return;
+      }
+
+      const needsAction = conversationStore.filter(conv29NeedsAction);
+      $("conv29Priority").innerHTML = `
+        <div class="conv29-priority-card">
+          <div>
+            <h2>${needsAction.length ? "چند کار باز داری" : "فعلاً کاری نداری"}</h2>
+            <p>${needsAction.length ? "اول این درخواست‌ها را جلو ببر؛ بقیه فقط برای پیگیری‌اند." : "درخواست‌ها و گفت‌وگوهایت اینجا می‌مانند."}</p>
+          </div>
+          <div class="conv29-priority-count">${formatter.format(needsAction.length)}</div>
+        </div>
+      `;
+
+      renderConv29Column("conv29ForMe", conversationStore.filter(c => conv29Bucket(c)==="forMe"), "درخواستی برای تو نیست.");
+      renderConv29Column("conv29FromMe", conversationStore.filter(c => conv29Bucket(c)==="fromMe"), "درخواستی از طرف تو نیست.");
+      renderConv29Column("conv29Done", conversationStore.filter(c => conv29Bucket(c)==="done"), "هنوز مورد تمام‌شده‌ای نداری.");
+    }
+
+    function renderConv29Column(id, items, emptyText){
+      $(id).innerHTML = items.length
+        ? items.map(renderConv29Card).join("")
+        : `<div class="conv29-empty">${emptyText}</div>`;
+    }
+
+    function renderConv29Card(c){
+      const p = convParticipant(c);
+      const st = conversationStatus[c.status] || conversationStatus.pending_provider_response;
+      const primary = renderConv29PrimaryAction(c);
+      const secondary = renderConv29SecondaryAction(c);
+
+      return `
+        <article class="conv29-card">
+          <div class="conv29-person">
+            <div class="conv29-avatar">${p.initials || "؟"}</div>
+            <div>
+              <b>${p.name}</b>
+              <span>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+            </div>
+          </div>
+
+          <div class="conv29-tagline">
+            <span class="conv29-pill">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+            <span class="conv29-pill">${conv29SimpleStatus(c)}</span>
+            ${c.selectedTime ? `<span class="conv29-pill">${c.selectedTime}</span>` : ""}
+          </div>
+
+          <p class="conv29-next">${conv29SimpleNext(c)}</p>
+
+          <div class="conv29-actions">
+            ${primary}
+            <div class="conv29-action-row">
+              <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+              ${secondary}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function conv29SimpleStatus(c){
+      const map = {
+        incoming_request:"درخواست جدید",
+        provider_time_options_sent:"زمان پیشنهاد شده",
+        pending_provider_response:"منتظر زمان",
+        time_options_sent:"زمان رسیده",
+        payment_pending:"آماده پرداخت",
+        scheduled:"قطعی‌شده",
+        feedback_pending:"تمام‌شده",
+        completed:"تمام‌شده",
+        cancelled:"لغو شده",
+        rejected:"رد شده",
+        expired:"منقضی شده"
+      };
+      return map[c.status] || "در حال پیگیری";
+    }
+
+    function conv29SimpleNext(c){
+      const map = {
+        incoming_request:"برای این درخواست زمان پیشنهاد بده.",
+        provider_time_options_sent:"زمان‌ها را فرستاده‌ای؛ منتظر انتخاب طرف مقابل بمان.",
+        pending_provider_response:"درخواستت ارسال شده؛ منتظر زمان پیشنهادی بمان.",
+        time_options_sent:"یکی از زمان‌های پیشنهادی را انتخاب کن.",
+        payment_pending:"برای قطعی‌شدن گفت‌وگو، پرداخت را کامل کن.",
+        scheduled:"زمان گفت‌وگو مشخص شده است.",
+        feedback_pending:"گفت‌وگو تمام شده؛ اگر خواستی بازخورد ثبت کن.",
+        completed:"این گفت‌وگو کامل شده است.",
+        cancelled:"این درخواست لغو شده است.",
+        rejected:"این درخواست رد شده است.",
+        expired:"این درخواست دیگر فعال نیست."
+      };
+      return map[c.status] || "";
+    }
+
+    function renderConv29PrimaryAction(c){
+      if(c.status === "incoming_request") return `<button class="btn primary" onclick="openTimeProposal('${c.id}')">پیشنهاد زمان</button>`;
+      if(c.status === "time_options_sent") return `<button class="btn primary" onclick="openConversationProposals('${c.id}')">انتخاب زمان</button>`;
+      if(c.status === "payment_pending") return `<button class="btn primary" onclick="payConversation('${c.id}')">پرداخت</button>`;
+      if(c.status === "feedback_pending") return `<button class="btn primary" onclick="openConversationFeedback('${c.id}')">ثبت بازخورد</button>`;
+      return `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">باز کردن</button>`;
+    }
+
+    function renderConv29SecondaryAction(c){
+      if(canCancelConversation(c)) return `<button class="btn danger" onclick="cancelConversation('${c.id}')">لغو</button>`;
+      return `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`;
+    }
+
+
+    // V30: one-column task inbox, no categories to interpret.
+    function conv30Bucket(c){
+      if(["incoming_request","time_options_sent","payment_pending"].includes(c.status)) return "task";
+      if(["pending_provider_response","provider_time_options_sent","scheduled"].includes(c.status)) return "tracking";
+      return "archive";
+    }
+
+    function renderConversations(){
+      ensureShamsiConversationDates();
+      $("conversationLoading").innerHTML = "";
+      $("conversationError").innerHTML = "";
+      $("emptyConversations").innerHTML = "";
+
+      if(conversationPageState === "loading"){
+        $("conversationLoading").innerHTML = "در حال بارگذاری گفت‌وگوها...";
+        return;
+      }
+
+      if(conversationPageState === "error"){
+        $("conversationError").innerHTML = `<h2>گفت‌وگوها بارگذاری نشد.</h2><button class="btn primary" onclick="retryConversations()">تلاش دوباره</button>`;
+        return;
+      }
+
+      const tasks = conversationStore.filter(c => conv30Bucket(c)==="task");
+      const tracking = conversationStore.filter(c => conv30Bucket(c)==="tracking");
+      const archive = conversationStore.filter(c => conv30Bucket(c)==="archive");
+
+      $("conv30Now").innerHTML = `
+        <div class="conv30-now-card">
+          <div>
+            <h2>${tasks.length ? "این‌ها را جلو ببر" : "فعلاً کاری برای انجام دادن نداری"}</h2>
+            <p>${tasks.length ? "فقط این بخش نیاز به اقدام دارد. بقیه برای پیگیری یا سابقه‌اند." : "وقتی درخواست جدید یا زمان پیشنهادی داشته باشی، همین‌جا می‌بینی."}</p>
+          </div>
+          <div class="conv30-count">${formatter.format(tasks.length)}</div>
+        </div>
+      `;
+
+      $("conv30Tasks").innerHTML = tasks.length ? tasks.map(renderConv30Card).join("") : `<div class="conv30-empty">کاری برای انجام دادن نداری.</div>`;
+      $("conv30Tracking").innerHTML = tracking.length ? tracking.map(renderConv30Card).join("") : `<div class="conv30-empty">موردی برای پیگیری نداری.</div>`;
+      $("conv30Archive").innerHTML = archive.length ? archive.map(renderConv30Card).join("") : `<div class="conv30-empty">هنوز مورد تمام‌شده‌ای نداری.</div>`;
+    }
+
+    function renderConv30Card(c){
+      const p = convParticipant(c);
+      const message = conv30Message(c);
+      return `
+        <article class="conv30-card">
+          <div class="conv30-main">
+            <div class="conv30-title">
+              <div class="conv30-avatar">${p.initials || "؟"}</div>
+              <div>
+                <b>${p.name}</b>
+                <span>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+              </div>
+            </div>
+            <p class="conv30-message">${message}</p>
+            <div class="conv30-meta">
+              <span class="conv30-pill">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              ${c.selectedTime ? `<span class="conv30-pill">${c.selectedTime}</span>` : ""}
+              <span class="conv30-pill">${conv30ShortStatus(c)}</span>
+            </div>
+          </div>
+          <div class="conv30-actions">
+            ${conv30Primary(c)}
+            <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+            ${canCancelConversation(c) && conv30Bucket(c)==="task" ? `<button class="btn danger" onclick="cancelConversation('${c.id}')">لغو</button>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    function conv30Message(c){
+      const name = convParticipant(c).name;
+      const map = {
+        incoming_request:`${name} از تو درخواست گفت‌وگو کرده.`,
+        time_options_sent:`${name} چند زمان پیشنهادی فرستاده.`,
+        payment_pending:`زمان گفت‌وگو با ${name} انتخاب شده.`,
+        pending_provider_response:`درخواستت برای ${name} ارسال شده.`,
+        provider_time_options_sent:`برای ${name} زمان پیشنهاد داده‌ای.`,
+        scheduled:`گفت‌وگو با ${name} قطعی شده.`,
+        feedback_pending:`گفت‌وگو با ${name} تمام شده.`,
+        completed:`گفت‌وگو با ${name} کامل شده.`,
+        cancelled:`درخواست مربوط به ${name} لغو شده.`,
+        rejected:`درخواست مربوط به ${name} رد شده.`,
+        expired:`درخواست مربوط به ${name} منقضی شده.`
+      };
+      return map[c.status] || `گفت‌وگو با ${name}`;
+    }
+
+    function conv30ShortStatus(c){
+      const map = {
+        incoming_request:"درخواست جدید",
+        time_options_sent:"زمان پیشنهادی",
+        payment_pending:"آماده پرداخت",
+        pending_provider_response:"در انتظار پاسخ",
+        provider_time_options_sent:"منتظر انتخاب",
+        scheduled:"قطعی‌شده",
+        feedback_pending:"تمام‌شده",
+        completed:"کامل‌شده",
+        cancelled:"لغو شده",
+        rejected:"رد شده",
+        expired:"منقضی شده"
+      };
+      return map[c.status] || "پیگیری";
+    }
+
+    function conv30Primary(c){
+      if(c.status === "incoming_request") return `<button class="btn primary" onclick="openTimeProposal('${c.id}')">پیشنهاد زمان</button>`;
+      if(c.status === "time_options_sent") return `<button class="btn primary" onclick="openConversationProposals('${c.id}')">انتخاب زمان</button>`;
+      if(c.status === "payment_pending") return `<button class="btn primary" onclick="payConversation('${c.id}')">پرداخت</button>`;
+      if(c.status === "feedback_pending") return `<button class="btn primary" onclick="openConversationFeedback('${c.id}')">ثبت بازخورد</button>`;
+      return `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">باز کردن</button>`;
+    }
+
+
+    // V31 Conversations: two Chrome-like tabs, then status groups inside each tab.
+    let conv31Tab = "sent";
+
+    function conv31IsAction(c){
+      return ["incoming_request","time_options_sent","payment_pending"].includes(c.status);
+    }
+
+    function conv31SentItems(){
+      return conversationStore.filter(c => c.direction !== "incoming");
+    }
+
+    function conv31ReceivedItems(){
+      return conversationStore.filter(c => c.direction === "incoming");
+    }
+
+    function conv31SentGroups(){
+      return [
+        {
+          key:"choose",
+          title:"زمان رسیده؛ باید انتخاب کنی",
+          desc:"طرف مقابل چند زمان پیشنهاد داده است.",
+          action:true,
+          filter:c=>c.status==="time_options_sent"
+        },
+        {
+          key:"pay",
+          title:"باید نهایی کنی",
+          desc:"زمان انتخاب شده و فقط پرداخت مانده است.",
+          action:true,
+          filter:c=>c.status==="payment_pending"
+        },
+        {
+          key:"waiting",
+          title:"منتظر پاسخ طرف مقابل",
+          desc:"درخواست را فرستاده‌ای و هنوز زمان پیشنهادی نیامده است.",
+          action:false,
+          filter:c=>c.status==="pending_provider_response"
+        },
+        {
+          key:"scheduled",
+          title:"گفت‌وگوهای قطعی‌شده",
+          desc:"زمان گفت‌وگو مشخص شده است.",
+          action:false,
+          filter:c=>c.status==="scheduled"
+        },
+        {
+          key:"done",
+          title:"تمام‌شده‌ها",
+          desc:"گفت‌وگوها یا درخواست‌هایی که بسته شده‌اند.",
+          action:false,
+          filter:c=>["feedback_pending","completed","cancelled","rejected","expired"].includes(c.status)
+        }
+      ];
+    }
+
+    function conv31ReceivedGroups(){
+      return [
+        {
+          key:"incoming",
+          title:"درخواست جدید؛ باید زمان پیشنهاد بدهی",
+          desc:"کسی برای گفت‌وگو با تو درخواست داده است.",
+          action:true,
+          filter:c=>c.status==="incoming_request"
+        },
+        {
+          key:"waiting",
+          title:"منتظر انتخاب طرف مقابل",
+          desc:"زمان‌ها را پیشنهاد داده‌ای و منتظر انتخاب طرف مقابل هستی.",
+          action:false,
+          filter:c=>c.status==="provider_time_options_sent"
+        },
+        {
+          key:"scheduled",
+          title:"گفت‌وگوهای قطعی‌شده",
+          desc:"زمان گفت‌وگو مشخص شده است.",
+          action:false,
+          filter:c=>c.status==="scheduled"
+        },
+        {
+          key:"done",
+          title:"تمام‌شده‌ها",
+          desc:"گفت‌وگوها یا درخواست‌هایی که بسته شده‌اند.",
+          action:false,
+          filter:c=>["feedback_pending","completed","cancelled","rejected","expired"].includes(c.status)
+        }
+      ];
+    }
+
+    function renderConversations(){
+      ensureShamsiConversationDates();
+      $("conversationLoading").innerHTML = "";
+      $("conversationError").innerHTML = "";
+      $("emptyConversations").innerHTML = "";
+
+      if(conversationPageState === "loading"){
+        $("conversationLoading").innerHTML = "در حال بارگذاری گفت‌وگوها...";
+        return;
+      }
+
+      if(conversationPageState === "error"){
+        $("conversationError").innerHTML = `<h2>گفت‌وگوها بارگذاری نشد.</h2><button class="btn primary" onclick="retryConversations()">تلاش دوباره</button>`;
+        return;
+      }
+
+      const sent = conv31SentItems();
+      const received = conv31ReceivedItems();
+      if($("conv31SentCount")) $("conv31SentCount").textContent = formatter.format(sent.length);
+      if($("conv31ReceivedCount")) $("conv31ReceivedCount").textContent = formatter.format(received.length);
+
+      document.querySelectorAll("[data-conv31-tab]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.conv31Tab === conv31Tab);
+      });
+
+      const items = conv31Tab === "sent" ? sent : received;
+      const actionCount = items.filter(conv31IsAction).length;
+      const title = conv31Tab === "sent" ? "درخواست‌هایی که تو فرستاده‌ای" : "درخواست‌هایی که برای تو آمده‌اند";
+      const desc = conv31Tab === "sent"
+        ? "اینجا فقط مسیر درخواست‌هایی را می‌بینی که خودت شروع کرده‌ای."
+        : "اینجا فقط درخواست‌هایی را می‌بینی که دیگران برای گفت‌وگو با تو فرستاده‌اند.";
+
+      $("conv31Summary").innerHTML = `
+        <div class="conv31-summary-card ${actionCount ? "action" : ""}">
+          <div>
+            <h2>${title}</h2>
+            <p>${desc}</p>
+          </div>
+          <div class="conv31-summary-count">${formatter.format(actionCount)}</div>
+        </div>
+      `;
+
+      const groups = conv31Tab === "sent" ? conv31SentGroups() : conv31ReceivedGroups();
+      const populated = groups.map(g => ({...g, items:items.filter(g.filter)})).filter(g => g.items.length);
+
+      if(!populated.length){
+        $("conv31Content").innerHTML = `<div class="conv31-empty">${conv31Tab === "sent" ? "هنوز درخواستی نفرستاده‌ای." : "هنوز درخواستی برای تو نیامده است."}</div>`;
+        return;
+      }
+
+      $("conv31Content").innerHTML = `<div class="conv31-groups">${populated.map(renderConv31Group).join("")}</div>`;
+    }
+
+    function renderConv31Group(group){
+      return `
+        <section class="conv31-group ${group.action ? "action" : ""}">
+          <div class="conv31-group-head">
+            <div>
+              <h2>${group.title}</h2>
+              <p>${group.desc}</p>
+            </div>
+            <span class="conv31-group-count">${formatter.format(group.items.length)}</span>
+          </div>
+          <div class="conv31-list">
+            ${group.items.map(c => renderConv31Card(c, group.action)).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderConv31Card(c, isAction){
+      const p = convParticipant(c);
+      return `
+        <article class="conv31-card ${isAction ? "action" : ""}">
+          <div>
+            <div class="conv31-person">
+              <div class="conv31-avatar">${p.initials || "؟"}</div>
+              <div>
+                <b>${p.name}</b>
+                <span>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+              </div>
+            </div>
+            <p class="conv31-message">${conv31Message(c)}</p>
+            <div class="conv31-meta">
+              <span class="conv31-pill">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              ${c.selectedTime ? `<span class="conv31-pill">${c.selectedTime}</span>` : ""}
+              <span class="conv31-pill">${conv31ShortStatus(c)}</span>
+            </div>
+          </div>
+          <div class="conv31-actions">
+            ${conv31Primary(c)}
+            <div class="conv31-action-row">
+              <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+              ${canCancelConversation(c) && isAction ? `<button class="btn danger" onclick="cancelConversation('${c.id}')">لغو</button>` : `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">پیگیری</button>`}
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function conv31Message(c){
+      const name = convParticipant(c).name;
+      const map = {
+        incoming_request:`${name} از تو درخواست گفت‌وگو کرده.`,
+        time_options_sent:`${name} چند زمان پیشنهادی فرستاده.`,
+        payment_pending:`زمان گفت‌وگو با ${name} انتخاب شده.`,
+        pending_provider_response:`درخواستت برای ${name} ارسال شده.`,
+        provider_time_options_sent:`برای ${name} زمان پیشنهاد داده‌ای.`,
+        scheduled:`گفت‌وگو با ${name} قطعی شده.`,
+        feedback_pending:`گفت‌وگو با ${name} تمام شده.`,
+        completed:`گفت‌وگو با ${name} کامل شده.`,
+        cancelled:`درخواست مربوط به ${name} لغو شده.`,
+        rejected:`درخواست مربوط به ${name} رد شده.`,
+        expired:`درخواست مربوط به ${name} منقضی شده.`
+      };
+      return map[c.status] || `گفت‌وگو با ${name}`;
+    }
+
+    function conv31ShortStatus(c){
+      const map = {
+        incoming_request:"درخواست جدید",
+        time_options_sent:"زمان پیشنهادی",
+        payment_pending:"آماده پرداخت",
+        pending_provider_response:"در انتظار پاسخ",
+        provider_time_options_sent:"منتظر انتخاب",
+        scheduled:"قطعی‌شده",
+        feedback_pending:"تمام‌شده",
+        completed:"کامل‌شده",
+        cancelled:"لغو شده",
+        rejected:"رد شده",
+        expired:"منقضی شده"
+      };
+      return map[c.status] || "پیگیری";
+    }
+
+    function conv31Primary(c){
+      if(c.status === "incoming_request") return `<button class="btn primary" onclick="openTimeProposal('${c.id}')">پیشنهاد زمان</button>`;
+      if(c.status === "time_options_sent") return `<button class="btn primary" onclick="openConversationProposals('${c.id}')">انتخاب زمان</button>`;
+      if(c.status === "payment_pending") return `<button class="btn primary" onclick="payConversation('${c.id}')">پرداخت</button>`;
+      if(c.status === "feedback_pending") return `<button class="btn primary" onclick="openConversationFeedback('${c.id}')">ثبت بازخورد</button>`;
+      return `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">باز کردن</button>`;
+    }
+
+    document.addEventListener("click", e => {
+      const tab = e.target.closest("[data-conv31-tab]");
+      if(!tab) return;
+      conv31Tab = tab.dataset.conv31Tab;
+      renderConversations();
+    });
+
+
+    // V32 Conversations: two primary tabs; three groups inside each tab.
+    let conv32Tab = "sent";
+
+    function conv32SentItems(){
+      return conversationStore.filter(c => c.direction !== "incoming");
+    }
+
+    function conv32ReceivedItems(){
+      return conversationStore.filter(c => c.direction === "incoming");
+    }
+
+    function conv32GroupForSent(c){
+      if(["time_options_sent","payment_pending"].includes(c.status)) return "action";
+      if(["pending_provider_response","scheduled"].includes(c.status)) return "tracking";
+      return "done";
+    }
+
+    function conv32GroupForReceived(c){
+      if(c.status === "incoming_request") return "action";
+      if(["provider_time_options_sent","scheduled"].includes(c.status)) return "tracking";
+      return "done";
+    }
+
+    function conv32GroupConfig(){
+      return [
+        {
+          key:"action",
+          title:"نیازمند اقدام",
+          desc:"این موارد باید جلو بروند.",
+          action:true
+        },
+        {
+          key:"tracking",
+          title:"در حال پیگیری",
+          desc:"فعلاً فقط وضعیتشان را دنبال کن.",
+          action:false
+        },
+        {
+          key:"done",
+          title:"تمام‌شده",
+          desc:"برای سابقه و بازخورد.",
+          action:false
+        }
+      ];
+    }
+
+    function renderConversations(){
+      ensureShamsiConversationDates();
+      $("conversationLoading").innerHTML = "";
+      $("conversationError").innerHTML = "";
+      $("emptyConversations").innerHTML = "";
+
+      if(conversationPageState === "loading"){
+        $("conversationLoading").innerHTML = "در حال بارگذاری گفت‌وگوها...";
+        return;
+      }
+
+      if(conversationPageState === "error"){
+        $("conversationError").innerHTML = `<h2>گفت‌وگوها بارگذاری نشد.</h2><button class="btn primary" onclick="retryConversations()">تلاش دوباره</button>`;
+        return;
+      }
+
+      const sent = conv32SentItems();
+      const received = conv32ReceivedItems();
+      if($("conv32SentCount")) $("conv32SentCount").textContent = formatter.format(sent.length);
+      if($("conv32ReceivedCount")) $("conv32ReceivedCount").textContent = formatter.format(received.length);
+
+      document.querySelectorAll("[data-conv32-tab]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.conv32Tab === conv32Tab);
+      });
+
+      const items = conv32Tab === "sent" ? sent : received;
+      const groupFn = conv32Tab === "sent" ? conv32GroupForSent : conv32GroupForReceived;
+      const actionCount = items.filter(c => groupFn(c) === "action").length;
+
+      $("conv32Summary").innerHTML = conv32Tab === "sent"
+        ? `<strong>${formatter.format(items.length)} درخواست</strong> فرستاده‌ای؛ <strong>${formatter.format(actionCount)} مورد</strong> نیاز به اقدام دارد.`
+        : `<strong>${formatter.format(items.length)} درخواست</strong> برای تو آمده؛ <strong>${formatter.format(actionCount)} مورد</strong> نیاز به اقدام دارد.`;
+
+      if(!items.length){
+        $("conv32Content").innerHTML = `<div class="conv32-empty">${conv32Tab === "sent" ? "هنوز درخواستی نفرستاده‌ای." : "هنوز درخواستی برای تو نیامده است."}</div>`;
+        return;
+      }
+
+      const sections = conv32GroupConfig()
+        .map(g => ({...g, items:items.filter(c => groupFn(c) === g.key)}))
+        .filter(g => g.items.length);
+
+      $("conv32Content").innerHTML = sections.map(renderConv32Group).join("");
+    }
+
+    function renderConv32Group(group){
+      return `
+        <section class="conv32-group ${group.action ? "action" : ""}">
+          <div class="conv32-group-head">
+            <div>
+              <h2>${group.title}</h2>
+              <p>${group.desc}</p>
+            </div>
+            <span class="conv32-count">${formatter.format(group.items.length)}</span>
+          </div>
+          <div class="conv32-list">
+            ${group.items.map(c => renderConv32Card(c, group.action)).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderConv32Card(c, isAction){
+      const p = convParticipant(c);
+      return `
+        <article class="conv32-card ${isAction ? "action" : ""}">
+          <div class="conv32-main">
+            <div class="conv32-topline">
+              <div class="conv32-avatar">${p.initials || "؟"}</div>
+              <div>
+                <span class="conv32-name">${p.name}</span>
+                <span class="conv32-role">${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+              </div>
+            </div>
+            <div class="conv32-status-row">
+              <span class="conv32-badge ${isAction ? "action" : ""}">${conv32Status(c)}</span>
+              <span class="conv32-badge">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              ${c.selectedTime ? `<span class="conv32-badge">${c.selectedTime}</span>` : ""}
+            </div>
+            <p class="conv32-message">${conv32Message(c)}</p>
+          </div>
+          <div class="conv32-actions">
+            ${conv32Primary(c)}
+            <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+            ${canCancelConversation(c) && isAction ? `<button class="conv32-more" onclick="cancelConversation('${c.id}')">لغو درخواست</button>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    function conv32Status(c){
+      const map = {
+        incoming_request:"درخواست جدید",
+        time_options_sent:"انتخاب زمان",
+        payment_pending:"نهایی‌سازی",
+        pending_provider_response:"منتظر زمان",
+        provider_time_options_sent:"منتظر انتخاب",
+        scheduled:"برنامه‌ریزی‌شده",
+        feedback_pending:"تمام‌شده",
+        completed:"تمام‌شده",
+        cancelled:"لغو شده",
+        rejected:"رد شده",
+        expired:"منقضی شده"
+      };
+      return map[c.status] || "پیگیری";
+    }
+
+    function conv32Message(c){
+      const name = convParticipant(c).name;
+      const map = {
+        incoming_request:`${name} از تو درخواست گفت‌وگو کرده.`,
+        time_options_sent:`${name} چند زمان پیشنهادی فرستاده.`,
+        payment_pending:`زمان گفت‌وگو با ${name} انتخاب شده.`,
+        pending_provider_response:`درخواستت برای ${name} ارسال شده.`,
+        provider_time_options_sent:`برای ${name} زمان پیشنهاد داده‌ای.`,
+        scheduled:`گفت‌وگو با ${name} قطعی شده.`,
+        feedback_pending:`گفت‌وگو با ${name} تمام شده.`,
+        completed:`گفت‌وگو با ${name} کامل شده.`,
+        cancelled:`درخواست مربوط به ${name} لغو شده.`,
+        rejected:`درخواست مربوط به ${name} رد شده.`,
+        expired:`درخواست مربوط به ${name} منقضی شده.`
+      };
+      return map[c.status] || `گفت‌وگو با ${name}`;
+    }
+
+    function conv32Primary(c){
+      if(c.status === "incoming_request") return `<button class="btn primary" onclick="openTimeProposal('${c.id}')">پیشنهاد زمان</button>`;
+      if(c.status === "time_options_sent") return `<button class="btn primary" onclick="openConversationProposals('${c.id}')">انتخاب زمان</button>`;
+      if(c.status === "payment_pending") return `<button class="btn primary" onclick="payConversation('${c.id}')">پرداخت</button>`;
+      if(c.status === "feedback_pending") return `<button class="btn secondary" onclick="openConversationFeedback('${c.id}')">ثبت بازخورد</button>`;
+      return `<button class="btn secondary" onclick="openConversationDetail('${c.id}')">باز کردن</button>`;
+    }
+
+    document.addEventListener("click", e => {
+      const tab = e.target.closest("[data-conv32-tab]");
+      if(!tab) return;
+      conv32Tab = tab.dataset.conv32Tab;
+      renderConversations();
+    });
+
+
+    // V33: Shamsi date and time are select controls, not free text.
+    const shamsiDateOptions = [
+      "شنبه ۲۶ خرداد ۱۴۰۵",
+      "یکشنبه ۲۷ خرداد ۱۴۰۵",
+      "دوشنبه ۲۸ خرداد ۱۴۰۵",
+      "سه‌شنبه ۲۹ خرداد ۱۴۰۵",
+      "چهارشنبه ۳۰ خرداد ۱۴۰۵",
+      "پنجشنبه ۳۱ خرداد ۱۴۰۵",
+      "شنبه ۲ تیر ۱۴۰۵",
+      "یکشنبه ۳ تیر ۱۴۰۵",
+      "دوشنبه ۴ تیر ۱۴۰۵",
+      "سه‌شنبه ۵ تیر ۱۴۰۵"
+    ];
+
+    const timeSlotOptions = [
+      "۰۹:۰۰",
+      "۰۹:۳۰",
+      "۱۰:۰۰",
+      "۱۰:۳۰",
+      "۱۱:۰۰",
+      "۱۱:۳۰",
+      "۱۲:۰۰",
+      "۱۴:۰۰",
+      "۱۴:۳۰",
+      "۱۵:۰۰",
+      "۱۵:۳۰",
+      "۱۶:۰۰",
+      "۱۶:۳۰",
+      "۱۷:۰۰",
+      "۱۷:۳۰",
+      "۱۸:۰۰",
+      "۱۸:۳۰",
+      "۱۹:۰۰"
+    ];
+
+    function hydrateTimeProposalSelects(){
+      [1,2,3].forEach((n, idx) => {
+        const dateSelect = $("timeDate" + n);
+        const slotSelect = $("timeSlot" + n);
+        if(!dateSelect || !slotSelect || dateSelect.dataset.hydrated === "1") return;
+
+        dateSelect.innerHTML = shamsiDateOptions.map((date, i) => 
+          `<option value="${date}" ${i === idx ? "selected" : ""}>${date}</option>`
+        ).join("");
+
+        slotSelect.innerHTML = timeSlotOptions.map((slot, i) => {
+          const selectedIndex = [2, 11, 16][idx];
+          return `<option value="${slot}" ${i === selectedIndex ? "selected" : ""}>${slot}</option>`;
+        }).join("");
+
+        dateSelect.dataset.hydrated = "1";
+        slotSelect.dataset.hydrated = "1";
+      });
+    }
+
+    function submitTimeOptions(){
+      if(!selectedConversation) return navigate("conversations");
+      hydrateTimeProposalSelects();
+
+      const rows = [1,2,3].map(n => ({
+        date: $("timeDate" + n)?.value,
+        slot: $("timeSlot" + n)?.value
+      }));
+
+      const unique = new Set(rows.map(r => `${r.date}، ${r.slot}`));
+      if(unique.size < 3){
+        toast("سه زمان متفاوت انتخاب کن.");
+        return;
+      }
+
+      selectedConversation.proposedTimes = rows.map(r => `${r.date}، ${r.slot}`);
+      selectedConversation.status = "provider_time_options_sent";
+      toast("زمان‌های پیشنهادی ارسال شدند.");
+      navigate("conversations");
+    }
+
+
+    // V34: Shamsi date/time must be shown everywhere, not only in proposal selects.
+    const shamsiNowV34 = "چهارشنبه ۲۴ خرداد ۱۴۰۵، ۱۴:۲۰";
+    const shamsiSentV34 = {
+      "conv-1": "چهارشنبه ۲۴ خرداد ۱۴۰۵، ۱۳:۴۰",
+      "conv-2": "سه‌شنبه ۲۳ خرداد ۱۴۰۵، ۱۸:۱۵",
+      "conv-3": "دوشنبه ۲۲ خرداد ۱۴۰۵، ۱۰:۳۰",
+      "conv-4": "چهارشنبه ۱۶ خرداد ۱۴۰۵، ۲۰:۰۰",
+      "conv-5": "چهارشنبه ۲۴ خرداد ۱۴۰۵، ۰۹:۵۵"
+    };
+
+    const shamsiScheduledV34 = {
+      "conv-3": "دوشنبه ۲۸ خرداد ۱۴۰۵، ۱۶:۰۰",
+      "conv-4": "چهارشنبه ۱۶ خرداد ۱۴۰۵، ۱۸:۳۰"
+    };
+
+    function shamsiCreatedAt(c){
+      return c.createdAtShamsi || shamsiSentV34[c.id] || "چهارشنبه ۲۴ خرداد ۱۴۰۵، ۱۴:۲۰";
+    }
+
+    function shamsiSelectedTime(c){
+      return c.selectedTimeShamsi || shamsiScheduledV34[c.id] || c.selectedTime || "";
+    }
+
+    function shamsiBadge(label, value){
+      if(!value) return "";
+      return `<span class="date-badge-v34">${label}: <strong>${value}</strong></span>`;
+    }
+
+    // Normalize seeded conversations and all future created request records.
+    function ensureShamsiConversationDates(){
+      if(typeof conversationStore === "undefined") return;
+      conversationStore.forEach(c => {
+        c.createdAtShamsi = shamsiCreatedAt(c);
+        if(c.selectedTime) c.selectedTimeShamsi = shamsiSelectedTime(c);
+        if(!c.createdAt || ["امروز","دیروز","۲ روز پیش","هفته گذشته","اکنون"].includes(c.createdAt)){
+          c.createdAt = c.createdAtShamsi;
+        }
+      });
+    }
+
+    // V34 override submitRequest: created/sent date is Shamsi.
+    function submitRequest(){
+      const note = $("requestNote")?.value?.trim() || "";
+      conversationStore.unshift({
+        id:"conv-" + Date.now(),
+        direction:"outgoing",
+        status:"pending_provider_response",
+        profile:selectedProfile,
+        duration:selectedDuration,
+        note,
+        createdAt:"چهارشنبه ۲۴ خرداد ۱۴۰۵، ۱۴:۲۰",
+        createdAtShamsi:"چهارشنبه ۲۴ خرداد ۱۴۰۵، ۱۴:۲۰"
+      });
+      toast("درخواست گفت‌وگو ارسال شد.");
+      navigate("conversations");
+    }
+
+    // V34 override confirmConversationTime: selected date/time is already Shamsi from select options.
+    function confirmConversationTime(){
+      if(!selectedConversation || !selectedConversationTime) return;
+      selectedConversation.selectedTime = selectedConversationTime;
+      selectedConversation.selectedTimeShamsi = selectedConversationTime;
+      selectedConversation.status = "payment_pending";
+      toast("زمان انتخاب شد. گفت‌وگو آماده نهایی‌سازی است.");
+      navigate("conversations");
+    }
+
+    // V34 override payConversation: keep Shamsi selected time.
+    function payConversation(id){
+      const c = conversationStore.find(x => x.id === id);
+      if(!c) return;
+      c.status = "scheduled";
+      c.selectedTime = c.selectedTimeShamsi || c.selectedTime || "دوشنبه ۲۸ خرداد ۱۴۰۵، ۱۶:۰۰";
+      c.selectedTimeShamsi = c.selectedTime;
+      toast("گفت‌وگو نهایی شد.");
+      renderConversations();
+    }
+
+    // V34 override V32 card so all cards show Shamsi sent date and scheduled date.
+    function renderConv32Card(c, isAction){
+      ensureShamsiConversationDates();
+      const p = convParticipant(c);
+      const scheduled = shamsiSelectedTime(c);
+      return `
+        <article class="conv32-card ${isAction ? "action" : ""}">
+          <div class="conv32-main">
+            <div class="conv32-topline">
+              <div class="conv32-avatar">${p.initials || "؟"}</div>
+              <div>
+                <span class="conv32-name">${p.name}</span>
+                <span class="conv32-role">${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+              </div>
+            </div>
+            <div class="conv32-status-row">
+              <span class="conv32-badge ${isAction ? "action" : ""}">${conv32Status(c)}</span>
+              <span class="conv32-badge">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              ${shamsiBadge("ارسال", shamsiCreatedAt(c))}
+              ${scheduled ? shamsiBadge("زمان گفت‌وگو", scheduled) : ""}
+            </div>
+            <p class="conv32-message">${conv32Message(c)}</p>
+          </div>
+          <div class="conv32-actions">
+            ${conv32Primary(c)}
+            <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+            ${canCancelConversation(c) && isAction ? `<button class="conv32-more" onclick="cancelConversation('${c.id}')">لغو درخواست</button>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    // V34 override detail page rows to include Shamsi sent/selected times.
+    function renderConversationDetail(){
+      ensureShamsiConversationDates();
+      const c = selectedConversation;
+      if(!c) return navigate("conversations");
+      const p = convParticipant(c);
+      const st = conversationStatus[c.status] || conversationStatus.pending_provider_response;
+      const selected = shamsiSelectedTime(c);
+
+      $("conversationDetailContent").innerHTML = `
+        <div class="conv-detail-grid-v22">
+          <div>
+            <div class="conv-detail-hero-v22">
+              <div class="conv-card-top-v22">
+                <span class="conv-status-v22 ${st.tone}">${st.label}</span>
+                <span class="conv-direction-v22">${convDirectionLabel(c)}</span>
+                ${convRequiresAction(c) ? `<span class="conv-status-v22 action">نیازمند اقدام</span>` : ""}
+              </div>
+              <div class="conv-person-row-v22">
+                <div class="conv-avatar-v22">${p.initials || "?"}</div>
+                <div>
+                  <h3>${p.name}</h3>
+                  <p>${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</p>
+                </div>
+              </div>
+              <p class="conv-next-v22">${st.next}</p>
+            </div>
+
+            <div class="panel">
+              <h2>جزئیات درخواست</h2>
+              <div class="row"><span class="k">تاریخ ارسال</span><span class="v">${shamsiCreatedAt(c)}</span></div>
+              <div class="row"><span class="k">مدت گفت‌وگو</span><span class="v">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span></div>
+              <div class="row"><span class="k">زمان گفت‌وگو</span><span class="v">${selected || "هنوز انتخاب نشده است"}</span></div>
+              <div class="row"><span class="k">توضیح</span><span class="v">${c.note || "ثبت نشده"}</span></div>
+            </div>
+
+            <div class="panel" style="margin-top:14px">
+              <h2>جریان گفت‌وگو</h2>
+              <div class="conv-timeline-v22">
+                <div class="conv-timeline-step-v22"><i>۱</i><div><b>درخواست ثبت شد</b><span>${shamsiCreatedAt(c)}</span></div></div>
+                <div class="conv-timeline-step-v22"><i>۲</i><div><b>زمان هماهنگ می‌شود</b><span>ارائه‌دهنده سه زمان پیشنهادی انتخاب می‌کند.</span></div></div>
+                <div class="conv-timeline-step-v22"><i>۳</i><div><b>نهایی‌سازی</b><span>${selected ? "زمان انتخاب‌شده: " + selected : "بعد از انتخاب زمان انجام می‌شود."}</span></div></div>
+                <div class="conv-timeline-step-v22"><i>۴</i><div><b>گفت‌وگو و بازخورد</b><span>بعد از گفت‌وگو، بازخورد در سوابق قابل ثبت است.</span></div></div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="panel sticky">
+            <h2>اقدام بعدی</h2>
+            <p class="muted">${st.next}</p>
+            <div class="btns">${renderPrimaryConversationAction(c)}</div>
+            <button class="btn secondary" style="width:100%;margin-top:8px" onclick="navigate('conversations')">بازگشت به گفت‌وگوها</button>
+          </aside>
+        </div>
+      `;
+    }
+
+    // V34 override proposal list so proposals are Shamsi and not free text.
+    function renderConversationProposals(){
+      const c = selectedConversation;
+      if(!c) return navigate("conversations");
+      $("conversationProposalContent").innerHTML = `
+        <h2>زمان‌های پیشنهادی</h2>
+        <div class="proposal-options-v22">
+          ${(c.proposedTimes || []).map(t => `<button class="proposal-option-v22 ${selectedConversationTime === t ? "selected" : ""}" onclick="selectConversationTime('${t}')">${t}</button>`).join("")}
+        </div>
+        <div class="btns">
+          <button class="btn primary" ${selectedConversationTime ? "" : "disabled"} onclick="confirmConversationTime()">ادامه به نهایی‌سازی</button>
+          <button class="btn danger" onclick="cancelConversation('${c.id}')">لغو درخواست</button>
+        </div>
+      `;
+    }
+
+
+    // V35: redesigned time proposal as date chips + time slot chips.
+    const time35Dates = [
+      {id:"d1", day:"شنبه", date:"۲۶ خرداد ۱۴۰۵", full:"شنبه ۲۶ خرداد ۱۴۰۵"},
+      {id:"d2", day:"یکشنبه", date:"۲۷ خرداد ۱۴۰۵", full:"یکشنبه ۲۷ خرداد ۱۴۰۵"},
+      {id:"d3", day:"دوشنبه", date:"۲۸ خرداد ۱۴۰۵", full:"دوشنبه ۲۸ خرداد ۱۴۰۵"},
+      {id:"d4", day:"سه‌شنبه", date:"۲۹ خرداد ۱۴۰۵", full:"سه‌شنبه ۲۹ خرداد ۱۴۰۵"},
+      {id:"d5", day:"چهارشنبه", date:"۳۰ خرداد ۱۴۰۵", full:"چهارشنبه ۳۰ خرداد ۱۴۰۵"},
+      {id:"d6", day:"پنجشنبه", date:"۳۱ خرداد ۱۴۰۵", full:"پنجشنبه ۳۱ خرداد ۱۴۰۵"},
+      {id:"d7", day:"شنبه", date:"۲ تیر ۱۴۰۵", full:"شنبه ۲ تیر ۱۴۰۵"},
+      {id:"d8", day:"یکشنبه", date:"۳ تیر ۱۴۰۵", full:"یکشنبه ۳ تیر ۱۴۰۵"}
+    ];
+
+    const time35Slots = [
+      "۰۹:۰۰","۰۹:۳۰","۱۰:۰۰","۱۰:۳۰","۱۱:۰۰","۱۱:۳۰",
+      "۱۴:۰۰","۱۴:۳۰","۱۵:۰۰","۱۵:۳۰","۱۶:۰۰","۱۶:۳۰",
+      "۱۷:۰۰","۱۷:۳۰","۱۸:۰۰","۱۸:۳۰","۱۹:۰۰"
+    ];
+
+    let time35SelectedDate = time35Dates[0].full;
+    let time35SelectedTimes = [];
+
+    function hydrateTimeProposalSelects(){
+      renderTime35Picker();
+    }
+
+    function renderTime35Picker(){
+      const dateEl = $("time35DateStrip");
+      const slotsEl = $("time35Slots");
+      const selectedEl = $("time35SelectedList");
+      const counterEl = $("time35Counter");
+      const submitEl = $("time35Submit");
+      if(!dateEl || !slotsEl || !selectedEl) return;
+
+      dateEl.innerHTML = time35Dates.map(d => `
+        <button class="time35-date-chip ${d.full === time35SelectedDate ? "active" : ""}" type="button" onclick="selectTime35Date('${d.full}')">
+          <strong>${d.day}</strong>
+          <span>${d.date}</span>
+        </button>
+      `).join("");
+
+      slotsEl.innerHTML = time35Slots.map(slot => {
+        const full = `${time35SelectedDate}، ${slot}`;
+        const selected = time35SelectedTimes.includes(full);
+        return `<button class="time35-slot ${selected ? "selected" : ""}" type="button" onclick="toggleTime35Slot('${slot}')">${slot}</button>`;
+      }).join("");
+
+      selectedEl.innerHTML = time35SelectedTimes.length
+        ? time35SelectedTimes.map((item, idx) => {
+          const [date, slot] = item.split("، ");
+          return `
+            <div class="time35-selected-item">
+              <div>
+                <b>${date}</b>
+                <span>${slot}</span>
+              </div>
+              <button class="time35-remove" type="button" onclick="removeTime35Selected(${idx})">×</button>
+            </div>
+          `;
+        }).join("")
+        : `<div class="time35-selected-empty">هنوز زمانی انتخاب نشده است.</div>`;
+
+      if(counterEl) counterEl.textContent = `${formatter.format(Math.min(time35SelectedTimes.length, 3))} از ۳`;
+      if(submitEl) submitEl.disabled = time35SelectedTimes.length < 3;
+    }
+
+    function selectTime35Date(date){
+      time35SelectedDate = date;
+      renderTime35Picker();
+    }
+
+    function toggleTime35Slot(slot){
+      const full = `${time35SelectedDate}، ${slot}`;
+      const index = time35SelectedTimes.indexOf(full);
+      if(index >= 0){
+        time35SelectedTimes.splice(index, 1);
+      } else {
+        time35SelectedTimes.push(full);
+      }
+      renderTime35Picker();
+    }
+
+    function removeTime35Selected(index){
+      time35SelectedTimes.splice(index, 1);
+      renderTime35Picker();
+    }
+
+    function submitTimeOptions(){
+      if(!selectedConversation) return navigate("conversations");
+      if(time35SelectedTimes.length < 3){
+        toast("حداقل سه زمان انتخاب کن.");
+        return;
+      }
+
+      selectedConversation.proposedTimes = time35SelectedTimes.slice(0, 6);
+      selectedConversation.status = "provider_time_options_sent";
+      toast("زمان‌های پیشنهادی ارسال شدند.");
+      time35SelectedTimes = [];
+      time35SelectedDate = time35Dates[0].full;
+      navigate("conversations");
+    }
+
+    window.selectTime35Date = selectTime35Date;
+    window.toggleTime35Slot = toggleTime35Slot;
+    window.removeTime35Selected = removeTime35Selected;
+
+
+    // V36 UI polish: compact dates on cards, full dates stay in detail.
+    function compactShamsiDate(value){
+      if(!value) return "";
+      return value
+        .replace("شنبه ", "")
+        .replace("یکشنبه ", "")
+        .replace("دوشنبه ", "")
+        .replace("سه‌شنبه ", "")
+        .replace("چهارشنبه ", "")
+        .replace("پنجشنبه ", "")
+        .replace("جمعه ", "")
+        .replace(" ۱۴۰۵", "");
+    }
+
+    function shamsiCardBadge(label, value){
+      if(!value) return "";
+      return `<span class="date-badge-v34">${label}: <strong>${compactShamsiDate(value)}</strong></span>`;
+    }
+
+    function renderConv32Group(group){
+      return `
+        <section class="conv32-group ${group.action ? "action" : ""}">
+          <div class="conv32-group-head">
+            <div>
+              <h2>${group.title}</h2>
+              <p>${group.desc}</p>
+            </div>
+            <span class="conv32-count">${formatter.format(group.items.length)}</span>
+          </div>
+          <div class="conv32-list">
+            ${group.items.map(c => renderConv32Card(c, group.action)).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderConv32Card(c, isAction){
+      ensureShamsiConversationDates();
+      const p = convParticipant(c);
+      const scheduled = shamsiSelectedTime(c);
+      return `
+        <article class="conv32-card ${isAction ? "action" : ""}">
+          <div class="conv32-main">
+            <div class="conv32-topline">
+              <div class="conv32-avatar">${p.initials || "؟"}</div>
+              <div>
+                <span class="conv32-name">${p.name}</span>
+                <span class="conv32-role">${p.roleFa || ""}${c.profile?.orgLevel ? " · " + c.profile.orgLevel : ""}</span>
+              </div>
+            </div>
+            <div class="conv32-status-row">
+              <span class="conv32-badge ${isAction ? "action" : ""}">${conv32Status(c)}</span>
+              <span class="conv32-badge">${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span>
+              ${shamsiCardBadge("ارسال", shamsiCreatedAt(c))}
+              ${scheduled ? shamsiCardBadge("گفت‌وگو", scheduled) : ""}
+            </div>
+            <p class="conv32-message">${conv32Message(c)}</p>
+          </div>
+          <div class="conv32-actions">
+            ${conv32Primary(c)}
+            <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+            ${canCancelConversation(c) && isAction ? `<button class="conv32-more" onclick="cancelConversation('${c.id}')">لغو درخواست</button>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    function conv32GroupConfig(){
+      return [
+        {
+          key:"action",
+          title:"نیازمند اقدام",
+          desc:"مواردی که باید جلو بروند.",
+          action:true
+        },
+        {
+          key:"tracking",
+          title:"در حال پیگیری",
+          desc:"مواردی که فعلاً فقط پیگیری می‌کنی.",
+          action:false
+        },
+        {
+          key:"done",
+          title:"تمام‌شده",
+          desc:"سوابق و بازخوردها.",
+          action:false
+        }
+      ];
+    }
+
+
+    // V37 My Experience: control panel, not dashboard.
+    function my37IncomingRequests(){
+      if(typeof conversationStore === "undefined") return [];
+      return conversationStore.filter(c => c.direction === "incoming" && c.status === "incoming_request");
+    }
+
+    function my37StatusCopy(){
+      const incoming = my37IncomingRequests().length;
+      const map = {
+        none:{
+          tone:"none",
+          badge:"پروفایل ساخته نشده",
+          title:"پروفایل تجربه‌ات را بساز",
+          body:"پروفایل تجربه بساز تا دیگران بتوانند برای گفت‌وگو به تو درخواست بدهند.",
+          actions:`<button class="btn primary" data-nav="buildExperience">ساخت پروفایل تجربه</button><button class="btn secondary" data-nav="discover">کشف تجربه‌ها</button>`
+        },
+        pending_review:{
+          tone:"pending",
+          badge:"در انتظار بررسی",
+          title:"پروفایل تجربه تو در انتظار بررسی است",
+          body:"بعد از تأیید، در کشف تجربه‌ها دیده می‌شوی.",
+          actions:`<button class="btn primary" data-nav="buildExperience">ویرایش اطلاعات</button>`
+        },
+        inactive:{
+          tone:"inactive",
+          badge:"غیرفعال",
+          title:"پروفایل تجربه تو غیرفعال است",
+          body:"فعلاً در کشف تجربه‌ها دیده نمی‌شوی.",
+          actions:`<button class="btn primary" onclick="reactivateExperienceProfile()">فعال‌سازی دوباره</button><button class="btn secondary" data-nav="buildExperience">ویرایش پروفایل</button>`
+        },
+        active:{
+          tone:"active",
+          badge:"فعال در کشف تجربه‌ها",
+          title:"پروفایل تجربه تو فعال است",
+          body: incoming ? `${formatter.format(incoming)} درخواست جدید داری.` : "در کشف تجربه‌ها دیده می‌شوی.",
+          actions:`<button class="btn primary" onclick="scrollToMy37Requests()">دیدن درخواست‌ها</button><button class="btn secondary" data-nav="buildExperience">ویرایش پروفایل</button>`
+        }
+      };
+      return map[experienceProfileStatus] || map.active;
+    }
+
+    function renderMyExperience(){
+      renderMy37Status();
+      renderMy37Requests();
+      renderMy37Profile();
+      renderMy37Network();
+      renderMy37Performance();
+    }
+
+    function renderMy37Status(){
+      const copy = my37StatusCopy();
+      $("my37Status").innerHTML = `
+        <div class="my37-status-card ${copy.tone}">
+          <div class="my37-status-text">
+            <span class="my37-status-badge">${copy.badge}</span>
+            <h2>${copy.title}</h2>
+            <p>${copy.body}</p>
+          </div>
+          <div class="my37-status-actions">${copy.actions}</div>
+        </div>
+      `;
+    }
+
+    function renderMy37Requests(){
+      const incoming = my37IncomingRequests();
+      if(experienceProfileStatus !== "active"){
+        $("my37Requests").innerHTML = `
+          <div class="my37-section-head">
+            <div>
+              <h2>درخواست‌های جدید</h2>
+              <p>بعد از فعال‌شدن پروفایل، درخواست‌های دریافتی اینجا دیده می‌شوند.</p>
+            </div>
+          </div>
+          <div class="my37-empty">فعلاً درخواستی وجود ندارد.</div>
+        `;
+        return;
+      }
+
+      $("my37Requests").innerHTML = `
+        <div class="my37-section-head">
+          <div>
+            <h2>درخواست‌های جدید</h2>
+            <p>${incoming.length ? "آخرین درخواست‌هایی که برای تجربه تو آمده‌اند." : "درخواست جدیدی نداری."}</p>
+          </div>
+          <span class="my37-count">${formatter.format(incoming.length)}</span>
+        </div>
+        ${incoming.length ? `
+          <div class="my37-request-list">
+            ${incoming.slice(0,2).map(renderMy37Request).join("")}
+          </div>
+          ${incoming.length > 2 ? `<div class="my37-panel-actions"><button class="btn secondary" data-nav="conversations">دیدن همه در گفت‌وگوها</button></div>` : ""}
+        ` : `<div class="my37-empty">درخواست جدیدی نداری.</div>`}
+      `;
+    }
+
+    function renderMy37Request(c){
+      const p = c.requester || {name:"کاربر", initials:"؟", roleFa:"درخواست‌دهنده"};
+      return `
+        <article class="my37-request-card">
+          <div>
+            <div class="my37-person">
+              <div class="my37-avatar">${p.initials || "؟"}</div>
+              <div>
+                <b>${p.name}</b>
+                <span>${p.roleFa || ""} · ${c.duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"} · ارسال: ${compactShamsiDate(shamsiCreatedAt(c))}</span>
+              </div>
+            </div>
+            <p>${p.name} از تو درخواست گفت‌وگو کرده.</p>
+          </div>
+          <div class="my37-card-actions">
+            <button class="btn primary" onclick="openTimeProposal('${c.id}')">پیشنهاد زمان</button>
+            <button class="btn secondary" onclick="openConversationDetail('${c.id}')">جزئیات</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderMy37Profile(){
+      if(experienceProfileStatus === "none"){
+        $("my37Profile").innerHTML = `
+          <div class="my37-section-head">
+            <div>
+              <h2>پروفایل تجربه من</h2>
+              <p>هنوز پروفایل تجربه نداری.</p>
+            </div>
+          </div>
+          <div class="my37-empty">برای دیده‌شدن در کشف تجربه‌ها، پروفایل تجربه بساز.</div>
+          <div class="my37-panel-actions"><button class="btn primary" data-nav="buildExperience">ساخت پروفایل تجربه</button></div>
+        `;
+        return;
+      }
+
+      $("my37Profile").innerHTML = `
+        <div class="my37-section-head">
+          <div>
+            <h2>پروفایل تجربه من</h2>
+            <p>اطلاعاتی که در کشف تجربه‌ها از تو دیده می‌شود.</p>
+          </div>
+        </div>
+
+        <div class="my37-profile-card">
+          <div class="my37-profile-top">
+            <div class="my37-avatar">${myExperienceProfile.initials}</div>
+            <div>
+              <h3>${myExperienceProfile.roleFa}</h3>
+              <p>${myExperienceProfile.orgLevel} · ${formatter.format(myExperienceProfile.yearsOfExperience)} سال سابقه</p>
+            </div>
+          </div>
+
+          <div class="my37-badges">
+            ${myExperienceProfile.jobCategoriesFa.slice(0,3).map(x => `<span class="my37-badge">${x}</span>`).join("")}
+            ${myExperienceProfile.previousCompaniesFa.slice(0,2).map(x => `<span class="my37-badge">${x}</span>`).join("")}
+          </div>
+
+          <div class="my37-price">
+            <div><span>۳۰ دقیقه</span><b>${toman(myExperienceProfile.pricing[30])}</b></div>
+            <div><span>۱ ساعت</span><b>${toman(myExperienceProfile.pricing[60])}</b></div>
+          </div>
+        </div>
+
+        <div class="my37-panel-actions">
+          <button class="btn primary" onclick="previewMyExperienceProfile()">مشاهده پروفایل</button>
+          <button class="btn secondary" data-nav="buildExperience">ویرایش</button>
+        </div>
+      `;
+    }
+
+    function renderMy37Network(){
+      const followed = profiles.filter(p => p.isFollowing);
+      const saved = profiles.filter(p => p.isSaved);
+      const preview = [...followed.slice(0,1), ...saved.filter(s => !followed.some(f => f.id === s.id)).slice(0,1)];
+
+      $("my37Network").innerHTML = `
+        <div class="my37-section-head">
+          <div>
+            <h2>شبکه من</h2>
+            <p>آدم‌هایی که دنبال یا ذخیره کرده‌ای.</p>
+          </div>
+        </div>
+
+        <div class="my37-network-grid">
+          <div class="my37-network-stat"><b>${formatter.format(followed.length)}</b><span>دنبال‌شده</span></div>
+          <div class="my37-network-stat"><b>${formatter.format(saved.length)}</b><span>ذخیره‌شده</span></div>
+        </div>
+
+        <div class="my37-mini-list">
+          ${preview.length ? preview.map(renderMy37MiniPerson).join("") : `<div class="my37-empty">هنوز کسی را دنبال یا ذخیره نکرده‌ای.</div>`}
+        </div>
+
+        <div class="my37-panel-actions">
+          <button class="btn secondary" data-nav="discover">کشف تجربه‌های بیشتر</button>
+        </div>
+      `;
+    }
+
+    function renderMy37MiniPerson(p){
+      return `
+        <div class="my37-mini-person">
+          <div class="my37-mini-main">
+            <div class="my37-avatar">${p.initials}</div>
+            <div>
+              <b>${p.name}</b>
+              <span>${p.roleFa}</span>
+            </div>
+          </div>
+          <button class="btn secondary" onclick="openProfile('${p.id}')">دیدن</button>
+        </div>
+      `;
+    }
+
+    function renderMy37Performance(){
+      if(experienceProfileStatus === "none" || experienceProfileStatus === "pending_review"){
+        $("my37Performance").innerHTML = "";
+        return;
+      }
+
+      $("my37Performance").innerHTML = `
+        <div class="my37-section-head">
+          <div>
+            <h2>عملکرد و درآمد</h2>
+            <p>خلاصه وضعیت پروفایل و گفت‌وگوهای انجام‌شده.</p>
+          </div>
+          <button class="btn secondary" data-nav="wallet">کیف پول و پرداخت‌ها</button>
+        </div>
+
+        <div class="my37-metrics">
+          <div class="my37-metric"><span>بازدید پروفایل</span><b>${formatter.format(myExperienceStats.profileViews)}</b></div>
+          <div class="my37-metric"><span>درخواست گفت‌وگو</span><b>${formatter.format(myExperienceStats.incomingRequests)}</b></div>
+          <div class="my37-metric"><span>رضایت</span><b>★ ${toFaDecimal(myExperienceStats.csat)}</b></div>
+          <div class="my37-metric"><span>قابل برداشت</span><b>${toman(myExperienceStats.availableEarnings)}</b></div>
+        </div>
+      `;
+    }
+
+    function scrollToMy37Requests(){
+      const el = $("my37Requests");
+      if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    window.scrollToMy37Requests = scrollToMy37Requests;
+
+
+    // V38 My Experience ecosystem: network, feedback, notification, successful conversations.
+    let network38Tab = "following";
+
+    const feedback38Items = [
+      {name:"سارا م.", role:"طراح محصول", rating:5, text:"گفت‌وگو روشن، کاربردی و دقیق بود."},
+      {name:"علی ر.", role:"BI Analyst", rating:4, text:"کمک کرد تصمیمم درباره مسیر Product و BI واضح‌تر شود."},
+      {name:"مینا پ.", role:"کارشناس رشد", rating:5, text:"خیلی سریع به نقطه اصلی مسئله رسیدیم."}
+    ];
+
+    function followers38(){
+      return profiles.slice(0,4).map((p, i) => ({
+        ...p,
+        followerSince:"از " + ["۲۴ خرداد","۲۰ خرداد","۱۷ خرداد","۱۲ خرداد"][i],
+        reason:"دنبال‌کننده توست."
+      }));
+    }
+
+    function my38Following(){ return profiles.filter(p => p.isFollowing); }
+    function my38Saved(){ return profiles.filter(p => p.isSaved); }
+
+    function my38IncomingCount(){
+      if(typeof conversationStore === "undefined") return 0;
+      return conversationStore.filter(c => c.direction === "incoming" && c.status === "incoming_request").length;
+    }
+
+    function successfulConversationCount(){
+      if(typeof conversationStore === "undefined") return myExperienceStats.completedTalks || 0;
+      return conversationStore.filter(c => ["completed","feedback_pending"].includes(c.status)).length || myExperienceStats.completedTalks || 0;
+    }
+
+    function openReceivedRequests(){
+      if(typeof conv32Tab !== "undefined") conv32Tab = "received";
+      navigate("conversations");
+      setTimeout(() => {
+        if(typeof conv32Tab !== "undefined") conv32Tab = "received";
+        if(typeof renderConversations === "function") renderConversations();
+      }, 0);
+    }
+
+    function renderMyExperience(){
+      renderMy38Status();
+      renderMy38Profile();
+      renderMy38Network();
+      renderMy38Performance();
+      renderMy38Feedback();
+    }
+
+    function my38StatusCopy(){
+      const map = {
+        none:{
+          tone:"none",
+          badge:"پروفایل ساخته نشده",
+          title:"پروفایل تجربه‌ات را بساز",
+          body:"پروفایل تجربه بساز تا دیگران بتوانند برای گفت‌وگو به تو درخواست بدهند.",
+          actions:`<button class="btn primary" data-nav="buildExperience">ساخت پروفایل تجربه</button><button class="btn secondary" data-nav="discover">کشف تجربه‌ها</button>`
+        },
+        pending_review:{
+          tone:"pending",
+          badge:"در انتظار بررسی",
+          title:"پروفایل تجربه تو در انتظار بررسی است",
+          body:"بعد از تأیید، در کشف تجربه‌ها دیده می‌شوی.",
+          actions:`<button class="btn primary" data-nav="buildExperience">ویرایش اطلاعات</button>`
+        },
+        inactive:{
+          tone:"inactive",
+          badge:"غیرفعال",
+          title:"پروفایل تجربه تو غیرفعال است",
+          body:"فعلاً در کشف تجربه‌ها دیده نمی‌شوی.",
+          actions:`<button class="btn primary" onclick="reactivateExperienceProfile()">فعال‌سازی دوباره</button><button class="btn secondary" data-nav="buildExperience">ویرایش پروفایل</button>`
+        },
+        active:{
+          tone:"active",
+          badge:"فعال در کشف تجربه‌ها",
+          title:"پروفایل تجربه تو فعال است",
+          body:"در کشف تجربه‌ها دیده می‌شوی.",
+          actions:`<button class="btn primary" onclick="previewMyExperienceProfile()">مشاهده پروفایل</button><button class="btn secondary" data-nav="buildExperience">ویرایش پروفایل</button>`
+        }
+      };
+      return map[experienceProfileStatus] || map.active;
+    }
+
+    function renderMy38Status(){
+      const copy = my38StatusCopy();
+      const incoming = my38IncomingCount();
+      $("my38Status").innerHTML = `
+        <div class="my38-status-card ${copy.tone}">
+          <div>
+            <span class="my38-status-badge">${copy.badge}</span>
+            <h2>${copy.title}</h2>
+            <p>${copy.body}</p>
+            ${incoming && experienceProfileStatus === "active" ? `<button class="my38-alert-link" onclick="openReceivedRequests()">${formatter.format(incoming)} درخواست جدید داری</button>` : ""}
+          </div>
+          <div class="my38-status-actions">${copy.actions}</div>
+        </div>
+      `;
+    }
+
+    function renderMy38Profile(){
+      if(experienceProfileStatus === "none"){
+        $("my38Profile").innerHTML = `
+          <div class="my38-section-head">
+            <div>
+              <h2>پروفایل تجربه من</h2>
+              <p>هنوز پروفایل تجربه نداری.</p>
+            </div>
+          </div>
+          <div class="my38-empty">برای دیده‌شدن در کشف تجربه‌ها، پروفایل تجربه بساز.</div>
+          <div class="my38-actions"><button class="btn primary" data-nav="buildExperience">ساخت پروفایل تجربه</button></div>
+        `;
+        return;
+      }
+
+      $("my38Profile").innerHTML = `
+        <div class="my38-section-head">
+          <div>
+            <h2>پروفایل تجربه من</h2>
+            <p>اطلاعاتی که در پروفایل تجربه‌ات نمایش داده می‌شود.</p>
+          </div>
+        </div>
+
+        <div class="my38-profile-top">
+          <div class="my38-avatar">${myExperienceProfile.initials}</div>
+          <div>
+            <h3>${myExperienceProfile.roleFa}</h3>
+            <p>${myExperienceProfile.orgLevel} · ${formatter.format(myExperienceProfile.yearsOfExperience)} سال سابقه</p>
+          </div>
+        </div>
+
+        <div class="my38-badges">
+          ${myExperienceProfile.jobCategoriesFa.slice(0,3).map(x => `<span class="my38-badge">${x}</span>`).join("")}
+          ${myExperienceProfile.previousCompaniesFa.slice(0,2).map(x => `<span class="my38-badge">${x}</span>`).join("")}
+        </div>
+
+        <div class="my38-price">
+          <div><span>۳۰ دقیقه</span><b>${toman(myExperienceProfile.pricing[30])}</b></div>
+          <div><span>۱ ساعت</span><b>${toman(myExperienceProfile.pricing[60])}</b></div>
+        </div>
+
+        <div class="my38-actions">
+          <button class="btn primary" onclick="previewMyExperienceProfile()">مشاهده پروفایل</button>
+          <button class="btn secondary" data-nav="buildExperience">ویرایش</button>
+        </div>
+      `;
+    }
+
+    function renderMy38Network(){
+      const following = my38Following();
+      const saved = my38Saved();
+      const followers = followers38();
+
+      $("my38Network").innerHTML = `
+        <div class="my38-section-head">
+          <div>
+            <h2>شبکه من</h2>
+            <p>آدم‌هایی که دنبال کرده‌ای، ذخیره کرده‌ای یا تو را دنبال می‌کنند.</p>
+          </div>
+        </div>
+
+        <div class="my38-network-grid">
+          <div class="my38-network-stat" onclick="openNetworkTab('following')"><b>${formatter.format(following.length)}</b><span>دنبال می‌کنم</span></div>
+          <div class="my38-network-stat" onclick="openNetworkTab('saved')"><b>${formatter.format(saved.length)}</b><span>ذخیره‌شده</span></div>
+          <div class="my38-network-stat" onclick="openNetworkTab('followers')"><b>${formatter.format(followers.length)}</b><span>دنبال‌کننده من</span></div>
+        </div>
+
+        <div class="my38-actions">
+          <button class="btn primary" onclick="openNetworkTab('following')">مدیریت شبکه من</button>
+          <button class="btn secondary" data-nav="discover">کشف تجربه‌های بیشتر</button>
+        </div>
+      `;
+    }
+
+    function renderMy38Performance(){
+      if(experienceProfileStatus === "none" || experienceProfileStatus === "pending_review"){
+        $("my38Performance").innerHTML = "";
+        return;
+      }
+
+      $("my38Performance").innerHTML = `
+        <div class="my38-section-head">
+          <div>
+            <h2>عملکرد تجربه</h2>
+            <p>خلاصه گفت‌وگوهای موفق و درآمد.</p>
+          </div>
+          <button class="btn secondary" data-nav="wallet">کیف پول و پرداخت‌ها</button>
+        </div>
+
+        <div class="my38-metrics">
+          <div class="my38-metric"><span>گفت‌وگوی موفق</span><b>${formatter.format(successfulConversationCount())}</b></div>
+          <div class="my38-metric"><span>رضایت گفت‌وگوها</span><b>★ ${toFaDecimal(myExperienceStats.csat)}</b></div>
+          <div class="my38-metric"><span>بازدید پروفایل</span><b>${formatter.format(myExperienceStats.profileViews)}</b></div>
+          <div class="my38-metric"><span>قابل برداشت</span><b>${toman(myExperienceStats.availableEarnings)}</b></div>
+        </div>
+      `;
+    }
+
+    function renderMy38Feedback(){
+      if(experienceProfileStatus === "none" || experienceProfileStatus === "pending_review"){
+        $("my38Feedback").innerHTML = "";
+        return;
+      }
+
+      $("my38Feedback").innerHTML = `
+        <div class="my38-section-head">
+          <div>
+            <h2>بازخوردهای دریافتی</h2>
+            <p>بازخوردهایی که بعد از گفت‌وگوها برای تو ثبت شده‌اند.</p>
+          </div>
+        </div>
+
+        <div class="my38-feedback-summary">
+          <div><b>${formatter.format(feedback38Items.length)}</b><span>بازخورد</span></div>
+          <div><b>★ ${toFaDecimal(myExperienceStats.csat)}</b><span>میانگین رضایت</span></div>
+        </div>
+
+        <div class="my38-actions">
+          <button class="btn primary" data-nav="receivedFeedback">دیدن بازخوردها</button>
+        </div>
+      `;
+    }
+
+    function openNetworkTab(tab){
+      network38Tab = tab;
+      navigate("myNetwork");
+      setTimeout(renderNetworkManager, 0);
+    }
+
+    function network38CurrentItems(){
+      if(network38Tab === "following") return my38Following();
+      if(network38Tab === "saved") return my38Saved();
+      return followers38();
+    }
+
+    function renderNetworkManager(){
+      const following = my38Following();
+      const saved = my38Saved();
+      const followers = followers38();
+
+      if($("networkFollowingCount")) $("networkFollowingCount").textContent = formatter.format(following.length);
+      if($("networkSavedCount")) $("networkSavedCount").textContent = formatter.format(saved.length);
+      if($("networkFollowersCount")) $("networkFollowersCount").textContent = formatter.format(followers.length);
+
+      document.querySelectorAll("[data-network-tab]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.networkTab === network38Tab);
+      });
+
+      const intro = {
+        following:"افرادی که دنبال می‌کنی.",
+        saved:"پروفایل‌هایی که ذخیره کرده‌ای.",
+        followers:"افرادی که تجربه تو را دنبال می‌کنند."
+      };
+      $("network38Intro").textContent = intro[network38Tab];
+
+      const query = ($("networkSearch")?.value || "").trim().toLowerCase();
+      const category = $("networkCategoryFilter")?.value || "";
+      const sort = $("networkSort")?.value || "recent";
+
+      let items = [...network38CurrentItems()];
+      if(query){
+        items = items.filter(p => `${p.name} ${p.roleFa || ""} ${(p.jobCategoriesFa || []).join(" ")}`.toLowerCase().includes(query));
+      }
+      if(category){
+        items = items.filter(p => (p.jobCategoriesFa || []).includes(category));
+      }
+      if(sort === "name") items.sort((a,b) => a.name.localeCompare(b.name, "fa"));
+      if(sort === "level") items.sort((a,b) => (b.orgLevel || "").localeCompare(a.orgLevel || "", "fa"));
+
+      $("network38List").innerHTML = items.length
+        ? items.map(renderNetwork38Card).join("")
+        : `<div class="my38-empty">موردی پیدا نشد.</div>`;
+    }
+
+    function renderNetwork38Card(p){
+      const isFollower = network38Tab === "followers";
+      const isSaved = network38Tab === "saved";
+      return `
+        <article class="network38-card">
+          <div class="network38-person">
+            <div class="network38-avatar">${p.initials || "؟"}</div>
+            <div>
+              <b>${p.name}</b>
+              <span>${p.roleFa || ""}${p.orgLevel ? " · " + p.orgLevel : ""}</span>
+            </div>
+          </div>
+          <p>${isFollower ? "دنبال‌کننده توست." : isSaved ? "ذخیره‌شده است." : "دنبال‌شده است."}</p>
+          <div class="network38-actions">
+            <button class="btn primary" onclick="openProfile('${p.id}')">دیدن تجربه</button>
+            ${isFollower ? "" : `<button class="btn secondary" onclick="toggleFollow('${p.id}'); renderNetworkManager(); renderMy38Network();">${p.isFollowing ? "دنبال نکردن" : "دنبال کردن"}</button>`}
+            ${isSaved ? `<button class="btn secondary" onclick="toggleSave('${p.id}'); renderNetworkManager(); renderMy38Network();">حذف از ذخیره‌شده‌ها</button>` : ""}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderReceivedFeedback(){
+      $("feedback38Summary").innerHTML = `
+        <div class="feedback38-summary-card"><b>${formatter.format(feedback38Items.length)}</b><span>بازخورد دریافتی</span></div>
+        <div class="feedback38-summary-card"><b>★ ${toFaDecimal(myExperienceStats.csat)}</b><span>میانگین رضایت</span></div>
+        <div class="feedback38-summary-card"><b>${formatter.format(successfulConversationCount())}</b><span>گفت‌وگوی موفق</span></div>
+      `;
+      $("feedback38List").innerHTML = feedback38Items.map(item => `
+        <article class="feedback38-card">
+          <h3>${item.name} · ${item.role}</h3>
+          <div class="stars">${"★".repeat(item.rating)}${"☆".repeat(5-item.rating)}</div>
+          <p>${item.text}</p>
+        </article>
+      `).join("");
+    }
+
+    document.addEventListener("click", e => {
+      const tab = e.target.closest("[data-network-tab]");
+      if(!tab) return;
+      network38Tab = tab.dataset.networkTab;
+      renderNetworkManager();
+    });
+
+    const navigateV38Original = navigate;
+    navigate = function(page){
+      navigateV38Original(page);
+      if(page === "myNetwork") setTimeout(renderNetworkManager, 0);
+      if(page === "receivedFeedback") setTimeout(renderReceivedFeedback, 0);
+    };
+
+    window.openNetworkTab = openNetworkTab;
+    window.openReceivedRequests = openReceivedRequests;
+    window.renderNetworkManager = renderNetworkManager;
+
+
+    // V44 completeness fix: build profile, wallet, notifications, dynamic Jalali dates.
+    let buildAvatarDataUrl = "";
+    let buildCompanyTags = ["اسنپ","دیجی‌کالا"];
+    let buildProfileDraftSaved = false;
+
+    const notificationStoreV44 = [
+      {id:"n1", unread:true, type:"request", title:"درخواست جدید داری", body:"یک نفر برای گفت‌وگو با تو درخواست داده است.", page:"conversations"},
+      {id:"n2", unread:true, type:"time", title:"زمان پیشنهادی رسیده", body:"برای یکی از درخواست‌ها چند زمان پیشنهادی ثبت شده است.", page:"conversations"},
+      {id:"n3", unread:true, type:"payment", title:"پرداخت نیاز به تکمیل دارد", body:"برای نهایی‌شدن گفت‌وگو، پرداخت را کامل کن.", page:"wallet"},
+      {id:"n4", unread:false, type:"feedback", title:"بازخورد جدید ثبت شد", body:"یک بازخورد تازه برای گفت‌وگوی انجام‌شده داری.", page:"receivedFeedback"}
+    ];
+
+    const walletTransactionsV44 = [
+      {type:"payment", title:"پرداخت گفت‌وگو با علی ر.", date:"۲۴ خرداد، ۱۴:۴۰", amount:-900000},
+      {type:"earning", title:"درآمد گفت‌وگوی موفق", date:"۲۳ خرداد، ۱۷:۱۰", amount:1800000},
+      {type:"payout", title:"تسویه به حساب بانکی", date:"۲۰ خرداد، ۱۲:۰۰", amount:-1200000},
+      {type:"refund", title:"برگشت مبلغ گفت‌وگوی لغوشده", date:"۱۸ خرداد، ۱۰:۳۰", amount:500000}
+    ];
+
+    const payoutInfoV44 = {iban:"IR••••••••••••••••۴۲۱", status:"تأیید شده"};
+
+    function selectedBuildCategories(){
+      return Array.from(document.querySelectorAll("#buildCategoryChips button.selected")).map(b => b.dataset.category);
+    }
+    function selectedBuildLanguages(){
+      return Array.from(document.querySelectorAll("#buildLanguageChips button.selected")).map(b => b.dataset.language);
+    }
+
+    function handleAvatarUpload(event){
+      const file = event.target.files?.[0];
+      const err = $("buildAvatarError");
+      if(err) err.textContent = "";
+      if(!file) return;
+      const validTypes = ["image/png","image/jpeg","image/webp"];
+      if(!validTypes.includes(file.type)){
+        if(err) err.textContent = "فرمت عکس باید PNG، JPG یا WebP باشد.";
+        event.target.value = "";
+        return;
+      }
+      if(file.size > 2 * 1024 * 1024){
+        if(err) err.textContent = "حجم عکس نباید بیشتر از ۲ مگابایت باشد.";
+        event.target.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        buildAvatarDataUrl = reader.result;
+        renderBuildAvatar();
+        updateBuildPreviewAndValidation();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderBuildAvatar(){
+      const preview = $("buildAvatarPreview");
+      if(!preview) return;
+      if(buildAvatarDataUrl){
+        preview.innerHTML = `<img src="${buildAvatarDataUrl}" alt="تصویر پروفایل">`;
+      } else {
+        preview.textContent = ($("buildDisplayName")?.value || "ع").trim()[0] || "ع";
+      }
+    }
+
+    function removeAvatar(){
+      buildAvatarDataUrl = "";
+      if($("buildAvatarInput")) $("buildAvatarInput").value = "";
+      if($("buildAvatarError")) $("buildAvatarError").textContent = "";
+      renderBuildAvatar();
+      updateBuildPreviewAndValidation();
+    }
+
+    function toggleBuildCategory(btn){
+      btn.classList.toggle("selected");
+      updateBuildPreviewAndValidation();
+    }
+    function toggleBuildLanguage(btn){
+      btn.classList.toggle("selected");
+      updateBuildPreviewAndValidation();
+    }
+
+    function handleCompanyKey(event){
+      if(event.key !== "Enter") return;
+      event.preventDefault();
+      const value = event.target.value.trim();
+      if(value) addCompanyTag(value);
+      event.target.value = "";
+    }
+
+    function addCompanyTag(name){
+      const clean = String(name || "").trim();
+      if(!clean || buildCompanyTags.includes(clean)) return;
+      buildCompanyTags.push(clean);
+      renderCompanyTags();
+      updateBuildPreviewAndValidation();
+    }
+
+    function removeCompanyTag(index){
+      buildCompanyTags.splice(index,1);
+      renderCompanyTags();
+      updateBuildPreviewAndValidation();
+    }
+
+    function renderCompanyTags(){
+      const el = $("buildCompanyTags");
+      if(!el) return;
+      el.innerHTML = buildCompanyTags.map((tag, index) => `
+        <span class="build44-tag">${tag}<button type="button" onclick="removeCompanyTag(${index})">×</button></span>
+      `).join("");
+    }
+
+    function updateSummaryCount(){
+      const value = $("buildSummary")?.value || "";
+      if($("summaryCount")) $("summaryCount").textContent = `${formatter.format(value.length)} / ۲۲۰`;
+    }
+
+    function updateBuildPricing(){
+      const level = $("buildOrgLevel")?.value;
+      const price = buildPricingByLevel[level] || {30:300000,60:500000};
+      if($("buildPrice30Input") && document.activeElement !== $("buildPrice30Input")) $("buildPrice30Input").value = price[30] || 0;
+      if($("buildPrice60Input") && document.activeElement !== $("buildPrice60Input")) $("buildPrice60Input").value = price[60] || 0;
+      updateBuildPreviewAndValidation();
+    }
+
+    function buildFormData(){
+      return {
+        displayName: ($("buildDisplayName")?.value || "").trim(),
+        role: ($("buildRole")?.value || "").trim(),
+        orgLevel: $("buildOrgLevel")?.value || "",
+        years: Number($("buildYears")?.value || 0),
+        categories: selectedBuildCategories(),
+        companies: [...buildCompanyTags],
+        languages: selectedBuildLanguages(),
+        summary: ($("buildSummary")?.value || "").trim(),
+        price30: Number($("buildPrice30Input")?.value || 0),
+        price60: Number($("buildPrice60Input")?.value || 0),
+        avatarUrl: buildAvatarDataUrl
+      };
+    }
+
+    function validateBuildForm(showErrors=true){
+      const data = buildFormData();
+      const errors = {};
+      if(!data.displayName || data.displayName.length < 2) errors.errDisplayName = "نام نمایشی را کامل کن.";
+      if(!data.role || data.role.length < 2) errors.errRole = "نقش اصلی را وارد کن.";
+      if(data.years < 0 || data.years > 40 || Number.isNaN(data.years)) errors.errYears = "سال سابقه باید بین ۰ تا ۴۰ باشد.";
+      if(!data.categories.length) errors.errCategories = "حداقل یک دسته‌بندی انتخاب کن.";
+      if(!data.companies.length) errors.errCompanies = "حداقل یک شرکت قبلی اضافه کن.";
+      if(!data.summary || data.summary.length < 20) errors.errSummary = "معرفی حرفه‌ای باید حداقل ۲۰ کاراکتر باشد.";
+      if(data.price30 <= 0) errors.errPrice30 = "قیمت ۳۰ دقیقه را وارد کن.";
+      if(data.price60 <= 0) errors.errPrice60 = "قیمت ۱ ساعت را وارد کن.";
+      if(data.price60 < data.price30) errors.errPrice60 = "قیمت ۱ ساعت نباید کمتر از ۳۰ دقیقه باشد.";
+
+      ["errDisplayName","errRole","errYears","errCategories","errCompanies","errSummary","errPrice30","errPrice60"].forEach(id => {
+        if($(id)) $(id).textContent = showErrors ? (errors[id] || "") : "";
+      });
+
+      const valid = Object.keys(errors).length === 0;
+      if($("submitBuildBtn")) $("submitBuildBtn").disabled = !valid;
+      return valid;
+    }
+
+    function renderBuildPreview(){
+      const data = buildFormData();
+      const avatar = data.avatarUrl ? `<img src="${data.avatarUrl}" alt="تصویر پروفایل">` : (data.displayName[0] || "؟");
+      const preview = `
+        <div class="build44-preview-top">
+          <div class="build44-preview-avatar">${data.avatarUrl ? avatar : avatar}</div>
+          <div>
+            <h3>${data.displayName || "نام نمایشی"}</h3>
+            <p>${data.role || "نقش"} · ${data.orgLevel || "رده سازمانی"} · ${formatter.format(data.years || 0)} سال سابقه</p>
+          </div>
+        </div>
+        <div class="build44-preview-badges">
+          ${data.categories.slice(0,4).map(x => `<span>${x}</span>`).join("")}
+          ${data.companies.slice(0,2).map(x => `<span>${x}</span>`).join("")}
+          ${data.languages.map(x => `<span>${x}</span>`).join("")}
+        </div>
+        <p>${data.summary || "معرفی حرفه‌ای کوتاه"}</p>
+        <div class="build44-preview-price">
+          <div><small>۳۰ دقیقه</small><b>${toman(data.price30 || 0)}</b></div>
+          <div><small>۱ ساعت</small><b>${toman(data.price60 || 0)}</b></div>
+        </div>
+      `;
+      if($("buildPublicPreview")) $("buildPublicPreview").innerHTML = preview;
+      return preview;
+    }
+
+    function updateBuildPreviewAndValidation(){
+      renderBuildAvatar();
+      renderCompanyTags();
+      updateSummaryCount();
+      renderBuildPreview();
+      validateBuildForm(false);
+      if($("build44Status")) $("build44Status").textContent = buildProfileDraftSaved ? "پیش‌نویس ذخیره‌شده" : "پیش‌نویس";
+    }
+
+    function saveBuildDraft(){
+      buildProfileDraftSaved = true;
+      updateBuildPreviewAndValidation();
+      toast("پیش‌نویس ذخیره شد.");
+    }
+
+    function openBuildPreview(){
+      renderBuildPreview();
+      if($("buildPreviewModalContent")) $("buildPreviewModalContent").innerHTML = renderBuildPreview();
+      $("buildPreviewModal")?.classList.add("show");
+    }
+    function closeBuildPreview(){
+      $("buildPreviewModal")?.classList.remove("show");
+    }
+
+    function submitBuildProfile(){
+      if(!validateBuildForm(true)){
+        toast("اطلاعات پروفایل را کامل کن.");
+        return;
+      }
+      const data = buildFormData();
+      myExperienceProfile.name = data.displayName;
+      myExperienceProfile.roleFa = data.role;
+      myExperienceProfile.orgLevel = data.orgLevel;
+      myExperienceProfile.yearsOfExperience = data.years;
+      myExperienceProfile.jobCategoriesFa = data.categories;
+      myExperienceProfile.previousCompaniesFa = data.companies;
+      myExperienceProfile.languages = data.languages;
+      myExperienceProfile.professionalSummary = data.summary;
+      myExperienceProfile.pricing = {30:data.price30,60:data.price60};
+      myExperienceProfile.avatarUrl = data.avatarUrl;
+      myExperienceProfile.initials = data.displayName[0] || myExperienceProfile.initials || "؟";
+      experienceProfileStatus = "pending_review";
+      notificationStoreV44.unshift({id:"n"+Date.now(), unread:true, type:"profile", title:"پروفایل برای بررسی ارسال شد", body:"بعد از تأیید، در کشف تجربه‌ها نمایش داده می‌شود.", page:"myExperience"});
+      updateNotifBadgeV44();
+      toast("پروفایل تجربه برای بررسی ارسال شد.");
+      navigate("myExperience");
+    }
+
+    function renderNotificationsV44(){
+      const list = $("notif44List");
+      if(!list) return;
+      list.innerHTML = notificationStoreV44.map(n => `
+        <article class="notif44-item ${n.unread ? "unread" : "read"}">
+          <span class="notif44-dot"></span>
+          <div><b>${n.title}</b><p>${n.body}</p></div>
+          <button class="btn secondary" onclick="openNotificationV44('${n.id}')">باز کردن</button>
+        </article>
+      `).join("");
+    }
+
+    function openNotificationV44(id){
+      const n = notificationStoreV44.find(x => x.id === id);
+      if(!n) return;
+      n.unread = false;
+      updateNotifBadgeV44();
+      if(n.page === "conversations" && typeof openReceivedRequests === "function") return openReceivedRequests();
+      navigate(n.page);
+    }
+
+    function updateNotifBadgeV44(){
+      const count = notificationStoreV44.filter(n => n.unread).length;
+      if($("notifBadgeV44")) $("notifBadgeV44").textContent = formatter.format(count);
+    }
+
+    function openTopupPanel(){
+      $("wallet44Panel").innerHTML = `
+        <b>افزایش موجودی</b><br>
+        مبلغ موردنظر را انتخاب کن و از طریق درگاه پرداخت کن.
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" onclick="topupWallet44(500000)">۵۰۰٬۰۰۰ تومان</button>
+          <button class="btn primary" onclick="topupWallet44(1000000)">۱٬۰۰۰٬۰۰۰ تومان</button>
+          <button class="btn primary" onclick="topupWallet44(2000000)">۲٬۰۰۰٬۰۰۰ تومان</button>
+        </div>
+      `;
+    }
+
+    function topupWallet44(amount){
+      wallet += amount;
+      walletTransactionsV44.unshift({type:"topup", title:"افزایش موجودی کیف پول", date:"امروز", amount});
+      toast("موجودی کیف پول افزایش یافت.");
+      renderWallet44();
+    }
+
+    function openPayoutPanel(){
+      $("wallet44Panel").innerHTML = `
+        <b>درخواست تسویه</b><br>
+        حساب تسویه: ${payoutInfoV44.iban} · وضعیت: ${payoutInfoV44.status}
+        <div style="margin-top:10px"><button class="btn primary" onclick="toast('درخواست تسویه ثبت شد.')">ثبت درخواست تسویه</button></div>
+      `;
+    }
+
+    function renderWallet44Transactions(){
+      const type = $("wallet44Filter")?.value || "";
+      const items = walletTransactionsV44.filter(t => !type || t.type === type);
+      $("wallet44Transactions").innerHTML = items.length ? items.map(t => `
+        <div class="wallet44-row">
+          <div><b>${t.title}</b><small>${t.date}</small></div>
+          <span class="wallet44-type">${walletTypeLabel44(t.type)}</span>
+          <b>${t.amount < 0 ? "−" : "+"}${toman(Math.abs(t.amount))}</b>
+        </div>
+      `).join("") : `<div class="my38-empty">تراکنشی پیدا نشد.</div>`;
+    }
+
+    function walletTypeLabel44(type){
+      return {payment:"پرداخت", earning:"درآمد", payout:"تسویه", refund:"برگشت مبلغ", topup:"افزایش موجودی"}[type] || type;
+    }
+
+    function renderWallet44(){
+      if($("wallet44Balance")) $("wallet44Balance").textContent = toman(wallet);
+      renderWallet44Transactions();
+    }
+
+    // Override checkout with insufficient balance and topup.
+    function renderCheckout(){
+      const r = selectedRequest || selectedConversation;
+      if(!r) return navigate("conversations");
+      const p = r.profile || selectedProfile || {};
+      const duration = r.duration || selectedDuration || 30;
+      const price = (p.pricing && p.pricing[duration]) || (duration === 60 ? 1800000 : 1000000);
+      const walletDeduction = Math.min(wallet, price);
+      const payable = Math.max(0, price - walletDeduction);
+      const selected = selectedProposal || r.selectedTime || r.selectedTimeShamsi || "زمان انتخاب‌شده";
+      $("checkoutSummary").innerHTML = `
+        <div class="row"><span class="k">فرد</span><span class="v">${p.name || "پروفایل انتخاب‌شده"}</span></div>
+        <div class="row"><span class="k">زمان گفت‌وگو</span><span class="v">${selected}</span></div>
+        <div class="row"><span class="k">مدت</span><span class="v">${duration === 60 ? "۱ ساعت" : "۳۰ دقیقه"}</span></div>
+        <div class="row"><span class="k">هزینه گفت‌وگو</span><span class="v">${toman(price)}</span></div>
+        <div class="row"><span class="k">پرداخت از کیف پول</span><span class="v">${toman(walletDeduction)}</span></div>
+        <div class="row"><span class="k">مبلغ قابل پرداخت از درگاه</span><span class="v">${toman(payable)}</span></div>
+        ${payable > 0 ? `<div class="build44-inline-note">موجودی کیف پول کافی نیست؛ باقی مبلغ از درگاه پرداخت می‌شود.</div>` : ""}
+      `;
+      $("payBtn").onclick = () => {
+        wallet = Math.max(0, wallet - walletDeduction);
+        walletTransactionsV44.unshift({type:"payment", title:"پرداخت گفت‌وگو", date:"امروز", amount:-price});
+        if(r.status !== undefined) r.status = "scheduled";
+        r.finalTime = selected;
+        r.selectedTime = selected;
+        toast("پرداخت انجام شد و گفت‌وگو نهایی شد.");
+        navigate("conversations");
+      };
+    }
+
+    function getNextJalaliDatesV44(count=10){
+      const fmtDay = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {weekday:"long"});
+      const fmtDate = new Intl.DateTimeFormat("fa-IR-u-ca-persian", {day:"numeric", month:"long", year:"numeric"});
+      const out = [];
+      const base = new Date();
+      for(let i=1;i<=count;i++){
+        const d = new Date(base);
+        d.setDate(base.getDate()+i);
+        out.push({id:"dyn"+i, day:fmtDay.format(d), date:fmtDate.format(d), full:`${fmtDay.format(d)} ${fmtDate.format(d)}`});
+      }
+      return out;
+    }
+
+    function renderTime35Picker(){
+      const dateEl = $("time35DateStrip");
+      const slotsEl = $("time35Slots");
+      const selectedEl = $("time35SelectedList");
+      const counterEl = $("time35Counter");
+      const submitEl = $("time35Submit");
+      if(!dateEl || !slotsEl || !selectedEl) return;
+      const dynamicDates = getNextJalaliDatesV44(10);
+      if(!time35SelectedDate || !dynamicDates.some(d => d.full === time35SelectedDate)){
+        time35SelectedDate = dynamicDates[0].full;
+      }
+      dateEl.innerHTML = dynamicDates.map(d => `
+        <button class="time35-date-chip ${d.full === time35SelectedDate ? "active" : ""}" type="button" onclick="selectTime35Date('${d.full}')">
+          <strong>${d.day}</strong><span>${d.date}</span>
+        </button>
+      `).join("");
+      slotsEl.innerHTML = time35Slots.map(slot => {
+        const full = `${time35SelectedDate}، ${slot}`;
+        const selected = time35SelectedTimes.includes(full);
+        return `<button class="time35-slot ${selected ? "selected" : ""}" type="button" onclick="toggleTime35Slot('${slot}')">${slot}</button>`;
+      }).join("");
+      selectedEl.innerHTML = time35SelectedTimes.length
+        ? time35SelectedTimes.map((item, idx) => {
+          const [date, slot] = item.split("، ");
+          return `<div class="time35-selected-item"><div><b>${date}</b><span>${slot}</span></div><button class="time35-remove" type="button" onclick="removeTime35Selected(${idx})">×</button></div>`;
+        }).join("")
+        : `<div class="time35-selected-empty">هنوز زمانی انتخاب نشده است.</div>`;
+      if(counterEl) counterEl.textContent = `${formatter.format(Math.min(time35SelectedTimes.length, 3))} از ۳`;
+      if(submitEl) submitEl.disabled = time35SelectedTimes.length < 3 || time35SelectedTimes.length > 6;
+    }
+
+    function submitTimeOptions(){
+      if(!selectedConversation) return navigate("conversations");
+      if(time35SelectedTimes.length < 3){
+        toast("حداقل سه زمان انتخاب کن.");
+        return;
+      }
+      if(time35SelectedTimes.length > 6){
+        toast("حداکثر شش زمان انتخاب کن.");
+        return;
+      }
+      selectedConversation.proposedTimes = [...time35SelectedTimes];
+      selectedConversation.status = "provider_time_options_sent";
+      notificationStoreV44.unshift({id:"n"+Date.now(), unread:true, type:"time", title:"زمان‌ها ارسال شدند", body:"زمان‌های پیشنهادی برای درخواست گفت‌وگو ثبت شد.", page:"conversations"});
+      updateNotifBadgeV44();
+      toast("زمان‌های پیشنهادی ارسال شدند.");
+      time35SelectedTimes = [];
+      time35SelectedDate = getNextJalaliDatesV44(1)[0].full;
+      navigate("conversations");
+    }
+
+    // Add avatar support in public profile.
+    function profileAvatarHtmlV44(p, cls="profile-avatar"){
+      if(p.avatarUrl) return `<div class="${cls}"><img src="${p.avatarUrl}" alt="تصویر ${p.name}" style="width:100%;height:100%;object-fit:cover;border-radius:inherit"></div>`;
+      return `<div class="${cls}">${p.initials || "؟"}</div>`;
+    }
+
+    function renderProfile(){
+      const p = selectedProfile;
+      $("profileContent").innerHTML = `
+        <div class="layout">
+          <div>
+            <div class="hero-profile">
+              ${profileAvatarHtmlV44(p)}
+              <div>
+                <h1 class="profile-name">${p.name}</h1>
+                <div style="color:var(--blue);font-weight:850">${p.roleFa}</div>
+                <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+                  <span class="chip level">${p.orgLevel}</span>
+                  <span class="chip">${formatter.format(p.yearsOfExperience)} سال سابقه</span>
+                  ${p.csat ? `<span class="chip csat"><span class="star">★</span>${toFaDecimal(p.csat)}</span>` : ""}
+                  <span class="chip">${formatter.format(p.conversations || 0)} گفت‌وگوی موفق</span>
+                </div>
+              </div>
+            </div>
+            <div class="panel" style="margin-top:14px">
+              <h2>معرفی حرفه‌ای</h2><p>${p.professionalSummary}</p>
+            </div>
+            <div class="panel" style="margin-top:14px">
+              <h2>اطلاعات حرفه‌ای</h2>
+              <div class="row"><span class="k">دسته‌بندی شغلی</span><span class="v">${p.jobCategoriesFa.join("، ")}</span></div>
+              <div class="row"><span class="k">شرکت‌های قبلی</span><span class="v">${p.previousCompaniesFa.join("، ")}</span></div>
+              <div class="row"><span class="k">زبان گفت‌وگو</span><span class="v">${(p.languages || ["فارسی"]).join("، ")}</span></div>
+            </div>
+            <div class="panel" style="margin-top:14px">
+              <h2>بازخوردها</h2>
+              <div class="row"><span class="k">میانگین رضایت</span><span class="v">★ ${toFaDecimal(p.csat || 0)}</span></div>
+              <p class="muted">${p.review || "هنوز بازخوردی ثبت نشده است."}</p>
+            </div>
+          </div>
+          <aside class="panel sticky">
+            <h2>درخواست گفت‌وگو</h2>
+            <p class="muted">بعد از ثبت درخواست، طرف مقابل چند زمان پیشنهادی ارسال می‌کند.</p>
+            <button class="btn primary" style="width:100%" onclick="startRequest('${p.id}',30)">درخواست ۳۰ دقیقه</button>
+            <button class="btn secondary" style="width:100%;margin-top:8px" onclick="startRequest('${p.id}',60)">درخواست ۱ ساعت</button>
+            <button class="btn secondary" style="width:100%;margin-top:8px" onclick="reportProfileV44('${p.id}')">گزارش پروفایل</button>
+          </aside>
+        </div>
+      `;
+    }
+
+    function reportProfileV44(id){ toast("گزارش ثبت شد و برای بررسی ارسال می‌شود."); }
+
+    // Render hooks.
+    const navigateV44Original = navigate;
+    navigate = function(page){
+      navigateV44Original(page);
+      if(page === "buildExperience") setTimeout(initBuildExperienceV44, 0);
+      if(page === "notifications") setTimeout(renderNotificationsV44, 0);
+      if(page === "wallet") setTimeout(renderWallet44, 0);
+    };
+
+    function initBuildExperienceV44(){
+      renderCompanyTags();
+      updateSummaryCount();
+      updateBuildPreviewAndValidation();
+    }
+
+    updateNotifBadgeV44();
+    setTimeout(initBuildExperienceV44, 0);
+
+    window.handleAvatarUpload = handleAvatarUpload;
+    window.removeAvatar = removeAvatar;
+    window.toggleBuildCategory = toggleBuildCategory;
+    window.toggleBuildLanguage = toggleBuildLanguage;
+    window.handleCompanyKey = handleCompanyKey;
+    window.addCompanyTag = addCompanyTag;
+    window.removeCompanyTag = removeCompanyTag;
+    window.saveBuildDraft = saveBuildDraft;
+    window.openBuildPreview = openBuildPreview;
+    window.closeBuildPreview = closeBuildPreview;
+    window.openTopupPanel = openTopupPanel;
+    window.openPayoutPanel = openPayoutPanel;
+    window.renderWallet44Transactions = renderWallet44Transactions;
+
+
+    // V46: price caps are maximums by org level; user can choose lower or offer free help.
+    const buildPriceCapsByLevel = {
+      "کارآموز": {30:100000, 60:250000},
+      "کارشناس": {30:300000, 60:500000},
+      "کارشناس ارشد": {30:500000, 60:900000},
+      "مدیر میانی": {30:1000000, 60:1800000},
+      "مدیر ارشد": {30:1000000, 60:1800000},
+      "مدیر کسب و کار": {30:4000000, 60:7000000},
+      "معاونت": {30:2500000, 60:4000000}
+    };
+
+    function moneyOrFreeV46(value){
+      return Number(value || 0) === 0 ? "رایگان" : toman(Number(value || 0));
+    }
+
+    function currentBuildPriceCap(){
+      const level = $("buildOrgLevel")?.value || "کارشناس";
+      return buildPriceCapsByLevel[level] || buildPriceCapsByLevel["کارشناس"];
+    }
+
+    function updateBuildPriceCapText(){
+      const cap = currentBuildPriceCap();
+      const level = $("buildOrgLevel")?.value || "";
+      const el = $("buildPriceCapText");
+      if(!el) return;
+      el.innerHTML = `<b>سقف قیمت ${level}</b>: ۳۰ دقیقه تا ${toman(cap[30])}، ۱ ساعت تا ${toman(cap[60])}. می‌توانی عدد کمتر انتخاب کنی.`;
+    }
+
+    function toggleFreeHelpPricing(){
+      const free = $("buildFreeHelp")?.checked;
+      const p30 = $("buildPrice30Input");
+      const p60 = $("buildPrice60Input");
+      if(!p30 || !p60) return;
+      if(free){
+        p30.dataset.previousValue = p30.value || "0";
+        p60.dataset.previousValue = p60.value || "0";
+        p30.value = 0;
+        p60.value = 0;
+        p30.disabled = true;
+        p60.disabled = true;
+      } else {
+        const cap = currentBuildPriceCap();
+        p30.disabled = false;
+        p60.disabled = false;
+        p30.value = Math.min(Number(p30.dataset.previousValue || cap[30] || 0), cap[30] || Number(p30.dataset.previousValue || 0));
+        p60.value = Math.min(Number(p60.dataset.previousValue || cap[60] || 0), cap[60] || Number(p60.dataset.previousValue || 0));
+      }
+      updateBuildPreviewAndValidation();
+    }
+
+    function updateBuildPricing(){
+      const cap = currentBuildPriceCap();
+      const p30 = $("buildPrice30Input");
+      const p60 = $("buildPrice60Input");
+      const free = $("buildFreeHelp")?.checked;
+      if(p30){
+        p30.max = cap[30] || 0;
+        if(!free && document.activeElement !== p30){
+          p30.value = cap[30] || 0;
+        }
+      }
+      if(p60){
+        p60.max = cap[60] || 0;
+        if(!free && document.activeElement !== p60){
+          p60.value = cap[60] || 0;
+        }
+      }
+      if(free){
+        if(p30) p30.value = 0;
+        if(p60) p60.value = 0;
+      }
+      updateBuildPriceCapText();
+      updateBuildPreviewAndValidation();
+    }
+
+    function buildFormData(){
+      const free = Boolean($("buildFreeHelp")?.checked);
+      return {
+        displayName: ($("buildDisplayName")?.value || "").trim(),
+        role: ($("buildRole")?.value || "").trim(),
+        orgLevel: $("buildOrgLevel")?.value || "",
+        years: Number($("buildYears")?.value || 0),
+        categories: selectedBuildCategories(),
+        companies: [...buildCompanyTags],
+        languages: selectedBuildLanguages(),
+        summary: ($("buildSummary")?.value || "").trim(),
+        price30: free ? 0 : Number($("buildPrice30Input")?.value || 0),
+        price60: free ? 0 : Number($("buildPrice60Input")?.value || 0),
+        freeHelp: free,
+        avatarUrl: buildAvatarDataUrl
+      };
+    }
+
+    function validateBuildForm(showErrors=true){
+      const data = buildFormData();
+      const cap = currentBuildPriceCap();
+      const errors = {};
+      if(!data.displayName || data.displayName.length < 2) errors.errDisplayName = "نام نمایشی را کامل کن.";
+      if(!data.role || data.role.length < 2) errors.errRole = "نقش اصلی را وارد کن.";
+      if(data.years < 0 || data.years > 40 || Number.isNaN(data.years)) errors.errYears = "سال سابقه باید بین ۰ تا ۴۰ باشد.";
+      if(!data.categories.length) errors.errCategories = "حداقل یک دسته‌بندی انتخاب کن.";
+      if(!data.companies.length) errors.errCompanies = "حداقل یک شرکت قبلی اضافه کن.";
+      if(!data.summary || data.summary.length < 20) errors.errSummary = "معرفی حرفه‌ای باید حداقل ۲۰ کاراکتر باشد.";
+      if(!data.freeHelp){
+        if(data.price30 < 0) errors.errPrice30 = "قیمت ۳۰ دقیقه نمی‌تواند منفی باشد.";
+        if(data.price60 < 0) errors.errPrice60 = "قیمت ۱ ساعت نمی‌تواند منفی باشد.";
+        if(cap[30] && data.price30 > cap[30]) errors.errPrice30 = `حداکثر قیمت ۳۰ دقیقه برای این رده ${toman(cap[30])} است.`;
+        if(cap[60] && data.price60 > cap[60]) errors.errPrice60 = `حداکثر قیمت ۱ ساعت برای این رده ${toman(cap[60])} است.`;
+        if(data.price60 < data.price30) errors.errPrice60 = "قیمت ۱ ساعت نباید کمتر از ۳۰ دقیقه باشد.";
+      }
+
+      ["errDisplayName","errRole","errYears","errCategories","errCompanies","errSummary","errPrice30","errPrice60"].forEach(id => {
+        if($(id)) $(id).textContent = showErrors ? (errors[id] || "") : "";
+      });
+
+      const valid = Object.keys(errors).length === 0;
+      if($("submitBuildBtn")) $("submitBuildBtn").disabled = !valid;
+      return valid;
+    }
+
+    function renderBuildPreview(){
+      const data = buildFormData();
+      const avatar = data.avatarUrl ? `<img src="${data.avatarUrl}" alt="تصویر پروفایل">` : (data.displayName[0] || "؟");
+      const preview = `
+        <div class="build44-preview-top">
+          <div class="build44-preview-avatar">${data.avatarUrl ? avatar : avatar}</div>
+          <div>
+            <h3>${data.displayName || "نام نمایشی"}</h3>
+            <p>${data.role || "نقش"} · ${data.orgLevel || "رده سازمانی"} · ${formatter.format(data.years || 0)} سال سابقه</p>
+          </div>
+        </div>
+        <div class="build44-preview-badges">
+          ${data.freeHelp ? `<span>کمک رایگان</span>` : ""}
+          ${data.categories.slice(0,4).map(x => `<span>${x}</span>`).join("")}
+          ${data.companies.slice(0,2).map(x => `<span>${x}</span>`).join("")}
+          ${data.languages.map(x => `<span>${x}</span>`).join("")}
+        </div>
+        <p>${data.summary || "معرفی حرفه‌ای کوتاه"}</p>
+        <div class="build44-preview-price">
+          <div><small>۳۰ دقیقه</small><b>${moneyOrFreeV46(data.price30)}</b></div>
+          <div><small>۱ ساعت</small><b>${moneyOrFreeV46(data.price60)}</b></div>
+        </div>
+      `;
+      if($("buildPublicPreview")) $("buildPublicPreview").innerHTML = preview;
+      return preview;
+    }
+
+    function submitBuildProfile(){
+      if(!validateBuildForm(true)){
+        toast("اطلاعات پروفایل را کامل کن.");
+        return;
+      }
+      const data = buildFormData();
+      myExperienceProfile.name = data.displayName;
+      myExperienceProfile.roleFa = data.role;
+      myExperienceProfile.orgLevel = data.orgLevel;
+      myExperienceProfile.yearsOfExperience = data.years;
+      myExperienceProfile.jobCategoriesFa = data.categories;
+      myExperienceProfile.previousCompaniesFa = data.companies;
+      myExperienceProfile.languages = data.languages;
+      myExperienceProfile.professionalSummary = data.summary;
+      myExperienceProfile.pricing = {30:data.price30,60:data.price60};
+      myExperienceProfile.freeHelp = data.freeHelp;
+      myExperienceProfile.avatarUrl = data.avatarUrl;
+      myExperienceProfile.initials = data.displayName[0] || myExperienceProfile.initials || "؟";
+      experienceProfileStatus = "pending_review";
+      notificationStoreV44.unshift({id:"n"+Date.now(), unread:true, type:"profile", title:"پروفایل برای بررسی ارسال شد", body:"بعد از تأیید، در کشف تجربه‌ها نمایش داده می‌شود.", page:"myExperience"});
+      updateNotifBadgeV44();
+      toast("پروفایل تجربه برای بررسی ارسال شد.");
+      navigate("myExperience");
+    }
+
+    function initBuildExperienceV44(){
+      renderCompanyTags();
+      updateSummaryCount();
+      updateBuildPriceCapText();
+      updateBuildPreviewAndValidation();
+    }
+
+
+    // V47: Account settings edit action.
+    const account47State = {
+      name: "علی ر.",
+      email: "user@example.com",
+      phone: "۰۹۱۲۱۲۳۴۵۶۷"
+    };
+
+    function openAccountEditModal(){
+      if($("account47Name")) $("account47Name").value = account47State.name;
+      if($("account47Email")) $("account47Email").value = account47State.email;
+      if($("account47Phone")) $("account47Phone").value = account47State.phone;
+      validateAccountEditForm(false);
+      $("accountEditModal")?.classList.add("show");
+    }
+
+    function closeAccountEditModal(){
+      $("accountEditModal")?.classList.remove("show");
+    }
+
+    function normalizePersianDigitsV47(value){
+      return String(value || "")
+        .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+        .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d));
+    }
+
+    function validateAccountEditForm(showErrors=true){
+      const name = ($("account47Name")?.value || "").trim();
+      const email = ($("account47Email")?.value || "").trim();
+      const phone = normalizePersianDigitsV47(($("account47Phone")?.value || "").trim());
+
+      const errors = {};
+      if(name.length < 2) errors.account47NameError = "نام را کامل وارد کن.";
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.account47EmailError = "ایمیل معتبر وارد کن.";
+      if(!/^09\d{9}$/.test(phone)) errors.account47PhoneError = "شماره موبایل باید با 09 شروع شود و ۱۱ رقم باشد.";
+
+      ["account47NameError","account47EmailError","account47PhoneError"].forEach(id => {
+        if($(id)) $(id).textContent = showErrors ? (errors[id] || "") : "";
+      });
+
+      const valid = Object.keys(errors).length === 0;
+      if($("account47SaveBtn")) $("account47SaveBtn").disabled = !valid;
+      return valid;
+    }
+
+    function saveAccountEdit(){
+      if(!validateAccountEditForm(true)){
+        toast("اطلاعات حساب را کامل کن.");
+        return;
+      }
+
+      account47State.name = $("account47Name").value.trim();
+      account47State.email = $("account47Email").value.trim();
+      account47State.phone = $("account47Phone").value.trim();
+
+      const settingsCards = document.querySelectorAll(".settings44-card");
+      if(settingsCards[0]){
+        const rows = settingsCards[0].querySelectorAll(".row .v");
+        if(rows[0]) rows[0].textContent = account47State.name;
+        if(rows[1]) rows[1].textContent = account47State.email;
+      }
+
+      closeAccountEditModal();
+      toast("اطلاعات حساب ذخیره شد.");
+    }
+
+    window.openAccountEditModal = openAccountEditModal;
+    window.closeAccountEditModal = closeAccountEditModal;
+    window.saveAccountEdit = saveAccountEdit;
+
+
+    // V49: org-level order + payout IBAN collection.
+    const orgLevelOrderV49 = ["کارآموز","کارشناس","کارشناس ارشد","مدیر میانی","مدیر ارشد","معاونت","مدیر کسب و کار"];
+
+    const payoutInfoStateV49 = {
+      owner: "",
+      iban: "",
+      verified: false
+    };
+
+    function normalizeIbanV49(value){
+      return String(value || "")
+        .replace(/\s+/g, "")
+        .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+        .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+        .toUpperCase();
+    }
+
+    function formatIbanInputV49(){
+      const el = $("payout49Iban");
+      if(!el) return;
+      let value = normalizeIbanV49(el.value);
+      if(value && !value.startsWith("IR")){
+        value = "IR" + value.replace(/^IR/i, "");
+      }
+      el.value = value.replace(/(.{4})/g, "$1 ").trim();
+    }
+
+    function validateIranIbanV49(iban){
+      const clean = normalizeIbanV49(iban);
+      return /^IR\d{24}$/.test(clean);
+    }
+
+    function openPayoutInfoModal(){
+      if($("payout49Owner")) $("payout49Owner").value = payoutInfoStateV49.owner || account47State?.name || "";
+      if($("payout49Iban")) $("payout49Iban").value = payoutInfoStateV49.iban ? payoutInfoStateV49.iban.replace(/(.{4})/g, "$1 ").trim() : "";
+      validatePayoutInfoForm(false);
+      $("payoutInfoModal")?.classList.add("show");
+    }
+
+    function closePayoutInfoModal(){
+      $("payoutInfoModal")?.classList.remove("show");
+    }
+
+    function validatePayoutInfoForm(showErrors=true){
+      const owner = ($("payout49Owner")?.value || "").trim();
+      const iban = normalizeIbanV49($("payout49Iban")?.value || "");
+      const errors = {};
+      if(owner.length < 3) errors.payout49OwnerError = "نام صاحب حساب را کامل وارد کن.";
+      if(!validateIranIbanV49(iban)) errors.payout49IbanError = "شماره شبا باید با IR شروع شود و ۲۴ رقم بعد از آن داشته باشد.";
+
+      ["payout49OwnerError","payout49IbanError"].forEach(id => {
+        if($(id)) $(id).textContent = showErrors ? (errors[id] || "") : "";
+      });
+
+      const valid = Object.keys(errors).length === 0;
+      if($("payout49SaveBtn")) $("payout49SaveBtn").disabled = !valid;
+      return valid;
+    }
+
+    function savePayoutInfo(){
+      if(!validatePayoutInfoForm(true)){
+        toast("اطلاعات تسویه را کامل کن.");
+        return;
+      }
+      payoutInfoStateV49.owner = $("payout49Owner").value.trim();
+      payoutInfoStateV49.iban = normalizeIbanV49($("payout49Iban").value);
+      payoutInfoStateV49.verified = true;
+
+      if($("settingsIbanValue")) $("settingsIbanValue").textContent = payoutInfoStateV49.iban.replace(/(.{4})/g, "$1 ").trim();
+      if($("settingsAccountOwnerValue")) $("settingsAccountOwnerValue").textContent = payoutInfoStateV49.owner;
+
+      closePayoutInfoModal();
+      toast("اطلاعات تسویه ذخیره شد.");
+    }
+
+    function openPayoutPanel(){
+      const hasPayoutInfo = Boolean(payoutInfoStateV49.verified && payoutInfoStateV49.iban);
+      $("wallet44Panel").innerHTML = hasPayoutInfo ? `
+        <b>درخواست تسویه</b><br>
+        حساب تسویه: ${payoutInfoStateV49.iban.replace(/(.{4})/g, "$1 ").trim()} · صاحب حساب: ${payoutInfoStateV49.owner}
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn primary" onclick="toast('درخواست تسویه ثبت شد.')">ثبت درخواست تسویه</button>
+          <button class="btn secondary" onclick="openPayoutInfoModal()">ویرایش اطلاعات تسویه</button>
+        </div>
+      ` : `
+        <b>اطلاعات تسویه ثبت نشده است</b><br>
+        برای برداشت درآمد، ابتدا شماره شبا و نام صاحب حساب را ثبت کن.
+        <div style="margin-top:10px"><button class="btn primary" onclick="openPayoutInfoModal()">ثبت اطلاعات تسویه</button></div>
+      `;
+    }
+
+    // Override network sort by org level using the intended hierarchy.
+    function renderNetworkManager(){
+      const following = my38Following();
+      const saved = my38Saved();
+      const followers = followers38();
+
+      if($("networkFollowingCount")) $("networkFollowingCount").textContent = formatter.format(following.length);
+      if($("networkSavedCount")) $("networkSavedCount").textContent = formatter.format(saved.length);
+      if($("networkFollowersCount")) $("networkFollowersCount").textContent = formatter.format(followers.length);
+
+      document.querySelectorAll("[data-network-tab]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.networkTab === network38Tab);
+      });
+
+      const intro = {
+        following:"افرادی که دنبال می‌کنی.",
+        saved:"پروفایل‌هایی که ذخیره کرده‌ای.",
+        followers:"افرادی که تجربه تو را دنبال می‌کنند."
+      };
+      if($("network38Intro")) $("network38Intro").textContent = intro[network38Tab];
+
+      const query = ($("networkSearch")?.value || "").trim().toLowerCase();
+      const category = $("networkCategoryFilter")?.value || "";
+      const sort = $("networkSort")?.value || "recent";
+
+      let items = [...network38CurrentItems()];
+      if(query){
+        items = items.filter(p => `${p.name} ${p.roleFa || ""} ${(p.jobCategoriesFa || []).join(" ")}`.toLowerCase().includes(query));
+      }
+      if(category){
+        items = items.filter(p => (p.jobCategoriesFa || []).includes(category));
+      }
+      if(sort === "name") items.sort((a,b) => a.name.localeCompare(b.name, "fa"));
+      if(sort === "level") items.sort((a,b) => (orgLevelOrderV49.indexOf(b.orgLevel) - orgLevelOrderV49.indexOf(a.orgLevel)));
+
+      if($("network38List")){
+        $("network38List").innerHTML = items.length
+          ? items.map(renderNetwork38Card).join("")
+          : `<div class="my38-empty">موردی پیدا نشد.</div>`;
+      }
+    }
+
+    window.openPayoutInfoModal = openPayoutInfoModal;
+    window.closePayoutInfoModal = closePayoutInfoModal;
+    window.savePayoutInfo = savePayoutInfo;
+    window.formatIbanInputV49 = formatIbanInputV49;
+
+
+    // V50: settings live inside Profile page, not top navigation.
+    function renderMy50AccountSettings(){
+      const el = $("my50AccountSettings");
+      if(!el) return;
+
+      const hasIban = Boolean(payoutInfoStateV49?.iban);
+      el.innerHTML = `
+        <div class="my38-section-head">
+          <div>
+            <h2>حساب و تنظیمات</h2>
+            <p>اطلاعات حساب، تسویه و حریم خصوصی.</p>
+          </div>
+        </div>
+
+        <div class="my50-settings-grid">
+          <div class="my50-settings-item">
+            <b>اطلاعات حساب</b>
+            <span>${account47State?.name || "علی ر."} · ${account47State?.email || "user@example.com"}</span>
+            <button class="btn secondary" onclick="openAccountEditModal()">ویرایش اطلاعات حساب</button>
+          </div>
+
+          <div class="my50-settings-item">
+            <b>اطلاعات تسویه</b>
+            <span>${hasIban ? payoutInfoStateV49.iban.replace(/(.{4})/g, "$1 ").trim() : "شماره شبا ثبت نشده است."}</span>
+            <button class="btn secondary" onclick="openPayoutInfoModal()">ثبت / ویرایش شبا</button>
+          </div>
+
+          <div class="my50-settings-item">
+            <b>تنظیمات کامل</b>
+            <span>اعلان‌ها، حریم خصوصی و وضعیت نمایش پروفایل.</span>
+            <button class="btn secondary" data-nav="accountSettings">رفتن به تنظیمات</button>
+          </div>
+        </div>
+      `;
+    }
+
+    const renderMyExperienceV50Previous = renderMyExperience;
+    renderMyExperience = function(){
+      renderMyExperienceV50Previous();
+      renderMy50AccountSettings();
+    };
+
+    // Refresh the profile settings panel after account/payout saves.
+    const saveAccountEditV50Previous = saveAccountEdit;
+    saveAccountEdit = function(){
+      saveAccountEditV50Previous();
+      renderMy50AccountSettings();
+    };
+
+    const savePayoutInfoV50Previous = savePayoutInfo;
+    savePayoutInfo = function(){
+      savePayoutInfoV50Previous();
+      renderMy50AccountSettings();
+    };
+
+    window.renderMy50AccountSettings = renderMy50AccountSettings;
+
+    hydrateFilters();
+    track("discovery_page_viewed");
+    renderCards();

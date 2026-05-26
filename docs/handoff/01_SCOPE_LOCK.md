@@ -1,0 +1,87 @@
+# Scope Lock — Useravaa MVP
+
+## In Scope for MVP
+
+- Main navigation: کشف تجربه‌ها، گفت‌وگوها، پروفایل.
+- Utility navigation: راهنما، اعلان‌ها، کیف پول.
+- Guide page labelled راهنما with primary explanatory content only.
+- Discover experience profiles by role, job category, organization level, previous companies and years of experience.
+- View an experience profile.
+- Follow a profile.
+- Save a profile.
+- Manage network from profile area:
+  - دنبال می‌کنم
+  - ذخیره‌شده‌ها
+  - دنبال‌کننده‌های من
+- Build and edit an experience profile with:
+  - profile image upload
+  - display name
+  - role
+  - organization level
+  - years of experience
+  - job categories multi-select
+  - previous companies tag input
+  - conversation languages
+  - professional summary
+  - 30-minute and 60-minute prices under configured caps
+  - کمک رایگان option
+  - draft save
+  - preview
+  - submit for review
+- Experience profile review states:
+  - draft
+  - pending_review
+  - needs_changes
+  - active
+  - inactive
+- Conversation request flow:
+  - seeker sends request
+  - provider proposes 3 to 6 date/time options
+  - seeker selects one proposed time or cancels
+  - payment/finalization
+  - completed conversation
+  - feedback
+- Conversations page with two primary tabs:
+  - درخواست‌های من
+  - درخواست‌های دریافتی
+- Conversation groups:
+  - نیازمند اقدام
+  - در حال پیگیری
+  - تمام‌شده
+- Time proposal picker using Shamsi/Jalali date chips and time slot chips, not free text.
+- No direct availability calendar on public profile.
+- Wallet:
+  - wallet balance
+  - transaction list
+  - transaction filter
+  - top-up
+  - payout/settlement request
+- Settlement data collection:
+  - Iranian IBAN/Shaba
+  - account owner name
+  - payout blocked until settlement info is registered
+- Account settings accessible from profile area, not top-level global navigation.
+- Account editing:
+  - name
+  - email
+  - phone
+- Notification center:
+  - notification badge
+  - unread/read state
+  - deep link to related page
+- Received feedback page and feedback summary in profile area.
+- RTL Persian UI, Persian numbers, Toman prices and Shamsi/Jalali dates.
+
+## Out of Scope for MVP
+
+- Homepage/landing page.
+- Public availability calendar on profile.
+- Direct booking without request.
+- Fixed separation of users into mentor vs seeker accounts.
+- Any feature not mapped in this package.
+- Commission calculation until product decision is made.
+- Cancellation/refund policy until product decision is made.
+- Payout timing and settlement cycle until product decision is made.
+- External provider-specific implementation details until providers are selected.
+- Real identity/KYC workflow beyond collecting payout information.
+- Real moderation backend beyond report endpoints/states.

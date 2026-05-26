@@ -1,0 +1,23 @@
+﻿epic,feature_id,title,description,priority,depends_on,acceptance_criteria
+Navigation,NAV-001,Implement final header layout,"Main nav must contain کشف تجربه‌ها, گفت‌وگوها, پروفایل. Utilities must contain راهنما, اعلان‌ها, کیف پول.",P0,,Header groups main navigation and utilities; settings is not a top-level nav item.
+Discover,DISC-001,Build discover page,"Search and filter experience profiles by role, category, org level, company and years group.",P0,API-Profile,"Profiles render with avatar fallback, role, org level, categories, companies, CSAT and successful conversations."
+Discover,DISC-002,Implement save/follow actions,Allow authenticated users to save and follow profiles from discovery/profile pages.,P0,"Auth,API-Network",Button state changes immediately; saved/followed items appear in network page.
+Profile,PROF-001,Public experience profile page,"Show avatar, display name, role, org level, years, categories, companies, language, summary, rating and successful conversations.",P0,API-Profile,Profile route loads public data and supports request CTA for authenticated users.
+Build Profile,BUILD-001,Avatar uploader,"Add profile image upload with preview, replace, remove, type and size validation.",P0,API-Upload,Accept PNG/JPG/WebP; reject invalid type/size; store avatarUrl.
+Build Profile,BUILD-002,Experience profile form,"Implement displayName, role, orgLevel, years, categories, companies, languages, summary, prices and free help.",P0,Data-Profile,Form validates all fields and supports draft save and preview.
+Build Profile,BUILD-003,Pricing caps validation,Enforce max prices by org level and allow lower prices or free help.,P0,PricingRules,Server and client reject values above cap; freeHelp sets both prices to 0.
+Build Profile,BUILD-004,Profile review lifecycle,"Implement draft, pending_review, needs_changes, active and inactive states.",P0,ProfileState,Submitted profile becomes pending_review; active profile is discoverable.
+Conversations,CONV-001,Create conversation request,Authenticated seeker creates request for a profile and duration.,P0,"Auth,API-Conversations",Request status becomes requested; provider sees it under received/needs action.
+Conversations,CONV-002,Conversation inbox,"Implement tabs درخواست‌های من and درخواست‌های دریافتی grouped by نیازمند اقدام, در حال پیگیری, تمام‌شده.",P0,CONV-001,Actions render based on state and actor.
+Scheduling,SCH-001,Provider time proposal,Provider selects 3 to 6 Shamsi date/time options via chips.,P0,CONV-001,No free text; duplicates blocked; submit disabled outside 3..6 range.
+Scheduling,SCH-002,Seeker time selection,Seeker selects one provider-proposed time or cancels.,P0,SCH-001,Selected time moves conversation to awaiting payment.
+Payment,PAY-001,Checkout finalization,"Calculate price, wallet deduction and gateway payable amount.",P0,"CONV-002,Wallet","After successful payment, conversation becomes scheduled."
+Wallet,WAL-001,Wallet page,"Show balance, available payout, pending payout and transactions with filter.",P0,Payment,Top-up and payout panels exist.
+Settlement,SET-001,Collect payout info,Collect account owner name and Iranian IBAN/Shaba before payout.,P0,Wallet,Payout blocked until valid IR + 24 digits is stored.
+Notifications,NOTIF-001,Notification center,"Badge, unread/read list and deep links.",P1,"Conversations,Payment",Clicking notification marks read and routes to related page.
+Network,NET-001,Network manager,"Tabs for following, saved, followers with search/filter/sort.",P0,DISC-002,Large saved lists handled through server-side pagination.
+Feedback,FDB-001,Feedback flow,Allow feedback after successful conversation and show received feedback to provider.,P1,"Payment,Conversations",Feedback visible in received feedback page and profile summary.
+Settings,SETT-001,Account settings inside profile,"Edit account info, notification toggles, privacy toggles and settlement access.",P1,Auth,Settings page is reachable from profile/account area.
+Admin,ADM-001,Profile review admin flow,Admin reviews profile submissions and sets active/needs_changes/rejected-like needs_changes state.,P1,BUILD-004,Admin can provide required changes; profile owner sees needs_changes.
+Analytics,AN-001,Event tracking taxonomy,"Track search, filter, save, follow, request, time proposal, time selection, payment, feedback.",P2,Core flows,Events use stable names and entity ids.
+QA,QA-001,E2E and state tests,Implement E2E tests from package scenarios and state machine transition tests.,P0,All P0,CI fails on invalid transitions and broken critical flows.

@@ -1,0 +1,55 @@
+{
+  "sourceOfTruth": "ExperienceTimelineItem[]",
+  "derivedFields": {
+    "current_role": {
+      "deriveFrom": "timeline item where isCurrent=true, latest start date",
+      "field": "jobTitle"
+    },
+    "current_seniority": {
+      "deriveFrom": "timeline item where isCurrent=true, latest start date",
+      "field": "orgLevel"
+    },
+    "current_company": {
+      "deriveFrom": "timeline item where isCurrent=true, latest start date",
+      "field": "companyName"
+    },
+    "current_company_field": {
+      "deriveFrom": "timeline item where isCurrent=true, latest start date",
+      "field": "companyField"
+    },
+    "current_company_country": {
+      "deriveFrom": "timeline item where isCurrent=true, latest start date",
+      "field": "companyCountry"
+    },
+    "previous_role": {
+      "deriveFrom": "most recent non-current timeline item sorted by end date desc",
+      "field": "jobTitle"
+    },
+    "previous_seniority": {
+      "deriveFrom": "most recent non-current timeline item sorted by end date desc",
+      "field": "orgLevel"
+    },
+    "previous_company": {
+      "deriveFrom": "most recent non-current timeline item sorted by end date desc",
+      "field": "companyName"
+    },
+    "previous_company_field": {
+      "deriveFrom": "most recent non-current timeline item sorted by end date desc",
+      "field": "companyField"
+    },
+    "previous_company_country": {
+      "deriveFrom": "most recent non-current timeline item sorted by end date desc",
+      "field": "companyCountry"
+    },
+    "job_category": {
+      "deriveFrom": "profile selected job categories",
+      "field": "ExperienceProfile.categories"
+    }
+  },
+  "templateEligibilityUpdate": {
+    "company_environment_templates": "Use current_company and previous_company derived from timeline.",
+    "seniority_difference_templates": "Use current_seniority and previous_seniority derived from timeline.",
+    "hidden_role_reality_templates": "Use current_role derived from timeline.",
+    "decision_pressure_templates": "Use current_role or job_category depending on template."
+  }
+}

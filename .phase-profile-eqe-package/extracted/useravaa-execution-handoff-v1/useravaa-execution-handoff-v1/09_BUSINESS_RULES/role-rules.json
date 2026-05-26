@@ -1,0 +1,38 @@
+{
+  "userRoles": [
+    "guest",
+    "authenticated_user",
+    "profile_owner",
+    "seeker",
+    "provider",
+    "admin"
+  ],
+  "accountRoleModel": "A user is not forced into mentor/seeker role; the same authenticated user can request conversations and offer their own experience.",
+  "organizationLevelsFa": [
+    "کارآموز",
+    "کارشناس",
+    "کارشناس ارشد",
+    "مدیر میانی",
+    "مدیر ارشد",
+    "معاونت",
+    "مدیر کسب و کار"
+  ],
+  "organizationLevelOrderLowToHigh": [
+    "کارآموز",
+    "کارشناس",
+    "کارشناس ارشد",
+    "مدیر میانی",
+    "مدیر ارشد",
+    "معاونت",
+    "مدیر کسب و کار"
+  ],
+  "organizationLevelMeaning": {
+    "مدیر کسب و کار": "highest seniority level; equivalent to CEO/business owner level in this product taxonomy"
+  },
+  "officialLabels": {
+    "orgLevelField": "رده سازمانی",
+    "experienceProfile": "پروفایل تجربه",
+    "discoverPage": "کشف تجربه‌ها",
+    "profilePage": "پروفایل من"
+  }
+}

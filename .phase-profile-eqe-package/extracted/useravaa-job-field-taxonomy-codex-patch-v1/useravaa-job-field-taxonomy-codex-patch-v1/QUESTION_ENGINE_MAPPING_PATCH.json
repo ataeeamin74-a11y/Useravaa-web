@@ -1,0 +1,42 @@
+{
+  "placeholderMapping": {
+    "current_role": {
+      "source": "current ExperienceTimelineItem.jobTitle",
+      "type": "free_text"
+    },
+    "job_category": {
+      "source": "current ExperienceTimelineItem.jobField or profile jobField list",
+      "type": "fixed_taxonomy",
+      "allowedValuesFa": [
+        "محصول و تجربه کاربر",
+        "طراحی گرافیک و هویت بصری",
+        "فنی و مهندسی نرم‌افزار",
+        "علوم داده و هوش مصنوعی",
+        "مارکتینگ و برند",
+        "تحلیل و توسعه کسب‌وکار",
+        "عملیات",
+        "تجربه مشتری",
+        "پشتیبانی مشتریان",
+        "فروش و بازرگانی",
+        "استراتژی و مدل کسب‌وکار",
+        "مالی، حقوقی و سرمایه‌گذاری",
+        "منابع انسانی و فرهنگ سازمانی",
+        "مدیریت، رهبری و کارآفرینی"
+      ]
+    },
+    "previous_role": {
+      "source": "most recent previous ExperienceTimelineItem.jobTitle",
+      "type": "free_text"
+    }
+  },
+  "eligibilityRules": {
+    "templatesRequiringCurrentRole": "eligible when current timeline item has non-empty jobTitle",
+    "templatesRequiringJobCategory": "eligible when jobField exists and is in fixed taxonomy",
+    "templatesRequiringPreviousRole": "eligible when previous timeline item has non-empty jobTitle"
+  },
+  "doNotUse": [
+    "arbitrary job category text",
+    "old inconsistent category labels",
+    "companyIndustry as job_category"
+  ]
+}

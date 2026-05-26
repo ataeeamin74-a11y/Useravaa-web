@@ -1,0 +1,217 @@
+Enum user_role {
+  USER
+  ADMIN
+}
+
+Enum org_level {
+  INTERN
+  SPECIALIST
+  SENIOR_SPECIALIST
+  MIDDLE_MANAGER
+  SENIOR_MANAGER
+  VP
+  BUSINESS_MANAGER
+}
+
+Enum profile_status {
+  DRAFT
+  PENDING_REVIEW
+  NEEDS_CHANGES
+  ACTIVE
+  INACTIVE
+}
+
+Enum conversation_status {
+  DRAFT
+  REQUESTED
+  PROVIDER_TIME_OPTIONS_SENT
+  TIME_SELECTED
+  AWAITING_PAYMENT
+  SCHEDULED
+  COMPLETED
+  FEEDBACK_PENDING
+  FEEDBACK_SUBMITTED
+  CANCELLED
+  EXPIRED
+}
+
+Table users {
+  id varchar [pk]
+  role user_role [not null, default: 'USER']
+  display_name varchar [not null]
+  email varchar [not null, unique]
+  phone varchar
+  avatar_url varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table experience_profiles {
+  id varchar [pk]
+  owner_id varchar [not null, unique, ref: > users.id]
+  status profile_status [not null, default: 'DRAFT']
+  display_name varchar [not null]
+  avatar_url varchar
+  role_title varchar [not null]
+  org_level org_level [not null]
+  years_of_experience int [not null]
+  professional_summary text [not null]
+  free_help boolean [not null, default: false]
+  price_30_toman int [not null]
+  price_60_toman int [not null]
+  review_note text
+  successful_conversation_count int [not null, default: 0]
+  csat_average float
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table job_categories {
+  id varchar [pk]
+  label_fa varchar [not null, unique]
+}
+
+Table profile_categories {
+  profile_id varchar [not null, ref: > experience_profiles.id]
+  category_id varchar [not null, ref: > job_categories.id]
+  indexes {
+    (profile_id, category_id) [pk]
+  }
+}
+
+Table companies {
+  id varchar [pk]
+  name_fa varchar [not null, unique]
+}
+
+Table profile_companies {
+  profile_id varchar [not null, ref: > experience_profiles.id]
+  company_id varchar [not null, ref: > companies.id]
+  indexes {
+    (profile_id, company_id) [pk]
+  }
+}
+
+Table languages {
+  id varchar [pk]
+  label_fa varchar [not null, unique]
+}
+
+Table profile_languages {
+  profile_id varchar [not null, ref: > experience_profiles.id]
+  language_id varchar [not null, ref: > languages.id]
+  indexes {
+    (profile_id, language_id) [pk]
+  }
+}
+
+Table saved_profiles {
+  user_id varchar [not null, ref: > users.id]
+  profile_id varchar [not null, ref: > experience_profiles.id]
+  created_at timestamp
+  indexes {
+    (user_id, profile_id) [pk]
+  }
+}
+
+Table profile_follows {
+  follower_id varchar [not null, ref: > users.id]
+  followed_user_id varchar [not null, ref: > users.id]
+  profile_id varchar [not null, ref: > experience_profiles.id]
+  created_at timestamp
+  indexes {
+    (follower_id, profile_id) [pk]
+  }
+}
+
+Table conversation_requests {
+  id varchar [pk]
+  seeker_id varchar [not null, ref: > users.id]
+  provider_id varchar [not null, ref: > users.id]
+  profile_id varchar [not null, ref: > experience_profiles.id]
+  duration varchar [not null]
+  price_toman int [not null]
+  status conversation_status [not null]
+  seeker_note text
+  selected_time_id varchar
+  final_time_shamsi varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table proposed_times {
+  id varchar [pk]
+  conversation_id varchar [not null, ref: > conversation_requests.id]
+  shamsi_date_label varchar [not null]
+  time_label varchar [not null]
+  is_selected boolean [not null, default: false]
+  created_at timestamp
+}
+
+Table payments {
+  id varchar [pk]
+  conversation_id varchar [not null, unique, ref: > conversation_requests.id]
+  payer_id varchar [not null, ref: > users.id]
+  amount_toman int [not null]
+  wallet_deduction_toman int [not null]
+  gateway_payable_toman int [not null]
+  status varchar [not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table wallets {
+  id varchar [pk]
+  user_id varchar [not null, unique, ref: > users.id]
+  balance_toman int [not null, default: 0]
+  available_payout_toman int [not null, default: 0]
+  pending_payout_toman int [not null, default: 0]
+}
+
+Table wallet_transactions {
+  id varchar [pk]
+  wallet_id varchar [not null, ref: > wallets.id]
+  type varchar [not null]
+  title varchar [not null]
+  amount_toman int [not null]
+  created_at timestamp
+}
+
+Table settlement_infos {
+  id varchar [pk]
+  user_id varchar [not null, unique, ref: > users.id]
+  account_owner varchar [not null]
+  iban varchar [not null]
+  verified boolean [not null, default: false]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table payouts {
+  id varchar [pk]
+  user_id varchar [not null, ref: > users.id]
+  amount_toman int [not null]
+  status varchar [not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table feedbacks {
+  id varchar [pk]
+  conversation_id varchar [not null, unique, ref: > conversation_requests.id]
+  profile_id varchar [not null, ref: > experience_profiles.id]
+  author_id varchar [not null, ref: > users.id]
+  rating int [not null]
+  text text
+  created_at timestamp
+}
+
+Table notifications {
+  id varchar [pk]
+  user_id varchar [not null, ref: > users.id]
+  status varchar [not null]
+  title varchar [not null]
+  body text [not null]
+  target_route varchar
+  created_at timestamp
+}

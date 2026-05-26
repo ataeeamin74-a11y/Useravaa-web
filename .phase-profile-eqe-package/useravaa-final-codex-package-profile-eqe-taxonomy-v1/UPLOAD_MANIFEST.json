@@ -1,0 +1,13 @@
+{
+  "packageName": "useravaa-final-codex-package-profile-eqe-taxonomy-v1",
+  "sourceOfTruthOrder": [
+    "useravaa-execution-handoff-v1.zip",
+    "useravaa-eqe-codex-final-upload.zip",
+    "useravaa-profile-experience-timeline-codex-patch-v1.zip",
+    "useravaa-job-field-taxonomy-codex-patch-v1.zip"
+  ],
+  "latestPriority": "useravaa-job-field-taxonomy-codex-patch-v1.zip",
+  "manualReviewGate": true,
+  "requiredCodexFinalLine": "Implementation complete. Waiting for manual Chrome review before checkpoint or next phase.",
+  "missingFiles": []
+}

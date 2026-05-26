@@ -1,0 +1,13 @@
+﻿scenario_id,title,given,when,then,priority
+E2E-001,Guest discovers profiles,Given a guest is on /discover,When they search and filter profiles,Then active profiles are listed and save/follow/request actions require authentication,P0
+E2E-002,Authenticated user builds profile with paid prices,Given a user is authenticated,"When they upload avatar, complete required fields, choose org level and prices under caps, then submit",Then the profile becomes pending_review,P0
+E2E-003,Price cap validation blocks higher price,Given a user selects کارشناس ارشد,When they enter ۳۰ دقیقه above ۵۰۰٬۰۰۰ or ۱ ساعت above ۹۰۰٬۰۰۰,Then the form shows cap validation error and cannot submit,P0
+E2E-004,Free help disables price inputs,Given a user is building profile,When they enable کمک رایگان,"Then both prices become 0, inputs are disabled and preview shows رایگان",P0
+E2E-005,Provider proposes times,Given a provider has a received request,When they select fewer than 3 times,Then submit is disabled; when selecting 3 to 6 unique times submit succeeds,P0
+E2E-006,Seeker selects proposed time and pays,Given a seeker has time options,When they choose one and complete checkout,Then conversation becomes scheduled,P0
+E2E-007,Wallet insufficient balance,Given wallet balance is less than conversation price,When checkout loads,Then wallet deduction and gateway payable amount are shown,P0
+E2E-008,Payout blocked without IBAN,Given provider has available payout but no settlement info,When requesting payout,Then settlement info form is required,P0
+E2E-009,IBAN validation,Given user opens settlement form,When IBAN is not IR plus 24 digits,Then save is blocked with validation error,P0
+E2E-010,Network saved list,Given user saved profiles,When they open /profile/network saved tab and search/filter,Then matching saved profiles are listed,P1
+E2E-011,Notification deep link,Given user has an unread conversation notification,When they open it,Then notification becomes read and user is routed to conversations,P1
+E2E-012,Feedback after successful conversation,Given a conversation is completed,When seeker submits rating 1 to 5,Then feedback appears in provider received feedback page,P1

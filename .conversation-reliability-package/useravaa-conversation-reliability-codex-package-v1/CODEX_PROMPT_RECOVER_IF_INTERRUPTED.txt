@@ -1,0 +1,35 @@
+Stop and recover the workspace before doing anything else.
+
+The previous Conversation Request Reliability attempt may have been interrupted after deleting or partially editing conversation-related files.
+
+Recovery requirements:
+1. Do not continue implementation yet.
+2. Do not start a new phase.
+3. Do not create a checkpoint.
+4. Inspect git/workspace status.
+5. If `src/features/v51/data/conversations.ts` or any conversation fixture/service file was deleted, emptied, or partially rewritten, restore it to the last good state before the interrupted reliability attempt.
+6. Revert only incomplete Conversation Request Reliability changes from the interrupted run.
+7. Preserve all completed previous phases:
+   - Phase 2C-3 profile settings checkpoint
+   - Phase 2D wallet implementation
+   - Profile Timeline + Job Field Taxonomy + EQE fixes
+8. Do not modify prototype files.
+
+After recovery, run:
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+
+If npm is not available, report the exact equivalent commands used.
+
+Then report:
+- current git/workspace status
+- whether conversations.ts or related conversation files were restored
+- which files were reverted
+- whether previous completed phases are still intact
+- lint/typecheck/test/build results
+
+Then stop.
+
+Do not restart Conversation Request Reliability until I explicitly tell you.

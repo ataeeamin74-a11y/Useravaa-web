@@ -1,0 +1,166 @@
+{
+  "orgLevels": [
+    "کارآموز",
+    "کارشناس",
+    "کارشناس ارشد",
+    "مدیر میانی",
+    "مدیر ارشد",
+    "معاونت",
+    "مدیر کسب و کار"
+  ],
+  "pricingCapsToman": {
+    "کارآموز": {
+      "30": 100000,
+      "60": 250000
+    },
+    "کارشناس": {
+      "30": 300000,
+      "60": 500000
+    },
+    "کارشناس ارشد": {
+      "30": 500000,
+      "60": 900000
+    },
+    "مدیر میانی": {
+      "30": 1000000,
+      "60": 1800000
+    },
+    "مدیر ارشد": {
+      "30": 1000000,
+      "60": 1800000
+    },
+    "معاونت": {
+      "30": 2500000,
+      "60": 4000000
+    },
+    "مدیر کسب و کار": {
+      "30": 4000000,
+      "60": 7000000
+    }
+  },
+  "jobCategories": [
+    "محصول",
+    "هوش تجاری",
+    "تحلیل داده",
+    "طراحی محصول",
+    "رشد",
+    "منابع انسانی",
+    "مهندسی"
+  ],
+  "companies": [
+    "اسنپ",
+    "دیجی‌کالا",
+    "کافه‌بازار",
+    "دیوار",
+    "علی‌بابا",
+    "تپسی"
+  ],
+  "languages": [
+    "فارسی",
+    "انگلیسی"
+  ],
+  "users": [
+    {
+      "id": "user_ali",
+      "displayName": "علی ر.",
+      "email": "ali@example.com",
+      "phone": "09121234567"
+    },
+    {
+      "id": "user_sara",
+      "displayName": "سارا م.",
+      "email": "sara@example.com",
+      "phone": "09121230000"
+    },
+    {
+      "id": "user_nazanin",
+      "displayName": "نازنین ک.",
+      "email": "nazanin@example.com",
+      "phone": "09121230001"
+    }
+  ],
+  "experienceProfiles": [
+    {
+      "id": "profile_ali",
+      "ownerId": "user_ali",
+      "status": "ACTIVE",
+      "displayName": "علی ر.",
+      "roleTitle": "مدیر محصول",
+      "orgLevel": "مدیر میانی",
+      "yearsOfExperience": 8,
+      "professionalSummary": "تجربه در تیم‌های محصول و تحلیل داده، با تمرکز بر تصمیم‌سازی محصولی.",
+      "freeHelp": false,
+      "price30Toman": 1000000,
+      "price60Toman": 1800000,
+      "categories": [
+        "محصول",
+        "هوش تجاری",
+        "تحلیل داده"
+      ],
+      "previousCompanies": [
+        "اسنپ",
+        "دیجی‌کالا"
+      ],
+      "languages": [
+        "فارسی"
+      ],
+      "successfulConversationCount": 12,
+      "csatAverage": 4.8
+    },
+    {
+      "id": "profile_sara",
+      "ownerId": "user_sara",
+      "status": "ACTIVE",
+      "displayName": "سارا م.",
+      "roleTitle": "طراح محصول",
+      "orgLevel": "کارشناس ارشد",
+      "yearsOfExperience": 6,
+      "professionalSummary": "تجربه طراحی محصول، تجربه کاربر و همکاری با تیم‌های Product.",
+      "freeHelp": false,
+      "price30Toman": 500000,
+      "price60Toman": 900000,
+      "categories": [
+        "طراحی محصول",
+        "محصول"
+      ],
+      "previousCompanies": [
+        "کافه‌بازار",
+        "دیوار"
+      ],
+      "languages": [
+        "فارسی"
+      ],
+      "successfulConversationCount": 9,
+      "csatAverage": 4.7
+    }
+  ],
+  "conversationRequests": [
+    {
+      "id": "conv_1",
+      "seekerId": "user_sara",
+      "providerId": "user_ali",
+      "profileId": "profile_ali",
+      "duration": "MIN_30",
+      "priceToman": 1000000,
+      "status": "REQUESTED",
+      "createdAtShamsi": "۲۴ خرداد، ۱۳:۴۰"
+    }
+  ],
+  "proposedTimes": [
+    {
+      "conversationId": "conv_1",
+      "shamsiDateLabel": "دوشنبه ۲۸ خرداد ۱۴۰۵",
+      "timeLabel": "۱۶:۰۰"
+    },
+    {
+      "conversationId": "conv_1",
+      "shamsiDateLabel": "سه‌شنبه ۲۹ خرداد ۱۴۰۵",
+      "timeLabel": "۱۸:۰۰"
+    },
+    {
+      "conversationId": "conv_1",
+      "shamsiDateLabel": "چهارشنبه ۳۰ خرداد ۱۴۰۵",
+      "timeLabel": "۱۰:۰۰"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "direction": "rtl",
+  "colors": {
+    "navy": "#071B4E",
+    "muted": "#667085",
+    "muted2": "#98A2B3",
+    "blue": "#2457FF",
+    "teal": "#02BFAE",
+    "line": "#E4EAF4",
+    "line2": "#D7E0EE",
+    "blueSoft": "#EEF4FF",
+    "tealSoft": "#E9FBF8",
+    "goldSoft": "#FFF8E6",
+    "bg": "#F7FAFC"
+  },
+  "typography": {
+    "uiLanguage": "fa",
+    "fontFamilySource": "prototype CSS only; production font file not included",
+    "numberFormat": "Persian digits in UI"
+  },
+  "spacing": {
+    "source": "prototype CSS uses px values; no complete token scale finalized in current chat"
+  },
+  "radius": {},
+  "shadow": {
+    "shadow": "0 12px 30px rgba(7,27,78,.052)",
+    "shadow2": "0 18px 46px rgba(7,27,78,.09)"
+  },
+  "zIndex": {
+    "modal": 1000
+  },
+  "componentSizes": {
+    "headerHeightDesktop": "60px in V51 prototype",
+    "timeSlotHeight": "40px in prototype",
+    "accountUtilityButtonHeight": "38px in V51 prototype"
+  },
+  "brandTokens": {
+    "brandName": "Useravaa",
+    "markText": "UA",
+    "logoAsset": "not included"
+  }
+}

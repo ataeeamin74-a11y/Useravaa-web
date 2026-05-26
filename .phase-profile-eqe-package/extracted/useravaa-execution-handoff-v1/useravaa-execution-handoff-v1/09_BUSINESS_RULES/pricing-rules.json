@@ -1,0 +1,53 @@
+{
+  "currency": "TOMAN",
+  "pricesAreMaximumCaps": true,
+  "usersCanChooseLowerPrice": true,
+  "freeHelpAllowed": true,
+  "freeHelpBehavior": {
+    "price30Toman": 0,
+    "price60Toman": 0,
+    "priceInputsDisabled": true
+  },
+  "durationOptionsMinutes": [
+    30,
+    60
+  ],
+  "capsToman": {
+    "کارآموز": {
+      "30": 100000,
+      "60": 250000
+    },
+    "کارشناس": {
+      "30": 300000,
+      "60": 500000
+    },
+    "کارشناس ارشد": {
+      "30": 500000,
+      "60": 900000
+    },
+    "مدیر میانی": {
+      "30": 1000000,
+      "60": 1800000
+    },
+    "مدیر ارشد": {
+      "30": 1000000,
+      "60": 1800000
+    },
+    "معاونت": {
+      "30": 2500000,
+      "60": 4000000
+    },
+    "مدیر کسب و کار": {
+      "30": 4000000,
+      "60": 7000000
+    }
+  },
+  "validation": [
+    "price30Toman >= 0",
+    "price60Toman >= 0",
+    "price30Toman <= cap[orgLevel][30]",
+    "price60Toman <= cap[orgLevel][60]",
+    "price60Toman >= price30Toman unless freeHelp=true",
+    "if freeHelp=true, both prices must equal 0"
+  ]
+}

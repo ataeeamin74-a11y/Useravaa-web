@@ -1,0 +1,210 @@
+{
+  "buildExperienceProfile": {
+    "displayName": {
+      "required": true,
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 80,
+      "errorKey": "profile.displayName.invalid"
+    },
+    "avatar": {
+      "required": false,
+      "type": "file",
+      "allowedValues": [
+        "image/png",
+        "image/jpeg",
+        "image/webp"
+      ],
+      "maxBytes": 2097152,
+      "errorKey": "profile.avatar.invalid"
+    },
+    "roleTitle": {
+      "required": true,
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 80,
+      "errorKey": "profile.role.invalid"
+    },
+    "orgLevel": {
+      "required": true,
+      "type": "enum",
+      "allowedValues": [
+        "کارآموز",
+        "کارشناس",
+        "کارشناس ارشد",
+        "مدیر میانی",
+        "مدیر ارشد",
+        "معاونت",
+        "مدیر کسب و کار"
+      ],
+      "errorKey": "profile.orgLevel.invalid"
+    },
+    "yearsOfExperience": {
+      "required": true,
+      "type": "integer",
+      "min": 0,
+      "max": 40,
+      "errorKey": "profile.years.invalid"
+    },
+    "categories": {
+      "required": true,
+      "type": "array",
+      "minItems": 1,
+      "allowedValues": [
+        "محصول",
+        "هوش تجاری",
+        "تحلیل داده",
+        "طراحی محصول",
+        "رشد",
+        "منابع انسانی",
+        "مهندسی"
+      ],
+      "errorKey": "profile.categories.required"
+    },
+    "previousCompanies": {
+      "required": true,
+      "type": "array",
+      "minItems": 1,
+      "errorKey": "profile.companies.required"
+    },
+    "languages": {
+      "required": true,
+      "type": "array",
+      "minItems": 1,
+      "allowedValues": [
+        "فارسی",
+        "انگلیسی"
+      ],
+      "errorKey": "profile.languages.required"
+    },
+    "professionalSummary": {
+      "required": true,
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 220,
+      "errorKey": "profile.summary.invalid"
+    },
+    "price30Toman": {
+      "required": true,
+      "type": "integer",
+      "min": 0,
+      "conditionalRequirements": "if freeHelp=false must be <= pricing cap for orgLevel",
+      "errorKey": "profile.price30.invalid"
+    },
+    "price60Toman": {
+      "required": true,
+      "type": "integer",
+      "min": 0,
+      "conditionalRequirements": "if freeHelp=false must be <= pricing cap for orgLevel and >= price30Toman",
+      "errorKey": "profile.price60.invalid"
+    },
+    "freeHelp": {
+      "required": true,
+      "type": "boolean",
+      "conditionalRequirements": "if true price30Toman=0 and price60Toman=0",
+      "errorKey": "profile.freeHelp.invalid"
+    }
+  },
+  "conversationRequest": {
+    "profileId": {
+      "required": true,
+      "type": "string",
+      "errorKey": "request.profile.required"
+    },
+    "duration": {
+      "required": true,
+      "type": "enum",
+      "allowedValues": [
+        30,
+        60
+      ],
+      "errorKey": "request.duration.invalid"
+    },
+    "note": {
+      "required": false,
+      "type": "string",
+      "maxLength": 500,
+      "errorKey": "request.note.tooLong"
+    }
+  },
+  "proposeTimes": {
+    "times": {
+      "required": true,
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 6,
+      "errorKey": "schedule.times.countInvalid"
+    },
+    "times[].shamsiDateLabel": {
+      "required": true,
+      "type": "string",
+      "errorKey": "schedule.date.required"
+    },
+    "times[].timeLabel": {
+      "required": true,
+      "type": "string",
+      "errorKey": "schedule.time.required"
+    },
+    "duplicates": {
+      "required": false,
+      "type": "constraint",
+      "conditionalRequirements": "duplicate date+time pairs forbidden",
+      "errorKey": "schedule.times.duplicate"
+    }
+  },
+  "selectTime": {
+    "proposedTimeId": {
+      "required": true,
+      "type": "string",
+      "errorKey": "schedule.selectedTime.required"
+    }
+  },
+  "accountEdit": {
+    "displayName": {
+      "required": true,
+      "type": "string",
+      "minLength": 2,
+      "errorKey": "account.name.invalid"
+    },
+    "email": {
+      "required": true,
+      "type": "email",
+      "errorKey": "account.email.invalid"
+    },
+    "phone": {
+      "required": true,
+      "type": "string",
+      "pattern": "^09[0-9]{9}$",
+      "errorKey": "account.phone.invalid"
+    }
+  },
+  "settlementInfo": {
+    "accountOwner": {
+      "required": true,
+      "type": "string",
+      "minLength": 3,
+      "errorKey": "settlement.owner.invalid"
+    },
+    "iban": {
+      "required": true,
+      "type": "string",
+      "pattern": "^IR[0-9]{24}$",
+      "errorKey": "settlement.iban.invalid"
+    }
+  },
+  "feedback": {
+    "rating": {
+      "required": true,
+      "type": "integer",
+      "min": 1,
+      "max": 5,
+      "errorKey": "feedback.rating.invalid"
+    },
+    "text": {
+      "required": false,
+      "type": "string",
+      "maxLength": 500,
+      "errorKey": "feedback.text.tooLong"
+    }
+  }
+}

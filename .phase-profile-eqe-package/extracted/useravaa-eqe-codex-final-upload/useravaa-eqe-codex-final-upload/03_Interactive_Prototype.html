@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head><meta charset="utf-8"><title>EQE No Admin Prototype</title>
+<style>
+body{font-family:Arial,Tahoma,sans-serif;background:#f6f8fb;margin:0;padding:24px;color:#071B4E}
+.shell{max-width:880px;margin:auto;display:grid;gap:16px}.card{background:#fff;border:1px solid #E6EDF7;border-radius:22px;padding:18px;box-shadow:0 10px 24px rgba(7,27,78,.05)}
+button{border:0;border-radius:14px;padding:11px 14px;font-weight:800;cursor:pointer}.primary{background:#2457FF;color:#fff}.secondary{background:#EEF4FF;color:#2457FF}.ghost{background:#F2F4F7;color:#344054}
+textarea{width:100%;min-height:130px;border:1px solid #D0D5DD;border-radius:16px;padding:12px;box-sizing:border-box;font-family:inherit;line-height:1.8}
+.help{color:#667085;font-size:13px}.danger{color:#B42318}.hidden{display:none}.answer{border:1px solid #E6EDF7;border-radius:18px;padding:14px;margin-top:10px;background:#FAFCFF}
+.notice{background:#FFF8E6;border:1px solid #FFE2A8;border-radius:16px;padding:12px;color:#8A5A00;font-size:13px;line-height:1.8}
+</style></head>
+<body><div class="shell">
+<div class="card"><h1>Experience Question Engine</h1><p class="help">نسخه بدون ادمین: مسئولیت پاسخ با خود Provider است.</p></div>
+<div class="card" id="questionCard"><h2>پرسش این هفته</h2><p class="help">پاسخ کوتاه شما به کامل‌تر شدن پروفایل تجربه‌تان کمک می‌کند.</p><h3 id="questionText">در نقش مدیر محصول، کدام بخش کار از بیرون ساده به نظر می‌رسد اما در عمل بیشترین انرژی را می‌گیرد؟</h3><button class="primary" onclick="showAnswer()">پاسخ می‌دهم</button> <button class="secondary" onclick="replaceQuestion()">سؤال دیگری بده</button> <button class="ghost" onclick="skipQuestion()">فعلاً نه</button></div>
+<div class="card hidden" id="answerCard"><h2>پاسخ شما</h2><textarea id="answerText" maxlength="700" oninput="updateCount()" placeholder="پاسخ کوتاه خود را بنویسید..."></textarea><p class="help">۳ تا ۵ جمله کافی است. پاسخ را بر اساس تجربه شخصی خودتان، حرفه‌ای و بدون افشای اطلاعات محرمانه بنویسید.</p><div class="notice">پاسخ را حرفه‌ای، محترمانه و بدون افشای اطلاعات محرمانه بنویسید. هدف، توضیح تجربه شخصی شماست، نه ارزیابی یا تخریب شرکت‌ها.</div><label style="display:block;margin-top:12px"><input id="responsibility" type="checkbox"> مسئولیت محتوای این پاسخ با من است.</label><p id="count" class="help">۰ / ۷۰۰</p><p id="error" class="danger"></p><button class="secondary" onclick="saveDraft()">ذخیره پیش‌نویس</button> <button class="primary" onclick="publishAnswer()">انتشار در پروفایل</button></div>
+<div class="card hidden" id="profileSection"><h2>از تجربه من</h2><div class="answer"><b id="publishedQuestion"></b><p id="publishedAnswer"></p><button class="ghost" onclick="retractAnswer()">حذف از پروفایل</button></div></div>
+</div><script>
+const questions=["در نقش مدیر محصول، کدام بخش کار از بیرون ساده به نظر می‌رسد اما در عمل بیشترین انرژی را می‌گیرد؟","در مدیر محصول، چه چیزی واقعاً جزو اختیار توست و چه چیزی فقط ظاهراً به نقش تو مربوط است؟","در کار روزمره مدیر محصول، بیشتر وقتت صرف چه کاری می‌شود که در شرح شغلی رسمی دیده نمی‌شود؟"];let idx=0,draft="";
+function showAnswer(){document.getElementById('answerCard').classList.remove('hidden')}function replaceQuestion(){idx=(idx+1)%questions.length;document.getElementById('questionText').textContent=questions[idx]}function skipQuestion(){document.getElementById('questionCard').innerHTML='<h2>فعلاً نه</h2><p class="help">تا هفته بعد سؤال جدیدی نمایش داده نمی‌شود.</p>'}
+function updateCount(){const v=document.getElementById('answerText').value;document.getElementById('count').textContent=v.length+' / ۷۰۰'}function saveDraft(){draft=document.getElementById('answerText').value;alert('پیش‌نویس ذخیره شد')}
+function publishAnswer(){const v=document.getElementById('answerText').value.trim();const ok=document.getElementById('responsibility').checked;if(!v || v.length<10){document.getElementById('error').textContent='حداقل یک جمله معنادار بنویسید.';return}if(!ok){document.getElementById('error').textContent='برای انتشار باید مسئولیت محتوا را تأیید کنید.';return}document.getElementById('publishedQuestion').textContent=document.getElementById('questionText').textContent;document.getElementById('publishedAnswer').textContent=v;document.getElementById('profileSection').classList.remove('hidden');document.getElementById('error').textContent='';}
+function retractAnswer(){document.getElementById('profileSection').classList.add('hidden')}
+</script></body></html>

@@ -1,0 +1,305 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum OrgLevel {
+  INTERN
+  SPECIALIST
+  SENIOR_SPECIALIST
+  MIDDLE_MANAGER
+  SENIOR_MANAGER
+  VP
+  BUSINESS_MANAGER
+}
+
+enum ProfileStatus {
+  DRAFT
+  PENDING_REVIEW
+  NEEDS_CHANGES
+  ACTIVE
+  INACTIVE
+}
+
+enum ConversationStatus {
+  DRAFT
+  REQUESTED
+  PROVIDER_TIME_OPTIONS_SENT
+  TIME_SELECTED
+  AWAITING_PAYMENT
+  SCHEDULED
+  COMPLETED
+  FEEDBACK_PENDING
+  FEEDBACK_SUBMITTED
+  CANCELLED
+  EXPIRED
+}
+
+enum DurationMinutes {
+  MIN_30
+  MIN_60
+}
+
+enum PaymentStatus {
+  CHECKOUT_CREATED
+  REQUIRES_GATEWAY_PAYMENT
+  WALLET_SUFFICIENT
+  PAYMENT_PROCESSING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+enum PayoutStatus {
+  NOT_REQUESTED
+  BLOCKED_MISSING_SETTLEMENT_INFO
+  REQUESTED
+  PROCESSING
+  PAID
+  FAILED
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+}
+
+model User {
+  id                 String              @id @default(cuid())
+  role               UserRole            @default(USER)
+  displayName        String
+  email              String              @unique
+  phone              String?
+  avatarUrl          String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  experienceProfile  ExperienceProfile?
+  wallet             Wallet?
+  settlementInfo     SettlementInfo?
+  sentConversations  ConversationRequest[] @relation("ConversationSeeker")
+  receivedConversations ConversationRequest[] @relation("ConversationProvider")
+  savedProfiles      SavedProfile[]
+  followingProfiles  ProfileFollow[]       @relation("Follower")
+  followers          ProfileFollow[]       @relation("Followed")
+  notifications      Notification[]
+}
+
+model ExperienceProfile {
+  id                    String          @id @default(cuid())
+  ownerId               String          @unique
+  owner                 User            @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status                ProfileStatus   @default(DRAFT)
+  displayName           String
+  avatarUrl             String?
+  roleTitle             String
+  orgLevel              OrgLevel
+  yearsOfExperience     Int
+  professionalSummary   String
+  freeHelp              Boolean         @default(false)
+  price30Toman          Int
+  price60Toman          Int
+  reviewNote            String?
+  successfulConversationCount Int       @default(0)
+  csatAverage           Float?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  categories            ProfileCategory[]
+  previousCompanies     ProfileCompany[]
+  languages             ProfileLanguage[]
+  savedBy               SavedProfile[]
+  followedBy            ProfileFollow[] @relation("ProfileFollowedProfile")
+  feedbacks             Feedback[]
+
+  @@index([status, orgLevel])
+}
+
+model JobCategory {
+  id        String @id @default(cuid())
+  labelFa   String @unique
+  profiles  ProfileCategory[]
+}
+
+model ProfileCategory {
+  profileId   String
+  categoryId  String
+  profile     ExperienceProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  category    JobCategory       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, categoryId])
+}
+
+model Company {
+  id        String @id @default(cuid())
+  nameFa    String @unique
+  profiles  ProfileCompany[]
+}
+
+model ProfileCompany {
+  profileId  String
+  companyId  String
+  profile    ExperienceProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  company    Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, companyId])
+}
+
+model Language {
+  id        String @id @default(cuid())
+  labelFa   String @unique
+  profiles  ProfileLanguage[]
+}
+
+model ProfileLanguage {
+  profileId  String
+  languageId String
+  profile    ExperienceProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  language   Language          @relation(fields: [languageId], references: [id], onDelete: Cascade)
+
+  @@id([profileId, languageId])
+}
+
+model SavedProfile {
+  userId     String
+  profileId  String
+  createdAt  DateTime @default(now())
+  user       User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profile    ExperienceProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@id([userId, profileId])
+}
+
+model ProfileFollow {
+  followerId  String
+  followedUserId String
+  profileId   String
+  createdAt   DateTime @default(now())
+  follower    User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followedUser User @relation("Followed", fields: [followedUserId], references: [id], onDelete: Cascade)
+  profile     ExperienceProfile @relation("ProfileFollowedProfile", fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, profileId])
+}
+
+model ConversationRequest {
+  id               String             @id @default(cuid())
+  seekerId         String
+  providerId       String
+  profileId        String
+  duration         DurationMinutes
+  priceToman       Int
+  status           ConversationStatus @default(REQUESTED)
+  seekerNote       String?
+  selectedTimeId   String?
+  finalTimeShamsi  String?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  seeker           User               @relation("ConversationSeeker", fields: [seekerId], references: [id])
+  provider         User               @relation("ConversationProvider", fields: [providerId], references: [id])
+  proposedTimes    ProposedTime[]
+  payment          Payment?
+  feedback         Feedback?
+
+  @@index([seekerId, status])
+  @@index([providerId, status])
+}
+
+model ProposedTime {
+  id                String @id @default(cuid())
+  conversationId    String
+  shamsiDateLabel   String
+  timeLabel         String
+  isSelected        Boolean @default(false)
+  createdAt         DateTime @default(now())
+  conversation      ConversationRequest @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId])
+}
+
+model Payment {
+  id                String @id @default(cuid())
+  conversationId    String @unique
+  payerId           String
+  amountToman       Int
+  walletDeductionToman Int
+  gatewayPayableToman Int
+  status            PaymentStatus @default(CHECKOUT_CREATED)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  conversation      ConversationRequest @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+}
+
+model Wallet {
+  id                String @id @default(cuid())
+  userId            String @unique
+  balanceToman      Int @default(0)
+  availablePayoutToman Int @default(0)
+  pendingPayoutToman Int @default(0)
+  user              User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions      WalletTransaction[]
+}
+
+model WalletTransaction {
+  id          String @id @default(cuid())
+  walletId    String
+  type        String
+  title       String
+  amountToman Int
+  createdAt   DateTime @default(now())
+  wallet      Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+}
+
+model SettlementInfo {
+  id             String @id @default(cuid())
+  userId         String @unique
+  accountOwner   String
+  iban           String
+  verified       Boolean @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Payout {
+  id             String @id @default(cuid())
+  userId         String
+  amountToman    Int
+  status         PayoutStatus @default(NOT_REQUESTED)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Feedback {
+  id              String @id @default(cuid())
+  conversationId  String @unique
+  profileId       String
+  authorId        String
+  rating          Int
+  text            String?
+  createdAt       DateTime @default(now())
+  conversation    ConversationRequest @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  profile         ExperienceProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String @id @default(cuid())
+  userId    String
+  status    NotificationStatus @default(UNREAD)
+  title     String
+  body      String
+  targetRoute String?
+  createdAt DateTime @default(now())
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

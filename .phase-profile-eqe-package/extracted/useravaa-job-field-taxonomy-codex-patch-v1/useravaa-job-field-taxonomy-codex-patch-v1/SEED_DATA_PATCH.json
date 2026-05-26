@@ -1,0 +1,40 @@
+{
+  "validExamples": [
+    {
+      "jobTitle": "مدیر محصول",
+      "jobField": "محصول و تجربه کاربر",
+      "orgLevel": "مدیر میانی",
+      "companyName": "اسنپ",
+      "companyCountry": "ایران",
+      "companyIndustry": "حمل‌ونقل آنلاین"
+    },
+    {
+      "jobTitle": "تحلیلگر داده",
+      "jobField": "علوم داده و هوش مصنوعی",
+      "orgLevel": "کارشناس ارشد",
+      "companyName": "دیجی‌کالا",
+      "companyCountry": "ایران",
+      "companyIndustry": "تجارت الکترونیک"
+    },
+    {
+      "jobTitle": "مدیر تجربه مشتری",
+      "jobField": "تجربه مشتری",
+      "orgLevel": "مدیر میانی",
+      "companyName": "Useravaa",
+      "companyCountry": "ایران",
+      "companyIndustry": "پلتفرم تجربه شغلی"
+    }
+  ],
+  "invalidExamples": [
+    {
+      "jobTitle": "Product Manager",
+      "jobField": "محصول",
+      "reason": "jobField must use fixed taxonomy label: محصول و تجربه کاربر"
+    },
+    {
+      "jobTitle": "Data Analyst",
+      "jobField": "تحلیل داده",
+      "reason": "jobField must use fixed taxonomy label: علوم داده و هوش مصنوعی"
+    }
+  ]
+}

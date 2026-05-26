@@ -1,0 +1,244 @@
+.walletShell {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.walletShell h1 {
+  margin: 0 0 8px;
+  color: var(--navy);
+  letter-spacing: 0;
+}
+
+.lead {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 640;
+  line-height: 1.85;
+}
+
+.walletGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.walletCard {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 8px 20px rgb(7 27 78 / 4%);
+  padding: 16px;
+}
+
+.walletCardPrimary {
+  border-color: #beefeb;
+  background: linear-gradient(180deg, #f4fffd, #fff);
+}
+
+.walletCard span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.walletCard b {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--navy);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.walletPanel {
+  margin-bottom: 14px;
+  border: 1px solid #dde6ff;
+  border-radius: 20px;
+  background: var(--blue-soft);
+  color: var(--blue);
+  font-size: 13px;
+  font-weight: 750;
+  line-height: 1.7;
+  padding: 14px;
+}
+
+.walletPanel b {
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.panelActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.selectedAmount {
+  box-shadow: 0 0 0 4px rgb(36 87 255 / 12%);
+}
+
+.successBox,
+.errorBox {
+  margin: 0 0 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.7;
+  padding: 12px 14px;
+}
+
+.successBox {
+  border: 1px solid #beefeb;
+  background: #f4fffd;
+  color: #007f78;
+}
+
+.errorBox {
+  border: 1px solid #fecaca;
+  background: #fff7f6;
+  color: #b42318;
+}
+
+.walletTableCard {
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: #fff;
+  padding: 16px;
+}
+
+.walletTableHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.walletTableHead h2 {
+  margin: 0;
+  color: var(--navy);
+}
+
+.filterControl {
+  position: relative;
+  width: 180px;
+  height: 38px;
+}
+
+.filterControl select {
+  width: 100%;
+  height: 38px;
+  border: 1px solid var(--line-2);
+  border-radius: 12px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #fff;
+  color: var(--navy);
+  direction: rtl;
+  font-size: 13px;
+  font-weight: 750;
+  padding: 0 10px 0 42px;
+  text-align: right;
+}
+
+.filterControl select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgb(36 87 255 / 9.5%);
+}
+
+.filterCaret {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  display: inline-flex;
+  transform: translateY(-50%);
+  color: var(--navy);
+  pointer-events: none;
+}
+
+.walletRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding: 12px 0;
+}
+
+.walletRow:first-child {
+  border-top: 0;
+}
+
+.walletRow b {
+  color: var(--navy);
+  font-size: 13px;
+}
+
+.walletRow small {
+  display: block;
+  color: var(--muted);
+  font-size: 11.5px;
+  font-weight: 650;
+}
+
+.walletType {
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: #f2f4f7;
+  color: #667085;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+
+.walletAmount {
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.walletAmountPositive {
+  color: #008f7e;
+}
+
+.walletAmountNegative {
+  color: #b42318;
+}
+
+.emptyState {
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 750;
+  padding: 18px 0 4px;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .walletGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .walletTableHead {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .filterControl {
+    width: 100%;
+  }
+
+  .walletRow {
+    grid-template-columns: 1fr;
+  }
+}

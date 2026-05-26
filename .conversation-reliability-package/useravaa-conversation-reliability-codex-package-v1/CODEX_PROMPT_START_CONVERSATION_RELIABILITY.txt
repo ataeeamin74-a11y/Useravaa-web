@@ -1,0 +1,352 @@
+Start next phase only: Conversation Request Reliability System.
+
+Use the uploaded package:
+useravaa-conversation-reliability-codex-package-v1.zip
+
+Start from:
+conversation-request-reliability-system.prd.md
+
+This file is the source of truth for this phase. If the PRD file is not visible in the workspace after upload, stop and ask for the file. Do not proceed from memory.
+
+Feature:
+Conversation Request Reliability System for Useravaa MVP.
+
+Goal:
+Prevent dead conversation requests, remove infinite pending states, preserve requester momentum, and make every conversation request time-bounded, stateful, and clearly actionable.
+
+Important:
+Use the existing V51 request/conversation/checkout implementation as the UI and interaction baseline.
+Use the PRD for business rules, statuses, deadlines, notification rules, email templates, expiration logic, similar experiences, validation, API contracts, and acceptance criteria.
+
+Do not redesign the conversations experience.
+Do not rename existing tabs unless required by the PRD.
+Do not modify prototype files.
+Do not start any unrelated phase.
+Do not delete or rewrite the existing conversation fixture/service file from scratch unless absolutely necessary. Prefer incremental, scoped edits.
+
+Scope for this phase:
+
+1. Conversation request state model
+
+Implement or update the request status model:
+- pending_provider_response
+- times_proposed
+- pending_payment
+- confirmed
+- rejected
+- expired
+- cancelled
+
+State rules:
+- New request starts as pending_provider_response.
+- Provider can propose times or reject.
+- Provider must respond within 24 hours.
+- If Provider does not respond within 24 hours, system expires the request.
+- Provider must propose at least 3 times.
+- After times are proposed, Requester has 48 hours to select one time.
+- If Requester does not select within 48 hours, system expires the request.
+- Payment is only available after Requester selects a proposed time.
+- After successful payment, status becomes confirmed.
+- No request can remain indefinitely pending.
+
+2. Conversation request deadlines
+
+Add fixture/model fields as needed:
+- createdAt
+- providerResponseDeadlineAt
+- providerRespondedAt
+- timesProposedAt
+- requesterSelectionDeadlineAt
+- selectedTimeId
+- selectedAt
+- paidAt
+- confirmedAt
+- rejectedAt
+- expiredAt
+- cancelledAt
+
+Use mock/fixture data only if this phase is still frontend/prototype implementation.
+Do not connect a real database unless the current project phase already requires backend integration.
+
+3. Conversations page behavior
+
+Update /conversations and conversation detail flows.
+
+Tabs:
+- درخواست‌های من
+- درخواست‌های دریافتی
+
+Groups:
+- نیازمند اقدام
+- در حال پیگیری
+- تمام‌شده
+
+Group mapping:
+
+Requester tab:
+- pending_provider_response → در حال پیگیری
+- times_proposed → نیازمند اقدام
+- pending_payment → نیازمند اقدام
+- confirmed → در حال پیگیری
+- rejected → تمام‌شده
+- expired → تمام‌شده
+- cancelled → تمام‌شده
+
+Provider tab:
+- pending_provider_response → نیازمند اقدام
+- times_proposed → در حال پیگیری
+- pending_payment → در حال پیگیری
+- confirmed → در حال پیگیری
+- rejected → تمام‌شده
+- expired → تمام‌شده
+- cancelled → تمام‌شده
+
+4. Provider SLA UI
+
+Provider must see:
+- new request badge
+- countdown to 24-hour response deadline
+- propose times action
+- reject request action
+- near-expiration warning
+
+Required copy:
+درخواست جدید
+۱۸ ساعت تا پایان مهلت پاسخ
+
+CTA:
+پیشنهاد زمان
+رد درخواست
+
+Expiration warning:
+این درخواست تا چند ساعت دیگر منقضی می‌شود.
+
+5. Requester SLA UI
+
+Requester must see:
+- current request status
+- who should act next
+- remaining time
+- what happens after no response
+- next available action
+
+Required copy:
+در انتظار پاسخ Provider
+پاسخ تا ۲۴ ساعت آینده مشخص می‌شود.
+
+زمان‌های پیشنهادی آماده است
+یکی از زمان‌ها را تا ۴۸ ساعت آینده انتخاب کنید.
+
+زمان گفت‌وگو انتخاب شده است
+برای ثبت نهایی گفت‌وگو، پرداخت را تکمیل کنید.
+
+Expired copy:
+این درخواست در زمان مقرر پاسخ نگرفت. می‌توانید تجربه‌های مشابه را بررسی کنید.
+
+6. Time proposal rules
+
+Provider must propose at least 3 times.
+
+Validation:
+- minimum 3 proposed times
+- date required
+- time required
+- duplicate time options not allowed
+- proposed time must belong to the same request
+
+Error copy:
+حداقل ۳ زمان پیشنهادی انتخاب کنید.
+زمان‌های پیشنهادی نباید تکراری باشند.
+
+7. Time selection and payment gating
+
+Requester can select exactly one proposed time.
+
+Rules:
+- select-time allowed only when status = times_proposed
+- after selection, status becomes pending_payment
+- payment disabled before time selection
+- payment enabled only when status = pending_payment
+- after mock successful payment, status becomes confirmed
+
+Error copy:
+پرداخت فقط بعد از انتخاب زمان فعال می‌شود.
+مهلت انتخاب زمان تمام شده است.
+
+8. Expiration logic
+
+Implement mock/system expiration behavior.
+
+For MVP/prototype:
+- add deterministic helper functions or fixture actions to simulate expiration
+- if current time exceeds providerResponseDeadlineAt and status is pending_provider_response, status becomes expired
+- if current time exceeds requesterSelectionDeadlineAt and status is times_proposed, status becomes expired
+
+If background jobs are in scope for this codebase, model these jobs:
+- expire pending provider requests every 15 minutes
+- expire proposed times every 15 minutes
+- conversation reminder every 15 minutes
+- expiration warning every 1 hour
+
+Do not connect real cron infrastructure unless already available.
+Keep jobs mockable/testable.
+
+9. Similar experiences after expire
+
+When request.status = expired, show:
+
+تجربه‌های مشابه برای ادامه مسیر
+
+Display 3 to 5 profiles.
+
+Simple MVP criteria:
+- same jobField
+- same or nearby orgLevel
+- similar previous or current company if available
+- more active or more responsive providers if data exists
+
+Do not show these words in UI:
+- match
+- score
+- درصد نزدیکی
+
+Do not expose ranking logic.
+
+10. Notifications
+
+Implement in-app notification fixtures/contracts for:
+- new request to Provider
+- proposed times to Requester
+- near expiration to Provider
+- confirmed conversation to both users
+- one-hour conversation reminder to both users
+
+Required messages:
+یک درخواست گفت‌وگوی جدید دریافت کردید.
+زمان‌های پیشنهادی برای گفت‌وگوی شما آماده است.
+این درخواست تا چند ساعت دیگر منقضی می‌شود.
+گفت‌وگوی شما ثبت شد.
+گفت‌وگوی شما تا یک ساعت دیگر شروع می‌شود.
+
+Targets:
+- /conversations/{id}
+- /conversations/{id}/select-time
+
+Badge rules:
+- Provider has badge when pending_provider_response exists
+- Requester has badge when times_proposed exists
+- Requester has badge when pending_payment exists
+- Any user has badge when unread notification exists
+
+11. Email requirements
+
+Add email template contracts and mock email log behavior.
+
+SMTP sender:
+notifications@useravaa.com
+
+Do not send real emails unless SMTP integration is explicitly available.
+For this phase, use mock email logs unless the project already has a transactional email service.
+
+Required email templates are defined in conversation-request-reliability-system.prd.md.
+Near-expiration warning is in-app only, not email.
+
+12. Data contracts
+
+Create/update typed fixtures or models for:
+- ConversationRequest
+- ProposedTime
+- Notification
+- EmailLog
+
+Use the exact fields defined in the PRD.
+
+13. API contracts or mock service functions
+
+Implement API routes or mock service functions according to the current architecture:
+- POST /api/conversation-requests
+- GET /api/conversation-requests
+- GET /api/conversation-requests/{id}
+- POST /api/conversation-requests/{id}/propose-times
+- POST /api/conversation-requests/{id}/reject
+- POST /api/conversation-requests/{id}/select-time
+- POST /api/conversation-requests/{id}/cancel
+- POST /api/conversation-requests/{id}/expire
+- GET /api/conversation-requests/{id}/similar-experiences
+
+If this phase is frontend-only, create typed mock service functions with the same names/contracts and document that real API integration is deferred.
+
+14. Tests
+
+Add tests for:
+- new request starts with pending_provider_response
+- provider response deadline is created as createdAt + 24h
+- Provider sees badge/countdown for pending_provider_response
+- Provider cannot propose fewer than 3 times
+- duplicate proposed times are rejected
+- proposing 3 times changes status to times_proposed
+- Requester receives proposed-times notification/email log
+- Requester has 48 hours to select time after timesProposedAt
+- selecting time changes status to pending_payment
+- payment is disabled before time selection
+- mock successful payment changes status to confirmed
+- request expires after 24h without Provider response
+- proposed times expire after 48h without Requester selection
+- expired request shows 3 to 5 similar experiences
+- similar experiences section does not show match, score, or درصد نزدیکی
+- near-expiration warning is in-app only
+- reminder notification/email log is created for confirmed conversation one hour before start
+- no request remains indefinitely pending
+
+15. Do not build
+
+Do not build:
+- SMS
+- WhatsApp API
+- push notification
+- follow
+- social notification
+- manual follow-up workflow
+- free chat between users
+- complex matching algorithm
+- payment before time selection
+- direct public availability calendar
+- real SMTP sending unless configured
+- real cron infrastructure unless already present
+- unrelated profile/EQE changes
+
+16. Verification
+
+After implementation:
+- run npm run lint
+- run npm run typecheck
+- run npm run test
+- run npm run build
+- fix all errors
+
+17. Report
+
+Create:
+PHASE_CONVERSATION_RELIABILITY_REPORT.md
+
+Report must include:
+1. PRD file used
+2. routes/components/services changed
+3. request status model implemented
+4. deadline/SLA behavior
+5. notification behavior
+6. email template/log behavior
+7. expiration behavior
+8. similar experiences behavior
+9. payment gating behavior
+10. tests added/updated
+11. verification results
+12. known gaps intentionally deferred
+
+Manual review gate:
+Do not create a checkpoint.
+Do not start the next phase.
+Wait for my manual Chrome review.
+
+Final response must end with:
+Implementation complete. Waiting for manual Chrome review before checkpoint or next phase.

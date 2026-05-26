@@ -1,0 +1,17 @@
+﻿page,route,required_api,primary_actions,states
+کشف تجربه‌ها,/discover,GET /api/profiles; POST/DELETE save/follow,"search,filter,sort,open_profile,save,follow","loading,empty,error,loaded,no_results"
+راهنما,/guide,none,"go_to_discover,go_to_build_profile",loaded
+پروفایل تجربه,/profiles/{profileId},GET /api/profiles/{profileId}; POST save/follow,"request_30,request_60,save,follow,report","loading,error,loaded,inactive_profile"
+درخواست گفت‌وگو,/requests/new,GET profile; POST /api/conversations,"submit_request,cancel","loaded,validation_error,submitting"
+گفت‌وگوها,/conversations,GET /api/conversations,"switch_sent_received,primary_state_action,open_detail","loading,empty,error,loaded,needs_action,tracking,done"
+جزئیات گفت‌وگو,/conversations/{conversationId},GET conversation; state action endpoints,"propose_times,select_time,pay,cancel,feedback","loading,error,loaded,state_specific"
+پیشنهاد زمان,/conversations/{conversationId}/propose-times,POST proposed-times,"select_date,select_time,remove_time,submit","empty_selection,invalid_count,valid_selection,submitting"
+انتخاب زمان,/conversations/{conversationId}/select-time,POST select-time,"select_proposed_time,cancel","loading,no_options,loaded,submitting"
+پرداخت و نهایی‌سازی,/checkout/{conversationId},POST checkout; POST confirm payment,"confirm_payment,top_up,cancel","wallet_sufficient,requires_gateway,processing,failed,paid"
+پروفایل من,/profile,GET me/profile/network/stats,"edit_profile,open_network,open_feedback,open_settings,open_wallet","no_profile,pending_review,needs_changes,active,inactive"
+ساخت پروفایل تجربه,/profile/build,POST draft; POST submit,"upload_avatar,save_draft,preview,submit_for_review","draft,invalid,valid,submitting,pending_review"
+شبکه من,/profile/network,GET /api/network,"switch_tab,search,filter,sort,open_profile,remove_save,unfollow","loading,empty,error,loaded,large_list"
+بازخوردهای دریافتی,/profile/feedback,GET /api/feedback/received,view_feedback,"loading,empty,error,loaded"
+تنظیمات حساب,/profile/settings,GET/PUT account; PUT settlement-info,"edit_account,edit_settlement,privacy_toggle,notification_toggle","loaded,validation_error,saved"
+کیف پول و پرداخت‌ها,/wallet,GET wallet; top-up; payout,"top_up,request_payout,edit_settlement,filter_transactions","loading,empty,error,loaded,missing_settlement_info"
+اعلان‌ها,/notifications,GET notifications; POST read,"open_notification,mark_read","loading,empty,error,loaded"

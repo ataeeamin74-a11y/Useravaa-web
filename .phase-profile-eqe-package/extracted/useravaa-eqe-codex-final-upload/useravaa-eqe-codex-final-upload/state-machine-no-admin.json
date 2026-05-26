@@ -1,0 +1,57 @@
+{
+  "question": {
+    "states": [
+      "active",
+      "replaced",
+      "skipped",
+      "expired"
+    ],
+    "transitions": [
+      {
+        "from": "active",
+        "to": "replaced",
+        "actor": "provider",
+        "action": "request_another_question"
+      },
+      {
+        "from": "active",
+        "to": "skipped",
+        "actor": "provider",
+        "action": "skip_this_week"
+      },
+      {
+        "from": "active",
+        "to": "expired",
+        "actor": "system",
+        "action": "weekly_cycle_expired"
+      }
+    ]
+  },
+  "answer": {
+    "states": [
+      "draft",
+      "published",
+      "retracted"
+    ],
+    "transitions": [
+      {
+        "from": "draft",
+        "to": "published",
+        "actor": "provider",
+        "action": "publish_with_responsibility_confirmation"
+      },
+      {
+        "from": "published",
+        "to": "retracted",
+        "actor": "provider",
+        "action": "retract_from_profile"
+      },
+      {
+        "from": "retracted",
+        "to": "draft",
+        "actor": "provider",
+        "action": "edit_and_prepare_republish"
+      }
+    ]
+  }
+}

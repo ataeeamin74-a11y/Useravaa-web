@@ -1,0 +1,18 @@
+{
+  "mobile": {
+    "minWidth": 0,
+    "maxWidth": 639
+  },
+  "tablet": {
+    "minWidth": 640,
+    "maxWidth": 899
+  },
+  "desktop": {
+    "minWidth": 900,
+    "maxWidth": 1199
+  },
+  "wide": {
+    "minWidth": 1200,
+    "maxWidth": null
+  }
+}

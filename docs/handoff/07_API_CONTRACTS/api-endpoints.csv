@@ -1,0 +1,28 @@
+﻿method,path,auth_required,role,request_body,response,main_errors
+GET,/api/profiles,false,"guest,authenticated_user","query: search, role, categories, orgLevels, companies, years, sort, page",ProfileListResponse,VALIDATION_ERROR
+GET,/api/profiles/{profileId},false,"guest,authenticated_user",path profileId,ProfileDetail,NOT_FOUND
+POST,/api/profiles/me/draft,true,profile_owner,ExperienceProfileDraftRequest,ExperienceProfile,"VALIDATION_ERROR,PRICE_CAP_EXCEEDED"
+POST,/api/profiles/me/submit,true,profile_owner,SubmitProfileRequest,ExperienceProfile,"INVALID_PROFILE_STATE,VALIDATION_ERROR"
+POST,/api/profiles/{profileId}/save,true,authenticated_user,empty,NetworkState,NOT_FOUND
+DELETE,/api/profiles/{profileId}/save,true,authenticated_user,empty,NetworkState,NOT_FOUND
+POST,/api/profiles/{profileId}/follow,true,authenticated_user,empty,NetworkState,NOT_FOUND
+DELETE,/api/profiles/{profileId}/follow,true,authenticated_user,empty,NetworkState,NOT_FOUND
+GET,/api/network,true,authenticated_user,"query tab, search, category, sort, page",NetworkListResponse,VALIDATION_ERROR
+POST,/api/conversations,true,seeker,CreateConversationRequest,Conversation,"VALIDATION_ERROR,PROFILE_NOT_ACTIVE"
+GET,/api/conversations,true,authenticated_user,"query direction, group, page",ConversationListResponse,VALIDATION_ERROR
+GET,/api/conversations/{conversationId},true,"seeker,provider",path conversationId,ConversationDetail,"NOT_FOUND,FORBIDDEN"
+POST,/api/conversations/{conversationId}/proposed-times,true,provider,ProposeTimesRequest,ConversationDetail,"INVALID_STATE_TRANSITION,VALIDATION_ERROR"
+POST,/api/conversations/{conversationId}/select-time,true,seeker,SelectTimeRequest,ConversationDetail,INVALID_STATE_TRANSITION
+POST,/api/conversations/{conversationId}/cancel,true,"seeker,provider",CancelRequest,ConversationDetail,INVALID_STATE_TRANSITION
+POST,/api/checkout/{conversationId},true,seeker,CreateCheckoutRequest,CheckoutResponse,INVALID_STATE_TRANSITION
+POST,/api/payments/{paymentId}/confirm,true,seeker,ConfirmPaymentRequest,Payment,PAYMENT_FAILED
+GET,/api/wallet,true,authenticated_user,none,WalletResponse,UNAUTHORIZED
+POST,/api/wallet/top-up,true,authenticated_user,TopUpRequest,WalletResponse,PAYMENT_FAILED
+POST,/api/payouts,true,provider,PayoutRequest,Payout,SETTLEMENT_INFO_REQUIRED
+PUT,/api/settlement-info,true,"provider,profile_owner",SettlementInfoRequest,SettlementInfo,INVALID_IBAN
+GET,/api/notifications,true,authenticated_user,"query status,page",NotificationListResponse,UNAUTHORIZED
+POST,/api/notifications/{notificationId}/read,true,authenticated_user,empty,Notification,NOT_FOUND
+POST,/api/feedback,true,seeker,FeedbackRequest,Feedback,"INVALID_STATE_TRANSITION,VALIDATION_ERROR"
+GET,/api/feedback/received,true,profile_owner,query page,FeedbackListResponse,UNAUTHORIZED
+PUT,/api/account,true,authenticated_user,AccountUpdateRequest,Account,VALIDATION_ERROR
+POST,/api/reports/profile,true,authenticated_user,ReportProfileRequest,Report,VALIDATION_ERROR

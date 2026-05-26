@@ -1,0 +1,97 @@
+[
+  {
+    "id": "BR-001",
+    "description": "No public availability calendar on profile.",
+    "condition": "public_profile_render",
+    "expectedBehavior": "Do not show provider free time slots; only request CTA is shown.",
+    "affectedEntities": [
+      "ExperienceProfile",
+      "ConversationRequest"
+    ]
+  },
+  {
+    "id": "BR-002",
+    "description": "Conversation starts with request.",
+    "condition": "seeker_wants_conversation",
+    "expectedBehavior": "Seeker creates conversation request before any time coordination.",
+    "affectedEntities": [
+      "ConversationRequest"
+    ]
+  },
+  {
+    "id": "BR-003",
+    "description": "Provider proposes times after request.",
+    "condition": "conversation.status=requested and actor=provider",
+    "expectedBehavior": "Provider must propose 3 to 6 date/time options.",
+    "affectedEntities": [
+      "ProposedTime",
+      "ConversationRequest"
+    ]
+  },
+  {
+    "id": "BR-004",
+    "description": "Seeker selects one proposed time.",
+    "condition": "conversation.status=provider_time_options_sent and actor=seeker",
+    "expectedBehavior": "Seeker may select exactly one proposed option or cancel.",
+    "affectedEntities": [
+      "ProposedTime",
+      "ConversationRequest"
+    ]
+  },
+  {
+    "id": "BR-005",
+    "description": "Profile must be active to appear in discover.",
+    "condition": "experienceProfile.status != active",
+    "expectedBehavior": "Profile is hidden from discover and public request flow.",
+    "affectedEntities": [
+      "ExperienceProfile"
+    ]
+  },
+  {
+    "id": "BR-006",
+    "description": "Settings belong inside profile/account area.",
+    "condition": "render_global_header",
+    "expectedBehavior": "Do not show settings as top-level header nav; expose through profile page.",
+    "affectedEntities": [
+      "Navigation"
+    ]
+  },
+  {
+    "id": "BR-007",
+    "description": "My Profile request notifications are small notifications only.",
+    "condition": "profile_dashboard_render and incoming_requests_count>0",
+    "expectedBehavior": "Show notification/link to conversations; do not render full request cards in profile dashboard.",
+    "affectedEntities": [
+      "ProfileDashboard",
+      "ConversationRequest"
+    ]
+  },
+  {
+    "id": "BR-008",
+    "description": "Follow, save and followers are managed in Network page.",
+    "condition": "user_opens_network",
+    "expectedBehavior": "Show tabs for following, saved and followers with search/filter/sort.",
+    "affectedEntities": [
+      "Network"
+    ]
+  },
+  {
+    "id": "BR-009",
+    "description": "Feedback received is accessible to profile owner.",
+    "condition": "profile_owner_opens_feedback",
+    "expectedBehavior": "Show feedback summary and list for completed conversations.",
+    "affectedEntities": [
+      "Feedback",
+      "ExperienceProfile"
+    ]
+  },
+  {
+    "id": "BR-010",
+    "description": "Business manager is highest org level.",
+    "condition": "sort_or_render_org_levels",
+    "expectedBehavior": "Order: کارآموز، کارشناس، کارشناس ارشد، مدیر میانی، مدیر ارشد، معاونت، مدیر کسب و کار.",
+    "affectedEntities": [
+      "OrgLevel"
+    ]
+  }
+]

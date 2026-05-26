@@ -1,0 +1,34 @@
+// Add this model to the Useravaa Prisma schema.
+
+model ExperienceTimelineItem {
+  id             String            @id @default(cuid())
+  profileId      String
+  profile        ExperienceProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  jobTitle       String
+  orgLevel       OrgLevel
+
+  companyName    String
+  companyField   String
+  companyCountry String
+
+  startYear      Int
+  startMonth     Int?
+  endYear        Int?
+  endMonth       Int?
+  isCurrent      Boolean           @default(false)
+
+  description    String?
+  sortOrder      Int?
+
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([profileId])
+  @@index([profileId, isCurrent])
+  @@index([companyName])
+  @@index([companyCountry])
+}
+
+// Add to ExperienceProfile:
+// timelineItems ExperienceTimelineItem[]

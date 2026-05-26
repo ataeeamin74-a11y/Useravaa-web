@@ -1,0 +1,18 @@
+{
+  "publicProfileShowsAvailability": false,
+  "requestBeforeScheduling": true,
+  "providerProposesAfterRequest": true,
+  "seekerSelectsFromProviderOptions": true,
+  "proposalTimeInput": "date_chips_and_time_slot_chips",
+  "freeTextTimeInputAllowed": false,
+  "dateCalendar": "Jalali/Shamsi display",
+  "minProposedTimes": 3,
+  "maxProposedTimes": 6,
+  "duplicatesAllowed": false,
+  "durationsMinutes": [
+    30,
+    60
+  ],
+  "finalization": "Selected time becomes final only after payment or free-help finalization.",
+  "dateTimeDisplay": "Persian/Jalali labels and Persian numerals in UI"
+}

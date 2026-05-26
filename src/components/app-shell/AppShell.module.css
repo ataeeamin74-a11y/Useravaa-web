@@ -1,0 +1,15 @@
+.app {
+  max-width: var(--max-content);
+  margin: 0 auto;
+  padding: 18px 22px 88px;
+}
+
+.main {
+  padding-top: 26px;
+}
+
+@media (max-width: 560px) {
+  .app {
+    padding-inline: 14px;
+  }
+}

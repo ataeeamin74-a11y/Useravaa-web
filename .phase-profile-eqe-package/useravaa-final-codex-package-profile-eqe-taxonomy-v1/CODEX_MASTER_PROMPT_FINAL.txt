@@ -1,0 +1,312 @@
+You are working on the Useravaa product implementation.
+
+Use the uploaded package `useravaa-final-codex-package-profile-eqe-taxonomy-v1.zip` as the full source of truth for this implementation phase.
+
+Start from this file first:
+- `CODEX_MASTER_PROMPT_FINAL.txt`
+
+Then read the included ZIP packages in this exact source-of-truth order:
+
+1. `useravaa-execution-handoff-v1.zip`
+Base product handoff, V51 prototype baseline, routes, pages, profile, wallet, conversations, pricing, settlement, navigation, design contracts, data model, API contracts, tests, and deployment notes.
+
+2. `useravaa-eqe-codex-final-upload.zip`
+Final Experience Question Engine package.
+This overrides any older Experience Question Engine assumptions.
+No Admin review.
+No Admin approve/reject/hide flow.
+Provider is responsible for their own answer content.
+Provider publishes directly after accepting responsibility.
+Answer statuses are only:
+- draft
+- published
+- retracted
+
+Raw weekly question only appears in:
+- `/profile#weekly-question`
+
+Published question-answer pairs appear only in:
+- `/profiles/[profileId]`
+- section title: `از تجربه من`
+
+Do not create feed, like, comment, share, public activity, social graph, ranking, or public answer pages.
+
+3. `useravaa-profile-experience-timeline-codex-patch-v1.zip`
+Profile timeline patch.
+Structured experience timeline is required for Provider profiles.
+Question Engine must derive current/previous role, seniority, company, company field/category, and company country from timeline items.
+Do not rely on free-text `previousCompanies` as the source of truth.
+
+4. `useravaa-job-field-taxonomy-codex-patch-v1.zip`
+Latest taxonomy patch and highest priority for job title/job field assumptions.
+This overrides older category/job-field assumptions.
+
+Final taxonomy rules:
+- `عنوان شغلی` / `jobTitle` is manual free text everywhere.
+- `حوزه شغلی` / `jobField` must always be selected only from the fixed taxonomy.
+- Do not make job title a dropdown.
+- Do not allow arbitrary job field/category text.
+- Do not keep old inconsistent job-category labels.
+- Do not confuse company industry with job field.
+
+Fixed حوزه شغلی taxonomy:
+1. محصول و تجربه کاربر
+2. طراحی گرافیک و هویت بصری
+3. فنی و مهندسی نرم‌افزار
+4. علوم داده و هوش مصنوعی
+5. مارکتینگ و برند
+6. تحلیل و توسعه کسب‌وکار
+7. عملیات
+8. تجربه مشتری
+9. پشتیبانی مشتریان
+10. فروش و بازرگانی
+11. استراتژی و مدل کسب‌وکار
+12. مالی، حقوقی و سرمایه‌گذاری
+13. منابع انسانی و فرهنگ سازمانی
+14. مدیریت، رهبری و کارآفرینی
+
+Implementation scope for this phase:
+
+A. Preserve V51 baseline
+- Use V51 prototype and handoff files as UI/product reference.
+- Do not redesign.
+- Do not rename pages, CTAs, statuses, roles, labels, pricing rules, or navigation unless explicitly overridden by the later EQE, timeline, or taxonomy patch files.
+
+B. Profile build/edit and profile data
+Update `/profile` and `/profile/build` so Provider profile data includes structured work-experience timeline.
+
+Add section:
+- `سوابق تجربه`
+
+Each timeline item must capture:
+- jobTitle / عنوان شغلی: manual free text, required
+- jobField / حوزه شغلی: fixed taxonomy, required
+- orgLevel / رده سازمانی: fixed org-level enum
+- companyName / نام شرکت
+- companyCountry / کشور یا محل شرکت
+- companyIndustry / زمینه فعالیت شرکت, separate from jobField
+- start year/month
+- end year/month or current role flag
+- optional description
+
+The timeline should cover at least the last five years where possible.
+If the Provider claims 5+ years of experience but the timeline covers less than five years, show the warning/validation defined in the timeline patch.
+
+C. Question Engine field mapping
+Use timeline as source of truth.
+
+Derive:
+- `{current_role}` from current timeline item `jobTitle`
+- `{current_seniority}` from current timeline item `orgLevel`
+- `{current_company}` from current timeline item `companyName`
+- `{current_company_country}` from current timeline item `companyCountry`
+- `{current_company_field}` or company-related fields from `companyIndustry` if needed
+- `{previous_role}` from most recent non-current timeline item `jobTitle`
+- `{previous_seniority}` from most recent non-current timeline item `orgLevel`
+- `{previous_company}` from most recent non-current timeline item `companyName`
+- `{job_category}` from `jobField`, using the fixed taxonomy only
+
+Do not use free-text previousCompanies as the source of truth for Question Engine eligibility.
+
+D. Experience Question Engine placement
+Raw weekly questions are shown only to the Provider.
+
+Route:
+- `/profile`
+
+Placement:
+- after profile status / profile hero
+- before performance, feedback, network, wallet/account/settings sections
+- component: `WeeklyQuestionCard`
+- anchor id: `weekly-question`
+
+Requester must never see raw unanswered questions.
+
+Published answers are shown only inside the Provider public profile.
+
+Route:
+- `/profiles/[profileId]`
+
+Section:
+- `از تجربه من`
+
+Display rules:
+- show only status=`published`
+- max 3 items
+- sort by `publishedAt desc`
+- each item shows rendered question + Provider answer
+- hide section completely if there are no published answers
+- no social actions on answers
+
+E. Experience Question Engine no-admin rule
+Do not implement Admin review for this feature.
+Do not implement admin review queue.
+Do not implement approve/reject/hide.
+Do not implement pending_review/rejected/hidden statuses.
+Provider publishes directly after responsibility confirmation.
+Provider can retract own published answer.
+
+Required answer statuses:
+- draft
+- published
+- retracted
+
+Before publish, Provider must accept:
+`مسئولیت محتوای این پاسخ با من است.`
+
+Use this safety text:
+`پاسخ را حرفه‌ای، محترمانه و بدون افشای اطلاعات محرمانه بنویسید. هدف، توضیح تجربه شخصی شماست، نه ارزیابی یا تخریب شرکت‌ها.`
+
+F. Required copy
+
+Provider card title:
+`پرسش این هفته`
+
+Provider card description:
+`پاسخ کوتاه شما به کامل‌تر شدن پروفایل تجربه‌تان کمک می‌کند.`
+
+Actions:
+`پاسخ می‌دهم`
+`سؤال دیگری بده`
+`فعلاً نه`
+
+Answer helper:
+`۳ تا ۵ جمله کافی است. پاسخ را بر اساس تجربه شخصی خودتان، حرفه‌ای و بدون افشای اطلاعات محرمانه بنویسید.`
+
+Publish CTA:
+`انتشار در پروفایل`
+
+Retract CTA:
+`حذف از پروفایل`
+
+Public profile section:
+`از تجربه من`
+
+Notification copy:
+`پرسش این هفته آماده است`
+
+Notification target:
+`/profile#weekly-question`
+
+Notification rule:
+Do not show full question text inside notification.
+
+G. Required implementation areas
+
+Implement or update:
+- `/profile`
+- `/profile/build`
+- `/profiles/[profileId]`
+- `/discover` filters if job field filters exist
+- `/notifications` if needed for reminder/deep link
+- Experience Question Engine fixtures/data/contracts
+- profile timeline model/schema
+- timeline editor UI
+- job field taxonomy
+- question eligibility mapping from timeline
+- public profile `از تجربه من` section
+- provider publish/retract flow
+
+H. Required components
+
+Create/update:
+- WeeklyQuestionCard
+- AnswerEditor
+- ResponsibilityCheckbox
+- ProfileExperienceAnswersSection
+- ExperienceAnswerItem
+- RetractAnswerButton
+- ExperienceTimelineEditor
+- ExperienceTimelineItemForm
+- ExperienceTimelineSummary
+- JobFieldSelect
+- JobTitleInput
+
+I. Required tests
+
+Add tests for:
+1. `/profile` renders WeeklyQuestionCard for Provider when active question exists.
+2. WeeklyQuestionCard is placed after profile status/hero and before dashboard sections.
+3. Raw unanswered question does not render on `/profiles/[profileId]`.
+4. Published answers render inside `از تجربه من` on `/profiles/[profileId]`.
+5. `از تجربه من` is hidden when there are no published answers.
+6. Max 3 published answers render.
+7. Notification links to `/profile#weekly-question` and does not include full question text.
+8. Publish is blocked without responsibility checkbox.
+9. Publishing valid answer changes status from `draft` to `published`.
+10. Provider can retract own published answer.
+11. Retracted answer disappears from public profile.
+12. No Admin routes, states, or components are added for EQE.
+13. Timeline item requires job title, job field, org level, company name, company country, start date, and end date unless current.
+14. `jobTitle` accepts manual free text.
+15. `jobField` only accepts the fixed taxonomy.
+16. Invalid old values such as `محصول`, `تحلیل داده`, `مهندسی`, `رشد`, `هوش تجاری`, `طراحی محصول` are not accepted as standalone jobField values unless mapped to the fixed taxonomy.
+17. Current role/seniority/company are derived from timeline item with `isCurrent=true`.
+18. Previous role/seniority/company are derived from most recent non-current timeline item.
+19. `{current_role}` uses `jobTitle`.
+20. `{job_category}` uses `jobField`.
+21. Company comparison templates are eligible only when current and previous company can be derived from timeline.
+22. Seniority comparison templates are eligible only when current and previous seniority can be derived from timeline.
+23. Free-text `previousCompanies` is not used as source of truth for Question Engine eligibility.
+24. Discovery job-field filters show exactly the fixed taxonomy list.
+
+J. Do not build
+
+Do not build:
+- Admin review flow for EQE
+- approve/reject/hide for EQE
+- pending_review/rejected/hidden statuses for EQE
+- feed
+- posts
+- likes
+- comments
+- shares
+- public answer pages
+- social graph
+- public activity
+- direct public availability calendar
+- arbitrary job field/category creation
+- job title dropdown
+
+K. Verification
+
+Before reporting completion, run:
+```bash
+npm run lint
+npm run typecheck
+npm run test
+npm run build
+```
+
+L. Required report
+
+Create:
+`PHASE_PROFILE_TIMELINE_JOBFIELD_EQE_REPORT.md`
+
+Report must include:
+- packages used
+- files changed
+- profile timeline changes
+- jobTitle free-text implementation
+- jobField fixed taxonomy implementation
+- discovery filter changes
+- schema/model changes
+- public profile changes
+- Question Engine placement implementation
+- Question Engine timeline field mapping
+- no-admin confirmation
+- components added/updated
+- tests added
+- verification results
+- known gaps intentionally deferred
+
+M. Manual review gate
+
+Do not create a checkpoint.
+Do not start the next phase.
+Do not mark this phase as approved.
+
+After finishing the implementation and verification, stop and wait for my manual Chrome review.
+
+Exact required final line in your response:
+`Implementation complete. Waiting for manual Chrome review before checkpoint or next phase.`

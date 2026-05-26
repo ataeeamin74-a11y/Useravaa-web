@@ -1,0 +1,31 @@
+{
+  "assets": [
+    {
+      "fileName": "prototype/index.html",
+      "type": "prototype_html",
+      "usage": "visual/product reference",
+      "canModify": false,
+      "sourceStatus": "included"
+    },
+    {
+      "fileName": "prototype/styles.css",
+      "type": "prototype_css",
+      "usage": "visual reference only",
+      "canModify": false,
+      "sourceStatus": "extracted_from_latest_prototype"
+    },
+    {
+      "fileName": "prototype/script.js",
+      "type": "prototype_js",
+      "usage": "behavior reference only; not production architecture",
+      "canModify": false,
+      "sourceStatus": "extracted_from_latest_prototype"
+    }
+  ],
+  "missingAssets": [
+    {
+      "asset": "official Useravaa logo files",
+      "impact": "Prototype currently uses text brand and UA mark rendered in HTML/CSS. Production asset source not included in current chat handoff."
+    }
+  ]
+}

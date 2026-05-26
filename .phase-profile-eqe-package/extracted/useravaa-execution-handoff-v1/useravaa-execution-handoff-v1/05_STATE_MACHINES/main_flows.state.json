@@ -1,0 +1,167 @@
+{
+  "conversationRequest": {
+    "initialState": "draft",
+    "states": [
+      "draft",
+      "requested",
+      "provider_time_options_sent",
+      "time_selected",
+      "awaiting_payment",
+      "scheduled",
+      "completed",
+      "feedback_pending",
+      "feedback_submitted",
+      "cancelled",
+      "expired"
+    ],
+    "allowedTransitions": [
+      {
+        "from": "draft",
+        "to": "requested",
+        "actor": "seeker",
+        "action": "submit_request"
+      },
+      {
+        "from": "requested",
+        "to": "provider_time_options_sent",
+        "actor": "provider",
+        "action": "propose_3_to_6_times"
+      },
+      {
+        "from": "provider_time_options_sent",
+        "to": "time_selected",
+        "actor": "seeker",
+        "action": "select_one_time"
+      },
+      {
+        "from": "time_selected",
+        "to": "awaiting_payment",
+        "actor": "system",
+        "action": "create_checkout"
+      },
+      {
+        "from": "awaiting_payment",
+        "to": "scheduled",
+        "actor": "seeker",
+        "action": "successful_payment_or_free_finalize"
+      },
+      {
+        "from": "scheduled",
+        "to": "completed",
+        "actor": "system_or_admin",
+        "action": "mark_conversation_completed"
+      },
+      {
+        "from": "completed",
+        "to": "feedback_pending",
+        "actor": "system",
+        "action": "open_feedback_window"
+      },
+      {
+        "from": "feedback_pending",
+        "to": "feedback_submitted",
+        "actor": "seeker",
+        "action": "submit_feedback"
+      },
+      {
+        "from": "requested",
+        "to": "cancelled",
+        "actor": "seeker_or_provider",
+        "action": "cancel_or_decline"
+      },
+      {
+        "from": "provider_time_options_sent",
+        "to": "cancelled",
+        "actor": "seeker_or_provider",
+        "action": "cancel"
+      },
+      {
+        "from": "time_selected",
+        "to": "cancelled",
+        "actor": "seeker_or_provider",
+        "action": "cancel_before_payment"
+      },
+      {
+        "from": "awaiting_payment",
+        "to": "cancelled",
+        "actor": "seeker",
+        "action": "cancel_checkout"
+      },
+      {
+        "from": "requested",
+        "to": "expired",
+        "actor": "system",
+        "action": "expire_unanswered_request"
+      },
+      {
+        "from": "provider_time_options_sent",
+        "to": "expired",
+        "actor": "system",
+        "action": "expire_time_options"
+      }
+    ],
+    "invalidTransitionBehavior": {
+      "httpStatus": 409,
+      "errorCode": "INVALID_STATE_TRANSITION",
+      "messageKey": "error.invalidStateTransition"
+    }
+  },
+  "network": {
+    "states": [
+      "not_saved",
+      "saved",
+      "not_following",
+      "following"
+    ],
+    "allowedTransitions": [
+      {
+        "from": "not_saved",
+        "to": "saved",
+        "actor": "authenticated_user",
+        "action": "save_profile"
+      },
+      {
+        "from": "saved",
+        "to": "not_saved",
+        "actor": "authenticated_user",
+        "action": "remove_saved_profile"
+      },
+      {
+        "from": "not_following",
+        "to": "following",
+        "actor": "authenticated_user",
+        "action": "follow_profile"
+      },
+      {
+        "from": "following",
+        "to": "not_following",
+        "actor": "authenticated_user",
+        "action": "unfollow_profile"
+      }
+    ],
+    "invalidTransitionBehavior": {
+      "httpStatus": 409,
+      "errorCode": "INVALID_NETWORK_TRANSITION",
+      "messageKey": "error.invalidNetworkTransition"
+    }
+  },
+  "notification": {
+    "states": [
+      "unread",
+      "read"
+    ],
+    "allowedTransitions": [
+      {
+        "from": "unread",
+        "to": "read",
+        "actor": "authenticated_user",
+        "action": "open_notification"
+      }
+    ],
+    "invalidTransitionBehavior": {
+      "httpStatus": 409,
+      "errorCode": "INVALID_NOTIFICATION_STATE",
+      "messageKey": "error.invalidNotificationState"
+    }
+  }
+}

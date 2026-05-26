@@ -1,0 +1,49 @@
+.btn {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 0;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 850;
+  padding: 10px 16px;
+  text-align: center;
+}
+
+.btn svg {
+  flex: none;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: #fff;
+}
+
+.secondary {
+  border: 1px solid var(--line-2);
+  background: #fff;
+  color: var(--navy);
+}
+
+.blueSecondary {
+  border: 1px solid var(--blue);
+  background: #fff;
+  color: var(--blue);
+}
+
+.danger {
+  border: 1px solid #fecaca;
+  background: #fef3f2;
+  color: #b42318;
+}
+
+.full {
+  width: 100%;
+}
