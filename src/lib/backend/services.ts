@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, type ContentEntryStatus, type ContentEntryType } from "@prisma/client";
 import { apiError, apiOk } from "./api-response";
 import { calculateRequesterCancellationPolicy } from "./cancellation-policy";
 import { isPrismaClientConfigurationError } from "./db/prisma";
@@ -12,12 +12,23 @@ import {
   decodeRequesterAttendanceCode,
   hashAttendanceCode
 } from "./repositories/attendance";
-import type { AdminCategoryRecord, PricingRuleListReadModel, PricingRuleRecord, RepositoryResult } from "./repositories";
+import type {
+  AdminCategoryRecord,
+  AdminContentEntryFilters,
+  AdminContentEntryRecord,
+  PricingRuleListReadModel,
+  PricingRuleRecord,
+  RepositoryResult
+} from "./repositories";
 import {
   adminCategoryArchiveSchema,
   adminCategoryCreateSchema,
   adminCategoryRestoreSchema,
   adminCategoryUpdateSchema,
+  adminContentEntryArchiveSchema,
+  adminContentEntryCreateSchema,
+  adminContentEntryRestoreSchema,
+  adminContentEntryUpdateSchema,
   adminCancellationCreditApprovalSchema,
   adminCancellationCreditRejectionSchema,
   adminExperienceProfileApprovalSchema,
@@ -383,6 +394,11 @@ type InsightModerationServiceOptions = {
 };
 
 type AdminCategoryServiceOptions = {
+  runInTransaction?: typeof withUseravaaTransaction;
+  now?: () => Date;
+};
+
+type AdminContentServiceOptions = {
   runInTransaction?: typeof withUseravaaTransaction;
   now?: () => Date;
 };
@@ -2753,6 +2769,41 @@ function isPrismaUniqueConstraintError(error: unknown): error is Prisma.PrismaCl
   return error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002";
 }
 
+function contentEntryStatus(content: Pick<AdminContentEntryRecord, "status" | "archivedAt">) {
+  return content.archivedAt ? "ARCHIVED" : content.status;
+}
+
+function contentEntryAuditSnapshot(
+  content: Pick<
+    AdminContentEntryRecord,
+    "key" | "namespace" | "locale" | "contentType" | "status" | "isEditable" | "isSystem" | "archivedAt"
+  >
+) {
+  return {
+    key: content.key,
+    namespace: content.namespace,
+    locale: content.locale,
+    contentType: content.contentType,
+    status: content.status,
+    isEditable: content.isEditable,
+    isSystem: content.isSystem,
+    archived: Boolean(content.archivedAt)
+  };
+}
+
+function contentDuplicateResult(details?: unknown) {
+  return validationErrorResult("admin_content", {
+    reason: "duplicate_content_key_namespace_locale",
+    details
+  });
+}
+
+function contentEntryCannotBeEditedResult(reason: string) {
+  return invalidStateResult("admin_content", {
+    reason
+  });
+}
+
 async function validateCategoryParent(
   parentId: string | null | undefined,
   tx: UseravaaTransactionClient,
@@ -2786,6 +2837,382 @@ async function validateCategoryParent(
 
   return null;
 }
+
+export const adminContentService = {
+  list(viewer: AdminViewer, filters: AdminContentEntryFilters = {}): Promise<ServiceResult<AdminContentEntryRecord[]>> {
+    if (!isAdminOrSupport(viewer)) {
+      return Promise.resolve(unauthorizedResult("admin_content"));
+    }
+
+    return useravaaRepository.adminContent
+      .listContentEntries(filters)
+      .then((result) => repositoryResultToService("admin_content", result));
+  },
+  getDetail(viewer: AdminViewer, contentEntryId: string): Promise<ServiceResult<AdminContentEntryRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return Promise.resolve(unauthorizedResult("admin_content"));
+    }
+
+    return useravaaRepository.adminContent.getContentEntry(contentEntryId).then((result) => {
+      if (!result.ok) {
+        return repositoryResultToService("admin_content", result);
+      }
+
+      if (!result.data) {
+        return targetNotFoundResult("admin_content");
+      }
+
+      return {
+        ok: true,
+        data: result.data
+      } satisfies ServiceResult<typeof result.data>;
+    });
+  },
+  getPublishedContentByKey(input: { namespace: string; key: string; locale?: string }) {
+    return useravaaRepository.adminContent
+      .getPublishedContentByKey(input)
+      .then((result) => repositoryResultToService("admin_content", result));
+  },
+  async create(
+    viewer: AdminViewer,
+    payload: unknown,
+    options: AdminContentServiceOptions = {}
+  ): Promise<ServiceResult<AdminContentEntryRecord>> {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_content");
+    }
+
+    const parsed = adminContentEntryCreateSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_content", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const created = await useravaaRepository.adminContent.createContentEntry(
+          {
+            key: parsed.data.key,
+            namespace: parsed.data.namespace,
+            locale: parsed.data.locale,
+            title: parsed.data.title,
+            body: parsed.data.body,
+            shortText: parsed.data.shortText,
+            description: parsed.data.description,
+            contentType: parsed.data.contentType as ContentEntryType,
+            status: parsed.data.status as ContentEntryStatus,
+            isEditable: parsed.data.isEditable,
+            adminId: viewer.id
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createContentEntryEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "CONTENT_ENTRY_CREATED",
+            contentEntryId: created.id,
+            beforeStatus: null,
+            afterStatus: contentEntryStatus(created),
+            metadata: {
+              after: contentEntryAuditSnapshot(created)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: created,
+          status: 201
+        } satisfies ServiceResult<typeof created>;
+      });
+    } catch (error) {
+      if (isPrismaUniqueConstraintError(error)) {
+        return contentDuplicateResult(error.meta);
+      }
+
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_content", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async update(
+    viewer: AdminViewer,
+    contentEntryId: string,
+    payload: unknown,
+    options: AdminContentServiceOptions = {}
+  ): Promise<ServiceResult<AdminContentEntryRecord>> {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_content");
+    }
+
+    const parsed = adminContentEntryUpdateSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_content", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminContent.getContentEntry(contentEntryId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_content", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_content");
+        }
+
+        if (existing.archivedAt || existing.status === "ARCHIVED") {
+          return contentEntryCannotBeEditedResult("archived_content_entry_cannot_be_updated");
+        }
+
+        if (!existing.isEditable) {
+          return contentEntryCannotBeEditedResult("non_editable_content_entry_cannot_be_updated");
+        }
+
+        const updated = await useravaaRepository.adminContent.updateContentEntry(
+          contentEntryId,
+          {
+            ...(parsed.data.title === undefined ? {} : { title: parsed.data.title }),
+            ...(parsed.data.body === undefined ? {} : { body: parsed.data.body }),
+            ...(parsed.data.shortText === undefined ? {} : { shortText: parsed.data.shortText }),
+            ...(parsed.data.description === undefined ? {} : { description: parsed.data.description }),
+            ...(parsed.data.contentType === undefined ? {} : { contentType: parsed.data.contentType as ContentEntryType }),
+            ...(parsed.data.status === undefined ? {} : { status: parsed.data.status as ContentEntryStatus }),
+            ...(parsed.data.isEditable === undefined ? {} : { isEditable: parsed.data.isEditable }),
+            adminId: viewer.id
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createContentEntryEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "CONTENT_ENTRY_UPDATED",
+            contentEntryId: updated.id,
+            beforeStatus: contentEntryStatus(existing),
+            afterStatus: contentEntryStatus(updated),
+            metadata: {
+              before: contentEntryAuditSnapshot(existing),
+              after: contentEntryAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaUniqueConstraintError(error)) {
+        return contentDuplicateResult(error.meta);
+      }
+
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_content", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async archive(
+    viewer: AdminViewer,
+    contentEntryId: string,
+    payload: unknown,
+    options: AdminContentServiceOptions = {}
+  ): Promise<ServiceResult<AdminContentEntryRecord>> {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_content");
+    }
+
+    const parsed = adminContentEntryArchiveSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_content", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminContent.getContentEntry(contentEntryId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_content", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_content");
+        }
+
+        if (existing.archivedAt || existing.status === "ARCHIVED") {
+          return invalidStateResult("admin_content", {
+            reason: "content_entry_already_archived"
+          });
+        }
+
+        if (existing.isSystem && !existing.isEditable) {
+          return contentEntryCannotBeEditedResult("non_editable_system_content_entry_cannot_be_archived");
+        }
+
+        const updated = await useravaaRepository.adminContent.archiveContentEntry(
+          contentEntryId,
+          {
+            adminId: viewer.id,
+            archivedAt: now
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createContentEntryEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "CONTENT_ENTRY_ARCHIVED",
+            contentEntryId: updated.id,
+            beforeStatus: contentEntryStatus(existing),
+            afterStatus: contentEntryStatus(updated),
+            reason: parsed.data.reason,
+            note: parsed.data.internalNote,
+            metadata: {
+              before: contentEntryAuditSnapshot(existing),
+              after: contentEntryAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_content", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async restore(
+    viewer: AdminViewer,
+    contentEntryId: string,
+    payload: unknown,
+    options: AdminContentServiceOptions = {}
+  ): Promise<ServiceResult<AdminContentEntryRecord>> {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_content");
+    }
+
+    const parsed = adminContentEntryRestoreSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_content", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminContent.getContentEntry(contentEntryId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_content", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_content");
+        }
+
+        if (!existing.archivedAt && existing.status !== "ARCHIVED") {
+          return invalidStateResult("admin_content", {
+            reason: "content_entry_is_not_archived"
+          });
+        }
+
+        if (existing.isSystem && !existing.isEditable) {
+          return contentEntryCannotBeEditedResult("non_editable_system_content_entry_cannot_be_restored");
+        }
+
+        const updated = await useravaaRepository.adminContent.restoreContentEntry(
+          contentEntryId,
+          {
+            adminId: viewer.id
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createContentEntryEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "CONTENT_ENTRY_RESTORED",
+            contentEntryId: updated.id,
+            beforeStatus: contentEntryStatus(existing),
+            afterStatus: contentEntryStatus(updated),
+            note: parsed.data.internalNote,
+            metadata: {
+              before: contentEntryAuditSnapshot(existing),
+              after: contentEntryAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_content", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  }
+} as const;
 
 export const adminCategoryService = {
   list(viewer: AdminViewer): Promise<ServiceResult<AdminCategoryRecord[]>> {

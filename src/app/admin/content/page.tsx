@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
 import { requireAdminPageAccess } from "@/features/v51/admin/access";
-import { AdminAccessDenied, AdminPlaceholder } from "@/features/v51/admin/AdminSurfaces";
-import { getPlaceholderData } from "@/features/v51/admin/data";
+import { AdminAccessDenied, AdminContentManagement } from "@/features/v51/admin/AdminSurfaces";
+import { getAdminContentRouteData, type AdminContentSearchParams } from "@/features/v51/admin/server-data";
 
 export const metadata: Metadata = {
   title: "مدیریت محتوا | Useravaa"
 };
 
-export default async function AdminContentPage() {
+type AdminContentPageProps = Readonly<{
+  searchParams?: Promise<AdminContentSearchParams>;
+}>;
+
+export default async function AdminContentPage({ searchParams }: AdminContentPageProps) {
   const viewer = await requireAdminPageAccess();
 
   if (!viewer) {
     return <AdminAccessDenied />;
   }
 
-  return <AdminPlaceholder data={getPlaceholderData("content")} />;
+  const routeData = await getAdminContentRouteData(viewer, await searchParams);
+
+  return <AdminContentManagement data={routeData} />;
 }

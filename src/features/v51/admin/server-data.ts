@@ -22,9 +22,14 @@ import {
   buildAdminPaidSessionsKpiTree,
   buildUnavailableAdminPaidSessionsKpiTree
 } from "@/lib/backend/admin-kpi-tree";
-import { JobField, type JobField as PrismaJobField } from "@prisma/client";
-import { adminCategoryService, adminPaymentService, adminPricingService } from "@/lib/backend/services";
-import type { AdminCategoryRecord, PricingRuleCategoryOption, PricingRuleRecord } from "@/lib/backend/repositories";
+import { ContentEntryStatus, ContentEntryType, JobField, type JobField as PrismaJobField } from "@prisma/client";
+import { adminCategoryService, adminContentService, adminPaymentService, adminPricingService } from "@/lib/backend/services";
+import type {
+  AdminCategoryRecord,
+  AdminContentEntryRecord,
+  PricingRuleCategoryOption,
+  PricingRuleRecord
+} from "@/lib/backend/repositories";
 import { adminAnalyticsFilterSchema } from "@/lib/backend/validation";
 import type { Viewer } from "@/lib/auth/types";
 import { formatFaNumber } from "@/lib/fa-format";
@@ -54,6 +59,11 @@ import {
   type AdminCategoryDetailData,
   type AdminCategoryItem,
   type AdminCategoryOption,
+  type AdminContentData,
+  type AdminContentDetailData,
+  type AdminContentEntryItem,
+  type AdminContentFilterOption,
+  type AdminUgcOverviewItem,
   type AdminConversationListItem,
   type AdminDataSource,
   type AdminDetailField,
@@ -118,6 +128,7 @@ export type AdminHomeRouteData = {
 };
 
 export type AdminAnalyticsSearchParams = Record<string, string | string[] | undefined>;
+export type AdminContentSearchParams = Record<string, string | string[] | undefined>;
 
 export type AdminListRouteData<T> = {
   items: T[];
@@ -211,6 +222,34 @@ const unsupportedAnalyticsMetrics = [
   }
 ] as const;
 
+const contentTypeLabels: Record<ContentEntryType, string> = {
+  SYSTEM_COPY: "کپی سیستمی",
+  PAGE_BLOCK: "بلوک صفحه",
+  FAQ: "پرسش پرتکرار",
+  HELP_TEXT: "متن راهنما",
+  EMPTY_STATE: "حالت خالی",
+  ERROR_MESSAGE: "پیام خطا",
+  CTA: "دعوت به اقدام",
+  ADMIN_COPY: "کپی ادمین",
+  NOTIFICATION_TEMPLATE: "الگوی اعلان"
+};
+
+const contentStatusLabels: Record<ContentEntryStatus, string> = {
+  DRAFT: "پیش‌نویس",
+  PUBLISHED: "منتشرشده",
+  HIDDEN: "مخفی",
+  ARCHIVED: "آرشیوشده"
+};
+
+const contentDefaultNamespaces = [
+  "public.insights",
+  "public.auth",
+  "public.discovery",
+  "product.conversation",
+  "product.checkout",
+  "admin.empty_states"
+] as const;
+
 function firstSearchParam(params: AdminAnalyticsSearchParams | undefined, key: string) {
   const value = params?.[key];
 
@@ -253,6 +292,75 @@ function adminAnalyticsHref(dateRange: AdminAnalyticsDateRange, category: string
   }
 
   return `/admin/analytics?${params.toString()}`;
+}
+
+function isContentEntryType(value: string | null | undefined): value is ContentEntryType {
+  return Boolean(value && Object.values(ContentEntryType).includes(value as ContentEntryType));
+}
+
+function isContentEntryStatus(value: string | null | undefined): value is ContentEntryStatus {
+  return Boolean(value && Object.values(ContentEntryStatus).includes(value as ContentEntryStatus));
+}
+
+function parseAdminContentFilters(params: AdminContentSearchParams | undefined) {
+  const namespace = firstSearchParam(params, "namespace")?.trim() ?? "";
+  const contentType = firstSearchParam(params, "contentType")?.trim() ?? "";
+  const status = firstSearchParam(params, "status")?.trim() ?? "";
+  const search = firstSearchParam(params, "search")?.trim() ?? "";
+
+  return {
+    namespace,
+    contentType: isContentEntryType(contentType) ? contentType : "",
+    status: isContentEntryStatus(status) ? status : "",
+    search
+  };
+}
+
+function adminContentHref(filters: {
+  namespace?: string;
+  contentType?: string;
+  status?: string;
+  search?: string;
+}) {
+  const params = new URLSearchParams();
+
+  if (filters.namespace) {
+    params.set("namespace", filters.namespace);
+  }
+
+  if (filters.contentType) {
+    params.set("contentType", filters.contentType);
+  }
+
+  if (filters.status) {
+    params.set("status", filters.status);
+  }
+
+  if (filters.search) {
+    params.set("search", filters.search);
+  }
+
+  const query = params.toString();
+  return query ? `/admin/content?${query}` : "/admin/content";
+}
+
+function mapContentFilterOption(
+  label: string,
+  value: string,
+  active: boolean,
+  nextFilters: {
+    namespace?: string;
+    contentType?: string;
+    status?: string;
+    search?: string;
+  }
+): AdminContentFilterOption {
+  return {
+    label,
+    value,
+    active,
+    href: adminContentHref(nextFilters)
+  };
 }
 
 function formatDateLike(value: Date | string | null | undefined) {
@@ -528,6 +636,104 @@ function mapAdminCategoryItem(category: AdminCategoryRecord, auditItems: readonl
   };
 }
 
+function contentBodySummary(body: string) {
+  const normalized = body.replace(/\s+/g, " ").trim();
+  return normalized.length > 180 ? `${normalized.slice(0, 177)}...` : normalized;
+}
+
+function mapAdminContentEntryItem(
+  entry: AdminContentEntryRecord,
+  auditItems: readonly AdminAuditLogItem[] = []
+): AdminContentEntryItem {
+  return {
+    id: entry.id,
+    key: entry.key,
+    namespace: entry.namespace,
+    locale: entry.locale,
+    title: entry.title,
+    bodySummary: contentBodySummary(entry.body),
+    bodyValue: entry.body,
+    shortText: entry.shortText ?? "",
+    description: entry.description ?? "",
+    contentType: entry.contentType,
+    contentTypeLabel: contentTypeLabels[entry.contentType],
+    status: entry.status,
+    statusLabel: contentStatusLabels[entry.status],
+    isEditable: entry.isEditable,
+    isSystem: entry.isSystem,
+    editableLabel: entry.isEditable ? "قابل ویرایش" : "غیرقابل ویرایش",
+    systemLabel: entry.isSystem ? "سیستمی" : "مدیریت‌شده",
+    createdBySummary: entry.createdByAdmin?.displayName ?? entry.createdByAdminId ?? notRecorded,
+    updatedBySummary: entry.updatedByAdmin?.displayName ?? entry.updatedByAdminId ?? notRecorded,
+    createdAt: formatDateLike(entry.createdAt),
+    updatedAt: formatDateLike(entry.updatedAt),
+    archivedAt: formatDateLike(entry.archivedAt),
+    href: `/admin/content/${entry.id}`,
+    source: "backend_repository",
+    actionsAvailable: entry.isEditable && !entry.archivedAt,
+    auditItems
+  };
+}
+
+function mapContentNamespaceOptions(
+  filters: ReturnType<typeof parseAdminContentFilters>,
+  entries: readonly AdminContentEntryRecord[]
+): AdminContentFilterOption[] {
+  const namespaces = Array.from(new Set([...contentDefaultNamespaces, ...entries.map((entry) => entry.namespace)])).sort();
+
+  return [
+    mapContentFilterOption("همه فضاها", "", !filters.namespace, {
+      contentType: filters.contentType,
+      status: filters.status,
+      search: filters.search
+    }),
+    ...namespaces.map((namespace) =>
+      mapContentFilterOption(namespace, namespace, filters.namespace === namespace, {
+        namespace,
+        contentType: filters.contentType,
+        status: filters.status,
+        search: filters.search
+      })
+    )
+  ];
+}
+
+function mapContentTypeOptions(filters: ReturnType<typeof parseAdminContentFilters>): AdminContentFilterOption[] {
+  return [
+    mapContentFilterOption("همه نوع‌ها", "", !filters.contentType, {
+      namespace: filters.namespace,
+      status: filters.status,
+      search: filters.search
+    }),
+    ...Object.values(ContentEntryType).map((contentType) =>
+      mapContentFilterOption(contentTypeLabels[contentType], contentType, filters.contentType === contentType, {
+        namespace: filters.namespace,
+        contentType,
+        status: filters.status,
+        search: filters.search
+      })
+    )
+  ];
+}
+
+function mapContentStatusOptions(filters: ReturnType<typeof parseAdminContentFilters>): AdminContentFilterOption[] {
+  return [
+    mapContentFilterOption("همه وضعیت‌ها", "", !filters.status, {
+      namespace: filters.namespace,
+      contentType: filters.contentType,
+      search: filters.search
+    }),
+    ...Object.values(ContentEntryStatus).map((status) =>
+      mapContentFilterOption(contentStatusLabels[status], status, filters.status === status, {
+        namespace: filters.namespace,
+        contentType: filters.contentType,
+        status,
+        search: filters.search
+      })
+    )
+  ];
+}
+
 function sourceHelper(source: AdminDataSource) {
   if (source === "backend_repository") {
     return "داده متصل به پایگاه داده";
@@ -765,6 +971,22 @@ function auditActionLabel(action: string) {
     return "بازفعال‌سازی دسته شغلی";
   }
 
+  if (action === "CONTENT_ENTRY_CREATED") {
+    return "ثبت محتوای مدیریت‌شده";
+  }
+
+  if (action === "CONTENT_ENTRY_UPDATED") {
+    return "ویرایش محتوای مدیریت‌شده";
+  }
+
+  if (action === "CONTENT_ENTRY_ARCHIVED") {
+    return "آرشیو محتوای مدیریت‌شده";
+  }
+
+  if (action === "CONTENT_ENTRY_RESTORED") {
+    return "بازگردانی محتوای مدیریت‌شده";
+  }
+
   return action;
 }
 
@@ -799,6 +1021,7 @@ function mapAuditItem(row: {
     insightHref: row.targetType === "INSIGHT" && row.targetId ? `/admin/insights/${row.targetId}` : undefined,
     pricingHref: row.targetType === "PRICING_RULE" && row.targetId ? `/admin/pricing/${row.targetId}` : undefined,
     categoryHref: row.targetType === "JOB_CATEGORY" && row.targetId ? `/admin/categories/${row.targetId}` : undefined,
+    contentHref: row.targetType === "CONTENT_ENTRY" && row.targetId ? `/admin/content/${row.targetId}` : undefined,
     source: "backend_repository"
   };
 }
@@ -2022,6 +2245,141 @@ export async function getAdminCategoryDetailRouteData(
     sourceNote: listResult.ok
       ? "دسته شغلی پیدا نشد؛ داده ساختگی نمایش داده نمی‌شود."
       : placeholderSourceNote,
+    viewerCanMutate: false
+  };
+}
+
+function buildUgcOverview(
+  insightsResult: Awaited<ReturnType<typeof adminReadModelService.listInsights>>
+): AdminUgcOverviewItem[] {
+  if (!insightsResult.ok) {
+    return [
+      {
+        id: "insights-unavailable",
+        title: "بینش‌ها و پاسخ‌های کوتاه",
+        status: "منبع داده در دسترس نیست",
+        description: "مرور محتوای کاربرساخته فقط از مسیرهای moderation موجود انجام می‌شود و ردیف نمایشی ساخته نمی‌شود.",
+        href: "/admin/insights",
+        ctaLabel: "مسیر moderation",
+        source: "placeholder"
+      },
+      {
+        id: "comments-not-implemented",
+        title: "دیدگاه‌ها",
+        status: "پیاده‌سازی نشده",
+        description: "مدل دیدگاه در اسکیما وجود ندارد؛ دیدگاه ساختگی یا صف نمایشی نشان داده نمی‌شود.",
+        source: "placeholder"
+      }
+    ];
+  }
+
+  const hiddenCount = insightsResult.data.filter((insight) => insight.status === "HIDDEN").length;
+  const archivedCount = insightsResult.data.filter((insight) => insight.status === "ARCHIVED").length;
+  const answerCount = insightsResult.data.reduce((sum, insight) => sum + insight._count.answers, 0);
+
+  return [
+    {
+      id: "insights",
+      title: "بینش‌ها",
+      status: `${formatFaNumber(insightsResult.data.length)} ردیف`,
+      description: `${formatFaNumber(hiddenCount)} مخفی و ${formatFaNumber(archivedCount)} آرشیوشده؛ ویرایش متن کاربر از این بخش انجام نمی‌شود.`,
+      href: "/admin/insights",
+      ctaLabel: "مدیریت بینش‌ها",
+      source: "backend_repository"
+    },
+    {
+      id: "insight-answers",
+      title: "پاسخ‌های کوتاه",
+      status: `${formatFaNumber(answerCount)} پاسخ`,
+      description: "پنهان‌سازی پاسخ‌ها از صفحه جزئیات بینش انجام می‌شود و بازنویسی متن کاربر مجاز نیست.",
+      href: "/admin/insights",
+      ctaLabel: "مشاهده moderation",
+      source: "backend_repository"
+    },
+    {
+      id: "profile-text",
+      title: "متن پروفایل تجربه‌آفرین",
+      status: "مسیر review موجود",
+      description: "بررسی متن پروفایل از مسیر بررسی پروفایل تجربه‌آفرین انجام می‌شود، نه از ویرایش محتوای وب‌سایت.",
+      href: "/admin/experience-profiles",
+      ctaLabel: "صف پروفایل‌ها",
+      source: "backend_repository"
+    },
+    {
+      id: "comments-not-implemented",
+      title: "دیدگاه‌ها",
+      status: "پیاده‌سازی نشده",
+      description: "مدل دیدگاه در اسکیما وجود ندارد؛ دیدگاه ساختگی یا صف نمایشی نشان داده نمی‌شود.",
+      source: "placeholder"
+    }
+  ];
+}
+
+export async function getAdminContentRouteData(
+  viewer: Viewer,
+  params?: AdminContentSearchParams
+): Promise<AdminContentData> {
+  const filters = parseAdminContentFilters(params);
+  const [contentResult, insightsResult] = await Promise.all([
+    adminContentService.list(viewer, {
+      namespace: filters.namespace || null,
+      contentType: filters.contentType ? (filters.contentType as ContentEntryType) : null,
+      status: filters.status ? (filters.status as ContentEntryStatus) : null,
+      search: filters.search || null
+    }),
+    adminReadModelService.listInsights(viewer)
+  ]);
+
+  if (contentResult.ok) {
+    return {
+      items: contentResult.data.map((entry) => mapAdminContentEntryItem(entry)),
+      namespaceOptions: mapContentNamespaceOptions(filters, contentResult.data),
+      contentTypeOptions: mapContentTypeOptions(filters),
+      statusOptions: mapContentStatusOptions(filters),
+      ugcOverview: buildUgcOverview(insightsResult),
+      activeFilters: filters,
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanMutate: viewer.role === "ADMIN"
+    };
+  }
+
+  return {
+    items: [],
+    namespaceOptions: mapContentNamespaceOptions(filters, []),
+    contentTypeOptions: mapContentTypeOptions(filters),
+    statusOptions: mapContentStatusOptions(filters),
+    ugcOverview: buildUgcOverview(insightsResult),
+    activeFilters: filters,
+    source: "placeholder",
+    sourceNote: placeholderSourceNote,
+    viewerCanMutate: false
+  };
+}
+
+export async function getAdminContentDetailRouteData(
+  viewer: Viewer,
+  contentEntryId: string
+): Promise<AdminContentDetailData> {
+  const [detailResult, auditResult] = await Promise.all([
+    adminContentService.getDetail(viewer, contentEntryId),
+    adminReadModelService.getContentEntryAuditLog(viewer, contentEntryId)
+  ]);
+  const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+
+  if (detailResult.ok) {
+    return {
+      item: mapAdminContentEntryItem(detailResult.data, auditItems),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanMutate: viewer.role === "ADMIN"
+    };
+  }
+
+  return {
+    item: null,
+    source: "placeholder",
+    sourceNote: placeholderSourceNote,
     viewerCanMutate: false
   };
 }

@@ -341,5 +341,25 @@ export const adminReadModelService = {
         note: "Category management audit events are read from admin audit persistence."
       }
     };
+  },
+  async getContentEntryAuditLog(viewer: AdminReadViewer, contentEntryId: string): Promise<AdminReadModelResult<AdminAuditLogReadModel>> {
+    if (!canReadAdminModels(viewer)) {
+      return unauthorizedResult<AdminAuditLogReadModel>();
+    }
+
+    const result = await useravaaRepository.adminAudit.listForContentEntry(contentEntryId);
+
+    if (!result.ok) {
+      return repositoryToAdminReadResult(result);
+    }
+
+    return {
+      ok: true,
+      data: {
+        implemented: true,
+        rows: mapAuditRows(result.data),
+        note: "Content entry audit events are read from admin audit persistence."
+      }
+    };
   }
 } as const;

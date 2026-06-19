@@ -20,7 +20,11 @@ export type AdminAuditAction =
   | "CATEGORY_CREATED"
   | "CATEGORY_UPDATED"
   | "CATEGORY_ARCHIVED"
-  | "CATEGORY_RESTORED";
+  | "CATEGORY_RESTORED"
+  | "CONTENT_ENTRY_CREATED"
+  | "CONTENT_ENTRY_UPDATED"
+  | "CONTENT_ENTRY_ARCHIVED"
+  | "CONTENT_ENTRY_RESTORED";
 
 export type AdminPaymentAuditEventInput = {
   actorAdminUserId: string;
@@ -126,6 +130,22 @@ export type AdminCategoryAuditEventInput = {
   now: Date;
 };
 
+export type AdminContentEntryAuditEventInput = {
+  actorAdminUserId: string;
+  actorRole: "ADMIN";
+  action: Extract<
+    AdminAuditAction,
+    "CONTENT_ENTRY_CREATED" | "CONTENT_ENTRY_UPDATED" | "CONTENT_ENTRY_ARCHIVED" | "CONTENT_ENTRY_RESTORED"
+  >;
+  contentEntryId: string;
+  beforeStatus?: string | null;
+  afterStatus: string;
+  reason?: string;
+  note?: string;
+  metadata?: Prisma.InputJsonValue;
+  now: Date;
+};
+
 const adminAuditEventSelect = {
   id: true,
   actorAdminUserId: true,
@@ -159,6 +179,7 @@ export const adminAuditRepository = {
     createInsightAnswerModerationEvent: "database_persistent",
     createPricingRuleEvent: "database_persistent",
     createCategoryEvent: "database_persistent",
+    createContentEntryEvent: "database_persistent",
     listForPayment: "read_only_persistent",
     listForCancellation: "read_only_persistent",
     listForExperienceProfile: "read_only_persistent",
@@ -166,6 +187,7 @@ export const adminAuditRepository = {
     listForInsightAnswer: "read_only_persistent",
     listForPricingRule: "read_only_persistent",
     listForCategory: "read_only_persistent",
+    listForContentEntry: "read_only_persistent",
     listRecent: "read_only_persistent"
   },
   async createPaymentReviewEvent(input: AdminPaymentAuditEventInput, tx: UseravaaTransactionClient) {
@@ -318,6 +340,26 @@ export const adminAuditRepository = {
       select: adminAuditEventSelect
     });
   },
+  async createContentEntryEvent(input: AdminContentEntryAuditEventInput, tx: UseravaaTransactionClient) {
+    return tx.adminAuditEvent.create({
+      data: {
+        actorAdminUserId: input.actorAdminUserId,
+        actorRole: input.actorRole,
+        action: input.action,
+        entityType: "CONTENT_ENTRY",
+        entityId: input.contentEntryId,
+        relatedConversationId: null,
+        relatedPaymentId: null,
+        beforeStatus: input.beforeStatus ?? null,
+        afterStatus: input.afterStatus,
+        reason: input.reason ?? null,
+        note: input.note ?? null,
+        metadata: input.metadata,
+        createdAt: input.now
+      },
+      select: adminAuditEventSelect
+    });
+  },
   listForPayment(paymentId: string) {
     return readOnlyRepositoryOperation("admin_audit", "listForPayment", (db) =>
       db.adminAuditEvent.findMany({
@@ -410,6 +452,19 @@ export const adminAuditRepository = {
         where: {
           entityType: "JOB_CATEGORY",
           entityId: categoryId
+        },
+        select: adminAuditEventSelect,
+        orderBy: { createdAt: "desc" },
+        take: 30
+      })
+    );
+  },
+  listForContentEntry(contentEntryId: string) {
+    return readOnlyRepositoryOperation("admin_audit", "listForContentEntry", (db) =>
+      db.adminAuditEvent.findMany({
+        where: {
+          entityType: "CONTENT_ENTRY",
+          entityId: contentEntryId
         },
         select: adminAuditEventSelect,
         orderBy: { createdAt: "desc" },

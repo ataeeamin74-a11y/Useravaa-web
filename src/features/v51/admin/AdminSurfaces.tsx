@@ -3,6 +3,7 @@ import { Fragment, type CSSProperties } from "react";
 import { UnauthorizedState } from "@/components/auth/UnauthorizedState";
 import { AdminCategoryActions } from "./AdminCategoryActions";
 import { AdminCancellationReviewActions } from "./AdminCancellationReviewActions";
+import { AdminContentActions } from "./AdminContentActions";
 import { AdminExperienceProfileReviewActions } from "./AdminExperienceProfileReviewActions";
 import { AdminInsightAnswerModerationActions } from "./AdminInsightAnswerModerationActions";
 import { AdminInsightModerationActions } from "./AdminInsightModerationActions";
@@ -18,6 +19,8 @@ import {
   type AdminCancellationItem,
   type AdminCategoriesData,
   type AdminCategoryDetailData,
+  type AdminContentData,
+  type AdminContentDetailData,
   type AdminConversationListItem,
   type AdminDataSource,
   type AdminExperienceProfileDetailItem,
@@ -1273,6 +1276,304 @@ export function AdminAttendanceList({ items, sourceNote }: Readonly<{ items: rea
   );
 }
 
+export function AdminContentManagement({ data }: Readonly<{ data: AdminContentData }>) {
+  return (
+    <div className={styles.pageStack}>
+      <AdminPageHeader
+        title="مدیریت محتوا"
+        description="مدیریت محدود و امن کپی وب‌سایت، محتوای پلتفرمی و مسیرهای moderation محتوای کاربرساخته."
+        sourceNote={data.sourceNote}
+      />
+      <section className={styles.surface}>
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>فیلتر محتوا</h3>
+            <p>فیلترها فقط ردیف‌های ContentEntry را محدود می‌کنند و ردیف ساختگی نمایش داده نمی‌شود.</p>
+          </div>
+          <DataSourceBadge source={data.source} />
+        </div>
+        <div>
+          <p className={styles.filterTitle}>فضای محتوا</p>
+          <div className={styles.filters}>
+            {data.namespaceOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`namespace-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>نوع محتوا</p>
+          <div className={styles.filters}>
+            {data.contentTypeOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`type-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>وضعیت</p>
+          <div className={styles.filters}>
+            {data.statusOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`status-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <form className={styles.reviewBox} action="/admin/content">
+          {data.activeFilters.namespace ? <input type="hidden" name="namespace" value={data.activeFilters.namespace} /> : null}
+          {data.activeFilters.contentType ? <input type="hidden" name="contentType" value={data.activeFilters.contentType} /> : null}
+          {data.activeFilters.status ? <input type="hidden" name="status" value={data.activeFilters.status} /> : null}
+          <label>
+            <span>جست‌وجو</span>
+            <input name="search" defaultValue={data.activeFilters.search} placeholder="کلید، عنوان یا متن" />
+          </label>
+          <button className={styles.secondaryButton} type="submit">
+            اعمال جست‌وجو
+          </button>
+        </form>
+      </section>
+      <section className={styles.detailGrid}>
+        <article className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>وب‌سایت و کپی سیستم</h3>
+              <p>این جدول برای Platform/System Copy و Managed Content است؛ متن کاربرساخته از این مسیر ویرایش نمی‌شود.</p>
+            </div>
+          </div>
+          {data.items.length ? (
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>عنوان</th>
+                    <th>کلید</th>
+                    <th>فضا</th>
+                    <th>نوع</th>
+                    <th>وضعیت</th>
+                    <th>ویرایش‌پذیری</th>
+                    <th>خلاصه متن</th>
+                    <th>آخرین تغییر</th>
+                    <th>کنش</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.items.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.title}</td>
+                      <td dir="ltr">{item.key}</td>
+                      <td dir="ltr">{item.namespace}</td>
+                      <td>{item.contentTypeLabel}</td>
+                      <td>{item.statusLabel}</td>
+                      <td>
+                        {item.editableLabel} / {item.systemLabel}
+                      </td>
+                      <td>{item.bodySummary}</td>
+                      <td>{item.updatedAt}</td>
+                      <td>
+                        <Link className={styles.secondaryLink} href={item.href}>
+                          جزئیات
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <EmptyState
+              title="محتوای مدیریت‌شده‌ای ثبت نشده است"
+              body="اگر DB یا ردیف محتوا در دسترس نباشد، این بخش ردیف نمایشی یا محتوای ساختگی نشان نمی‌دهد."
+            />
+          )}
+        </article>
+        <aside className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>محتوای تازه</h3>
+              <p>برای بلوک‌های مدیریت‌شده محدود؛ صفحه‌ساز یا ویرایشگر متن غنی در این checkpoint اضافه نشده است.</p>
+            </div>
+          </div>
+          <AdminContentActions mode="create" viewerCanMutate={data.viewerCanMutate} />
+        </aside>
+      </section>
+      <section className={styles.surface}>
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>مرور محتوای کاربرساخته</h3>
+            <p>این بخش فقط مسیرهای moderation موجود را نشان می‌دهد و متن کاربر را بازنویسی نمی‌کند.</p>
+          </div>
+        </div>
+        <div className={styles.tableWrap}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>نوع محتوا</th>
+                <th>وضعیت</th>
+                <th>توضیح</th>
+                <th>مسیر</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.ugcOverview.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.title}</td>
+                  <td>{item.status}</td>
+                  <td>{item.description}</td>
+                  <td>
+                    {item.href ? (
+                      <Link className={styles.secondaryLink} href={item.href}>
+                        {item.ctaLabel ?? "مشاهده"}
+                      </Link>
+                    ) : (
+                      "پیاده‌سازی نشده"
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export function AdminContentDetail({ data }: Readonly<{ data: AdminContentDetailData }>) {
+  const item = data.item;
+
+  if (!item) {
+    return (
+      <div className={styles.pageStack}>
+        <AdminPageHeader title="جزئیات محتوا" description="ردیف محتوا پیدا نشد." sourceNote={data.sourceNote} />
+        <section className={styles.surface}>
+          <EmptyState title="محتوا پیدا نشد" body="هیچ ردیف ساختگی برای این جزئیات نمایش داده نمی‌شود." />
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.pageStack}>
+      <AdminPageHeader
+        title="جزئیات محتوای مدیریت‌شده"
+        description="مشاهده و ویرایش محدود ردیف‌های امن محتوا؛ محتوای کاربرساخته از این مسیر بازنویسی نمی‌شود."
+        sourceNote={data.sourceNote}
+      />
+      <section className={styles.detailGrid}>
+        <article className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>{item.title}</h3>
+              <p>
+                شناسه محتوا: <span dir="ltr">{item.id}</span>
+              </p>
+            </div>
+            <DataSourceBadge source={item.source} />
+          </div>
+          <dl className={styles.detailList}>
+            <div>
+              <dt>کلید</dt>
+              <dd dir="ltr">{item.key}</dd>
+            </div>
+            <div>
+              <dt>فضا</dt>
+              <dd dir="ltr">{item.namespace}</dd>
+            </div>
+            <div>
+              <dt>زبان</dt>
+              <dd dir="ltr">{item.locale}</dd>
+            </div>
+            <div>
+              <dt>نوع محتوا</dt>
+              <dd>{item.contentTypeLabel}</dd>
+            </div>
+            <div>
+              <dt>وضعیت</dt>
+              <dd>{item.statusLabel}</dd>
+            </div>
+            <div>
+              <dt>ویرایش‌پذیری</dt>
+              <dd>
+                {item.editableLabel} / {item.systemLabel}
+              </dd>
+            </div>
+            <div>
+              <dt>متن کوتاه</dt>
+              <dd>{item.shortText || "ثبت نشده"}</dd>
+            </div>
+            <div>
+              <dt>توضیح داخلی</dt>
+              <dd>{item.description || "ثبت نشده"}</dd>
+            </div>
+            <div>
+              <dt>ثبت‌کننده</dt>
+              <dd>{item.createdBySummary}</dd>
+            </div>
+            <div>
+              <dt>آخرین ویرایش‌کننده</dt>
+              <dd>{item.updatedBySummary}</dd>
+            </div>
+            <div>
+              <dt>آخرین تغییر</dt>
+              <dd>{item.updatedAt}</dd>
+            </div>
+            <div>
+              <dt>آرشیو</dt>
+              <dd>{item.archivedAt}</dd>
+            </div>
+          </dl>
+          <section className={styles.emptyState}>
+            <strong>متن کامل</strong>
+            <p>{item.bodyValue}</p>
+          </section>
+          <div className={styles.actions}>
+            <Link className={styles.secondaryLink} href="/admin/content">
+              بازگشت به مدیریت محتوا
+            </Link>
+            <Link className={styles.secondaryLink} href="/admin/audit-log">
+              گزارش ممیزی
+            </Link>
+          </div>
+        </article>
+        <aside className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>ویرایش و آرشیو</h3>
+              <p>فقط ADMIN می‌تواند ردیف‌های قابل ویرایش را تغییر دهد؛ SUPPORT این بخش را خواندنی می‌بیند.</p>
+            </div>
+          </div>
+          <AdminContentActions mode="edit" entry={item} viewerCanMutate={data.viewerCanMutate} />
+        </aside>
+      </section>
+      <section className={styles.surface} aria-label="گزارش ممیزی محتوا">
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>گزارش ممیزی</h3>
+            <p>رویدادهای ایجاد، ویرایش، آرشیو و بازگردانی این محتوا.</p>
+          </div>
+        </div>
+        {item.auditItems?.length ? (
+          <dl className={styles.detailList}>
+            {item.auditItems.map((event) => (
+              <div key={event.id}>
+                <dt>{event.actionLabel}</dt>
+                <dd>
+                  {event.actorSummary} · {event.statusChange} · {event.createdAt}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <EmptyState title="رویدادی ثبت نشده" body="پس از ثبت کنش محتوا، این بخش از پایگاه داده به‌روز می‌شود." />
+        )}
+      </section>
+    </div>
+  );
+}
+
 export function AdminCategories({ data }: Readonly<{ data: AdminCategoriesData }>) {
   return (
     <div className={styles.pageStack}>
@@ -1920,6 +2221,14 @@ export function AdminAuditLog({ data }: Readonly<{ data?: AdminAuditLogData }> =
                       {" "}
                       <Link className={styles.secondaryLink} href={row.categoryHref}>
                         دسته شغلی
+                      </Link>
+                    </>
+                  ) : null}
+                  {row.contentHref ? (
+                    <>
+                      {" "}
+                      <Link className={styles.secondaryLink} href={row.contentHref}>
+                        محتوا
                       </Link>
                     </>
                   ) : null}

@@ -241,7 +241,11 @@ describe("Checkpoint 2B-1 database persistence foundation", () => {
       "POST /api/admin/categories",
       "PATCH /api/admin/categories/[categoryId]",
       "POST /api/admin/categories/[categoryId]/archive",
-      "POST /api/admin/categories/[categoryId]/restore"
+      "POST /api/admin/categories/[categoryId]/restore",
+      "POST /api/admin/content",
+      "PATCH /api/admin/content/[contentId]",
+      "POST /api/admin/content/[contentId]/archive",
+      "POST /api/admin/content/[contentId]/restore"
     ]);
   });
 
@@ -261,6 +265,7 @@ describe("Checkpoint 2B-1 database persistence foundation", () => {
       [
         "adminAudit",
         "adminCategories",
+        "adminContent",
         "adminExperienceProfileReview",
         "adminInsightModeration",
         "adminPaymentReview",

@@ -177,6 +177,7 @@ export const adminOptionalRoutePatterns = [
   "/admin/pricing",
   "/admin/pricing/[ruleId]",
   "/admin/content",
+  "/admin/content/[contentId]",
   "/admin/categories",
   "/admin/categories/[categoryId]",
   "/admin/support",
@@ -198,6 +199,7 @@ export function adminHrefIsKnown(href: string) {
     /^\/admin\/experience-profiles\/[^/]+$/.test(href) ||
     /^\/admin\/insights\/[^/]+$/.test(href) ||
     /^\/admin\/pricing\/[^/]+$/.test(href) ||
+    /^\/admin\/content\/[^/]+$/.test(href) ||
     /^\/admin\/categories\/[^/]+$/.test(href)
   );
 }

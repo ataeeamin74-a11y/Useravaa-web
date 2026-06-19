@@ -280,6 +280,25 @@ enum EmailLogStatus {
   FAILED
 }
 
+enum ContentEntryType {
+  SYSTEM_COPY
+  PAGE_BLOCK
+  FAQ
+  HELP_TEXT
+  EMPTY_STATE
+  ERROR_MESSAGE
+  CTA
+  ADMIN_COPY
+  NOTIFICATION_TEMPLATE
+}
+
+enum ContentEntryStatus {
+  DRAFT
+  PUBLISHED
+  HIDDEN
+  ARCHIVED
+}
+
 model User {
   id                    String                @id @default(cuid())
   role                  UserRole              @default(USER)
@@ -309,6 +328,8 @@ model User {
   updatedPricingRules   PricingRule[]          @relation("PricingRuleUpdatedByAdmin")
   createdJobCategories  JobCategory[]          @relation("JobCategoryCreatedByAdmin")
   updatedJobCategories  JobCategory[]          @relation("JobCategoryUpdatedByAdmin")
+  createdContentEntries ContentEntry[]          @relation("ContentEntryCreatedByAdmin")
+  updatedContentEntries ContentEntry[]          @relation("ContentEntryUpdatedByAdmin")
   notifications         Notification[]
   insightAnswers        InsightAnswer[]
   officialInsights      Insight[]             @relation("InsightCreatedBy")
@@ -927,6 +948,34 @@ model EmailLog {
   sentAt                DateTime?
   failedReason          String?
   createdAt             DateTime       @default(now())
+}
+
+model ContentEntry {
+  id               String             @id @default(cuid())
+  key              String
+  namespace        String
+  locale           String             @default("fa")
+  title            String
+  body             String
+  shortText        String?
+  description      String?
+  contentType      ContentEntryType
+  status           ContentEntryStatus @default(DRAFT)
+  isEditable       Boolean            @default(true)
+  isSystem         Boolean            @default(false)
+  createdByAdminId String?
+  updatedByAdminId String?
+  archivedAt       DateTime?
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  createdByAdmin   User?              @relation("ContentEntryCreatedByAdmin", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+  updatedByAdmin   User?              @relation("ContentEntryUpdatedByAdmin", fields: [updatedByAdminId], references: [id], onDelete: SetNull)
+
+  @@unique([namespace, key, locale])
+  @@index([namespace, contentType, status])
+  @@index([status, archivedAt])
+  @@index([isSystem, isEditable])
 }
 
 model AdminAuditEvent {

@@ -18,6 +18,7 @@ export const useravaaTransactionUseCases = [
   "moderate_insight_content_and_write_audit",
   "manage_pricing_rule_and_write_audit",
   "manage_job_category_and_write_audit",
+  "manage_content_entry_and_write_audit",
   "propose_times_and_supersede_old_options",
   "select_time_and_confirm_session",
   "cancel_conversation_and_create_wallet_credit",

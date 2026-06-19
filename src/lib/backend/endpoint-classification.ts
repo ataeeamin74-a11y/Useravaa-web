@@ -345,5 +345,37 @@ export const apiEndpointPersistenceClassification = {
     usesRepository: true,
     writesImplemented: true,
     notes: "ADMIN-only category restore clears archivedAt and writes audit; visibility flags remain explicit admin-controlled fields."
+  },
+  "POST /api/admin/content": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only content entry creation persists platform/managed content and writes audit without mutating UGC, payments, wallet, conversations, pricing, or categories."
+  },
+  "PATCH /api/admin/content/[contentId]": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only content entry update changes editable platform/managed content and writes audit. Non-editable entries are denied and UGC body text is not rewritten."
+  },
+  "POST /api/admin/content/[contentId]/archive": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only content archive soft-archives ContentEntry rows and writes audit without hard-deleting content or touching UGC moderation rows."
+  },
+  "POST /api/admin/content/[contentId]/restore": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only content restore returns archived ContentEntry rows to DRAFT and writes audit; publication remains an explicit update decision."
   }
 } satisfies Record<string, ApiEndpointClassification>;

@@ -40,6 +40,21 @@ const commissionBpsSchema = z.number().int().min(0).max(10_000);
 const pricingEffectiveDateSchema = z.coerce.date();
 const adminCategorySlugSchema = z.string().trim().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).min(2).max(80);
 const adminCategorySortOrderSchema = z.number().int().min(0).max(10_000);
+const adminContentEntryTypes = [
+  "SYSTEM_COPY",
+  "PAGE_BLOCK",
+  "FAQ",
+  "HELP_TEXT",
+  "EMPTY_STATE",
+  "ERROR_MESSAGE",
+  "CTA",
+  "ADMIN_COPY",
+  "NOTIFICATION_TEMPLATE"
+] as const;
+const adminContentEditableStatuses = ["DRAFT", "PUBLISHED", "HIDDEN"] as const;
+const adminContentNamespaceSchema = z.string().trim().regex(/^[a-z0-9]+(?:[._-][a-z0-9]+)*$/).min(2).max(100);
+const adminContentKeySchema = z.string().trim().regex(/^[a-z0-9]+(?:[._-][a-z0-9]+)*$/).min(2).max(140);
+const adminContentLocaleSchema = z.string().trim().regex(/^[a-z]{2}(?:-[A-Z]{2})?$/).default("fa");
 
 export const userMotivationCodeSchema = z.enum(USER_MOTIVATION_CODES);
 export const insightAudienceIntentSchema = z.enum(INSIGHT_AUDIENCE_INTENT_CODES);
@@ -426,6 +441,49 @@ export const adminCategoryRestoreSchema = z
   })
   .strict();
 
+export const adminContentEntryCreateSchema = z
+  .object({
+    key: adminContentKeySchema,
+    namespace: adminContentNamespaceSchema,
+    locale: adminContentLocaleSchema,
+    title: trimmedString(180),
+    body: trimmedString(10_000),
+    shortText: z.string().trim().max(500).optional(),
+    description: z.string().trim().max(1_000).optional(),
+    contentType: z.enum(adminContentEntryTypes),
+    status: z.enum(adminContentEditableStatuses).default("DRAFT"),
+    isEditable: z.boolean().default(true)
+  })
+  .strict();
+
+export const adminContentEntryUpdateSchema = z
+  .object({
+    title: trimmedString(180).optional(),
+    body: trimmedString(10_000).optional(),
+    shortText: z.string().trim().max(500).nullable().optional(),
+    description: z.string().trim().max(1_000).nullable().optional(),
+    contentType: z.enum(adminContentEntryTypes).optional(),
+    status: z.enum(adminContentEditableStatuses).optional(),
+    isEditable: z.boolean().optional()
+  })
+  .strict()
+  .refine((value) => Object.keys(value).length > 0, {
+    message: "At least one content field must be provided."
+  });
+
+export const adminContentEntryArchiveSchema = z
+  .object({
+    reason: trimmedString(500),
+    internalNote: z.string().trim().max(800).optional()
+  })
+  .strict();
+
+export const adminContentEntryRestoreSchema = z
+  .object({
+    internalNote: z.string().trim().max(800).optional()
+  })
+  .strict();
+
 export const backendValidationSchemas = {
   profileUpdateSchema,
   requestCreationSchema,
@@ -457,5 +515,9 @@ export const backendValidationSchemas = {
   adminCategoryCreateSchema,
   adminCategoryUpdateSchema,
   adminCategoryArchiveSchema,
-  adminCategoryRestoreSchema
+  adminCategoryRestoreSchema,
+  adminContentEntryCreateSchema,
+  adminContentEntryUpdateSchema,
+  adminContentEntryArchiveSchema,
+  adminContentEntryRestoreSchema
 } as const;

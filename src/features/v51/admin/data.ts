@@ -422,6 +422,76 @@ export type AdminPricingRuleDetailData = {
   viewerCanMutate: boolean;
 };
 
+export type AdminContentFilterOption = {
+  label: string;
+  value: string;
+  href: string;
+  active: boolean;
+};
+
+export type AdminContentEntryItem = {
+  id: string;
+  key: string;
+  namespace: string;
+  locale: string;
+  title: string;
+  bodySummary: string;
+  bodyValue: string;
+  shortText: string;
+  description: string;
+  contentType: string;
+  contentTypeLabel: string;
+  status: string;
+  statusLabel: string;
+  isEditable: boolean;
+  isSystem: boolean;
+  editableLabel: string;
+  systemLabel: string;
+  createdBySummary: string;
+  updatedBySummary: string;
+  createdAt: string;
+  updatedAt: string;
+  archivedAt: string;
+  href: string;
+  source: AdminDataSource;
+  actionsAvailable: boolean;
+  auditItems?: readonly AdminAuditLogItem[];
+};
+
+export type AdminUgcOverviewItem = {
+  id: string;
+  title: string;
+  status: string;
+  description: string;
+  href?: string;
+  ctaLabel?: string;
+  source: AdminDataSource;
+};
+
+export type AdminContentData = {
+  items: readonly AdminContentEntryItem[];
+  namespaceOptions: readonly AdminContentFilterOption[];
+  contentTypeOptions: readonly AdminContentFilterOption[];
+  statusOptions: readonly AdminContentFilterOption[];
+  ugcOverview: readonly AdminUgcOverviewItem[];
+  activeFilters: {
+    namespace: string;
+    contentType: string;
+    status: string;
+    search: string;
+  };
+  sourceNote: string;
+  source: AdminDataSource;
+  viewerCanMutate: boolean;
+};
+
+export type AdminContentDetailData = {
+  item: AdminContentEntryItem | null;
+  sourceNote: string;
+  source: AdminDataSource;
+  viewerCanMutate: boolean;
+};
+
 export type AdminAuditLogData = {
   implemented: boolean;
   rows: readonly AdminAuditLogItem[];
@@ -445,6 +515,7 @@ export type AdminAuditLogItem = {
   insightHref?: string;
   pricingHref?: string;
   categoryHref?: string;
+  contentHref?: string;
   source: AdminDataSource;
 };
 

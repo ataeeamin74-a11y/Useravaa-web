@@ -351,6 +351,18 @@ export const backendImplementationClassification = {
     blocksProductionLaunch: true,
     notes: "ADMIN-only category create, update, archive, and restore actions persist JobCategory taxonomy changes with AdminAuditEvent records. SUPPORT is read-only. Existing profiles, insights, pricing rules, conversations, payments, wallet transactions, payout, and settlement data are not destructively changed."
   },
+  adminContent: {
+    classification: "transaction_ready",
+    prismaSchemaExists: true,
+    prismaClientBoundaryExists: true,
+    repositoryBoundaryExists: true,
+    apiRouteExists: true,
+    readsUseRepository: true,
+    writesImplemented: true,
+    productionProviderConfigured: false,
+    blocksProductionLaunch: true,
+    notes: "ADMIN-only content entry create, update, archive, and restore actions persist ContentEntry rows with AdminAuditEvent records. SUPPORT is read-only. UGC moderation remains in insight/profile moderation surfaces and user-authored text is not silently rewritten."
+  },
   adminAudit: {
     classification: "transaction_ready",
     prismaSchemaExists: true,
