@@ -9,11 +9,12 @@ import styles from "./ConversationCluster.module.css";
 type RequestSummaryProps = {
   profile: ExperienceProfileFixture;
   duration: ConversationDuration;
+  topic?: string;
   note?: string;
   freeHelp?: boolean;
 };
 
-export function RequestSummary({ profile, duration, note, freeHelp }: RequestSummaryProps) {
+export function RequestSummary({ profile, duration, topic, note, freeHelp }: RequestSummaryProps) {
   const summaryConversation = {
     profile,
     duration,
@@ -32,6 +33,12 @@ export function RequestSummary({ profile, duration, note, freeHelp }: RequestSum
           <span>زمان جلسه مشاوره</span>
           <strong>{formatDuration(duration)}</strong>
         </div>
+        {topic ? (
+          <div className={styles.summaryRow}>
+            <span>موضوع</span>
+            <strong>{topic}</strong>
+          </div>
+        ) : null}
         <div className={styles.summaryRow}>
           <span>هزینه</span>
           <strong>{formatPrice(summaryConversation)}</strong>
@@ -43,7 +50,7 @@ export function RequestSummary({ profile, duration, note, freeHelp }: RequestSum
           </div>
         ) : null}
       </div>
-      <p className={styles.infoBox}>بعد از ارسال درخواست، ارائه‌دهنده باید حداقل سه زمان پیشنهادی شامل روز و ساعت اعلام کند.</p>
+      <p className={styles.infoBox}>پرداخت امن انجام می‌شود و بعد از آن درخواست برای تجربه‌آفرین ارسال می‌شود. تجربه‌آفرین دقیقاً سه زمان پیشنهادی اعلام می‌کند.</p>
     </aside>
   );
 }

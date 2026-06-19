@@ -1,0 +1,71 @@
+.avatar {
+  --ua-avatar-size: var(--ua-avatar-size-md);
+  aspect-ratio: 1 / 1;
+  width: var(--ua-avatar-size, 40px);
+  height: var(--ua-avatar-size, 40px);
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: #f4f8fb;
+  vertical-align: middle;
+}
+
+.circle {
+  border-radius: 999px;
+}
+
+.rounded {
+  border-radius: 999px;
+}
+
+.xs {
+  --ua-avatar-size: var(--ua-avatar-size-xs);
+}
+
+.sm {
+  --ua-avatar-size: var(--ua-avatar-size-sm);
+}
+
+.md {
+  --ua-avatar-size: var(--ua-avatar-size-md);
+}
+
+.lg {
+  --ua-avatar-size: var(--ua-avatar-size-lg);
+}
+
+.xl {
+  --ua-avatar-size: var(--ua-avatar-size-xl);
+}
+
+.profile {
+  --ua-avatar-size: var(--ua-avatar-size-profile);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 999px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.avatar[data-fallback="true"] .image {
+  object-fit: cover;
+  object-position: center;
+}
+
+.photoImage {
+  object-fit: cover;
+  object-position: center;
+}
+
+.fallbackImage {
+  object-fit: cover;
+  object-position: center;
+}

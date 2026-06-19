@@ -1,7 +1,8 @@
 import Link from "next/link";
+import { StatChip } from "@/components/ui/StatChip";
 import { V51LinkButton } from "@/features/v51/components/V51Button";
 import { type MyProfileDashboardFixture } from "@/features/v51/data/my-profile";
-import { formatter, toman } from "@/features/v51/data/profiles";
+import { toman } from "@/features/v51/data/profiles";
 import { CsatValue, DashboardProfilePreview } from "./ProfilePreviewCard";
 import styles from "./MyProfile.module.css";
 
@@ -54,8 +55,7 @@ export function ProfileDashboardPanels({ fixture }: ProfileDashboardPanelsProps)
           </div>
           <div className={styles.networkGrid}>
             <Link href="/saved" className={styles.networkStat}>
-              <b>{formatter.format(fixture.network.saved)}</b>
-              <span>ذخیره‌شده</span>
+              <StatChip value={fixture.network.saved} label="نفر ذخیره‌شده" />
             </Link>
           </div>
           <div className={styles.actions}>
@@ -79,20 +79,14 @@ export function ProfileDashboardPanels({ fixture }: ProfileDashboardPanelsProps)
                 <V51LinkButton href="/wallet">مشاهده کیف پول</V51LinkButton>
               </div>
               <div className={styles.metrics}>
-                <div className={styles.metric}>
-                  <span>جلسه موفق</span>
-                  <b>{formatter.format(fixture.stats.successfulConversations)}</b>
-                </div>
+                <StatChip className={styles.metric} value={fixture.stats.successfulConversations} label="جلسه موفق" />
                 <div className={styles.metric}>
                   <span>رضایت جلسه‌ها</span>
                   <b>
                     <CsatValue value={fixture.stats.csat} />
                   </b>
                 </div>
-                <div className={styles.metric}>
-                  <span>بازدید پروفایل</span>
-                  <b>{formatter.format(fixture.stats.profileViews)}</b>
-                </div>
+                <StatChip className={styles.metric} value={fixture.stats.profileViews} label="بازدید پروفایل" />
                 <div className={styles.metric}>
                   <span>قابل برداشت</span>
                   <b>{toman(fixture.stats.availableEarnings)}</b>
@@ -118,10 +112,7 @@ export function ProfileDashboardPanels({ fixture }: ProfileDashboardPanelsProps)
                 </div>
               </div>
               <div className={styles.feedbackSummary}>
-                <div>
-                  <b>{formatter.format(fixture.feedbackCount)}</b>
-                  <span>بازخورد</span>
-                </div>
+                <StatChip className={styles.metric} value={fixture.feedbackCount} label="بازخورد" />
                 <div>
                   <b>
                     <CsatValue value={fixture.stats.csat} />

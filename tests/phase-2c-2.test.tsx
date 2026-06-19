@@ -5,9 +5,9 @@ import {
   getNetworkItems,
   initialSavedProfileIds,
   receivedFeedbackItems,
-  renderStars,
   toggleNetworkProfileId
 } from "@/features/v51/data/my-profile";
+import { toFaDecimal } from "@/features/v51/data/profiles";
 import { ProfileFeedbackPage } from "@/features/v51/my-profile/pages/ProfileFeedbackPage";
 import { ProfileNetworkPage } from "@/features/v51/my-profile/pages/ProfileNetworkPage";
 
@@ -65,7 +65,7 @@ describe("Phase 2C-2 V51 profile network and feedback pages", () => {
 
     expect(html).toContain(receivedFeedbackItems[0].name);
     expect(html).toContain(receivedFeedbackItems[0].role);
-    expect(html).toContain(renderStars(receivedFeedbackItems[0].rating));
+    expect(html).toContain(`${toFaDecimal(receivedFeedbackItems[0].rating)} از ۵`);
   });
 
   it("feedback empty state renders when no feedback exists", () => {

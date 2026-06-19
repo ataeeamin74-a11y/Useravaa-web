@@ -5,6 +5,8 @@ export const envSchema = z.object({
   APP_BASE_URL: z.string().url().optional(),
   API_BASE_URL: z.string().url().optional(),
   DATABASE_URL: z.string().min(1).optional(),
+  PRISMA_ACCELERATE_URL: z.string().min(1).optional(),
+  USERAVAA_DB_SMOKE_TEST: z.enum(["0", "1"]).optional(),
   AUTH_SECRET: z.string().optional(),
   JWT_SECRET: z.string().optional(),
   UPLOAD_STORAGE_PROVIDER: z.string().optional(),

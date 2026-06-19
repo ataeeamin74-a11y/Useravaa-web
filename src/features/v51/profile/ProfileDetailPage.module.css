@@ -20,8 +20,9 @@
 
 .panel p {
   color: var(--ink);
-  font-weight: 650;
-  line-height: 1.85;
+  font-weight: var(--weight-medium);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
 }
 
 .heroProfile {
@@ -30,7 +31,7 @@
   gap: 16px;
   border: 1px solid var(--line);
   border-radius: 28px;
-  background: linear-gradient(135deg, #fff, #f8faff);
+  background: linear-gradient(135deg, #fff, var(--surface-soft));
   box-shadow: var(--shadow);
   padding: 24px;
 }
@@ -40,25 +41,27 @@
   height: 70px;
   display: grid;
   place-items: center;
-  border-radius: 24px;
+  border-radius: 999px;
   background: linear-gradient(135deg, var(--teal-soft), var(--blue-soft));
   color: var(--navy);
   font-size: 29px;
-  font-weight: 900;
+  font-weight: var(--weight-extra-bold);
 }
 
 .profileName {
   margin: 0 0 6px;
   color: var(--navy);
-  font-size: 42px;
-  font-weight: 900;
+  font-size: clamp(32px, 4vw, var(--text-h1-operational));
+  font-weight: var(--weight-extra-bold);
   letter-spacing: 0;
-  line-height: 1.08;
+  line-height: var(--leading-tight);
 }
 
 .role {
   color: var(--blue);
-  font-weight: 850;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-body-sm);
 }
 
 .badges {
@@ -69,35 +72,39 @@
 }
 
 .chip {
-  height: 28px;
+  min-height: var(--ua-meta-chip-height);
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: var(--ua-meta-chip-gap);
   border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #fafcff;
+  border-radius: var(--ua-meta-chip-radius);
+  background: var(--surface-soft);
   color: var(--navy);
-  font-size: 11px;
-  font-weight: 850;
-  padding: 0 9px;
+  font-size: var(--text-chip);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  padding-inline: var(--ua-meta-chip-padding-x);
   white-space: nowrap;
 }
 
+.chip svg {
+  flex: none;
+}
+
 .level {
-  border-color: #beefeb;
+  border-color: var(--teal-soft);
   background: var(--teal-soft);
-  color: #007f78;
+  color: var(--ua-navy);
 }
 
 .csat {
-  border-color: #ffe2a8;
-  background: var(--gold-soft);
+  border-color: var(--line-2);
+  background: var(--surface-soft);
 }
 
-.star {
-  color: var(--gold);
-  font-size: 13px;
-  line-height: 1;
+.csat svg {
+  color: var(--ua-rating-star);
 }
 
 .row {
@@ -105,7 +112,7 @@
   grid-template-columns: 140px 1fr;
   gap: 14px;
   border-bottom: 1px solid var(--line);
-  font-size: 14px;
+  font-size: var(--text-body-sm);
   padding: 12px 0;
 }
 
@@ -115,12 +122,14 @@
 
 .k {
   color: var(--muted);
-  font-weight: 750;
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
 }
 
 .v {
   color: var(--navy);
-  font-weight: 850;
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-body-sm);
 }
 
 .sticky {
@@ -130,8 +139,9 @@
 
 .muted {
   color: var(--muted);
-  font-weight: 620;
-  line-height: 1.85;
+  font-weight: var(--weight-medium);
+  font-size: 15px;
+  line-height: 27px;
 }
 
 .priceGrid {
@@ -143,9 +153,13 @@
 
 .priceCard {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: #fafcff;
+  background: var(--surface-soft);
   color: inherit;
   cursor: pointer;
   font: inherit;
@@ -161,14 +175,15 @@
 }
 
 .priceCard b {
-  display: block;
+  display: inline-flex;
+  align-items: center;
   color: var(--navy);
 }
 
 .reviewCard {
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #fafcff;
+  background: var(--surface-soft);
   padding: 13px;
 }
 
@@ -181,7 +196,7 @@
 .profileInsightItem {
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #fafcff;
+  background: var(--surface-soft);
   padding: 13px;
 }
 
@@ -189,9 +204,9 @@
 .profileInsightItem b {
   display: block;
   color: var(--navy);
-  font-size: 14px;
-  font-weight: 900;
-  line-height: 1.8;
+  font-size: 18px;
+  font-weight: var(--weight-bold);
+  line-height: 1.5;
   margin-bottom: 8px;
 }
 
@@ -199,9 +214,9 @@
 .profileInsightItem p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
-  font-weight: 650;
-  line-height: 1.85;
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  line-height: 27px;
 }
 
 .profileInsightsList {
@@ -220,21 +235,32 @@
 .reviewHead b,
 .reviewHead strong {
   color: var(--navy);
-  font-weight: 900;
+  font-weight: var(--weight-bold);
 }
 
 .reviewHead span {
   display: block;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 750;
-  line-height: 1.7;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-caption);
   margin-top: 2px;
 }
 
 .reviewHead strong {
-  color: var(--gold);
+  color: var(--ua-navy);
   white-space: nowrap;
+}
+
+.reviewRating {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.reviewRating svg {
+  flex: none;
+  color: var(--ua-rating-star);
 }
 
 .requestButton {
@@ -257,7 +283,7 @@
   }
 
   .profileName {
-    font-size: 36px;
+    font-size: 32px;
   }
 
   .row,

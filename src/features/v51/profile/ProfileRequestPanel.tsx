@@ -18,7 +18,7 @@ export function ProfileRequestPanel({ profile, initialDuration = 30 }: ProfileRe
   return (
     <aside className={`${styles.panel} ${styles.sticky}`}>
       <h2>هماهنگی جلسه</h2>
-      <p className={styles.muted}>زمان‌های آزاد در پروفایل نمایش داده نمی‌شود. بعد از ثبت درخواست، صاحب تجربه حداقل سه زمان پیشنهادی اعلام می‌کند.</p>
+      <p className={styles.muted}>زمان‌های آزاد در پروفایل نمایش داده نمی‌شود. بعد از پرداخت امن درخواست، صاحب تجربه دقیقاً سه زمان پیشنهادی اعلام می‌کند.</p>
       <div className={styles.priceGrid} role="group" aria-label="انتخاب مدت جلسه مشاوره">
         {durations.map((duration) => (
           <button
@@ -28,8 +28,8 @@ export function ProfileRequestPanel({ profile, initialDuration = 30 }: ProfileRe
             aria-pressed={selectedDuration === duration}
             onClick={() => setSelectedDuration(duration)}
           >
-            <span>{durationLabel(duration)}</span>
-            <b>{toman(profile.pricing[duration])}</b>
+            <span className="button-label">{durationLabel(duration)}</span>
+            <b className="button-label">{toman(profile.pricing[duration])}</b>
           </button>
         ))}
       </div>

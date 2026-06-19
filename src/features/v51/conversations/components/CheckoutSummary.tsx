@@ -1,3 +1,4 @@
+import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
 import {
   calculateCheckout,
   formatDuration,
@@ -15,39 +16,34 @@ export function CheckoutSummary({ conversation }: CheckoutSummaryProps) {
   const checkout = calculateCheckout(conversation);
 
   return (
-    <section className={styles.panel}>
-      <h2>خلاصه پرداخت</h2>
+    <section id="checkout-summary" className={styles.panel}>
+      <h2 className={styles.panelTitleWithIcon}>
+        <UseravaaIcon name="payoutRequest" size={18} aria-hidden="true" />
+        خلاصه درخواست
+      </h2>
       <div className={styles.summaryRows}>
         <div className={styles.summaryRow}>
-          <span>فرد</span>
+          <span>تجربه‌آفرین</span>
           <strong>{getPersonName(conversation)}</strong>
         </div>
         <div className={styles.summaryRow}>
-          <span>زمان انتخاب‌شده</span>
-          <strong>
-            {conversation.selectedTime ? `${conversation.selectedTime.dateLabel}، ${conversation.selectedTime.timeLabel}` : "زمانی انتخاب نشده است"}
-          </strong>
-        </div>
-        <div className={styles.summaryRow}>
-          <span>زمان جلسه مشاوره</span>
+          <span>مدت گفت‌وگو</span>
           <strong>{formatDuration(conversation.duration)}</strong>
         </div>
+        {conversation.requestTopic ? (
+          <div className={styles.summaryRow}>
+            <span>موضوع کلی</span>
+            <strong>{conversation.requestTopic}</strong>
+          </div>
+        ) : null}
         <div className={styles.summaryRow}>
-          <span>هزینه جلسه مشاوره</span>
+          <span>توضیح شما</span>
+          <strong>{conversation.note || "ثبت نشده است"}</strong>
+        </div>
+        <div className={styles.summaryRow}>
+          <span>مبلغ</span>
           <strong>{checkout.price === 0 ? "رایگان" : formatToman(checkout.price)}</strong>
         </div>
-        <div className={styles.summaryRow}>
-          <span>پرداخت از کیف پول</span>
-          <strong>{formatToman(checkout.walletDeduction)}</strong>
-        </div>
-        <div className={styles.summaryRow}>
-          <span>پرداخت از درگاه</span>
-          <strong>{formatToman(checkout.gatewayPayable)}</strong>
-        </div>
-      </div>
-      <div className={styles.checkoutTotal}>
-        <span>موجودی کیف پول: {formatToman(checkout.walletBalance)}</span>
-        <strong>{checkout.requiresGateway ? "باقی‌مانده از درگاه پرداخت می‌شود." : "کیف پول برای نهایی‌سازی کافی است."}</strong>
       </div>
     </section>
   );

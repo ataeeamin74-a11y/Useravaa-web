@@ -1,5 +1,7 @@
+import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
 import type { ConversationDirection, ConversationFixture } from "@/features/v51/data/conversations";
 import { groupConversations } from "@/features/v51/data/conversations";
+import { formatFaNumber } from "@/lib/fa-format";
 import styles from "./ConversationCluster.module.css";
 
 type ConversationTabsProps = {
@@ -23,7 +25,10 @@ export function ConversationTabs({ activeTab, conversations, onTabChange }: Conv
         className={`${styles.tab} ${activeTab === "outgoing" ? styles.tabActive : ""}`}
         onClick={() => onTabChange("outgoing")}
       >
-        درخواست‌های من ({sentCount})
+        <span className={styles.tabTitle}>
+          <UseravaaIcon name="send" size={16} aria-hidden="true" />
+          ارسالی {formatFaNumber(sentCount)}
+        </span>
       </button>
       <button
         type="button"
@@ -32,7 +37,10 @@ export function ConversationTabs({ activeTab, conversations, onTabChange }: Conv
         className={`${styles.tab} ${activeTab === "incoming" ? styles.tabActive : ""}`}
         onClick={() => onTabChange("incoming")}
       >
-        درخواست‌های دریافتی ({receivedCount})
+        <span className={styles.tabTitle}>
+          <UseravaaIcon name="inbox" size={16} aria-hidden="true" />
+          دریافتی {formatFaNumber(receivedCount)}
+        </span>
       </button>
     </div>
   );

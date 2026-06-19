@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
 import {
   applySettlementSettings,
   formatIban,
   normalizeIban,
-  validateIranIban,
   validateSettlementSettings,
   type SettlementSettings,
   type SettlementSettingsErrors
@@ -13,10 +13,14 @@ import {
 import {
   applyWalletSettlement,
   initialWalletFixture,
-  requestPayout,
+  submitWalletWithdrawalRequest,
   topUpWallet,
+  validateWalletWithdrawalInput,
+  walletWithdrawalCopy,
   type WalletFixture,
-  type WalletTransactionFilter
+  type WalletTransactionFilter,
+  type WalletWithdrawalErrors,
+  type WalletWithdrawalInput
 } from "@/features/v51/data/wallet";
 import { SettlementInfoModal } from "@/features/v51/my-profile/components/SettlementInfoModal";
 import { WalletPanel, type WalletPanelMode } from "./WalletPanel";
@@ -26,11 +30,12 @@ import { WalletTransactionList } from "./WalletTransactionList";
 
 type WalletPageProps = Readonly<{
   fixture?: WalletFixture;
+  currentUserId?: string;
   initialPanel?: WalletPanelMode;
   initialSettlementModalOpen?: boolean;
 }>;
 
-export function WalletPage({ fixture = initialWalletFixture, initialPanel = null, initialSettlementModalOpen = false }: WalletPageProps) {
+export function WalletPage({ fixture = initialWalletFixture, currentUserId = fixture.ownerUserId, initialPanel = null, initialSettlementModalOpen = false }: WalletPageProps) {
   const [wallet, setWallet] = useState<WalletFixture>(fixture);
   const [panel, setPanel] = useState<WalletPanelMode>(initialPanel);
   const [filter, setFilter] = useState<WalletTransactionFilter>("");
@@ -41,8 +46,12 @@ export function WalletPage({ fixture = initialWalletFixture, initialPanel = null
   const [settlementDraft, setSettlementDraft] = useState<SettlementSettings>(fixture.settlement);
   const [settlementErrors, setSettlementErrors] = useState<SettlementSettingsErrors>(validateSettlementSettings(fixture.settlement));
   const [showSettlementErrors, setShowSettlementErrors] = useState(false);
-
-  const settlementIsReady = wallet.settlement.verified && validateIranIban(wallet.settlement.iban);
+  const [withdrawalDraft, setWithdrawalDraft] = useState<WalletWithdrawalInput>({
+    accountHolderName: fixture.settlement.accountOwner,
+    iban: fixture.settlement.iban
+  });
+  const [withdrawalErrors, setWithdrawalErrors] = useState<WalletWithdrawalErrors>({});
+  const [showWithdrawalErrors, setShowWithdrawalErrors] = useState(false);
 
   const clearMessages = () => {
     setStatusMessage("");
@@ -61,9 +70,15 @@ export function WalletPage({ fixture = initialWalletFixture, initialPanel = null
     setStatusMessage("موجودی کیف پول افزایش یافت.");
   };
 
-  const openPayoutPanel = () => {
+  const openWithdrawalPanel = () => {
     clearMessages();
-    setPanel(settlementIsReady ? "payout" : "missing-settlement");
+    setWithdrawalDraft({
+      accountHolderName: wallet.settlement.accountOwner,
+      iban: wallet.settlement.iban ? formatIban(wallet.settlement.iban) : ""
+    });
+    setWithdrawalErrors({});
+    setShowWithdrawalErrors(false);
+    setPanel("withdrawal");
   };
 
   const openSettlementDetails = () => {
@@ -112,24 +127,47 @@ export function WalletPage({ fixture = initialWalletFixture, initialPanel = null
     }
 
     setWallet((current) => applyWalletSettlement(current, result.settlement));
+    setWithdrawalDraft({
+      accountHolderName: result.settlement.accountOwner,
+      iban: formatIban(result.settlement.iban)
+    });
     setSettlementModalOpen(false);
     setShowSettlementErrors(false);
-    setPanel("payout");
+    setPanel("withdrawal");
     setErrorMessage("");
     setStatusMessage("اطلاعات تسویه ذخیره شد.");
   };
 
-  const submitPayoutRequest = () => {
-    const result = requestPayout(wallet);
+  const updateWithdrawalDraft = (draft: WalletWithdrawalInput) => {
+    setWithdrawalDraft(draft);
+    setWithdrawalErrors(validateWalletWithdrawalInput(draft).errors);
+  };
 
-    if (result.status === "blocked_missing_settlement_info") {
-      setPanel("missing-settlement");
+  const submitWithdrawalRequest = () => {
+    const result = submitWalletWithdrawalRequest(wallet, withdrawalDraft, currentUserId);
+
+    if (result.status === "invalid") {
+      setWithdrawalErrors(result.errors);
+      setShowWithdrawalErrors(true);
+      setStatusMessage("");
+      setErrorMessage(Object.values(result.errors)[0] ?? walletWithdrawalCopy.ibanError);
+      return;
+    }
+
+    if (result.status !== "requested") {
       setStatusMessage("");
       setErrorMessage(result.message);
       return;
     }
 
     setWallet(result.wallet);
+    setWithdrawalDraft({
+      accountHolderName: result.withdrawalRequest.accountHolderName,
+      iban: formatIban(result.withdrawalRequest.iban)
+    });
+    setWithdrawalErrors({});
+    setShowWithdrawalErrors(false);
+    setPanel("withdrawal-success");
     setErrorMessage("");
     setStatusMessage(result.message);
   };
@@ -139,19 +177,40 @@ export function WalletPage({ fixture = initialWalletFixture, initialPanel = null
       <h1>کیف پول و پرداخت‌ها</h1>
       <p className={styles.lead}>پرداخت جلسه‌های مشاوره، درآمد، تسویه و تراکنش‌ها.</p>
 
-      <WalletSummaryCards wallet={wallet} onTopUp={openTopUpPanel} onPayout={openPayoutPanel} onSettlementDetails={openSettlementDetails} />
+      <WalletSummaryCards
+        wallet={wallet}
+        currentUserId={currentUserId}
+        onTopUp={openTopUpPanel}
+        onPayout={openWithdrawalPanel}
+        onSettlementDetails={openSettlementDetails}
+      />
 
       <WalletPanel
         mode={panel}
         wallet={wallet}
         selectedTopUpAmount={selectedTopUpAmount}
+        withdrawalDraft={withdrawalDraft}
+        withdrawalErrors={withdrawalErrors}
+        showWithdrawalErrors={showWithdrawalErrors}
         onTopUpAmount={applyTopUp}
         onOpenSettlement={openSettlementModal}
-        onRequestPayout={submitPayoutRequest}
+        onWithdrawalDraftChange={updateWithdrawalDraft}
+        onSubmitWithdrawal={submitWithdrawalRequest}
+        onBack={() => setPanel(null)}
       />
 
-      {statusMessage ? <p className={styles.successBox}>{statusMessage}</p> : null}
-      {errorMessage ? <p className={styles.errorBox}>{errorMessage}</p> : null}
+      {statusMessage ? (
+        <p className={styles.successBox}>
+          <UseravaaIcon name="success" size={16} aria-hidden="true" />
+          {statusMessage}
+        </p>
+      ) : null}
+      {errorMessage ? (
+        <p className={styles.errorBox}>
+          <UseravaaIcon name="warning" size={16} aria-hidden="true" />
+          {errorMessage}
+        </p>
+      ) : null}
 
       <WalletTransactionList wallet={wallet} filter={filter} onFilterChange={setFilter} />
 

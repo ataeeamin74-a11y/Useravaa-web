@@ -1,0 +1,142 @@
+[
+  {
+    "slug": "product-ux",
+    "titleFa": "محصول و تجربه کاربر",
+    "titleEn": "Product and User Experience",
+    "jobField": "PRODUCT_UX",
+    "sortOrder": 10,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "graphic-brand-identity",
+    "titleFa": "طراحی گرافیک و هویت بصری",
+    "titleEn": "Graphic and Brand Identity",
+    "jobField": "GRAPHIC_BRAND_IDENTITY",
+    "sortOrder": 20,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "software-engineering",
+    "titleFa": "فنی و مهندسی نرم‌افزار",
+    "titleEn": "Software Engineering",
+    "jobField": "SOFTWARE_ENGINEERING",
+    "sortOrder": 30,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "data-ai",
+    "titleFa": "علوم داده و هوش مصنوعی",
+    "titleEn": "Data and AI",
+    "jobField": "DATA_AI",
+    "sortOrder": 40,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "marketing-brand",
+    "titleFa": "مارکتینگ و برند",
+    "titleEn": "Marketing and Brand",
+    "jobField": "MARKETING_BRAND",
+    "sortOrder": 50,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "business-analysis-development",
+    "titleFa": "تحلیل و توسعه کسب‌وکار",
+    "titleEn": "Business Analysis and Development",
+    "jobField": "BUSINESS_ANALYSIS_DEVELOPMENT",
+    "sortOrder": 60,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "operations",
+    "titleFa": "عملیات",
+    "titleEn": "Operations",
+    "jobField": "OPERATIONS",
+    "sortOrder": 70,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "customer-experience",
+    "titleFa": "تجربه مشتری",
+    "titleEn": "Customer Experience",
+    "jobField": "CUSTOMER_EXPERIENCE",
+    "sortOrder": 80,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "customer-support",
+    "titleFa": "پشتیبانی مشتریان",
+    "titleEn": "Customer Support",
+    "jobField": "CUSTOMER_SUPPORT",
+    "sortOrder": 90,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "sales-commerce",
+    "titleFa": "فروش و بازرگانی",
+    "titleEn": "Sales and Commerce",
+    "jobField": "SALES_COMMERCE",
+    "sortOrder": 100,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "strategy-business-model",
+    "titleFa": "استراتژی و مدل کسب‌وکار",
+    "titleEn": "Strategy and Business Model",
+    "jobField": "STRATEGY_BUSINESS_MODEL",
+    "sortOrder": 110,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "finance-legal-investment",
+    "titleFa": "مالی، حقوقی و سرمایه‌گذاری",
+    "titleEn": "Finance Legal and Investment",
+    "jobField": "FINANCE_LEGAL_INVESTMENT",
+    "sortOrder": 120,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "hr-org-culture",
+    "titleFa": "منابع انسانی و فرهنگ سازمانی",
+    "titleEn": "HR and Organizational Culture",
+    "jobField": "HR_ORG_CULTURE",
+    "sortOrder": 130,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  },
+  {
+    "slug": "management-leadership-entrepreneurship",
+    "titleFa": "مدیریت، رهبری و کارآفرینی",
+    "titleEn": "Management Leadership and Entrepreneurship",
+    "jobField": "MANAGEMENT_LEADERSHIP_ENTREPRENEURSHIP",
+    "sortOrder": 140,
+    "showInDiscovery": true,
+    "showInInsights": true,
+    "showInPricing": true
+  }
+]

@@ -1,0 +1,230 @@
+.faqSection {
+  display: grid;
+  gap: 14px;
+}
+
+.sectionHeader {
+  display: grid;
+  gap: 6px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-heavy);
+  line-height: var(--leading-heading);
+}
+
+.sectionHeader p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
+}
+
+.searchCard,
+.faqItem,
+.noResults {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.searchCard {
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+}
+
+.searchLabel {
+  color: var(--navy);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
+}
+
+.searchField {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--muted);
+  padding: 0 14px;
+}
+
+.searchField:focus-within {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(36, 95, 253, 0.14);
+}
+
+.searchField input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--navy);
+  font: inherit;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+}
+
+.searchField input::placeholder {
+  color: var(--muted-2);
+}
+
+.searchIcon {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  flex: none;
+}
+
+.searchIcon::before {
+  content: "";
+  position: absolute;
+  inset: 2px 4px 4px 2px;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+}
+
+.searchIcon::after {
+  content: "";
+  width: 7px;
+  height: 2px;
+  position: absolute;
+  right: 2px;
+  bottom: 3px;
+  border-radius: 999px;
+  background: currentColor;
+  transform: rotate(-45deg);
+  transform-origin: center;
+}
+
+.accordion {
+  display: grid;
+  gap: 10px;
+}
+
+.faqItem {
+  overflow: hidden;
+}
+
+.questionButton {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 0;
+  background: transparent;
+  color: var(--navy);
+  cursor: pointer;
+  padding: 14px 16px;
+  text-align: right;
+}
+
+.questionButton:focus-visible {
+  outline: 3px solid rgba(36, 95, 253, 0.18);
+  outline-offset: -3px;
+}
+
+.questionText {
+  display: grid;
+  gap: 5px;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-body);
+}
+
+.category {
+  width: fit-content;
+  border: 1px solid #B8F3ED;
+  border-radius: 999px;
+  background: var(--teal-soft);
+  color: #007F7A;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  padding: 5px 9px;
+}
+
+.indicator,
+.indicatorOpen {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  flex: none;
+  color: var(--muted);
+  transition: transform 160ms ease, color 160ms ease;
+}
+
+.indicator::before,
+.indicatorOpen::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  inset: 4px;
+  border-inline-end: 2px solid currentColor;
+  border-block-end: 2px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.indicatorOpen {
+  color: var(--blue);
+  transform: rotate(180deg);
+}
+
+.answerPanel {
+  border-top: 1px solid var(--line);
+  background: var(--surface-soft);
+  padding: 14px 16px 16px;
+}
+
+.answerPanel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body);
+}
+
+.noResults {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  padding: 18px;
+}
+
+.noResults h3,
+.noResults p {
+  margin: 0;
+}
+
+.noResults h3 {
+  color: var(--navy);
+  font-size: var(--text-h4);
+  font-weight: var(--weight-heavy);
+}
+
+.noResults p {
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
+}
+
+.noResults a {
+  min-height: 40px;
+  border: 1px solid var(--blue);
+  background: #fff;
+  color: var(--blue);
+  padding: 9px 14px;
+}

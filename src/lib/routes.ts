@@ -6,6 +6,7 @@ export type RouteId =
   | "requests"
   | "requestNew"
   | "sessions"
+  | "actions"
   | "conversations"
   | "conversationDetail"
   | "proposeTimes"
@@ -90,7 +91,7 @@ export const appRoutes = [
     id: "conversations",
     href: "/conversations",
     title: "جلسه‌ها",
-    summary: "درخواست‌های جلسه مشاوره، زمان‌های پیشنهادی، پرداخت و هماهنگی جلسه‌های ثبت‌شده.",
+    summary: "درخواست‌های پرداخت‌شده، زمان‌های پیشنهادی و هماهنگی جلسه‌های قطعی‌شده.",
     requiredApi: "GET /api/conversations",
     primaryActions: ["switch_sent_received", "primary_state_action", "open_detail"],
     states: ["loading", "empty", "error", "loaded", "needs_action", "tracking", "done"]
@@ -99,10 +100,19 @@ export const appRoutes = [
     id: "sessions",
     href: "/sessions",
     title: "جلسه‌ها",
-    summary: "نمای مستقل پیگیری جلسه‌های مشاوره، زمان‌های پیشنهادی، پرداخت و وضعیت جلسه‌های ثبت‌شده.",
+    summary: "نمای مستقل پیگیری درخواست‌های پرداخت‌شده، زمان‌های پیشنهادی و وضعیت جلسه‌های قطعی‌شده.",
     requiredApi: "GET /api/conversations",
     primaryActions: ["switch_sent_received", "primary_state_action", "open_detail"],
     states: ["loading", "empty", "error", "loaded", "needs_action", "tracking", "done"]
+  },
+  {
+    id: "actions",
+    href: "/actions",
+    title: "اقدام‌ها",
+    summary: "صندوق اقدام‌های لازم برای ادامه مسیر درخواست‌ها، جلسه‌ها، پرداخت، پروفایل و کیف پول.",
+    requiredApi: "GET /api/conversations; GET account/profile/wallet readiness",
+    primaryActions: ["filter_actions", "open_task", "open_detail"],
+    states: ["loaded", "filtered", "empty"]
   },
   {
     id: "conversationDetail",
@@ -110,14 +120,14 @@ export const appRoutes = [
     title: "جزئیات جلسه",
     summary: "نمای وضعیت محور جلسه مشاوره، تایم‌لاین و CTAهای وابسته به state machine.",
     requiredApi: "GET conversation; state action endpoints",
-    primaryActions: ["propose_times", "select_time", "pay", "cancel", "feedback"],
+    primaryActions: ["propose_times", "select_time", "cancel", "feedback"],
     states: ["loading", "error", "loaded", "state_specific"]
   },
   {
     id: "proposeTimes",
     href: "/conversations/[conversationId]/propose-times",
-    title: "پیشنهاد زمان",
-    summary: "انتخاب حداقل سه زمان پیشنهادی و ارسال زمان‌ها برای طرف مقابل.",
+    title: "پیشنهاد سه زمان",
+    summary: "انتخاب دقیقاً سه زمان پیشنهادی و ارسال زمان‌ها برای طرف مقابل.",
     requiredApi: "POST proposed-times",
     primaryActions: ["select_date", "select_time", "remove_time", "submit"],
     states: ["empty_selection", "invalid_count", "valid_selection", "submitting"]
@@ -126,7 +136,7 @@ export const appRoutes = [
     id: "selectTime",
     href: "/conversations/[conversationId]/select-time",
     title: "انتخاب زمان",
-    summary: "انتخاب یکی از زمان‌های پیشنهادی برای ادامه مسیر نهایی‌سازی جلسه مشاوره.",
+    summary: "انتخاب یکی از زمان‌های پیشنهادی برای قطعی‌شدن جلسه مشاوره.",
     requiredApi: "POST select-time",
     primaryActions: ["select_proposed_time", "cancel"],
     states: ["loading", "no_options", "loaded", "submitting"]
@@ -134,8 +144,8 @@ export const appRoutes = [
   {
     id: "checkout",
     href: "/checkout/[conversationId]",
-    title: "پرداخت و نهایی‌سازی",
-    summary: "مرور جلسه مشاوره، بررسی موجودی کیف پول و مسیر پرداخت طبق رفتار V51.",
+    title: "پرداخت امن درخواست جلسه",
+    summary: "مرور درخواست، بررسی موجودی کیف پول و پرداخت امن پیش از ارسال درخواست برای صاحب تجربه.",
     requiredApi: "POST checkout; POST confirm payment",
     primaryActions: ["confirm_payment", "top_up", "cancel"],
     states: ["wallet_sufficient", "requires_gateway", "processing", "failed", "paid"]
@@ -227,15 +237,11 @@ export const mainNavigation = [
   { href: "/discover", label: "کشف تجربه‌ها", routeIds: ["discover"] },
   { href: "/insights", label: "بینش‌ها", routeIds: ["insights"] },
   {
-    href: "/requests",
-    label: "درخواست‌ها",
-    routeIds: ["requests", "requestNew"]
-  },
-  {
-    href: "/sessions",
+    href: "/conversations",
     label: "جلسه‌ها",
-    routeIds: ["sessions", "conversations", "conversationDetail", "proposeTimes", "selectTime", "checkout"]
-  }
+    routeIds: ["conversations", "conversationDetail", "proposeTimes", "selectTime", "checkout", "requestNew", "requests", "sessions", "actions"]
+  },
+  { href: "/guide", label: "راهنما", routeIds: ["guide"] }
 ] as const;
 
 export const utilityNavigation = [

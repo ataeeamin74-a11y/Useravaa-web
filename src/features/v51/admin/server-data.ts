@@ -1,0 +1,2184 @@
+import {
+  adminReadModelService,
+  type AdminActionQueueItem as RepositoryActionQueueItem,
+  type AdminAnalyticsDateRange,
+  type AdminAnalyticsFilters,
+  type AdminAnalyticsSummary as RepositoryAnalyticsSummary,
+  type AdminAttendanceRow as RepositoryAttendanceRow,
+  type AdminCancellationDetail as RepositoryCancellationDetail,
+  type AdminCancellationRow as RepositoryCancellationRow,
+  type AdminConversationDetail as RepositoryConversationDetail,
+  type AdminConversationRow as RepositoryConversationRow,
+  type AdminDashboardSummary as RepositoryDashboardSummary,
+  type AdminExperienceProfileDetail as RepositoryExperienceProfileDetail,
+  type AdminExperienceProfileRow as RepositoryExperienceProfileRow,
+  type AdminInsightDetail as RepositoryInsightDetail,
+  type AdminInsightRow as RepositoryInsightRow,
+  type AdminUserDetail as RepositoryUserDetail,
+  type AdminUserRow as RepositoryUserRow,
+  type AdminWalletTransactionRow as RepositoryWalletTransactionRow
+} from "@/lib/backend/admin-read-models";
+import {
+  buildAdminPaidSessionsKpiTree,
+  buildUnavailableAdminPaidSessionsKpiTree
+} from "@/lib/backend/admin-kpi-tree";
+import { JobField, type JobField as PrismaJobField } from "@prisma/client";
+import { adminCategoryService, adminPaymentService, adminPricingService } from "@/lib/backend/services";
+import type { AdminCategoryRecord, PricingRuleCategoryOption, PricingRuleRecord } from "@/lib/backend/repositories";
+import { adminAnalyticsFilterSchema } from "@/lib/backend/validation";
+import type { Viewer } from "@/lib/auth/types";
+import { formatFaNumber } from "@/lib/fa-format";
+import {
+  buildAdminHomeData,
+  getAttendanceQueueItems,
+  getCancellationAdminItem,
+  getCancellationAdminItems,
+  getConversationAdminItem,
+  getConversationAdminItems,
+  getExperienceProfileAdminItem,
+  getExperienceProfileAdminItems,
+  getLocalPaymentQueueItems,
+  getLocalPaymentQueueItem,
+  getUserAdminItem,
+  getUserAdminItems,
+  getWalletLedgerAdminItems,
+  type AdminActionItem,
+  type AdminActionPriority,
+  type AdminAnalyticsBreakdownRow,
+  type AdminAnalyticsData,
+  type AdminAttendanceItem,
+  type AdminAuditLogItem,
+  type AdminAuditLogData,
+  type AdminCancellationItem,
+  type AdminCategoriesData,
+  type AdminCategoryDetailData,
+  type AdminCategoryItem,
+  type AdminCategoryOption,
+  type AdminConversationListItem,
+  type AdminDataSource,
+  type AdminDetailField,
+  type AdminExperienceProfileDetailItem,
+  type AdminInsightDetailItem,
+  type AdminInsightItem,
+  type AdminMetric,
+  type AdminPaymentQueueItem,
+  type AdminPricingCategoryOption,
+  type AdminPricingRuleDetailData,
+  type AdminPricingRuleItem,
+  type AdminPricingRulesData,
+  type AdminReadDetail,
+  type AdminUserItem,
+  type AdminWalletLedgerItem,
+  type AdminExperienceProfileItem
+} from "./data";
+
+type RepositoryPaymentReview = {
+  id: string;
+  status: string;
+  referenceNumber: string | null;
+  receiptFileName: string | null;
+  submittedAt: Date | string | null;
+  reviewedAt: Date | string | null;
+  adminNote: string | null;
+  rejectionReason: string | null;
+  payment: {
+    id: string;
+    conversationId: string;
+    method: string;
+    status: string;
+    amountToman: number | null;
+    conversation: {
+      id: string;
+      requesterId: string;
+      providerId: string;
+      status: string;
+      requestTopic: string | null;
+      providerVisibleAt: Date | string | null;
+      paymentFinalizedAt: Date | string | null;
+      confirmedAt: Date | string | null;
+      selectedTimeId: string | null;
+      createdAt: Date | string;
+      proposedTimes: { id: string }[];
+      attendanceVerification: { id: string } | null;
+      walletTransactions: { id: string }[];
+    };
+  };
+};
+
+export type AdminPaymentRouteData = {
+  items: AdminPaymentQueueItem[];
+  source: AdminDataSource;
+  sourceNote: string;
+};
+
+export type AdminHomeRouteData = {
+  metrics: AdminMetric[];
+  actionItems: AdminActionItem[];
+  sourceNote: string;
+};
+
+export type AdminAnalyticsSearchParams = Record<string, string | string[] | undefined>;
+
+export type AdminListRouteData<T> = {
+  items: T[];
+  source: AdminDataSource;
+  sourceNote: string;
+};
+
+export type AdminDetailRouteData<TFallback> = {
+  detail: AdminReadDetail | null;
+  fallback: TFallback | null;
+  source: AdminDataSource;
+  sourceNote: string;
+};
+
+export type AdminCancellationDetailRouteData = {
+  detail: AdminReadDetail | null;
+  fallback: ReturnType<typeof getCancellationAdminItem> | null;
+  item: AdminCancellationItem | null;
+  source: AdminDataSource;
+  sourceNote: string;
+};
+
+export type AdminExperienceProfileDetailRouteData = {
+  detail: AdminReadDetail | null;
+  fallback: ReturnType<typeof getExperienceProfileAdminItem> | null;
+  item: AdminExperienceProfileDetailItem | null;
+  source: AdminDataSource;
+  sourceNote: string;
+};
+
+export type AdminInsightDetailRouteData = {
+  item: AdminInsightDetailItem | null;
+  source: AdminDataSource;
+  sourceNote: string;
+};
+
+const repositorySourceNote = "داده این صفحه از read model متصل به پایگاه داده خوانده شده است.";
+const demoFallbackSourceNote = "پایگاه داده در دسترس نبود؛ نمایش فعلی با داده محلی / نمایشی برچسب‌گذاری شده است.";
+const placeholderSourceNote = "این بخش هنوز منبع عملیاتی پایدار ندارد و داده ساختگی نمایش نمی‌دهد.";
+const notRecorded = "ثبت نشده";
+
+export function isAdminLocalDemoFallbackEnabled() {
+  return process.env.NODE_ENV !== "production" || process.env.USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK === "1";
+}
+
+function placeholderAdminList<T>(): AdminListRouteData<T> {
+  return {
+    items: [],
+    source: "placeholder",
+    sourceNote: placeholderSourceNote
+  };
+}
+
+function placeholderAdminHome(): AdminHomeRouteData {
+  return {
+    metrics: [
+      {
+        id: "admin-data-unavailable",
+        label: "داده عملیات",
+        value: "ناموجود",
+        helper: "پایگاه داده در دسترس نیست و داده نمایشی در محیط تولید نمایش داده نمی‌شود.",
+        source: "placeholder"
+      }
+    ],
+    actionItems: [],
+    sourceNote: placeholderSourceNote
+  };
+}
+const analyticsDateRangeLabels: Record<AdminAnalyticsDateRange, string> = {
+  last_7_days: "۷ روز گذشته",
+  last_30_days: "۳۰ روز گذشته",
+  last_90_days: "۹۰ روز گذشته",
+  all_time: "همه زمان‌ها"
+};
+const analyticsDateRanges = Object.keys(analyticsDateRangeLabels) as AdminAnalyticsDateRange[];
+const unsupportedAnalyticsMetrics = [
+  {
+    id: "nmv",
+    label: "NMV",
+    reason: "پیاده‌سازی نشده — مدل کمیسیون/تسویه برای محاسبه خالص بازار وجود ندارد."
+  },
+  {
+    id: "nmv-gmv",
+    label: "NMV / GMV",
+    reason: "پیاده‌سازی نشده — NMV قابل محاسبه نیست."
+  },
+  {
+    id: "clv",
+    label: "CLV",
+    reason: "پیاده‌سازی نشده — مدل نگهداشت/کوهورت و تاریخچه درآمد کافی لازم است."
+  }
+] as const;
+
+function firstSearchParam(params: AdminAnalyticsSearchParams | undefined, key: string) {
+  const value = params?.[key];
+
+  if (Array.isArray(value)) {
+    return value[0];
+  }
+
+  return value;
+}
+
+function isPrismaJobField(value: string | null | undefined): value is PrismaJobField {
+  return Boolean(value && Object.values(JobField).includes(value as PrismaJobField));
+}
+
+function parseAdminAnalyticsFilters(params: AdminAnalyticsSearchParams | undefined): AdminAnalyticsFilters {
+  const parsed = adminAnalyticsFilterSchema.safeParse({
+    range: firstSearchParam(params, "range") ?? "last_30_days",
+    category: firstSearchParam(params, "category")
+  });
+
+  if (!parsed.success) {
+    return {
+      dateRange: "last_30_days",
+      category: null
+    };
+  }
+
+  return {
+    dateRange: parsed.data.range,
+    category: isPrismaJobField(parsed.data.category) ? parsed.data.category : null
+  };
+}
+
+function adminAnalyticsHref(dateRange: AdminAnalyticsDateRange, category: string | null) {
+  const params = new URLSearchParams();
+  params.set("range", dateRange);
+
+  if (category) {
+    params.set("category", category);
+  }
+
+  return `/admin/analytics?${params.toString()}`;
+}
+
+function formatDateLike(value: Date | string | null | undefined) {
+  if (!value) {
+    return notRecorded;
+  }
+
+  if (value instanceof Date) {
+    return value.toISOString();
+  }
+
+  return value;
+}
+
+function countLabel(value: number) {
+  return formatFaNumber(value);
+}
+
+function percentLabel(value: number | null) {
+  if (value === null) {
+    return notRecorded;
+  }
+
+  return `${formatFaNumber(Math.round(value * 100))}%`;
+}
+
+function amountLabel(value: number | null | undefined) {
+  return value == null ? notRecorded : `${value.toLocaleString("fa-IR")} تومان`;
+}
+
+function signedAmountLabel(value: number | null | undefined) {
+  if (value == null) {
+    return notRecorded;
+  }
+
+  const prefix = value > 0 ? "+" : "";
+  return `${prefix}${value.toLocaleString("fa-IR")} تومان`;
+}
+
+function safeText(value: string | null | undefined, fallback = notRecorded) {
+  return value?.trim() || fallback;
+}
+
+function participantSummary(user: { id: string; displayName: string }) {
+  return `${user.displayName} · ${user.id}`;
+}
+
+function providerVisibilityLabel(value: Date | string | null | undefined) {
+  return value ? `نمایش داده شده · ${formatDateLike(value)}` : "نمایش داده نشده";
+}
+
+function selectedSessionLabel(
+  selectedTime: {
+    shamsiDateLabel: string;
+    timeLabel: string;
+    startsAt: Date | string;
+  } | null
+) {
+  if (!selectedTime) {
+    return notRecorded;
+  }
+
+  return `${selectedTime.shamsiDateLabel} · ${selectedTime.timeLabel}`;
+}
+
+function categoriesLabel(categories: readonly { category: { labelFa: string; code: string | null } }[]) {
+  return categories.map((item) => item.category.labelFa || item.category.code).filter(Boolean).join("، ") || notRecorded;
+}
+
+function repositoryPaymentStatusLabel(status: string) {
+  if (status === "PENDING_REVIEW") {
+    return "در انتظار بررسی پرداخت";
+  }
+
+  if (status === "PAID") {
+    return "پرداخت شده";
+  }
+
+  if (status === "FAILED") {
+    return "ناموفق";
+  }
+
+  return status;
+}
+
+function repositoryManualReviewStatusLabel(status: string) {
+  if (status === "SUBMITTED" || status === "NEEDS_REVIEW") {
+    return "در انتظار بررسی";
+  }
+
+  if (status === "APPROVED") {
+    return "تأیید شده";
+  }
+
+  if (status === "REJECTED") {
+    return "رد شده";
+  }
+
+  return status;
+}
+
+function methodLabel(method: string) {
+  if (method === "CARD_TO_CARD") {
+    return "پرداخت دستی";
+  }
+
+  if (method === "FREE") {
+    return "بدون پرداخت";
+  }
+
+  if (method === "WALLET") {
+    return "کیف پول";
+  }
+
+  return "پرداخت آنلاین";
+}
+
+function pricingExperienceLevelLabel(level: string | null) {
+  if (!level) {
+    return "همه سطح‌های تجربه";
+  }
+
+  const labels: Record<string, string> = {
+    INTERN: "تازه‌کار",
+    SPECIALIST: "متخصص",
+    SENIOR_SPECIALIST: "متخصص ارشد",
+    MIDDLE_MANAGER: "مدیر میانی",
+    SENIOR_MANAGER: "مدیر ارشد",
+    VP: "مدیر ارشد اجرایی",
+    BUSINESS_MANAGER: "مدیر کسب‌وکار"
+  };
+
+  return labels[level] ?? level;
+}
+
+function pricingDurationLabel(duration: string | null) {
+  if (duration === "MIN_30") {
+    return "جلسه ۳۰ دقیقه‌ای";
+  }
+
+  if (duration === "MIN_60") {
+    return "جلسه ۶۰ دقیقه‌ای";
+  }
+
+  return "همه مدت‌ها";
+}
+
+function pricingDurationValue(duration: string | null) {
+  if (duration === "MIN_30") {
+    return "30";
+  }
+
+  if (duration === "MIN_60") {
+    return "60";
+  }
+
+  return "";
+}
+
+function pricingStateLabel(rule: { isActive: boolean; archivedAt: Date | string | null }) {
+  if (rule.archivedAt) {
+    return "آرشیوشده";
+  }
+
+  return rule.isActive ? "فعال" : "غیرفعال";
+}
+
+function pricingCommissionLabel(value: number) {
+  return `${formatFaNumber(value / 100)}%`;
+}
+
+function pricingEffectiveWindowLabel(rule: { effectiveFrom: Date | string; effectiveTo: Date | string | null }) {
+  return `${formatDateLike(rule.effectiveFrom)} تا ${rule.effectiveTo ? formatDateLike(rule.effectiveTo) : "بدون پایان"}`;
+}
+
+function isoDateInputValue(value: Date | string | null | undefined) {
+  if (!value) {
+    return "";
+  }
+
+  return new Date(value).toISOString().slice(0, 10);
+}
+
+function pricingCategoryLabel(
+  jobField: string | null,
+  categoryOptions: readonly PricingRuleCategoryOption[]
+) {
+  if (!jobField) {
+    return "همه دسته‌های شغلی";
+  }
+
+  return categoryOptions.find((category) => category.code === jobField)?.labelFa ?? jobField;
+}
+
+function mapPricingCategoryOptions(categoryOptions: readonly PricingRuleCategoryOption[]): AdminPricingCategoryOption[] {
+  return categoryOptions
+    .filter((option): option is PricingRuleCategoryOption & { code: NonNullable<PricingRuleCategoryOption["code"]> } =>
+      Boolean(option.code)
+    )
+    .map((option) => ({
+      label: option.labelFa || option.code,
+      value: option.code
+    }));
+}
+
+function categoryStateLabel(category: Pick<AdminCategoryRecord, "isActive" | "archivedAt">) {
+  if (category.archivedAt) {
+    return "آرشیو شده";
+  }
+
+  return category.isActive ? "فعال" : "غیرفعال";
+}
+
+function categoryVisibilitySummary(category: Pick<AdminCategoryRecord, "showInDiscovery" | "showInInsights" | "showInPricing">) {
+  const visible = [
+    category.showInDiscovery ? "کشف تجربه" : null,
+    category.showInInsights ? "بینش‌ها" : null,
+    category.showInPricing ? "قیمت‌گذاری" : null
+  ].filter(Boolean);
+
+  return visible.length ? visible.join("، ") : "نمایش فعال ندارد";
+}
+
+function actorSummary(actor: { displayName: string; role: string } | null) {
+  return actor ? `${actor.displayName} · ${actor.role}` : notRecorded;
+}
+
+function mapCategoryParentOptions(categories: readonly AdminCategoryRecord[], excludedId?: string): AdminCategoryOption[] {
+  return categories
+    .filter((category) => category.id !== excludedId && category.isActive && !category.archivedAt)
+    .map((category) => ({
+      label: category.labelFa,
+      value: category.id
+    }));
+}
+
+function mapAdminCategoryItem(category: AdminCategoryRecord, auditItems: readonly AdminAuditLogItem[] = []): AdminCategoryItem {
+  return {
+    id: category.id,
+    slug: category.slug,
+    titleFa: category.labelFa,
+    titleEn: category.titleEn ?? "",
+    descriptionFa: category.descriptionFa ?? "",
+    parentLabel: category.parent?.labelFa ?? "بدون دسته بالادست",
+    parentId: category.parentId ?? "",
+    sortOrder: category.sortOrder,
+    jobFieldCode: category.code ?? "",
+    jobFieldLabel: category.code ?? "بدون اتصال به JobField",
+    activeLabel: categoryStateLabel(category),
+    isActive: category.isActive,
+    isArchived: Boolean(category.archivedAt),
+    showInDiscovery: category.showInDiscovery,
+    showInInsights: category.showInInsights,
+    showInPricing: category.showInPricing,
+    visibilitySummary: categoryVisibilitySummary(category),
+    profileCountLabel: countLabel(category._count.profiles),
+    profileCount: category._count.profiles,
+    insightCountLabel: countLabel(category.insightCount),
+    insightCount: category.insightCount,
+    pricingRuleCountLabel: countLabel(category.pricingRuleCount),
+    pricingRuleCount: category.pricingRuleCount,
+    childCountLabel: countLabel(category._count.children),
+    childCount: category._count.children,
+    createdBySummary: actorSummary(category.createdByAdmin),
+    updatedBySummary: actorSummary(category.updatedByAdmin),
+    createdAt: formatDateLike(category.createdAt),
+    updatedAt: formatDateLike(category.updatedAt),
+    archivedAt: category.archivedAt ? formatDateLike(category.archivedAt) : notRecorded,
+    href: `/admin/categories/${category.id}`,
+    source: "backend_repository",
+    actionsAvailable: !category.archivedAt,
+    auditItems
+  };
+}
+
+function sourceHelper(source: AdminDataSource) {
+  if (source === "backend_repository") {
+    return "داده متصل به پایگاه داده";
+  }
+
+  if (source === "local_demo") {
+    return "داده محلی / نمایشی";
+  }
+
+  return "پیاده‌سازی نشده";
+}
+
+function profileCompletionLabel(user: RepositoryUserRow | RepositoryUserDetail) {
+  let score = 0;
+
+  if (user.displayName) score += 25;
+  if (user.email) score += 25;
+  if (user.profile?.status && user.profile.status !== "NONE") score += 25;
+  if (user.profile?.professionalSummary) score += 25;
+
+  return `${formatFaNumber(score)}%`;
+}
+
+function experienceReadinessLabel(
+  profile: {
+    publicProfessionalSummary?: string | null;
+    categories?: readonly unknown[];
+    price30Toman?: number | null;
+    price60Toman?: number | null;
+    freeHelp?: boolean;
+    status?: string;
+  } | null
+) {
+  if (!profile) {
+    return "0%";
+  }
+
+  let score = 20;
+  if (profile.publicProfessionalSummary) score += 20;
+  if ((profile.categories?.length ?? 0) > 0) score += 20;
+  if (profile.price30Toman || profile.price60Toman || profile.freeHelp) score += 20;
+  if (profile.status === "ACTIVE") score += 20;
+
+  return `${formatFaNumber(score)}%`;
+}
+
+function reviewStatusLabel(status: string) {
+  if (status === "PENDING_REVIEW") {
+    return "در بررسی";
+  }
+
+  if (status === "ACTIVE") {
+    return "تأیید شده";
+  }
+
+  if (status === "NEEDS_CHANGES") {
+    return "نیازمند اصلاح";
+  }
+
+  if (status === "INACTIVE") {
+    return "مخفی از نمایش";
+  }
+
+  return status;
+}
+
+function insightPublicationStatusLabel(status: string) {
+  if (status === "PUBLISHED") {
+    return "منتشر شده";
+  }
+
+  if (status === "HIDDEN") {
+    return "مخفی شده";
+  }
+
+  if (status === "ARCHIVED") {
+    return "حذف نرم";
+  }
+
+  if (status === "DRAFT") {
+    return "پیش‌نویس";
+  }
+
+  return status;
+}
+
+function insightModerationStatusLabel(status: string) {
+  if (status === "PUBLISHED") {
+    return "بدون محدودیت";
+  }
+
+  if (status === "HIDDEN") {
+    return "مخفی‌کردن";
+  }
+
+  if (status === "ARCHIVED") {
+    return "حذف نرم";
+  }
+
+  return "نیازمند بررسی";
+}
+
+function insightAnswerStatusLabel(status: string) {
+  if (status === "APPROVED") {
+    return "منتشر شده";
+  }
+
+  if (status === "SUBMITTED") {
+    return "در بررسی";
+  }
+
+  if (status === "HIDDEN") {
+    return "مخفی شده";
+  }
+
+  if (status === "REJECTED") {
+    return "رد شده";
+  }
+
+  if (status === "DRAFT") {
+    return "پیش‌نویس";
+  }
+
+  return status;
+}
+
+function supportReviewLabel(status: string) {
+  if (status === "UNDER_SUPPORT_REVIEW" || status === "REQUESTED") {
+    return "در بررسی پشتیبانی";
+  }
+
+  if (status === "COMPLETED") {
+    return "بررسی شده";
+  }
+
+  if (status === "REJECTED") {
+    return "رد شده";
+  }
+
+  return status;
+}
+
+function mapRepositoryPaymentItem(review: RepositoryPaymentReview): AdminPaymentQueueItem {
+  return {
+    id: review.id,
+    paymentId: review.payment.id,
+    conversationId: review.payment.conversationId,
+    requestTopic: safeText(review.payment.conversation.requestTopic, "درخواست گفت‌وگو"),
+    requesterSummary: `${review.payment.conversation.requesterId} · درخواست‌دهنده`,
+    providerSummary: `${review.payment.conversation.providerId} · تجربه‌آفرین`,
+    amountLabel: amountLabel(review.payment.amountToman),
+    methodLabel: methodLabel(review.payment.method),
+    paymentStatusLabel: repositoryPaymentStatusLabel(review.payment.status),
+    manualReviewStatusLabel: repositoryManualReviewStatusLabel(review.status),
+    conversationStatusLabel: review.payment.conversation.status,
+    providerVisibilityLabel: providerVisibilityLabel(review.payment.conversation.providerVisibleAt),
+    submittedAt: formatDateLike(review.submittedAt),
+    referenceSummary: review.referenceNumber ? "شماره مرجع ثبت شده" : "شماره مرجع ثبت نشده",
+    receiptSummary: review.receiptFileName ? "رسید پیوست شده" : "رسید پیوست نشده",
+    source: "backend_repository",
+    actionsAvailable: review.status === "SUBMITTED" || review.status === "NEEDS_REVIEW"
+  };
+}
+
+function auditActionLabel(action: string) {
+  if (action === "PAYMENT_MANUAL_APPROVED") {
+    return "تأیید پرداخت";
+  }
+
+  if (action === "PAYMENT_MANUAL_REJECTED") {
+    return "رد پرداخت";
+  }
+
+  if (action === "CANCELLATION_SUPPORT_CREDIT_APPROVED") {
+    return "تأیید اعتبار لغو";
+  }
+
+  if (action === "CANCELLATION_SUPPORT_CREDIT_REJECTED") {
+    return "رد اعتبار لغو";
+  }
+
+  if (action === "EXPERIENCE_PROFILE_APPROVED") {
+    return "تأیید پروفایل تجربه";
+  }
+
+  if (action === "EXPERIENCE_PROFILE_CHANGES_REQUESTED") {
+    return "درخواست اصلاح پروفایل تجربه";
+  }
+
+  if (action === "EXPERIENCE_PROFILE_HIDDEN") {
+    return "مخفی‌سازی پروفایل تجربه";
+  }
+
+  if (action === "INSIGHT_HIDDEN") {
+    return "مخفی‌کردن بینش";
+  }
+
+  if (action === "INSIGHT_RESTORED") {
+    return "بازگردانی بینش";
+  }
+
+  if (action === "INSIGHT_DELETED") {
+    return "حذف نرم بینش";
+  }
+
+  if (action === "INSIGHT_ANSWER_HIDDEN") {
+    return "مخفی‌کردن پاسخ کوتاه";
+  }
+
+  if (action === "PRICING_RULE_CREATED") {
+    return "ثبت قانون قیمت‌گذاری";
+  }
+
+  if (action === "PRICING_RULE_UPDATED") {
+    return "ویرایش قانون قیمت‌گذاری";
+  }
+
+  if (action === "PRICING_RULE_DEACTIVATED") {
+    return "غیرفعال‌سازی قانون قیمت‌گذاری";
+  }
+
+  if (action === "CATEGORY_CREATED") {
+    return "ثبت دسته شغلی";
+  }
+
+  if (action === "CATEGORY_UPDATED") {
+    return "ویرایش دسته شغلی";
+  }
+
+  if (action === "CATEGORY_ARCHIVED") {
+    return "آرشیو دسته شغلی";
+  }
+
+  if (action === "CATEGORY_RESTORED") {
+    return "بازفعال‌سازی دسته شغلی";
+  }
+
+  return action;
+}
+
+function mapAuditItem(row: {
+  id: string;
+  actorLabel: string;
+  actorRole: string;
+  action: string;
+  targetType: string;
+  targetId: string | null;
+  relatedConversationId: string | null;
+  relatedPaymentId: string | null;
+  beforeStatus: string | null;
+  afterStatus: string | null;
+  reason: string | null;
+  note: string | null;
+  createdAt: Date;
+}): AdminAuditLogItem {
+  return {
+    id: row.id,
+    actorSummary: `${row.actorLabel} · ${row.actorRole}`,
+    actionLabel: auditActionLabel(row.action),
+    entitySummary: `${row.targetType} · ${row.targetId ?? "ثبت نشده"}`,
+    statusChange: `${row.beforeStatus ?? "ثبت نشده"} → ${row.afterStatus ?? "ثبت نشده"}`,
+    reason: row.reason ?? "ثبت نشده",
+    note: row.note ?? "ثبت نشده",
+    createdAt: formatDateLike(row.createdAt),
+    paymentHref: row.relatedPaymentId ? `/admin/payments/${row.relatedPaymentId}` : undefined,
+    conversationHref: row.relatedConversationId ? `/admin/conversations/${row.relatedConversationId}` : undefined,
+    cancellationHref: row.targetType === "CANCELLATION" && row.targetId ? `/admin/cancellations/${row.targetId}` : undefined,
+    profileHref: row.targetType === "EXPERIENCE_PROFILE" && row.targetId ? `/admin/experience-profiles/${row.targetId}` : undefined,
+    insightHref: row.targetType === "INSIGHT" && row.targetId ? `/admin/insights/${row.targetId}` : undefined,
+    pricingHref: row.targetType === "PRICING_RULE" && row.targetId ? `/admin/pricing/${row.targetId}` : undefined,
+    categoryHref: row.targetType === "JOB_CATEGORY" && row.targetId ? `/admin/categories/${row.targetId}` : undefined,
+    source: "backend_repository"
+  };
+}
+
+function mapConversationRow(row: RepositoryConversationRow): AdminConversationListItem {
+  const cancellation = row.cancellations[0];
+
+  return {
+    id: row.id,
+    title: safeText(row.requestTopic, "گفت‌وگو"),
+    requesterSummary: participantSummary(row.requester),
+    providerSummary: participantSummary(row.provider),
+    requestStatusLabel: row.status,
+    paymentStatusLabel: row.payment?.status ?? row.paymentRequirement,
+    attendanceStatusLabel: row.attendanceVerification?.status ?? "NOT_REQUIRED",
+    cancellationStatusLabel: cancellation ? supportReviewLabel(cancellation.status) : "فعال نیست",
+    createdAt: formatDateLike(row.createdAt),
+    href: `/admin/conversations/${row.id}`,
+    source: "backend_repository"
+  };
+}
+
+function mapCancellationRow(row: RepositoryCancellationRow): AdminCancellationItem {
+  const eligibleCreditAmountToman = eligibleCancellationCreditAmount(row);
+
+  return {
+    id: row.id,
+    conversationId: row.conversationId,
+    title: safeText(row.conversation.requestTopic, "لغو گفت‌وگو"),
+    requesterSummary: participantSummary(row.conversation.requester),
+    providerSummary: participantSummary(row.conversation.provider),
+    reason: safeText(row.otherReasonText, row.reasonCode),
+    stage: row.stage,
+    supportStatus: supportReviewLabel(row.status),
+    supportReviewReason: safeText(row.supportReviewReason),
+    creditAmountLabel: amountLabel(row.refundAmountToman),
+    eligibleCreditAmountLabel: amountLabel(eligibleCreditAmountToman),
+    eligibleCreditAmountToman,
+    paymentAmountLabel: amountLabel(row.conversation.payment?.amountToman ?? row.conversation.priceToman),
+    paymentStatusLabel: row.conversation.payment?.status ?? row.conversation.paymentRequirement,
+    conversationStatusLabel: row.conversation.status,
+    selectedSession: selectedSessionLabel(row.conversation.selectedTime),
+    actionsAvailable: row.status === "UNDER_SUPPORT_REVIEW",
+    walletTransactionHref: row.requesterRefundWalletTransactionId ? "/admin/wallet-transactions" : undefined,
+    createdAt: formatDateLike(row.createdAt),
+    href: `/admin/cancellations/${row.id}`,
+    source: "backend_repository"
+  };
+}
+
+function mapUserRow(row: RepositoryUserRow): AdminUserItem {
+  const conversationCount = row._count.sentConversations + row._count.receivedConversations;
+
+  return {
+    id: row.id,
+    displayName: row.displayName,
+    roleLabel: row.role,
+    profileCompletion: profileCompletionLabel(row),
+    accountStatus: "فعال",
+    experienceProfileStatus: row.experienceProfile?.status ?? "ثبت نشده",
+    conversationsCount: countLabel(conversationCount),
+    href: `/admin/users/${row.id}`,
+    source: "backend_repository"
+  };
+}
+
+function mapExperienceProfileRow(row: RepositoryExperienceProfileRow): AdminExperienceProfileItem {
+  return {
+    id: row.id,
+    displayName: row.displayName,
+    roleLabel: row.roleTitle,
+    categories: categoriesLabel(row.categories),
+    pricing: `${amountLabel(row.price30Toman)} / ${amountLabel(row.price60Toman)}`,
+    visibilityStatus: row.status === "ACTIVE" ? "فعال در کشف تجربه‌ها" : row.status === "INACTIVE" ? "مخفی از نمایش" : "غیرفعال",
+    reviewStatus: reviewStatusLabel(row.status),
+    readinessScore: experienceReadinessLabel(row),
+    href: `/admin/experience-profiles/${row.id}`,
+    source: "backend_repository"
+  };
+}
+
+function mapExperienceProfileDetailItem(
+  row: RepositoryExperienceProfileDetail,
+  auditItems: readonly AdminAuditLogItem[] = []
+): AdminExperienceProfileDetailItem {
+  const item = mapExperienceProfileRow(row);
+
+  return {
+    ...item,
+    ownerSummary: participantSummary(row.owner),
+    ownerHref: `/admin/users/${row.ownerId}`,
+    professionalSummary: row.publicProfessionalSummary,
+    jobFieldLabel: row.jobField ?? notRecorded,
+    orgLevelLabel: row.orgLevel,
+    yearsOfExperienceLabel: countLabel(row.yearsOfExperience),
+    freeHelpLabel: row.freeHelp ? "فعال" : "غیرفعال",
+    price30Label: amountLabel(row.price30Toman),
+    price60Label: amountLabel(row.price60Toman),
+    reviewNote: safeText(row.reviewNote),
+    relatedConversationsCount: countLabel(row._count.conversations),
+    experienceAnswersCount: countLabel(row._count.experienceAnswers),
+    officialInsightsCount: countLabel(row._count.officialInsights),
+    createdAt: formatDateLike(row.createdAt),
+    updatedAt: formatDateLike(row.updatedAt),
+    actionsAvailable: {
+      approve: row.status === "PENDING_REVIEW" || row.status === "NEEDS_CHANGES",
+      requestChanges: row.status === "PENDING_REVIEW" || row.status === "ACTIVE",
+      hide: row.status === "ACTIVE" || row.status === "PENDING_REVIEW" || row.status === "NEEDS_CHANGES"
+    },
+    auditItems
+  };
+}
+
+function experienceProfileReviewSortValue(item: AdminExperienceProfileItem) {
+  if (item.reviewStatus === "در بررسی") {
+    return 0;
+  }
+
+  if (item.reviewStatus === "نیازمند اصلاح") {
+    return 1;
+  }
+
+  if (item.reviewStatus === "مخفی از نمایش") {
+    return 2;
+  }
+
+  return 3;
+}
+
+function insightAuthorSummary(author: { id: string; displayName: string } | null, authorUserId: string | null) {
+  if (author) {
+    return participantSummary(author);
+  }
+
+  return authorUserId ?? notRecorded;
+}
+
+function insightProfileSummary(profile: RepositoryInsightRow["experienceProfile"]) {
+  if (!profile) {
+    return notRecorded;
+  }
+
+  return `${profile.displayName} · ${profile.roleTitle}`;
+}
+
+function mapInsightRow(row: RepositoryInsightRow): AdminInsightItem {
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    promptSummary: safeText(row.prompt),
+    authorSummary: insightAuthorSummary(row.authorUser, row.authorUserId),
+    authorHref: row.authorUserId ? `/admin/users/${row.authorUserId}` : undefined,
+    profileSummary: insightProfileSummary(row.experienceProfile),
+    categorySummary: row.experienceProfile ? categoriesLabel(row.experienceProfile.categories) : notRecorded,
+    publicationStatus: insightPublicationStatusLabel(row.status),
+    moderationStatus: insightModerationStatusLabel(row.status),
+    answerCount: countLabel(row._count.answers),
+    createdAt: formatDateLike(row.createdAt),
+    updatedAt: formatDateLike(row.updatedAt),
+    href: `/admin/insights/${row.id}`,
+    source: "backend_repository"
+  };
+}
+
+function mapInsightAnswerRow(answer: RepositoryInsightDetail["answers"][number]): AdminInsightDetailItem["answers"][number] {
+  return {
+    id: answer.id,
+    questionSummary: safeText(answer.renderedQuestion),
+    answerSummary: safeText(answer.answerText),
+    authorSummary: participantSummary(answer.authorUser),
+    profileSummary: answer.experienceProfile ? `${answer.experienceProfile.displayName} · ${answer.experienceProfile.roleTitle}` : notRecorded,
+    statusLabel: insightAnswerStatusLabel(answer.status),
+    submittedAt: formatDateLike(answer.submittedAt ?? answer.approvedAt ?? answer.createdAt),
+    actionsAvailable: {
+      hide: answer.status === "APPROVED" || answer.status === "SUBMITTED"
+    }
+  };
+}
+
+function mapInsightDetailItem(row: RepositoryInsightDetail, auditItems: readonly AdminAuditLogItem[] = []): AdminInsightDetailItem {
+  return {
+    ...mapInsightRow(row),
+    bodySummary: safeText(row.body),
+    publishedAt: formatDateLike(row.publishedAt),
+    hiddenAt: formatDateLike(row.hiddenAt),
+    actionsAvailable: {
+      hide: row.status === "PUBLISHED",
+      restore: row.status === "HIDDEN",
+      delete: row.status !== "ARCHIVED"
+    },
+    answers: row.answers.map(mapInsightAnswerRow),
+    auditItems
+  };
+}
+
+function insightModerationSortValue(item: AdminInsightItem) {
+  if (item.moderationStatus === "نیازمند بررسی") {
+    return 0;
+  }
+
+  if (item.publicationStatus === "منتشر شده") {
+    return 1;
+  }
+
+  if (item.publicationStatus === "مخفی شده") {
+    return 2;
+  }
+
+  return 3;
+}
+
+function mapWalletTransactionRow(row: RepositoryWalletTransactionRow): AdminWalletLedgerItem {
+  return {
+    id: row.id,
+    typeLabel: row.type,
+    title: row.title,
+    amountLabel: signedAmountLabel(row.amountToman),
+    statusLabel: row.status,
+    sourceConversationHref: row.conversationId ? `/admin/conversations/${row.conversationId}` : undefined,
+    paymentHref: row.paymentId ? `/admin/payments/${row.paymentId}` : undefined,
+    userHref: `/admin/users/${row.wallet.userId}`,
+    createdAt: formatDateLike(row.createdAt),
+    source: "backend_repository"
+  };
+}
+
+function mapPricingRuleItem(
+  rule: PricingRuleRecord,
+  categoryOptions: readonly PricingRuleCategoryOption[],
+  auditItems: readonly AdminAuditLogItem[] = []
+): AdminPricingRuleItem {
+  return {
+    id: rule.id,
+    title: rule.title,
+    jobCategoryLabel: pricingCategoryLabel(rule.jobField, categoryOptions),
+    jobFieldCode: rule.jobField ?? "",
+    experienceLevelLabel: pricingExperienceLevelLabel(rule.experienceLevel),
+    experienceLevelCode: rule.experienceLevel ?? "",
+    durationLabel: pricingDurationLabel(rule.sessionDurationMinutes),
+    durationValue: pricingDurationValue(rule.sessionDurationMinutes),
+    minPriceLabel: amountLabel(rule.minPriceToman),
+    minPriceToman: rule.minPriceToman,
+    suggestedPriceLabel: amountLabel(rule.suggestedPriceToman),
+    suggestedPriceToman: rule.suggestedPriceToman,
+    maxPriceLabel: amountLabel(rule.maxPriceToman),
+    maxPriceToman: rule.maxPriceToman,
+    commissionLabel: pricingCommissionLabel(rule.commissionRateBps),
+    commissionRateBps: rule.commissionRateBps,
+    freeSessionCommissionLabel: pricingCommissionLabel(rule.freeSessionCommissionRateBps),
+    freeSessionCommissionRateBps: rule.freeSessionCommissionRateBps,
+    freeSessionLabel: rule.allowFreeSession ? "جلسه کمک‌محور / رایگان مجاز است" : "جلسه رایگان مجاز نیست",
+    allowFreeSession: rule.allowFreeSession,
+    stateLabel: pricingStateLabel(rule),
+    isActive: rule.isActive,
+    isArchived: Boolean(rule.archivedAt),
+    effectiveWindowLabel: pricingEffectiveWindowLabel(rule),
+    effectiveFromValue: isoDateInputValue(rule.effectiveFrom),
+    effectiveToValue: isoDateInputValue(rule.effectiveTo),
+    internalNote: rule.internalNote ?? "",
+    createdBySummary: rule.createdByAdmin?.displayName ?? rule.createdByAdminId ?? notRecorded,
+    updatedBySummary: rule.updatedByAdmin?.displayName ?? rule.updatedByAdminId ?? notRecorded,
+    updatedAt: formatDateLike(rule.updatedAt),
+    href: `/admin/pricing/${rule.id}`,
+    source: "backend_repository",
+    actionsAvailable: !rule.archivedAt,
+    auditItems
+  };
+}
+
+function mapAttendanceRow(row: RepositoryAttendanceRow): AdminAttendanceItem {
+  return {
+    id: row.id,
+    conversationId: row.conversationId,
+    title: safeText(row.conversation.requestTopic, "جلسه"),
+    requesterSummary: participantSummary(row.conversation.requester),
+    providerSummary: participantSummary(row.conversation.provider),
+    selectedSession: selectedSessionLabel(row.conversation.selectedTime),
+    attendanceStatusLabel: row.status,
+    attemptsLabel: countLabel(row.attempts),
+    submittedAt: formatDateLike(row.submittedAt),
+    verifiedAt: formatDateLike(row.verifiedAt),
+    requiresReview: row.status === "NEEDS_REVIEW",
+    href: `/admin/conversations/${row.conversationId}`,
+    source: "backend_repository"
+  };
+}
+
+function eligibleCancellationCreditAmount(row: RepositoryCancellationRow | RepositoryCancellationDetail) {
+  const payment = row.conversation.payment;
+
+  if (!payment || payment.status !== "PAID") {
+    return 0;
+  }
+
+  return Math.max(0, payment.amountToman ?? row.conversation.priceToman);
+}
+
+function detailField(label: string, value: string | number | null | undefined, href?: string): AdminDetailField {
+  return {
+    label,
+    value: value == null ? notRecorded : String(value),
+    href
+  };
+}
+
+function conversationDetail(row: RepositoryConversationDetail): AdminReadDetail {
+  const latestCancellation = row.cancellations[0];
+
+  return {
+    title: safeText(row.requestTopic, "جزئیات گفت‌وگو"),
+    description: "نمای خواندنی چرخه عمر گفت‌وگو، پرداخت، زمان پیشنهادی، حضور و لغو.",
+    sourceNote: repositorySourceNote,
+    source: "backend_repository",
+    idLabel: "شناسه گفت‌وگو",
+    id: row.id,
+    sections: [
+      {
+        title: "کاربران",
+        items: [
+          detailField("درخواست‌دهنده", participantSummary(row.requester), `/admin/users/${row.requesterId}`),
+          detailField("تجربه‌آفرین", participantSummary(row.provider), `/admin/users/${row.providerId}`),
+          detailField("پروفایل تجربه‌آفرین", row.experienceProfile.displayName, `/admin/experience-profiles/${row.experienceProfileId}`)
+        ]
+      },
+      {
+        title: "چرخه عمر",
+        items: [
+          detailField("وضعیت", row.status),
+          detailField("مدت", row.duration),
+          detailField("مبلغ", amountLabel(row.priceToman)),
+          detailField("نمایش به تجربه‌آفرین", formatDateLike(row.providerVisibleAt)),
+          detailField("ثبت", formatDateLike(row.createdAt)),
+          detailField("به‌روزرسانی", formatDateLike(row.updatedAt))
+        ]
+      },
+      {
+        title: "پرداخت",
+        items: [
+          detailField("وضعیت پرداخت", row.payment?.status ?? row.paymentRequirement),
+          detailField("روش", row.payment ? methodLabel(row.payment.method) : notRecorded),
+          detailField("مبلغ پرداخت", amountLabel(row.payment?.amountToman)),
+          detailField("بررسی پرداخت دستی", row.payment?.manualReview?.status ?? notRecorded),
+          detailField("شناسه پرداخت", row.payment?.id ?? notRecorded, row.payment?.id ? `/admin/payments/${row.payment.id}` : undefined)
+        ]
+      },
+      {
+        title: "جلسه و حضور",
+        items: [
+          detailField("زمان انتخاب‌شده", selectedSessionLabel(row.selectedTime)),
+          detailField("گزینه‌های پیشنهادی", countLabel(row._count.proposedTimes)),
+          detailField("وضعیت حضور", row.attendanceVerification?.status ?? "NOT_REQUIRED"),
+          detailField("تلاش ثبت‌شده", row.attendanceVerification ? countLabel(row.attendanceVerification.attempts) : countLabel(0)),
+          detailField("تأیید حضور", formatDateLike(row.attendanceVerification?.verifiedAt))
+        ]
+      },
+      {
+        title: "لغو و کیف پول",
+        items: [
+          detailField("لغو اخیر", latestCancellation?.status ?? "فعال نیست", latestCancellation ? `/admin/cancellations/${latestCancellation.id}` : undefined),
+          detailField("تراکنش‌های کیف پول", countLabel(row._count.walletTransactions), "/admin/wallet-transactions")
+        ]
+      }
+    ],
+    actions: [
+      ...(row.payment?.id ? [{ label: "مشاهده پرداخت", href: `/admin/payments/${row.payment.id}` }] : []),
+      ...(latestCancellation ? [{ label: "مشاهده لغو", href: `/admin/cancellations/${latestCancellation.id}` }] : []),
+      { label: "دفتر تراکنش کیف پول", href: "/admin/wallet-transactions" }
+    ]
+  };
+}
+
+function cancellationDetail(row: RepositoryCancellationDetail): AdminReadDetail {
+  return {
+    title: safeText(row.conversation.requestTopic, "جزئیات لغو"),
+    description: "نمای خواندنی مرحله، وضعیت، مبلغ و پیوندهای مرتبط با لغو.",
+    sourceNote: repositorySourceNote,
+    source: "backend_repository",
+    idLabel: "شناسه لغو",
+    id: row.id,
+    sections: [
+      {
+        title: "خلاصه لغو",
+        items: [
+          detailField("وضعیت", row.status),
+          detailField("مرحله", row.stage),
+          detailField("دلیل", safeText(row.otherReasonText, row.reasonCode)),
+          detailField("نقش لغوکننده", row.cancelledByRole),
+          detailField("بررسی پشتیبانی", supportReviewLabel(row.status))
+        ]
+      },
+      {
+        title: "مبلغ‌ها",
+        items: [
+          detailField("مبلغ پرداخت", amountLabel(row.conversation.payment?.amountToman ?? row.conversation.priceToman)),
+          detailField("اعتبار کیف پول", amountLabel(row.refundAmountToman)),
+          detailField("نرخ اعتبار", `${row.refundRateBps} bps`),
+          detailField("سهم پلتفرم", amountLabel(row.useravaaFeeAmountToman)),
+          detailField("خالص تجربه‌آفرین", amountLabel(row.providerNetCompensationToman))
+        ]
+      },
+      {
+        title: "پیوندها",
+        items: [
+          detailField("گفت‌وگو", row.conversationId, `/admin/conversations/${row.conversationId}`),
+          detailField("پرداخت", row.conversation.payment?.id ?? notRecorded, row.conversation.payment?.id ? `/admin/payments/${row.conversation.payment.id}` : undefined),
+          detailField("تراکنش کیف پول", row.requesterRefundWalletTransactionId ?? notRecorded, row.requesterRefundWalletTransactionId ? "/admin/wallet-transactions" : undefined)
+        ]
+      }
+    ],
+    actions: [
+      { label: "مشاهده گفت‌وگو", href: `/admin/conversations/${row.conversationId}` },
+      ...(row.requesterRefundWalletTransactionId ? [{ label: "دفتر تراکنش کیف پول", href: "/admin/wallet-transactions" }] : [])
+    ]
+  };
+}
+
+function userDetail(row: RepositoryUserDetail): AdminReadDetail {
+  const conversationsCount = row._count.sentConversations + row._count.receivedConversations;
+
+  return {
+    title: row.displayName,
+    description: "خلاصه خواندنی حساب، پروفایل، گفت‌وگوها، کیف پول و بینش‌ها.",
+    sourceNote: repositorySourceNote,
+    source: "backend_repository",
+    idLabel: "شناسه کاربر",
+    id: row.id,
+    sections: [
+      {
+        title: "حساب",
+        items: [
+          detailField("ایمیل", row.email),
+          detailField("نقش", row.role),
+          detailField("تکمیل پروفایل", profileCompletionLabel(row)),
+          detailField("ثبت", formatDateLike(row.createdAt)),
+          detailField("به‌روزرسانی", formatDateLike(row.updatedAt))
+        ]
+      },
+      {
+        title: "پروفایل تجربه‌آفرین",
+        items: [
+          detailField("وضعیت", row.experienceProfile?.status ?? notRecorded),
+          detailField("عنوان حرفه‌ای", row.experienceProfile?.roleTitle ?? notRecorded),
+          detailField("آمادگی", experienceReadinessLabel(row.experienceProfile)),
+          detailField("پیوند", row.experienceProfile?.id ?? notRecorded, row.experienceProfile?.id ? `/admin/experience-profiles/${row.experienceProfile.id}` : undefined)
+        ]
+      },
+      {
+        title: "عملیات",
+        items: [
+          detailField("گفت‌وگوها", countLabel(conversationsCount)),
+          detailField("لغوها", countLabel(row._count.cancellations)),
+          detailField("بینش‌ها", countLabel(row._count.insightAnswers)),
+          detailField("موجودی کیف پول", amountLabel(row.wallet?.balanceToman)),
+          detailField("آماده برداشت", amountLabel(row.wallet?.availablePayoutToman))
+        ]
+      },
+      {
+        title: "یادداشت داخلی",
+        items: [detailField("وضعیت", "پیاده‌سازی نشده")]
+      }
+    ],
+    actions: [
+      ...(row.experienceProfile?.id ? [{ label: "مشاهده پروفایل", href: `/admin/experience-profiles/${row.experienceProfile.id}` }] : []),
+      { label: "دفتر تراکنش کیف پول", href: "/admin/wallet-transactions" }
+    ]
+  };
+}
+
+function experienceProfileDetail(row: RepositoryExperienceProfileDetail): AdminReadDetail {
+  return {
+    title: row.displayName,
+    description: "نمای خواندنی کیفیت، دسته شغلی، قیمت‌گذاری و ارتباط با کاربر.",
+    sourceNote: repositorySourceNote,
+    source: "backend_repository",
+    idLabel: "شناسه پروفایل",
+    id: row.id,
+    sections: [
+      {
+        title: "خلاصه حرفه‌ای",
+        items: [
+          detailField("کاربر", participantSummary(row.owner), `/admin/users/${row.ownerId}`),
+          detailField("عنوان", row.roleTitle),
+          detailField("دسته شغلی", categoriesLabel(row.categories)),
+          detailField("سطح سازمانی", row.orgLevel),
+          detailField("سال تجربه", countLabel(row.yearsOfExperience)),
+          detailField("معرفی", row.publicProfessionalSummary)
+        ]
+      },
+      {
+        title: "قیمت و نمایش",
+        items: [
+          detailField("وضعیت", row.status),
+          detailField("۳۰ دقیقه", amountLabel(row.price30Toman)),
+          detailField("۶۰ دقیقه", amountLabel(row.price60Toman)),
+          detailField("کمک رایگان", row.freeHelp ? "فعال" : "غیرفعال"),
+          detailField("آمادگی", experienceReadinessLabel(row))
+        ]
+      },
+      {
+        title: "ارتباط‌ها",
+        items: [
+          detailField("گفت‌وگوها", countLabel(row._count.conversations)),
+          detailField("پاسخ‌های بینش", countLabel(row._count.experienceAnswers)),
+          detailField("بینش رسمی", countLabel(row._count.officialInsights))
+        ]
+      }
+    ],
+    actions: [{ label: "مشاهده کاربر", href: `/admin/users/${row.ownerId}` }]
+  };
+}
+
+function mapDashboardMetrics(dashboard: RepositoryDashboardSummary): AdminMetric[] {
+  return [
+    {
+      id: "payments-awaiting-review",
+      label: "پرداخت‌های در انتظار بررسی",
+      value: countLabel(dashboard.manualPaymentsAwaitingReview),
+      helper: sourceHelper("backend_repository"),
+      href: "/admin/payments",
+      source: "backend_repository"
+    },
+    {
+      id: "cancellations-under-review",
+      label: "لغوهای در بررسی پشتیبانی",
+      value: countLabel(dashboard.supportReviewCancellations),
+      helper: sourceHelper("backend_repository"),
+      href: "/admin/cancellations",
+      source: "backend_repository"
+    },
+    {
+      id: "profiles-awaiting-review",
+      label: "پروفایل‌های در بررسی",
+      value: countLabel(dashboard.profilesAwaitingReview),
+      helper: sourceHelper("backend_repository"),
+      href: "/admin/experience-profiles",
+      source: "backend_repository"
+    },
+    {
+      id: "attendance-pending",
+      label: "حضورهای در بررسی",
+      value: countLabel(dashboard.pendingAttendance),
+      helper: sourceHelper("backend_repository"),
+      href: "/admin/attendance",
+      source: "backend_repository"
+    },
+    {
+      id: "completed-sessions",
+      label: "جلسه‌های تکمیل‌شده",
+      value: countLabel(dashboard.completedSessions),
+      helper: sourceHelper("backend_repository"),
+      href: "/admin/conversations",
+      source: "backend_repository"
+    },
+    {
+      id: "wallet-credit-total",
+      label: "اعتبار کیف پول از لغو",
+      value: amountLabel(dashboard.cancellationWalletCreditToman),
+      helper: sourceHelper("backend_repository"),
+      href: "/admin/wallet-transactions",
+      source: "backend_repository"
+    }
+  ];
+}
+
+function actionTypeLabel(kind: RepositoryActionQueueItem["kind"]) {
+  const labels: Record<RepositoryActionQueueItem["kind"], string> = {
+    manual_payment_review: "بررسی پرداخت دستی",
+    cancellation_support_review: "بررسی لغو",
+    attendance_review: "بررسی وضعیت حضور",
+    provider_time_proposal_waiting: "پیگیری زمان پیشنهادی",
+    new_time_request_waiting: "پیگیری زمان تازه",
+    experience_profile_review: "بررسی پروفایل"
+  };
+
+  return labels[kind];
+}
+
+function priorityLabel(priority: RepositoryActionQueueItem["priority"]): AdminActionPriority {
+  if (priority === "urgent") {
+    return "فوری";
+  }
+
+  if (priority === "high") {
+    return "بالا";
+  }
+
+  return "معمولی";
+}
+
+function ctaLabel(kind: RepositoryActionQueueItem["kind"]) {
+  if (kind === "manual_payment_review") {
+    return "بررسی پرداخت";
+  }
+
+  if (kind === "cancellation_support_review") {
+    return "مشاهده لغو";
+  }
+
+  if (kind === "experience_profile_review") {
+    return "مشاهده پروفایل";
+  }
+
+  return "مشاهده گفت‌وگو";
+}
+
+function mapActionItem(item: RepositoryActionQueueItem): AdminActionItem {
+  return {
+    id: item.id,
+    actionType: actionTypeLabel(item.kind),
+    priority: priorityLabel(item.priority),
+    relatedEntity: item.relatedEntity,
+    relatedUsers: item.relatedUsers,
+    status: item.status,
+    createdAt: formatDateLike(item.createdAt),
+    href: item.href,
+    ctaLabel: ctaLabel(item.kind),
+    source: "backend_repository"
+  };
+}
+
+function analyticsBreakdownRow(
+  id: string,
+  label: string,
+  value: string,
+  helper: string,
+  source: AdminDataSource = "backend_repository"
+): AdminAnalyticsBreakdownRow {
+  return {
+    id,
+    label,
+    value,
+    helper,
+    source
+  };
+}
+
+function notImplementedMetric(id: string, label: string, reason: string) {
+  return {
+    id,
+    label,
+    value: "پیاده‌سازی نشده",
+    helper: reason,
+    source: "placeholder" as AdminDataSource
+  };
+}
+
+function mapAnalytics(summary: RepositoryAnalyticsSummary): AdminAnalyticsData {
+  const selectedCategory = summary.filters.category;
+  const activeCategoryLabel =
+    summary.categoryOptions.find((option) => option.value === selectedCategory)?.label ?? "همه دسته‌ها";
+  const dateRangeOptions = analyticsDateRanges.map((dateRange) => ({
+    label: analyticsDateRangeLabels[dateRange],
+    value: dateRange,
+    href: adminAnalyticsHref(dateRange, selectedCategory),
+    active: dateRange === summary.filters.dateRange
+  }));
+  const categoryOptions = [
+    {
+      label: "همه دسته‌ها",
+      value: "",
+      href: adminAnalyticsHref(summary.filters.dateRange, null),
+      active: selectedCategory === null
+    },
+    ...summary.categoryOptions.map((option) => ({
+      label: option.label,
+      value: option.value,
+      href: adminAnalyticsHref(summary.filters.dateRange, option.value),
+      active: option.value === selectedCategory
+    }))
+  ];
+  const gmvSourceHelper = `از ${countLabel(summary.paidOrderCount)} پرداخت PAID در بازه انتخابی.`;
+  const observedAverageLabel = summary.observedAverageGmvPerPayingCustomerToman === null
+    ? notRecorded
+    : amountLabel(summary.observedAverageGmvPerPayingCustomerToman);
+  const unsupported = summary.unsupportedMetrics.length ? summary.unsupportedMetrics : unsupportedAnalyticsMetrics;
+  const nmvReason = unsupported.find((metric) => metric.id === "nmv")?.reason ?? "پیاده‌سازی نشده";
+  const nmvGmvReason = unsupported.find((metric) => metric.id === "nmv-gmv")?.reason ?? "پیاده‌سازی نشده";
+  const categoryRows = summary.categoryBreakdown.map((row) =>
+    analyticsBreakdownRow(
+      row.category,
+      row.label,
+      `${amountLabel(row.paidGmvToman)} · ${countLabel(row.paidOrderCount)} سفارش`,
+      `لغو: ${countLabel(row.cancellationCount)} · بینش: ${countLabel(row.insightCount)} · پروفایل فعال: ${countLabel(row.activeExperienceProfileCount)}`
+    )
+  );
+  const kpiTree = buildAdminPaidSessionsKpiTree({
+    dateRangeLabel: analyticsDateRangeLabels[summary.filters.dateRange],
+    categoryLabel: activeCategoryLabel,
+    categoryFilterSelected: selectedCategory !== null,
+    completedPaidSessionCount: summary.completedPaidSessionCount,
+    scheduledPaidSessionCount: summary.scheduledPaidSessionCount,
+    paidSessionCount: summary.paidOrderCount,
+    acceptedRequestProxyCount: summary.acceptedRequestProxyCount,
+    submittedRequestCount: summary.allRequestCount,
+    activatedSeekerCount: summary.activatedSeekerCount,
+    qualifiedSignupProxyCount: summary.qualifiedSignupProxyCount
+  });
+
+  return {
+    source: "backend_repository",
+    sourceNote: repositorySourceNote,
+    activeDateRangeLabel: analyticsDateRangeLabels[summary.filters.dateRange],
+    activeCategoryLabel,
+    dateRangeOptions,
+    categoryOptions,
+    metrics: [
+      { id: "gmv", label: "GMV", value: amountLabel(summary.paidGmvToman), helper: gmvSourceHelper, source: "backend_repository" },
+      notImplementedMetric("nmv", "NMV", nmvReason),
+      notImplementedMetric("nmv-gmv", "NMV / GMV", nmvGmvReason),
+      { id: "paid-orders", label: "سفارش‌های پرداخت‌شده", value: countLabel(summary.paidOrderCount), helper: "فقط پرداخت‌های PAID.", source: "backend_repository" },
+      { id: "paying-customers", label: "مشتریان پرداخت‌کننده", value: countLabel(summary.payingCustomers), helper: `نرخ فعال‌سازی پرداختی: ${percentLabel(summary.customerActivationRate)}`, source: "backend_repository" },
+      { id: "observed-average-gmv", label: "میانگین GMV مشاهده‌شده", value: observedAverageLabel, helper: "این CLV نیست؛ فقط GMV پرداخت‌شده تقسیم بر مشتریان پرداخت‌کننده است.", source: "backend_repository" },
+      { id: "cancellations", label: "لغوها", value: countLabel(summary.cancellationCount), helper: `نرخ نسبت به سفارش پرداخت‌شده: ${percentLabel(summary.cancellationRate)}`, source: "backend_repository" },
+      { id: "insights", label: "بینش‌ها", value: countLabel(summary.insightStatusCounts.total), helper: `مخفی: ${percentLabel(summary.insightHiddenRate)} · حذف نرم: ${percentLabel(summary.insightArchivedRate)}`, source: "backend_repository" },
+      { id: "active-profiles", label: "پروفایل‌های فعال", value: countLabel(summary.experienceProfileStatusCounts.active ?? 0), helper: `کل پروفایل‌ها: ${countLabel(summary.experienceProfileStatusCounts.total)}`, source: "backend_repository" }
+    ],
+    kpiTree,
+    breakdownSections: [
+      {
+        id: "orders",
+        title: "خلاصه سفارش و پرداخت",
+        description: "پرداخت‌های موفق و درخواست‌های گفت‌وگو در بازه و دسته انتخابی.",
+        rows: [
+          analyticsBreakdownRow("paid-gmv", "GMV پرداخت‌شده", amountLabel(summary.paidGmvToman), gmvSourceHelper),
+          analyticsBreakdownRow("paid-orders", "سفارش‌های پرداخت‌شده", countLabel(summary.paidOrderCount), "Payment.status = PAID"),
+          analyticsBreakdownRow("all-requests", "همه درخواست‌ها", countLabel(summary.allRequestCount), "ConversationRequest.createdAt در همین بازه."),
+          analyticsBreakdownRow("completed-conversations", "گفت‌وگوهای تکمیل‌شده", countLabel(summary.completedConversationCount), "ConversationRequest.status = COMPLETED"),
+          analyticsBreakdownRow("registered-users", "کاربران ثبت‌شده", countLabel(summary.totalRegisteredUsers), "کاربران ساخته‌شده در بازه انتخابی."),
+          analyticsBreakdownRow("activation-rate", "نرخ فعال‌سازی پرداختی", percentLabel(summary.customerActivationRate), "مشتری پرداخت‌کننده / کاربران ثبت‌شده.")
+        ]
+      },
+      {
+        id: "cancellations",
+        title: "خلاصه لغو",
+        description: "لغوها، دلایل ثبت‌شده، بررسی پشتیبانی و اعتبار کیف پول.",
+        rows: [
+          analyticsBreakdownRow("cancellation-count", "تعداد لغو", countLabel(summary.cancellationCount), "Cancellation.createdAt در بازه انتخابی."),
+          analyticsBreakdownRow("cancellation-rate", "نرخ لغو", percentLabel(summary.cancellationRate), "لغو / سفارش پرداخت‌شده در همین بازه."),
+          analyticsBreakdownRow("support-review", "لغوهای در بررسی پشتیبانی", countLabel(summary.supportReviewCancellationCount), "Cancellation.status = UNDER_SUPPORT_REVIEW"),
+          analyticsBreakdownRow("wallet-credit", "اعتبار کیف پول لغو", amountLabel(summary.cancellationWalletCreditToman), "فقط WalletTransaction نوع CANCELLATION_REFUND_CREDIT و COMPLETED."),
+          ...summary.cancellationReasonBreakdown.map((reason) =>
+            analyticsBreakdownRow(
+              `reason-${reason.reasonCode}`,
+              `دلیل: ${reason.reasonCode}`,
+              countLabel(reason.count),
+              `سهم از لغوها: ${percentLabel(reason.percentage)}`
+            )
+          )
+        ]
+      },
+      {
+        id: "insights",
+        title: "خلاصه بینش",
+        description: "وضعیت انتشار و مشارکت نویسندگان بینش.",
+        rows: [
+          analyticsBreakdownRow("insight-total", "کل بینش‌ها", countLabel(summary.insightStatusCounts.total), "Insight.createdAt در بازه انتخابی."),
+          analyticsBreakdownRow("insight-published", "منتشرشده", countLabel(summary.insightStatusCounts.published ?? 0), "Insight.status = PUBLISHED"),
+          analyticsBreakdownRow("insight-hidden", "مخفی‌شده", countLabel(summary.insightStatusCounts.hidden ?? 0), `نرخ مخفی: ${percentLabel(summary.insightHiddenRate)}`),
+          analyticsBreakdownRow("insight-archived", "حذف نرم / آرشیو", countLabel(summary.insightStatusCounts.archived ?? 0), `نرخ حذف نرم: ${percentLabel(summary.insightArchivedRate)}`),
+          analyticsBreakdownRow("insight-authors", "کاربران دارای حداقل یک بینش", countLabel(summary.insightAuthorCount), `سهم از کاربران: ${percentLabel(summary.insightShareRate)}`)
+        ]
+      },
+      {
+        id: "experience-profiles",
+        title: "خلاصه پروفایل تجربه",
+        description: "وضعیت‌های بررسی و نمایش پروفایل‌های تجربه‌آفرین.",
+        rows: [
+          analyticsBreakdownRow("profile-total", "کل پروفایل‌ها", countLabel(summary.experienceProfileStatusCounts.total), "ExperienceProfile.createdAt در بازه انتخابی."),
+          analyticsBreakdownRow("profile-pending", "در انتظار بررسی", countLabel(summary.experienceProfileStatusCounts.pendingReview ?? 0), "status = PENDING_REVIEW"),
+          analyticsBreakdownRow("profile-active", "فعال / تأییدشده", countLabel(summary.experienceProfileStatusCounts.active ?? 0), "status = ACTIVE"),
+          analyticsBreakdownRow("profile-needs-changes", "نیازمند اصلاح", countLabel(summary.experienceProfileStatusCounts.needsChanges ?? 0), "status = NEEDS_CHANGES"),
+          analyticsBreakdownRow("profile-inactive", "غیرفعال / مخفی", countLabel(summary.experienceProfileStatusCounts.inactive ?? 0), "status = INACTIVE")
+        ]
+      },
+      {
+        id: "categories",
+        title: "شکست دسته شغلی",
+        description: "محاسبه از jobField و دسته‌های موجود روی پروفایل تجربه.",
+        rows: categoryRows
+      }
+    ],
+    unsupportedMetrics: unsupported,
+    dataQualityNotes: [
+      "DB-backed: داده‌ها از read model ادمین و پایگاه داده فعلی خوانده می‌شوند.",
+      "GMV فقط از پرداخت‌های PAID و finalizedAt در بازه انتخابی محاسبه می‌شود.",
+      "فیلتر دسته از jobField یا دسته‌های متصل به ExperienceProfile استفاده می‌کند.",
+      "درخت KPI جلسه‌های پرداخت‌شده فقط از داده فعلی DB و taxonomy مرکزی ساخته می‌شود؛ KPIهای بدون داده لازم همچنان با وضعیت پیاده‌سازی‌نشده نمایش داده می‌شوند.",
+      "معیارهای بدون مدل پایدار به‌صورت پیاده‌سازی نشده نمایش داده می‌شوند؛ مقدار ساختگی یا صفر جعلی ندارند."
+    ]
+  };
+}
+
+export async function getAdminPaymentRouteData(viewer: Viewer): Promise<AdminPaymentRouteData> {
+  const result = await adminPaymentService.listReviews(viewer);
+
+  if (result.ok) {
+    return {
+      items: (result.data as RepositoryPaymentReview[]).map(mapRepositoryPaymentItem),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return placeholderAdminList();
+  }
+
+  return {
+    items: getLocalPaymentQueueItems(),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminPaymentDetailRouteData(viewer: Viewer, paymentId: string) {
+  const result = await adminPaymentService.getReview(viewer, paymentId);
+
+  if (result.ok) {
+    const auditResult = await adminReadModelService.getPaymentAuditLog(viewer, paymentId);
+    const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+
+    return {
+      items: [],
+      source: "backend_repository" as AdminDataSource,
+      sourceNote: repositorySourceNote,
+      item: {
+        ...mapRepositoryPaymentItem(result.data as RepositoryPaymentReview),
+        auditItems
+      }
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return {
+      items: [],
+      source: "placeholder" as AdminDataSource,
+      sourceNote: placeholderSourceNote,
+      item: null
+    };
+  }
+
+  const item = getLocalPaymentQueueItem(paymentId);
+
+  return {
+    items: item ? [item] : [],
+    source: "local_demo" as AdminDataSource,
+    sourceNote: demoFallbackSourceNote,
+    item
+  };
+}
+
+export async function getAdminHomeRouteData(viewer: Viewer): Promise<AdminHomeRouteData> {
+  const [dashboardResult, actionQueueResult] = await Promise.all([
+    adminReadModelService.getDashboard(viewer),
+    adminReadModelService.listActionQueue(viewer)
+  ]);
+
+  if (dashboardResult.ok && actionQueueResult.ok) {
+    return {
+      metrics: mapDashboardMetrics(dashboardResult.data),
+      actionItems: actionQueueResult.data.map(mapActionItem),
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return placeholderAdminHome();
+  }
+
+  const paymentData = await getAdminPaymentRouteData(viewer);
+  return buildAdminHomeData(paymentData.items.filter((item) => item.actionsAvailable));
+}
+
+export async function getAdminConversationRouteData(viewer: Viewer): Promise<AdminListRouteData<AdminConversationListItem>> {
+  const result = await adminReadModelService.listConversations(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.map(mapConversationRow),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return placeholderAdminList();
+  }
+
+  return {
+    items: getConversationAdminItems(),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminConversationDetailRouteData(
+  viewer: Viewer,
+  conversationId: string
+): Promise<AdminDetailRouteData<ReturnType<typeof getConversationAdminItem>>> {
+  const result = await adminReadModelService.getConversationDetail(viewer, conversationId);
+
+  if (result.ok) {
+    return {
+      detail: result.data ? conversationDetail(result.data) : null,
+      fallback: null,
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return {
+      detail: null,
+      fallback: null,
+      source: "placeholder",
+      sourceNote: placeholderSourceNote
+    };
+  }
+
+  return {
+    detail: null,
+    fallback: getConversationAdminItem(conversationId),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminCancellationRouteData(viewer: Viewer): Promise<AdminListRouteData<AdminCancellationItem>> {
+  const result = await adminReadModelService.listCancellations(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.map(mapCancellationRow),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return placeholderAdminList();
+  }
+
+  return {
+    items: getCancellationAdminItems(),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminCancellationDetailRouteData(
+  viewer: Viewer,
+  cancellationId: string
+): Promise<AdminCancellationDetailRouteData> {
+  const result = await adminReadModelService.getCancellationDetail(viewer, cancellationId);
+
+  if (result.ok) {
+    const auditResult = await adminReadModelService.getCancellationAuditLog(viewer, cancellationId);
+    const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+    const item = result.data
+      ? {
+          ...mapCancellationRow(result.data),
+          auditItems
+        }
+      : null;
+
+    return {
+      detail: result.data ? cancellationDetail(result.data) : null,
+      item,
+      fallback: null,
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return {
+      detail: null,
+      item: null,
+      fallback: null,
+      source: "placeholder",
+      sourceNote: placeholderSourceNote
+    };
+  }
+
+  return {
+    detail: null,
+    item: null,
+    fallback: getCancellationAdminItem(cancellationId),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminUserRouteData(viewer: Viewer): Promise<AdminListRouteData<AdminUserItem>> {
+  const result = await adminReadModelService.listUsers(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.map(mapUserRow),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return placeholderAdminList();
+  }
+
+  return {
+    items: getUserAdminItems(),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminUserDetailRouteData(
+  viewer: Viewer,
+  userId: string
+): Promise<AdminDetailRouteData<ReturnType<typeof getUserAdminItem>>> {
+  const result = await adminReadModelService.getUserDetail(viewer, userId);
+
+  if (result.ok) {
+    return {
+      detail: result.data ? userDetail(result.data) : null,
+      fallback: null,
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return {
+      detail: null,
+      fallback: null,
+      source: "placeholder",
+      sourceNote: placeholderSourceNote
+    };
+  }
+
+  return {
+    detail: null,
+    fallback: getUserAdminItem(userId),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminExperienceProfileRouteData(viewer: Viewer): Promise<AdminListRouteData<AdminExperienceProfileItem>> {
+  const result = await adminReadModelService.listExperienceProfiles(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.map(mapExperienceProfileRow).sort((a, b) => experienceProfileReviewSortValue(a) - experienceProfileReviewSortValue(b)),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return placeholderAdminList();
+  }
+
+  return {
+    items: getExperienceProfileAdminItems(),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminExperienceProfileDetailRouteData(
+  viewer: Viewer,
+  profileId: string
+): Promise<AdminExperienceProfileDetailRouteData> {
+  const result = await adminReadModelService.getExperienceProfileDetail(viewer, profileId);
+
+  if (result.ok) {
+    const auditResult = await adminReadModelService.getExperienceProfileAuditLog(viewer, profileId);
+    const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+
+    return {
+      detail: result.data ? experienceProfileDetail(result.data) : null,
+      item: result.data ? mapExperienceProfileDetailItem(result.data, auditItems) : null,
+      fallback: null,
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return {
+      detail: null,
+      item: null,
+      fallback: null,
+      source: "placeholder",
+      sourceNote: placeholderSourceNote
+    };
+  }
+
+  return {
+    detail: null,
+    item: null,
+    fallback: getExperienceProfileAdminItem(profileId),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminInsightRouteData(viewer: Viewer): Promise<AdminListRouteData<AdminInsightItem>> {
+  const result = await adminReadModelService.listInsights(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.map(mapInsightRow).sort((a, b) => insightModerationSortValue(a) - insightModerationSortValue(b)),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  return {
+    items: [],
+    source: "placeholder",
+    sourceNote: placeholderSourceNote
+  };
+}
+
+export async function getAdminInsightDetailRouteData(
+  viewer: Viewer,
+  insightId: string
+): Promise<AdminInsightDetailRouteData> {
+  const result = await adminReadModelService.getInsightDetail(viewer, insightId);
+
+  if (result.ok) {
+    const auditResult = await adminReadModelService.getInsightAuditLog(viewer, insightId);
+    const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+
+    return {
+      item: result.data ? mapInsightDetailItem(result.data, auditItems) : null,
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  return {
+    item: null,
+    source: "placeholder",
+    sourceNote: placeholderSourceNote
+  };
+}
+
+export async function getAdminWalletTransactionRouteData(viewer: Viewer): Promise<AdminListRouteData<AdminWalletLedgerItem>> {
+  const result = await adminReadModelService.listWalletTransactions(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.map(mapWalletTransactionRow),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return placeholderAdminList();
+  }
+
+  return {
+    items: getWalletLedgerAdminItems(),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminCategoryRouteData(viewer: Viewer): Promise<AdminCategoriesData> {
+  const result = await adminCategoryService.list(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.map((category) => mapAdminCategoryItem(category)),
+      parentOptions: mapCategoryParentOptions(result.data),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanMutate: viewer.role === "ADMIN"
+    };
+  }
+
+  return {
+    items: [],
+    parentOptions: [],
+    source: "placeholder",
+    sourceNote: placeholderSourceNote,
+    viewerCanMutate: false
+  };
+}
+
+export async function getAdminCategoryDetailRouteData(
+  viewer: Viewer,
+  categoryId: string
+): Promise<AdminCategoryDetailData> {
+  const [listResult, detailResult, auditResult] = await Promise.all([
+    adminCategoryService.list(viewer),
+    adminCategoryService.getDetail(viewer, categoryId),
+    adminReadModelService.getCategoryAuditLog(viewer, categoryId)
+  ]);
+  const categories = listResult.ok ? listResult.data : [];
+  const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+
+  if (detailResult.ok) {
+    return {
+      item: mapAdminCategoryItem(detailResult.data, auditItems),
+      parentOptions: mapCategoryParentOptions(categories, detailResult.data.id),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanMutate: viewer.role === "ADMIN"
+    };
+  }
+
+  return {
+    item: null,
+    parentOptions: mapCategoryParentOptions(categories, categoryId),
+    source: listResult.ok ? "backend_repository" : "placeholder",
+    sourceNote: listResult.ok
+      ? "دسته شغلی پیدا نشد؛ داده ساختگی نمایش داده نمی‌شود."
+      : placeholderSourceNote,
+    viewerCanMutate: false
+  };
+}
+
+export async function getAdminPricingRouteData(viewer: Viewer): Promise<AdminPricingRulesData> {
+  const result = await adminPricingService.list(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.rules.map((rule) => mapPricingRuleItem(rule, result.data.categoryOptions)),
+      categoryOptions: mapPricingCategoryOptions(result.data.categoryOptions),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanMutate: viewer.role === "ADMIN"
+    };
+  }
+
+  return {
+    items: [],
+    categoryOptions: [],
+    source: "placeholder",
+    sourceNote: "پایگاه داده یا مدل خواندن قیمت‌گذاری در دسترس نیست؛ قانون قیمت‌گذاری ساختگی نمایش داده نمی‌شود.",
+    viewerCanMutate: false
+  };
+}
+
+export async function getAdminPricingDetailRouteData(
+  viewer: Viewer,
+  ruleId: string
+): Promise<AdminPricingRuleDetailData> {
+  const [listResult, detailResult, auditResult] = await Promise.all([
+    adminPricingService.list(viewer),
+    adminPricingService.getDetail(viewer, ruleId),
+    adminReadModelService.getPricingRuleAuditLog(viewer, ruleId)
+  ]);
+  const categoryOptions = listResult.ok ? listResult.data.categoryOptions : [];
+  const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+
+  if (detailResult.ok) {
+    return {
+      item: mapPricingRuleItem(detailResult.data, categoryOptions, auditItems),
+      categoryOptions: mapPricingCategoryOptions(categoryOptions),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanMutate: viewer.role === "ADMIN"
+    };
+  }
+
+  return {
+    item: null,
+    categoryOptions: mapPricingCategoryOptions(categoryOptions),
+    source: listResult.ok ? "backend_repository" : "placeholder",
+    sourceNote: listResult.ok
+      ? "قانون قیمت‌گذاری پیدا نشد؛ داده ساختگی نمایش داده نمی‌شود."
+      : "پایگاه داده یا مدل خواندن قیمت‌گذاری در دسترس نیست؛ قانون قیمت‌گذاری ساختگی نمایش داده نمی‌شود.",
+    viewerCanMutate: false
+  };
+}
+
+export async function getAdminAttendanceRouteData(viewer: Viewer): Promise<AdminListRouteData<AdminAttendanceItem>> {
+  const result = await adminReadModelService.listAttendance(viewer);
+
+  if (result.ok) {
+    return {
+      items: result.data.map(mapAttendanceRow),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote
+    };
+  }
+
+  if (!isAdminLocalDemoFallbackEnabled()) {
+    return placeholderAdminList();
+  }
+
+  return {
+    items: getAttendanceQueueItems().map((item) => ({
+      id: item.id,
+      conversationId: item.id.replace(/^attendance-/, ""),
+      title: item.title,
+      requesterSummary: item.users,
+      providerSummary: item.users,
+      selectedSession: notRecorded,
+      attendanceStatusLabel: item.status,
+      attemptsLabel: countLabel(0),
+      submittedAt: notRecorded,
+      verifiedAt: notRecorded,
+      requiresReview: true,
+      href: item.href,
+      source: "local_demo"
+    })),
+    source: "local_demo",
+    sourceNote: demoFallbackSourceNote
+  };
+}
+
+export async function getAdminAnalyticsRouteData(
+  viewer: Viewer,
+  searchParams?: AdminAnalyticsSearchParams
+): Promise<AdminAnalyticsData> {
+  const filters = parseAdminAnalyticsFilters(searchParams);
+  const result = await adminReadModelService.getAnalyticsSummary(viewer, filters);
+
+  if (result.ok) {
+    return mapAnalytics(result.data);
+  }
+
+  const activeDateRangeLabel = analyticsDateRangeLabels[filters.dateRange];
+  const activeCategoryLabel = "همه دسته‌ها";
+
+  return {
+    source: "placeholder",
+    sourceNote: placeholderSourceNote,
+    activeDateRangeLabel,
+    activeCategoryLabel,
+    dateRangeOptions: analyticsDateRanges.map((dateRange) => ({
+      label: analyticsDateRangeLabels[dateRange],
+      value: dateRange,
+      href: adminAnalyticsHref(dateRange, null),
+      active: dateRange === filters.dateRange
+    })),
+    categoryOptions: [
+      {
+        label: "همه دسته‌ها",
+        value: "",
+        href: adminAnalyticsHref(filters.dateRange, null),
+        active: true
+      }
+    ],
+    metrics: [
+      { id: "analytics-unavailable", label: "داده تحلیل", value: "ناموجود", helper: "در این نسخه هنوز محاسبه نمی‌شود", source: "placeholder" }
+    ],
+    kpiTree: buildUnavailableAdminPaidSessionsKpiTree(activeDateRangeLabel, activeCategoryLabel),
+    breakdownSections: [],
+    unsupportedMetrics: unsupportedAnalyticsMetrics,
+    dataQualityNotes: [
+      "پایگاه داده یا read model در دسترس نبود؛ این صفحه ردیف یا عدد نمایشی جعلی نشان نمی‌دهد.",
+      "برای مشاهده معیارهای واقعی، اتصال DB امن و نقش ADMIN/SUPPORT لازم است."
+    ]
+  };
+}
+
+export async function getAdminAuditLogRouteData(viewer: Viewer): Promise<AdminAuditLogData> {
+  const result = await adminReadModelService.getAuditLog(viewer);
+
+  if (result.ok) {
+    return {
+      implemented: result.data.implemented,
+      rows: result.data.rows.map(mapAuditItem),
+      source: result.data.implemented ? "backend_repository" : "placeholder",
+      sourceNote: result.data.implemented ? repositorySourceNote : placeholderSourceNote
+    };
+  }
+
+  return {
+    implemented: false,
+    rows: [],
+    source: "placeholder",
+    sourceNote: placeholderSourceNote
+  };
+}

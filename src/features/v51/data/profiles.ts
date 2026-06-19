@@ -1,3 +1,4 @@
+import { formatFaCurrencyToman, formatFaDecimal, formatFaNumber } from "@/lib/fa-format";
 import { initialExperienceTimeline, type ExperienceTimelineItem } from "./experience-timeline";
 import { jobFieldTaxonomy, type JobField } from "./job-fields";
 
@@ -429,14 +430,16 @@ export type DiscoveryState = "ready" | "loading" | "error";
 export type ExperienceRange = "" | "0-2" | "3-5" | "6-9" | "10-14" | "15+";
 export type SortOption = "relevant" | "experience_desc" | "csat_desc" | "recent_activity";
 
-export const formatter = new Intl.NumberFormat("fa-IR");
+export const formatter = {
+  format: formatFaNumber
+};
 
 export function toman(value: number | null) {
-  return value == null ? "نیاز به تعیین" : `${formatter.format(value)} تومان`;
+  return value == null ? "نیاز به تعیین" : formatFaCurrencyToman(value);
 }
 
 export function toFaDecimal(value: number) {
-  return String(value).replace(".", "٫");
+  return formatFaDecimal(value);
 }
 
 export function uniqueValues(values: readonly string[]) {

@@ -4,6 +4,7 @@ import {
   limitInsightAnswerInput,
   weeklyQuestionCopy
 } from "@/features/v51/data/experience-questions";
+import { formatFaNumber } from "@/lib/fa-format";
 import styles from "./MyProfile.module.css";
 
 type AnswerEditorProps = Readonly<{
@@ -30,7 +31,7 @@ export function AnswerEditor({ value, onChange }: AnswerEditorProps) {
           {weeklyQuestionCopy.answerHelper} {weeklyQuestionCopy.answerLimitHelper}
         </small>
         <span id="weeklyQuestionAnswerCounter" className={styles.answerCounter}>
-          {count} / {insightAnswerMaxLength}
+          {formatFaNumber(count)} / {formatFaNumber(insightAnswerMaxLength)}
         </span>
       </div>
     </div>

@@ -18,6 +18,7 @@ import {
   insightShareFontFamily,
   insightShareVisualSpec
 } from "@/features/v51/insights/insight-share-export";
+import { DEFAULT_AVATAR_SRC } from "@/components/ui/avatar-constants";
 
 function readProjectFile(relativePath: string) {
   return fs.readFileSync(path.join(process.cwd(), relativePath), "utf8");
@@ -94,13 +95,12 @@ describe("Dynamic insight share export", () => {
     });
   });
 
-  it("uses provider initials as the avatar fallback when no avatar exists", () => {
+  it("uses the official default avatar when no provider avatar exists", () => {
     const data = buildInsightShareExportData("active-question-product-ambiguity-ali")!;
     const html = renderToStaticMarkup(<InsightsPage initialDownloadInsightId={data.insight.id} />);
 
-    expect(data.provider.avatarUrl).toBeUndefined();
-    expect(data.provider.initials).toBe("ع");
-    expect(html).toContain("ع");
+    expect(data.provider.avatarUrl).toBe(DEFAULT_AVATAR_SRC);
+    expect(html).toContain(DEFAULT_AVATAR_SRC);
   });
 
   it("renders and downloads PNG output instead of the removed SVG export path", () => {

@@ -174,10 +174,10 @@ describe("Profile timeline, job field taxonomy, and EQE integration", () => {
     const emptyHtml = renderToStaticMarkup(<AnswerEditor value="" onChange={() => undefined} />);
     const filledHtml = renderToStaticMarkup(<AnswerEditor value={"ا".repeat(124)} onChange={() => undefined} />);
 
-    expect(emptyHtml).toContain("0 / 280");
+    expect(emptyHtml).toContain("۰ / ۲۸۰");
     expect(emptyHtml).toContain("maxLength=\"280\"");
     expect(emptyHtml).toContain("حداکثر ۲۸۰ کاراکتر");
-    expect(filledHtml).toContain("124 / 280");
+    expect(filledHtml).toContain("۱۲۴ / ۲۸۰");
     expect(getInsightAnswerCharacterCount("ا".repeat(124))).toBe(124);
   });
 
@@ -222,11 +222,11 @@ describe("Profile timeline, job field taxonomy, and EQE integration", () => {
     expect(getPublishedProfileAnswers("ali", [retracted])).toHaveLength(0);
   });
 
-  it("no Admin routes, states, or components are added for EQE", () => {
+  it("EQE keeps provider-facing answer states separate from Admin/Ops", () => {
     expect(experienceAnswerStatuses).toEqual(["draft", "published", "retracted"]);
     expect(forbiddenExperienceAnswerStatuses.every((status) => !(experienceAnswerStatuses as readonly string[]).includes(status))).toBe(true);
     expect(fs.existsSync(path.join(process.cwd(), "src/app/admin/experience-answers"))).toBe(false);
-    expect(fs.existsSync(path.join(process.cwd(), "src/features/v51/admin"))).toBe(false);
+    expect(fs.existsSync(path.join(process.cwd(), "src/features/v51/admin"))).toBe(true);
   });
 
   it("timeline item requires job title, job field, org level, company name, company country, start date, and end date unless current", () => {
@@ -289,6 +289,17 @@ describe("Profile timeline, job field taxonomy, and EQE integration", () => {
     jobFieldTaxonomy.forEach((field) => {
       expect(html).toContain(`value="${field}"`);
     });
+  });
+
+  it("jobField dropdown can use active DB-provided options while preserving a historical selected value", () => {
+    const html = renderToStaticMarkup(
+      <JobFieldSelect value={jobFieldTaxonomy[1]} options={[jobFieldTaxonomy[0]]} onChange={() => undefined} />
+    );
+
+    expect(html.match(/<option/g) ?? []).toHaveLength(2);
+    expect(html).toContain(`value="${jobFieldTaxonomy[0]}"`);
+    expect(html).toContain(`value="${jobFieldTaxonomy[1]}"`);
+    expect(html).not.toContain(`value="${jobFieldTaxonomy[2]}"`);
   });
 
   it("invalid old values are not accepted as standalone jobField values unless mapped to fixed taxonomy", () => {

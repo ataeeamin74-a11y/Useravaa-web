@@ -38,6 +38,11 @@ function readProjectFile(relativePath: string) {
   return fs.readFileSync(path.join(process.cwd(), relativePath), "utf8");
 }
 
+const authenticatedInsightsViewer = {
+  id: "user-requester",
+  displayName: "علی"
+} as const;
+
 describe("Experience Discovery System", () => {
   it("discover renders search above the four allowed filters with the exact placeholder", () => {
     const html = renderToStaticMarkup(<DiscoverPage initialState="ready" />);
@@ -104,6 +109,9 @@ describe("Experience Discovery System", () => {
 
   it("discover searchable filters are data-backed for job group and company options", () => {
     const jobHtml = renderToStaticMarkup(<DiscoverPage initialState="ready" initialJobCategoryComboboxOpen initialJobCategorySearchQuery="محصول" />);
+    const dbJobHtml = renderToStaticMarkup(
+      <DiscoverPage initialState="ready" initialJobCategoryComboboxOpen jobCategoryOptions={[jobFieldTaxonomy[11]]} />
+    );
     const emptyJobHtml = renderToStaticMarkup(<DiscoverPage initialState="ready" initialJobCategoryComboboxOpen initialJobCategorySearchQuery="مالی" />);
     const companyHtml = renderToStaticMarkup(<DiscoverPage initialState="ready" initialCompanyComboboxOpen initialCompanySearchQuery="دیجی" />);
 
@@ -112,6 +120,7 @@ describe("Experience Discovery System", () => {
     expect(searchDiscoverJobCategories("محصول")).toEqual(["محصول و تجربه کاربر"]);
     expect(searchDiscoverExperienceCompanies("دیجی")).toContain("دیجی‌کالا");
     expect(jobHtml).toContain("محصول و تجربه کاربر");
+    expect(dbJobHtml).toContain(jobFieldTaxonomy[11]);
     expect(companyHtml).toContain("دیجی‌کالا");
     expect(emptyJobHtml).toContain("نتیجه‌ای پیدا نشد");
   });
@@ -163,7 +172,7 @@ describe("Experience Discovery System", () => {
   });
 
   it("insights renders the refined page name, masthead, inline filters, and current question", () => {
-    const html = renderToStaticMarkup(<InsightsPage />);
+    const html = renderToStaticMarkup(<InsightsPage viewer={authenticatedInsightsViewer} />);
 
     expect(html).toContain("<h1>بینش‌ها</h1>");
     expect(html).toContain("تجربه‌های کوتاه و واقعی برای تصمیم‌های شغلی بهتر.");
@@ -197,6 +206,15 @@ describe("Experience Discovery System", () => {
     expect(categoryHtml).not.toContain("نوع بینش");
     expect(categoryHtml).not.toContain("همه واقعیت‌ها");
     expect(categoryHtml).not.toContain("همه قالب‌ها");
+  });
+
+  it("insights can receive active DB-backed category options without exposing inactive static options", () => {
+    const categoryHtml = renderToStaticMarkup(
+      <InsightsPage initialOpenFilter="jobCategory" jobCategoryOptions={[jobFieldTaxonomy[0]]} />
+    );
+
+    expect(categoryHtml).toContain(jobFieldTaxonomy[0]);
+    expect(categoryHtml).not.toContain(jobFieldTaxonomy[1]);
   });
 
   it("insights filters results by selected category only", () => {
@@ -263,22 +281,22 @@ describe("Experience Discovery System", () => {
   });
 
   it("insights answer composer renders the 280-character counter and enforces textarea length", () => {
-    const emptyHtml = renderToStaticMarkup(<InsightsPage initialAnswerComposerOpen />);
-    const draftedHtml = renderToStaticMarkup(<InsightsPage initialAnswerComposerOpen initialAnswerDraft={"ا".repeat(124)} />);
+    const emptyHtml = renderToStaticMarkup(<InsightsPage viewer={authenticatedInsightsViewer} initialAnswerComposerOpen />);
+    const draftedHtml = renderToStaticMarkup(<InsightsPage viewer={authenticatedInsightsViewer} initialAnswerComposerOpen initialAnswerDraft={"ا".repeat(124)} />);
 
     expect(emptyHtml).toContain("<textarea");
     expect(emptyHtml).toContain("maxLength=\"280\"");
-    expect(emptyHtml).toContain("0 / 280");
+    expect(emptyHtml).toContain("۰ / ۲۸۰");
     expect(emptyHtml).toContain("حداکثر ۲۸۰ کاراکتر");
     expect(emptyHtml).toContain("سؤال جدید");
     expect(emptyHtml).toContain("این نکته بیشتر به درد چه کسانی می‌خورد؟");
     expect(emptyHtml).toContain('type="checkbox"');
     expect(emptyHtml).toContain("انتشار بینش");
-    expect(draftedHtml).toContain("124 / 280");
+    expect(draftedHtml).toContain("۱۲۴ / ۲۸۰");
   });
 
   it("insights answer composer keeps no-profile fallback inside the page flow", () => {
-    const html = renderToStaticMarkup(<InsightsPage initialAnswerComposerOpen initialHasExperienceProfile={false} />);
+    const html = renderToStaticMarkup(<InsightsPage viewer={authenticatedInsightsViewer} initialAnswerComposerOpen initialHasExperienceProfile={false} />);
 
     expect(html).toContain("برای پاسخ دادن، اول پروفایل تجربه بسازید.");
     expect(html).toContain("ساخت پروفایل تجربه");

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { PageContainer } from "@/components/layout/PageContainer";
 import { getProfileById } from "@/features/v51/data/profiles";
 import { ProfileDetailPage } from "@/features/v51/profile/ProfileDetailPage";
 
@@ -16,5 +17,9 @@ export default async function ProfileDetailRoute({ params }: ProfileDetailRouteP
     notFound();
   }
 
-  return <ProfileDetailPage profile={profile} />;
+  return (
+    <PageContainer variant="flow">
+      <ProfileDetailPage profile={profile} />
+    </PageContainer>
+  );
 }

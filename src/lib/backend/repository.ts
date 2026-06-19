@@ -1,0 +1,59 @@
+export {
+  adminAuditRepository,
+  adminCategoryRepository,
+  adminPaymentReviewRepository,
+  adminReadModelRepository,
+  attendanceVerificationRepository,
+  cancellationRepository,
+  conversationRepository,
+  experienceProfileRepository,
+  insightsRepository,
+  notificationRepository,
+  paymentRepository,
+  pricingRuleRepository,
+  profileRepository,
+  timeProposalRepository,
+  walletRepository,
+  walletTransactionRepository,
+  withdrawalRepository
+} from "./repositories";
+
+import {
+  adminAuditRepository,
+  adminCategoryRepository,
+  adminPaymentReviewRepository,
+  adminReadModelRepository,
+  attendanceVerificationRepository,
+  cancellationRepository,
+  conversationRepository,
+  experienceProfileRepository,
+  insightsRepository,
+  notificationRepository,
+  paymentRepository,
+  pricingRuleRepository,
+  profileRepository,
+  timeProposalRepository,
+  walletRepository,
+  walletTransactionRepository,
+  withdrawalRepository
+} from "./repositories";
+
+export const useravaaRepository = {
+  profile: profileRepository,
+  experienceProfile: experienceProfileRepository,
+  conversations: conversationRepository,
+  payment: paymentRepository,
+  pricingRules: pricingRuleRepository,
+  timeProposal: timeProposalRepository,
+  attendance: attendanceVerificationRepository,
+  cancellation: cancellationRepository,
+  wallet: walletRepository,
+  walletTransaction: walletTransactionRepository,
+  withdrawal: withdrawalRepository,
+  notifications: notificationRepository,
+  insights: insightsRepository,
+  adminPayments: adminPaymentReviewRepository,
+  adminCategories: adminCategoryRepository,
+  adminAudit: adminAuditRepository,
+  adminReadModels: adminReadModelRepository
+} as const;

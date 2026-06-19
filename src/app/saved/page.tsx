@@ -1,4 +1,6 @@
+import { PageContainer } from "@/components/layout/PageContainer";
 import { SavedPage } from "@/features/v51/saved/SavedPage";
+import { requireCurrentViewer } from "@/lib/auth/session";
 
 type SavedRouteProps = Readonly<{
   searchParams: Promise<{
@@ -7,7 +9,12 @@ type SavedRouteProps = Readonly<{
 }>;
 
 export default async function SavedRoute({ searchParams }: SavedRouteProps) {
+  await requireCurrentViewer();
   const params = await searchParams;
 
-  return <SavedPage initialTab={params.tab} />;
+  return (
+    <PageContainer variant="empty">
+      <SavedPage initialTab={params.tab} />
+    </PageContainer>
+  );
 }

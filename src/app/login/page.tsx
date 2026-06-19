@@ -1,28 +1,31 @@
 import Link from "next/link";
+import { PageContainer } from "@/components/layout/PageContainer";
 import { PasswordField } from "@/features/v51/auth/PasswordField";
 import styles from "@/features/v51/auth/AuthPage.module.css";
 
 export default function LoginPage() {
   return (
-    <main className={styles.authPage}>
-      <h1>ورود به Useravaa</h1>
-      <p>برای ذخیره تجربه‌ها، درخواست جلسه مشاوره و مدیریت پروفایل تجربه وارد حساب شوید.</p>
-      <form className={styles.authForm}>
-        <label>
-          ایمیل
-          <input type="email" autoComplete="email" placeholder="you@example.com" />
-        </label>
-        <label>
-          رمز عبور
-          <PasswordField autoComplete="current-password" />
-        </label>
-        <button className={styles.primaryButton} type="button">
-          ورود
-        </button>
-        <Link className={styles.secondaryLink} href="/register">
-          ساخت حساب کاربری
-        </Link>
-      </form>
-    </main>
+    <PageContainer as="main" variant="empty" className={styles.authShell}>
+      <section className={styles.authPage}>
+        <h1>ورود به یوزراوا</h1>
+        <p>وارد حساب خود شوید و مسیر گفت‌وگوها، تجربه‌ها و پروفایل خود را ادامه دهید.</p>
+        <form className={styles.authForm}>
+          <label>
+            ایمیل
+            <input type="email" autoComplete="email" placeholder="you@example.com" />
+          </label>
+          <label>
+            رمز عبور
+            <PasswordField autoComplete="current-password" />
+          </label>
+          <button className={styles.primaryButton} type="button">
+            <span className="button-label">ورود</span>
+          </button>
+          <Link className={styles.secondaryLink} href="/register">
+            <span className="button-label">ساخت حساب</span>
+          </Link>
+        </form>
+      </section>
+    </PageContainer>
   );
 }

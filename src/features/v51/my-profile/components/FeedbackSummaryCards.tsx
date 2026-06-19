@@ -1,5 +1,6 @@
-import { formatter, toFaDecimal } from "@/features/v51/data/profiles";
+import { StatChip } from "@/components/ui/StatChip";
 import { getFeedbackSummary, type ReceivedFeedback } from "@/features/v51/data/my-profile";
+import { CsatValue } from "./ProfilePreviewCard";
 import styles from "./MyProfile.module.css";
 
 type FeedbackSummaryCardsProps = Readonly<{
@@ -12,16 +13,14 @@ export function FeedbackSummaryCards({ feedbacks }: FeedbackSummaryCardsProps) {
   return (
     <div className={styles.feedbackPageSummary}>
       <div className={styles.feedbackSummaryCard}>
-        <b>{formatter.format(summary.count)}</b>
-        <span>بازخورد دریافتی</span>
+        <StatChip value={summary.count} label="بازخورد دریافتی" />
       </div>
       <div className={styles.feedbackSummaryCard}>
-        <b>{summary.average ? `★ ${toFaDecimal(Number(summary.average.toFixed(1)))}` : "بدون امتیاز"}</b>
+        <b>{summary.average ? <CsatValue value={Number(summary.average.toFixed(1))} /> : "بدون امتیاز"}</b>
         <span>میانگین رضایت</span>
       </div>
       <div className={styles.feedbackSummaryCard}>
-        <b>{formatter.format(summary.successfulConversations)}</b>
-        <span>جلسه موفق</span>
+        <StatChip value={summary.successfulConversations} label="جلسه موفق" />
       </div>
     </div>
   );

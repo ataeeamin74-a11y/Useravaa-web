@@ -1,8 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { type FormEvent, type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from "react";
+import { type FormEvent, type KeyboardEvent, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+import { Avatar } from "@/components/ui/Avatar";
+import { MetaChip } from "@/components/ui/MetaChip";
+import { StatChip } from "@/components/ui/StatChip";
 import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
+import { useClickOutside } from "@/lib/use-click-outside";
 import { V51Button } from "@/features/v51/components/V51Button";
 import {
   formatter,
@@ -35,6 +39,7 @@ import styles from "./DiscoverPage.module.css";
 type DiscoverPageProps = Readonly<{
   initialState: DiscoveryState;
   initialSavedProfileIds?: readonly string[];
+  jobCategoryOptions?: readonly JobField[];
   initialJobCategoryComboboxOpen?: boolean;
   initialJobCategorySearchQuery?: string;
   initialCompanyComboboxOpen?: boolean;
@@ -76,7 +81,7 @@ function SkeletonCards() {
 }
 
 function getFilterPlaceholder(label: string, count: number) {
-  return count ? `${label} ${formatter.format(count)}` : label;
+  return count ? `${formatter.format(count)} ${label}` : label;
 }
 
 function hasAnyFilter(filters: DiscoverFilters) {
@@ -137,11 +142,19 @@ function SearchableFilterCombobox({
 }>) {
   const inputId = useId();
   const listboxId = useId();
+  const comboboxRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(initialOpen);
   const [query, setQuery] = useState(initialQuery);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const results = useMemo(() => searchOptions(query), [query, searchOptions]);
   const hasAvailableOptions = availableOptions.length > 0;
+  const closeCombobox = useCallback(() => setIsOpen(false), []);
+
+  useClickOutside({
+    refs: [comboboxRef],
+    enabled: isOpen,
+    onOutsideClick: closeCombobox
+  });
 
   function chooseValue(value: string) {
     onSelect(value);
@@ -188,7 +201,7 @@ function SearchableFilterCombobox({
   }
 
   return (
-    <div className={classNames(styles.companyCombobox, (selectedValue || isOpen) && styles.active)}>
+    <div ref={comboboxRef} className={classNames(styles.companyCombobox, (selectedValue || isOpen) && styles.active)}>
       <label htmlFor={inputId}>{label}</label>
       <div className={styles.companyInputWrap}>
         <input
@@ -236,7 +249,7 @@ function SearchableFilterCombobox({
                 onMouseEnter={() => setHighlightedIndex(index)}
                 onClick={() => chooseValue(company)}
               >
-                {company}
+                <span className="button-label">{company}</span>
               </button>
             ))
           ) : (
@@ -261,7 +274,6 @@ function ExperienceProfileCard({
 }>) {
   const companyLine = getPublicCompanySummary(profile);
   const publishedInsightCount = getPublishedInsightCountForProfile(profile.id);
-  const formattedInsightCount = formatter.format(publishedInsightCount);
 
   return (
     <article className={styles.card} aria-label={`کارت تجربه ${profile.name}، ${getProfileJobTitle(profile)}`}>
@@ -274,18 +286,21 @@ function ExperienceProfileCard({
           onClick={() => onSave(profile.id)}
         >
           <UseravaaIcon name={isSaved ? "unsave" : "save"} size={18} />
-          {isSaved ? <span className={styles.bookmarkLabel}>ذخیره‌شده</span> : null}
+          {isSaved ? <span className={`${styles.bookmarkLabel} button-label`}>ذخیره‌شده</span> : null}
         </button>
         {publishedInsightCount > 0 ? (
-          <span className={styles.insightCountBadge} aria-label={`${formattedInsightCount} بینش منتشرشده از این تجربه`}>
-            <UseravaaIcon name="insight" size={14} aria-hidden="true" />
-            {formattedInsightCount} بینش
-          </span>
+          <StatChip
+            className={styles.insightCountBadge}
+            icon="insight"
+            value={publishedInsightCount}
+            label="بینش"
+            ariaLabel={`${formatter.format(publishedInsightCount)} بینش منتشرشده از این تجربه`}
+          />
         ) : null}
       </div>
 
       <header className={styles.head}>
-        <div className={styles.avatar}>{profile.initials}</div>
+        <Avatar src={profile.avatarUrl} alt="" size="xl" className={styles.avatar} />
         <div className={styles.identity}>
           <h3 className={styles.name}>{profile.name}</h3>
           <p className={styles.role}>{getProfileJobTitle(profile)}</p>
@@ -293,8 +308,8 @@ function ExperienceProfileCard({
       </header>
 
       <div className={styles.trust}>
-        <span className={classNames(styles.chip, styles.level)}>{profile.orgLevel}</span>
-        <span className={styles.chip}>{profile.jobCategoriesFa[0]}</span>
+        <MetaChip className={classNames(styles.chip, styles.level)}>{profile.orgLevel}</MetaChip>
+        <MetaChip className={styles.chip}>{profile.jobCategoriesFa[0]}</MetaChip>
       </div>
 
       {companyLine ? <div className={styles.companies}>{companyLine}</div> : null}
@@ -304,10 +319,10 @@ function ExperienceProfileCard({
 
       <div className={styles.actions}>
         <Link className={classNames(styles.cta, styles.primary)} href={`/profiles/${profile.id}`}>
-          مشاهده تجربه
+          <span className="button-label">مشاهده تجربه</span>
         </Link>
         <Link className={classNames(styles.cta, styles.secondary)} href={getRequestHref(profile.id, 30)}>
-          هماهنگی جلسه
+          <span className="button-label">هماهنگی جلسه</span>
         </Link>
       </div>
     </article>
@@ -317,6 +332,7 @@ function ExperienceProfileCard({
 export function DiscoverPage({
   initialState,
   initialSavedProfileIds = emptySavedProfileIds,
+  jobCategoryOptions,
   initialJobCategoryComboboxOpen = false,
   initialJobCategorySearchQuery = "",
   initialCompanyComboboxOpen = false,
@@ -341,7 +357,10 @@ export function DiscoverPage({
 
   const results = useMemo(() => filterDiscoverProfiles(profiles, submittedSearchQuery, filters), [submittedSearchQuery, filters]);
   const chips = useMemo(() => activeFilterChips(submittedSearchQuery, filters), [submittedSearchQuery, filters]);
-  const availableJobCategoryOptions = useMemo(() => getDiscoverJobCategoryOptions(profiles), []);
+  const availableJobCategoryOptions = useMemo(
+    () => jobCategoryOptions ?? getDiscoverJobCategoryOptions(profiles),
+    [jobCategoryOptions]
+  );
   const availableCompanyOptions = useMemo(() => getDiscoverExperienceCompanyOptions(profiles), []);
   const activeFilterCount = chips.length;
   const hasActiveFilters = hasAnyFilter(filters);
@@ -437,7 +456,10 @@ export function DiscoverPage({
         <h1>کشف تجربه‌ها</h1>
         <p className={styles.lead}>آدم‌های باتجربه را پیدا کنید، تجربه‌شان را بررسی کنید، و در صورت نیاز جلسه مشاوره هماهنگ کنید.</p>
       </div>
-      <p className={styles.guidanceLine}>تجربه‌ها را ببینید، مشاوره بگیرید و مسیر شغلی خود را آگاهانه‌تر انتخاب کنید.</p>
+      <p className={styles.guidanceLine}>
+        تجربه‌ها را ببینید، مشاوره بگیرید و مسیر شغلی خود را آگاهانه‌تر انتخاب کنید.
+        <Link href="/guide">Useravaa چطور کار می‌کند؟</Link>
+      </p>
 
       <form className={styles.searchBar} role="search" onSubmit={submitSearch}>
         <span className={styles.searchIcon}>
@@ -449,13 +471,15 @@ export function DiscoverPage({
           value={searchDraft}
           onChange={(event) => setSearchDraft(event.target.value)}
         />
-        <button type="submit">جستجو</button>
+        <button type="submit">
+          <span className="button-label">جستجو</span>
+        </button>
       </form>
 
       <div className={styles.mobileFilterActions}>
         <button className={styles.mobileFilterButton} type="button" onClick={() => setIsDrawerOpen(true)}>
           <UseravaaIcon name="filter" size={18} />
-          {activeFilterCount ? `فیلترها ${formatter.format(activeFilterCount)}` : "فیلترها"}
+          <span className="button-label">{activeFilterCount ? `فیلترها ${formatter.format(activeFilterCount)}` : "فیلترها"}</span>
         </button>
       </div>
 
@@ -464,7 +488,7 @@ export function DiscoverPage({
           <strong>فیلترها</strong>
           <button type="button" onClick={() => setIsDrawerOpen(false)}>
             <UseravaaIcon name="close" size={16} />
-            <span>بستن</span>
+            <span className="button-label">بستن</span>
           </button>
         </div>
         <div className={styles.filterGrid}>
@@ -476,7 +500,7 @@ export function DiscoverPage({
             initialOpen={initialJobCategoryComboboxOpen}
             initialQuery={initialJobCategorySearchQuery}
             availableOptions={availableJobCategoryOptions}
-            searchOptions={(query) => searchDiscoverJobCategories(query, 14)}
+            searchOptions={(query) => searchDiscoverJobCategories(query, 14, profiles, availableJobCategoryOptions)}
             onSelect={selectJobCategory}
             onClear={clearJobCategory}
           />
@@ -541,7 +565,7 @@ export function DiscoverPage({
           ))}
         </div>
         <button className={styles.clearAll} type="button" onClick={clearAllFilters}>
-          پاک‌کردن همه
+          <span className="button-label">پاک‌کردن همه</span>
         </button>
       </div>
 
@@ -586,6 +610,9 @@ export function DiscoverPage({
                 <V51Button tone="secondary" onClick={clearAllFilters}>
                   بازگشت به همه تجربه‌ها
                 </V51Button>
+                <Link className={styles.guideLink} href="/guide">
+                  راهنمای Useravaa
+                </Link>
               </div>
             </div>
           ) : null}

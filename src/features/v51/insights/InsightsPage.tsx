@@ -1,9 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { UseravaaLogo } from "@/components/logo/UseravaaLogo";
+import { Avatar } from "@/components/ui/Avatar";
+import { StatChip } from "@/components/ui/StatChip";
 import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
+import { formatFaNumber } from "@/lib/fa-format";
 import {
   allJobCategoriesFilterLabel,
   currentInsightQuestionCycle,
@@ -26,8 +29,7 @@ import {
   type InsightAudienceIntent
 } from "@/features/v51/data/experience-questions";
 import type { JobField } from "@/features/v51/data/job-fields";
-import { myProfileDashboardFixture } from "@/features/v51/data/my-profile";
-import { categoryOptions, formatter } from "@/features/v51/data/profiles";
+import { categoryOptions } from "@/features/v51/data/profiles";
 import { useSavedItems } from "@/features/v51/saved/useSavedItems";
 import styles from "./InsightsPage.module.css";
 import {
@@ -40,14 +42,23 @@ import {
 
 type OpenFilter = "jobCategory" | null;
 
+export type InsightsViewer = Readonly<{
+  id: string;
+  displayName?: string;
+  avatarUrl?: string;
+}> | null;
+
 type InsightsPageProps = Readonly<{
   initialCategory?: JobField | "";
   initialOpenFilter?: OpenFilter;
   initialDownloadInsightId?: string;
   initialAnswerComposerOpen?: boolean;
+  initialAuthPromptOpen?: boolean;
   initialAnswerDraft?: string;
   initialHasExperienceProfile?: boolean;
   initialSavedInsightIds?: readonly string[];
+  viewer?: InsightsViewer;
+  jobCategoryOptions?: readonly JobField[];
 }>;
 
 const initialVisibleCount = 4;
@@ -77,7 +88,7 @@ function InlineFilterPopover({
       <div className={styles.popover} role="dialog" aria-label={title}>
         <strong>{title}</strong>
         <button className={classNames(styles.option, selectedValue === "" && styles.optionSelected)} type="button" onClick={() => onSelect("")}>
-          {allJobCategoriesFilterLabel}
+          <span className="button-label">{allJobCategoriesFilterLabel}</span>
         </button>
         {options.map((option) => (
           <button
@@ -86,7 +97,7 @@ function InlineFilterPopover({
             type="button"
             onClick={() => onSelect(option)}
           >
-            {option}
+            <span className="button-label">{option}</span>
           </button>
         ))}
       </div>
@@ -107,12 +118,14 @@ function InsightMasthead() {
 
 function JobCategoryFilterModule({
   selectedJobCategory,
+  categoryOptions,
   openFilter,
   onOpenFilter,
   onSelectJobCategory,
   onCloseFilter
 }: Readonly<{
   selectedJobCategory: JobField | "";
+  categoryOptions: readonly JobField[];
   openFilter: OpenFilter;
   onOpenFilter: (filter: OpenFilter) => void;
   onSelectJobCategory: (value: JobField | "") => void;
@@ -129,7 +142,7 @@ function JobCategoryFilterModule({
             aria-label="دسته‌بندی شغلی"
             onClick={() => onOpenFilter(openFilter === "jobCategory" ? null : "jobCategory")}
           >
-            <span>{selectedJobCategory || allJobCategoriesFilterLabel}</span>
+            <span className="button-label">{selectedJobCategory || allJobCategoriesFilterLabel}</span>
             <UseravaaIcon name="dropdown" size={16} />
           </button>
           {openFilter === "jobCategory" ? (
@@ -147,30 +160,42 @@ function JobCategoryFilterModule({
   );
 }
 
-function ActiveQuestionBar({ onOpenAnswerComposer }: Readonly<{ onOpenAnswerComposer: () => void }>) {
-  const profile = myProfileDashboardFixture.profile;
-  const profileFirstName = profile.name.trim().split(/\s+/)[0];
-  const headline = profileFirstName ? `${profileFirstName}، یک سؤال جدید داری` : "یک سؤال جدید برای تجربه شما";
+function ActiveQuestionBar({
+  viewer,
+  onOpenAnswerComposer,
+  onOpenAuthPrompt
+}: Readonly<{
+  viewer: InsightsViewer;
+  onOpenAnswerComposer: () => void;
+  onOpenAuthPrompt: () => void;
+}>) {
+  const viewerFirstName = viewer?.displayName?.trim().split(/\s+/)[0];
+  const isAuthenticated = Boolean(viewer);
+  const headline = isAuthenticated && viewerFirstName ? `${viewerFirstName}، یک سؤال جدید داری` : "یک سؤال جدید برای پاسخ کوتاه";
+  const questionText = isAuthenticated
+    ? currentInsightQuestionCycle.questionText
+    : "در نقش شما، چه چیزی بیرون ساده به نظر می‌رسد اما در عمل سخت‌تر است؟";
+  const helperText = isAuthenticated
+    ? "پاسخ کوتاه شما در پروفایل تجربه‌تان منتشر می‌شود."
+    : "پاسخ کوتاه شما می‌تواند به تصمیم شغلی دیگران کمک کند.";
 
   return (
     <section className={styles.questionBar} aria-label="سؤال جدید">
       <div className={styles.questionContentSide}>
-        <div className={styles.questionAvatar}>
-          {profile.avatarUrl ? <span style={{ backgroundImage: `url(${profile.avatarUrl})` }} /> : profile.initials}
-        </div>
+        {viewer?.avatarUrl ? <Avatar src={viewer.avatarUrl} alt="" size="profile" className={styles.questionAvatar} /> : null}
         <div className={styles.questionCopy}>
           <div className={styles.questionLabel}>
             <UseravaaIcon name="insight" size={18} />
             <span>سؤال جدید</span>
           </div>
           <p className={styles.questionHeadline}>{headline}</p>
-          <h2>{currentInsightQuestionCycle.questionText}</h2>
-          <small>پاسخ کوتاه شما در پروفایل تجربه‌تان منتشر می‌شود.</small>
+          <h2>{questionText}</h2>
+          <small>{helperText}</small>
         </div>
       </div>
       <div className={styles.questionActions}>
-        <button type="button" onClick={onOpenAnswerComposer}>
-          نوشتن پاسخ کوتاه
+        <button type="button" onClick={isAuthenticated ? onOpenAnswerComposer : onOpenAuthPrompt}>
+          <span className="button-label">نوشتن پاسخ کوتاه</span>
         </button>
         <small>حداکثر ۲۸۰ کاراکتر</small>
       </div>
@@ -207,7 +232,7 @@ function InsightCard({
       </div>
       <p className={styles.quote}>{insight.answerText}</p>
       <div className={styles.authorLine}>
-        <div className={styles.avatar}>{author.initials}</div>
+        <Avatar src={author.avatarUrl} alt="" size="lg" className={styles.avatar} />
         <div>
           <strong>{author.displayName}</strong>
           <span>
@@ -218,7 +243,7 @@ function InsightCard({
       </div>
       <div className={styles.cardActions}>
         <Link className={styles.primaryAction} href={author.profileUrl}>
-          مشاهده تجربه
+          <span className="button-label">مشاهده تجربه</span>
         </Link>
       </div>
     </article>
@@ -233,14 +258,12 @@ export function InsightShareModal({
   onClose: () => void;
 }>) {
   const [statusMessage, setStatusMessage] = useState("");
-  const [failedAvatarInsightId, setFailedAvatarInsightId] = useState<string | null>(null);
 
   if (!shareData) {
     return null;
   }
 
   const activeShareData = shareData;
-  const shouldShowAvatar = Boolean(shareData.provider.avatarUrl && failedAvatarInsightId !== shareData.insight.id);
   const answerTypography = getInsightShareAnswerTypography(shareData.insight.answerText);
 
   async function copyLink() {
@@ -264,25 +287,14 @@ export function InsightShareModal({
         </div>
         <div className={styles.sharePreview}>
           <div className={styles.previewProvider}>
-            {shouldShowAvatar && shareData.provider.avatarUrl ? (
-              <Image
-                className={styles.previewAvatarImage}
-                src={shareData.provider.avatarUrl}
-                alt={shareData.provider.name}
-                width={48}
-                height={48}
-                onError={() => setFailedAvatarInsightId(shareData.insight.id)}
-              />
-            ) : (
-              <span className={styles.previewAvatarFallback}>{shareData.provider.initials}</span>
-            )}
+            <Avatar src={shareData.provider.avatarUrl} alt={`تصویر پروفایل ${shareData.provider.name}`} size="lg" className={styles.previewAvatarImage} />
             <div>
               <strong>{shareData.provider.name}</strong>
               <span>{shareData.provider.subtitle}</span>
             </div>
           </div>
           <div className={styles.previewBrandRow}>
-            <Image className={styles.previewLogo} src={shareData.brand.logoAssetUrl} alt="Useravaa" width={152} height={48} />
+            <UseravaaLogo variant="wordmark" className={styles.previewLogo} />
           </div>
           <div className={styles.previewQuotePanel}>
             <span>{shareData.insight.promptHeader}</span>
@@ -304,14 +316,40 @@ export function InsightShareModal({
         <div className={styles.modalActions}>
           <button className={styles.primaryAction} type="button" onClick={saveImage}>
             <UseravaaIcon name="download" size={18} />
-            دانلود تصویر کارت
+            <span className="button-label">دانلود تصویر کارت</span>
           </button>
           <button className={styles.textAction} type="button" onClick={copyLink}>
             <UseravaaIcon name="link" size={18} />
-            کپی لینک
+            <span className="button-label">کپی لینک</span>
           </button>
         </div>
         {statusMessage ? <p className={styles.modalStatus}>{statusMessage}</p> : null}
+      </div>
+    </div>
+  );
+}
+
+function InsightAuthPromptModal({ onClose }: Readonly<{ onClose: () => void }>) {
+  const returnTo = "/insights?answer=active";
+
+  return (
+    <div className={styles.modalScrim} role="presentation">
+      <div className={styles.authPromptModal} role="dialog" aria-modal="true" aria-label="برای نوشتن پاسخ وارد شوید" dir="rtl">
+        <div className={styles.modalHead}>
+          <h2>برای نوشتن پاسخ وارد شوید</h2>
+          <button className={styles.modalCloseButton} type="button" aria-label="بستن" onClick={onClose}>
+            <UseravaaIcon name="close" size={18} />
+          </button>
+        </div>
+        <p>برای ثبت پاسخ کوتاه، ابتدا وارد حساب خود شوید یا یک حساب بسازید.</p>
+        <div className={styles.authPromptActions}>
+          <Link className={styles.authPromptPrimary} href={`/login?returnTo=${encodeURIComponent(returnTo)}`}>
+            <span className="button-label">ورود</span>
+          </Link>
+          <Link className={styles.authPromptSecondary} href={`/register?returnTo=${encodeURIComponent(returnTo)}`}>
+            <span className="button-label">ساخت حساب</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -367,18 +405,18 @@ function InsightAnswerComposerModal({
             <div className={styles.successActions}>
               <button className={styles.primaryAction} type="button" onClick={onDownloadOwnerCard}>
                 <UseravaaIcon name="download" size={18} />
-                دانلود تصویر کارت
+                <span className="button-label">دانلود تصویر کارت</span>
               </button>
               <button className={styles.textAction} type="button" onClick={onCopyOwnerLink}>
                 <UseravaaIcon name="link" size={18} />
-                کپی لینک
+                <span className="button-label">کپی لینک</span>
               </button>
               <button className={styles.textAction} type="button" onClick={onEditPublishedInsight}>
                 <UseravaaIcon name="edit" size={18} />
-                ویرایش بینش
+                <span className="button-label">ویرایش بینش</span>
               </button>
               <Link className={styles.textAction} href="/profiles/ali">
-                مشاهده در پروفایل
+                <span className="button-label">مشاهده در پروفایل</span>
               </Link>
             </div>
             {message ? <p className={styles.modalStatus}>{message}</p> : null}
@@ -401,7 +439,7 @@ function InsightAnswerComposerModal({
           <div className={styles.noProfileAnswer}>
             <p>برای پاسخ دادن، اول پروفایل تجربه بسازید.</p>
             <Link className={styles.primaryAction} href="/profile/build">
-              ساخت پروفایل تجربه
+              <span className="button-label">ساخت پروفایل تجربه</span>
             </Link>
           </div>
         ) : (
@@ -429,7 +467,7 @@ function InsightAnswerComposerModal({
                   id="insightAnswerCounter"
                   className={classNames(styles.answerCounter, !isWithinLimit && styles.answerCounterInvalid)}
                 >
-                  {count} / {insightAnswerMaxLength}
+                  {formatFaNumber(count)} / {formatFaNumber(insightAnswerMaxLength)}
                 </span>
               </div>
               <fieldset className={styles.answerAudience}>
@@ -461,10 +499,10 @@ function InsightAnswerComposerModal({
             </div>
             <div className={styles.answerStickyFooter}>
               <button className={styles.primaryAction} type="button" disabled={!responsibilityAccepted || !canSubmit} onClick={onPublish}>
-                انتشار بینش
+                <span className="button-label">انتشار بینش</span>
               </button>
               <button className={styles.textAction} type="button" onClick={onClose}>
-                بستن
+                <span className="button-label">بستن</span>
               </button>
             </div>
           </>
@@ -479,10 +517,14 @@ export function InsightsPage({
   initialOpenFilter = null,
   initialDownloadInsightId,
   initialAnswerComposerOpen = false,
+  initialAuthPromptOpen = false,
   initialAnswerDraft = "",
   initialHasExperienceProfile = true,
-  initialSavedInsightIds = emptySavedInsightIds
+  initialSavedInsightIds = emptySavedInsightIds,
+  viewer = null,
+  jobCategoryOptions
 }: InsightsPageProps) {
+  const isAuthenticated = Boolean(viewer);
   const [selectedJobCategory, setSelectedJobCategory] = useState<JobField | "">(initialCategory);
   const [openFilter, setOpenFilter] = useState<OpenFilter>(initialOpenFilter);
   const [visibleCount, setVisibleCount] = useState(initialVisibleCount);
@@ -495,12 +537,14 @@ export function InsightsPage({
 
     return initialInsight?.profileId === currentViewerProfileId ? buildInsightShareExportData(initialInsight.id) : null;
   });
-  const [answerComposerOpen, setAnswerComposerOpen] = useState(initialAnswerComposerOpen);
+  const [answerComposerOpen, setAnswerComposerOpen] = useState(isAuthenticated && initialAnswerComposerOpen);
+  const [authPromptOpen, setAuthPromptOpen] = useState(!isAuthenticated && (initialAuthPromptOpen || initialAnswerComposerOpen));
   const [answerDraft, setAnswerDraft] = useState(limitInsightAnswerInput(initialAnswerDraft));
   const [answerAudienceIntents, setAnswerAudienceIntents] = useState<InsightAudienceIntent[]>([]);
   const [answerResponsibilityAccepted, setAnswerResponsibilityAccepted] = useState(false);
   const [answerMessage, setAnswerMessage] = useState("");
   const [createdOwnerShareData, setCreatedOwnerShareData] = useState<InsightShareExportData | null>(null);
+  const resolvedCategoryOptions = jobCategoryOptions ?? categoryOptions;
 
   const filteredInsights = useMemo(
     () => getFilteredInsightCards(selectedJobCategory, ""),
@@ -522,6 +566,15 @@ export function InsightsPage({
     setSelectedJobCategory("");
     setVisibleCount(initialVisibleCount);
     setOpenFilter(null);
+  }
+
+  function openAnswerFlow() {
+    if (!isAuthenticated) {
+      setAuthPromptOpen(true);
+      return;
+    }
+
+    setAnswerComposerOpen(true);
   }
 
   function handleSavedInsightToggle(insightId: string) {
@@ -593,9 +646,12 @@ export function InsightsPage({
   return (
     <section className={styles.page}>
       <InsightMasthead />
-      {initialHasExperienceProfile ? <ActiveQuestionBar onOpenAnswerComposer={() => setAnswerComposerOpen(true)} /> : null}
+      {initialHasExperienceProfile ? (
+        <ActiveQuestionBar viewer={viewer} onOpenAnswerComposer={openAnswerFlow} onOpenAuthPrompt={() => setAuthPromptOpen(true)} />
+      ) : null}
       <JobCategoryFilterModule
         selectedJobCategory={selectedJobCategory}
+        categoryOptions={resolvedCategoryOptions}
         openFilter={openFilter}
         onOpenFilter={setOpenFilter}
         onSelectJobCategory={selectJobCategory}
@@ -604,10 +660,7 @@ export function InsightsPage({
 
       <div className={styles.feedHeader}>
         <h2 className={styles.feedHeading}>تازه‌ترین بینش‌ها</h2>
-        <span>
-          <UseravaaIcon name="insight" size={16} aria-hidden="true" />
-          {formatter.format(filteredInsights.length)} بینش برای خواندن
-        </span>
+        <StatChip className={styles.feedCountChip} icon="insight" value={filteredInsights.length} label="بینش برای خواندن" />
       </div>
 
       {filteredInsights.length ? (
@@ -626,10 +679,14 @@ export function InsightsPage({
           <section className={styles.contributionReminder}>
             <div>
               <h2>تجربه‌ای برای پاسخ به سؤال جدید دارید؟</h2>
-              <p>با یک پاسخ کوتاه، تجربه خود را به پروفایل‌تان وصل کنید و در بینش‌ها دیده شوید.</p>
+              <p>
+                {isAuthenticated
+                  ? "با یک پاسخ کوتاه، تجربه خود را به پروفایل‌تان وصل کنید و در بینش‌ها دیده شوید."
+                  : "با یک پاسخ کوتاه، تجربه خود را به شکلی روشن و قابل استفاده با دیگران به اشتراک بگذارید."}
+              </p>
             </div>
-            <button type="button" onClick={() => setAnswerComposerOpen(true)}>
-              نوشتن پاسخ کوتاه
+            <button type="button" onClick={openAnswerFlow}>
+              <span className="button-label">نوشتن پاسخ کوتاه</span>
             </button>
           </section>
 
@@ -649,7 +706,7 @@ export function InsightsPage({
           {hasMore ? (
             <div className={styles.loadMoreRow}>
               <button type="button" onClick={() => setVisibleCount((current) => current + 4)}>
-                نمایش بینش‌های بیشتر
+                <span className="button-label">نمایش بینش‌های بیشتر</span>
               </button>
             </div>
           ) : null}
@@ -658,7 +715,7 @@ export function InsightsPage({
         <section className={styles.emptyState}>
           <h2>برای این ترکیب هنوز بینشی نداریم.</h2>
           <button type="button" onClick={resetFilters}>
-            دیدن همه بینش‌ها
+            <span className="button-label">دیدن همه بینش‌ها</span>
           </button>
         </section>
       )}
@@ -666,6 +723,7 @@ export function InsightsPage({
       {savedStatusMessage ? <p className={styles.savedStatus}>{savedStatusMessage}</p> : null}
       <footer className={styles.footer}>Useravaa · بینش‌های کوتاه از تجربه‌های واقعی</footer>
       <InsightShareModal shareData={shareData} onClose={() => setShareData(null)} />
+      {authPromptOpen ? <InsightAuthPromptModal onClose={() => setAuthPromptOpen(false)} /> : null}
       {answerComposerOpen ? (
         <InsightAnswerComposerModal
           answerDraft={answerDraft}

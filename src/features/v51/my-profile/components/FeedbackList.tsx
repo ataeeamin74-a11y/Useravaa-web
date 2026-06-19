@@ -1,4 +1,5 @@
-import { renderStars, type ReceivedFeedback } from "@/features/v51/data/my-profile";
+import { RatingDisplay } from "@/components/ui/RatingDisplay";
+import type { ReceivedFeedback } from "@/features/v51/data/my-profile";
 import styles from "./MyProfile.module.css";
 
 type FeedbackListProps = Readonly<{
@@ -17,7 +18,9 @@ export function FeedbackList({ feedbacks }: FeedbackListProps) {
           <h3>
             {item.name} · {item.role}
           </h3>
-          <div className={styles.stars}>{renderStars(item.rating)}</div>
+          <div className={styles.stars}>
+            <RatingDisplay value={item.rating} showStars size="sm" />
+          </div>
           <p>{item.text}</p>
         </article>
       ))}

@@ -25,6 +25,7 @@ import {
   EyeOff,
   FileText,
   ImagePlus,
+  Inbox,
   Info,
   Layers3,
   Link2,
@@ -74,6 +75,7 @@ export const useravaaLucideIcons = {
   delete: Trash2,
   archive: Archive,
   send: Send,
+  inbox: Inbox,
   search: Search,
   filter: ListFilter,
   dropdown: ChevronDown,
@@ -119,8 +121,13 @@ export type UseravaaIconProps = Omit<LucideProps, "name"> & {
   name: UseravaaIconName;
 };
 
+function classNames(...classes: Array<string | false | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
+
 export function UseravaaIcon({
   name,
+  className,
   size = USERAVAA_ICON_DEFAULT_SIZE,
   strokeWidth = USERAVAA_ICON_DEFAULT_STROKE,
   color = "currentColor",
@@ -134,6 +141,7 @@ export function UseravaaIcon({
     <Icon
       aria-hidden={ariaLabel ? ariaHidden : true}
       aria-label={ariaLabel}
+      className={classNames("ua-inline-control-icon", className)}
       color={color}
       focusable="false"
       size={size}

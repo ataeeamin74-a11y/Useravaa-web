@@ -14,11 +14,12 @@ type ExperienceTimelineItemFormProps = Readonly<{
   item: ExperienceTimelineItem;
   index: number;
   errors: TimelineItemErrors;
+  jobFieldOptions?: readonly JobField[];
   onChange: (item: ExperienceTimelineItem) => void;
   onRemove: () => void;
 }>;
 
-export function ExperienceTimelineItemForm({ item, index, errors, onChange, onRemove }: ExperienceTimelineItemFormProps) {
+export function ExperienceTimelineItemForm({ item, index, errors, jobFieldOptions, onChange, onRemove }: ExperienceTimelineItemFormProps) {
   const update = (patch: Partial<ExperienceTimelineItem>) => onChange({ ...item, ...patch });
 
   return (
@@ -37,7 +38,7 @@ export function ExperienceTimelineItemForm({ item, index, errors, onChange, onRe
         </TimelineField>
 
         <TimelineField label="حوزه شغلی" error={errors.jobField}>
-          <JobFieldSelect value={item.jobField} onChange={(jobField: JobField) => update({ jobField })} />
+          <JobFieldSelect value={item.jobField} options={jobFieldOptions} onChange={(jobField: JobField) => update({ jobField })} />
         </TimelineField>
 
         <TimelineField label="رده سازمانی" error={errors.orgLevel}>

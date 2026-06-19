@@ -1,4 +1,7 @@
-import { formatter, toFaDecimal, type ExperienceProfileFixture } from "@/features/v51/data/profiles";
+import { Avatar } from "@/components/ui/Avatar";
+import { MetaChip } from "@/components/ui/MetaChip";
+import { RatingDisplay } from "@/components/ui/RatingDisplay";
+import { formatter, type ExperienceProfileFixture } from "@/features/v51/data/profiles";
 import { ProfileInsightsSection } from "./ProfileInsightsSection";
 import styles from "./ProfileDetailPage.module.css";
 import { ProfileRequestPanel } from "./ProfileRequestPanel";
@@ -12,18 +15,21 @@ export function ProfileDetailPage({ profile }: ProfileDetailPageProps) {
     <section className={styles.layout}>
       <div>
         <div className={styles.heroProfile}>
-          <div className={styles.profileAvatar}>{profile.initials}</div>
+          <Avatar src={profile.avatarUrl} alt={`تصویر پروفایل ${profile.name}`} size="profile" className={styles.profileAvatar} />
           <div>
             <h1 className={styles.profileName}>{profile.name}</h1>
             <div className={styles.role}>{profile.roleFa}</div>
             <div className={styles.badges}>
-              <span className={`${styles.chip} ${styles.level}`}>{profile.orgLevel}</span>
-              <span className={styles.chip}>{formatter.format(profile.yearsOfExperience)} سال سابقه</span>
+              <MetaChip className={`${styles.chip} ${styles.level}`} icon="orgLevel" iconSize={14}>
+                {profile.orgLevel}
+              </MetaChip>
+              <MetaChip className={styles.chip} icon="briefcase" iconSize={14}>
+                {formatter.format(profile.yearsOfExperience)} سال سابقه
+              </MetaChip>
               {profile.csat ? (
-                <span className={`${styles.chip} ${styles.csat}`}>
-                  <span className={styles.star}>★</span>
-                  {toFaDecimal(profile.csat)}
-                </span>
+                <MetaChip className={`${styles.chip} ${styles.csat}`}>
+                  <RatingDisplay value={profile.csat} showStars size="sm" />
+                </MetaChip>
               ) : null}
             </div>
           </div>
@@ -71,7 +77,13 @@ export function ProfileDetailPage({ profile }: ProfileDetailPageProps) {
                   {profile.reviewAuthor.company ? ` · ${profile.reviewAuthor.company}` : ""}
                 </span>
               </div>
-              <strong>{profile.csat ? `★ ${toFaDecimal(profile.csat)} از ۵` : "بدون امتیاز"}</strong>
+              <strong className={styles.reviewRating}>
+                {profile.csat ? (
+                  <RatingDisplay value={profile.csat} showStars size="sm" />
+                ) : (
+                  "بدون امتیاز"
+                )}
+              </strong>
             </div>
             <p>{profile.review}</p>
           </article>

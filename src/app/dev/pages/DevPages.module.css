@@ -2,34 +2,35 @@
   min-height: 100vh;
   background:
     radial-gradient(circle at top right, rgba(1, 190, 183, 0.08), transparent 30rem),
-    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-  color: #0f1d43;
-  padding: 48px min(5vw, 72px) 72px;
+    linear-gradient(180deg, var(--surface-soft) 0%, #ffffff 100%);
+  color: var(--ua-navy);
+  padding-block: 48px 72px;
 }
 
 .hero {
   display: grid;
   gap: 12px;
-  margin: 0 auto 28px;
-  max-width: 1180px;
+  margin: 0 0 28px;
 }
 
 .eyebrow {
-  color: #01a8a2;
-  font-size: 0.88rem;
-  font-weight: 800;
+  color: var(--ua-teal);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
 }
 
 .hero h1 {
-  font-size: clamp(2rem, 4vw, 3.2rem);
-  line-height: 1.25;
+  font-size: clamp(32px, 4vw, var(--text-h1-internal));
+  font-weight: var(--weight-extra-bold);
+  line-height: var(--leading-tight);
   margin: 0;
 }
 
 .hero p {
-  color: #58657d;
-  font-size: 1rem;
-  line-height: 1.9;
+  color: var(--muted);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body);
   margin: 0;
   max-width: 760px;
 }
@@ -37,8 +38,6 @@
 .content {
   display: grid;
   gap: 28px;
-  margin: 0 auto;
-  max-width: 1180px;
 }
 
 .group {
@@ -52,12 +51,14 @@
 }
 
 .groupHeader h2 {
-  font-size: 1.35rem;
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-card-title);
   margin: 0;
 }
 
 .groupHeader p {
-  color: #6b768c;
+  color: var(--muted);
   margin: 0;
 }
 
@@ -70,7 +71,7 @@
 .card,
 .missingCard {
   background: rgba(255, 255, 255, 0.92);
-  border: 1px solid #e4e7ec;
+  border: 1px solid var(--line);
   border-radius: 22px;
   box-shadow: 0 18px 44px rgba(15, 29, 67, 0.07);
   display: grid;
@@ -86,34 +87,39 @@
 
 .card h3,
 .missingCard h3 {
-  font-size: 1.04rem;
+  font-size: var(--text-h4);
+  font-weight: var(--weight-bold);
+  line-height: 1.45;
   margin: 0;
 }
 
 .path {
   direction: ltr;
-  color: #01a8a2;
+  color: var(--ua-teal);
   font-family: var(--font-en), "Manrope", ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.82rem;
-  font-weight: 800;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
   overflow-wrap: anywhere;
   text-align: left;
 }
 
 .note {
-  color: #58657d;
-  font-size: 0.94rem;
-  line-height: 1.8;
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
   margin: 0;
 }
 
 .link {
   align-items: center;
-  background: #0f1d43;
+  background: var(--ua-navy);
   border-radius: 999px;
   color: #ffffff;
   display: inline-flex;
-  font-weight: 800;
+  font-size: var(--text-button);
+  font-weight: var(--weight-bold);
+  line-height: 1;
   justify-content: center;
   min-height: 42px;
   padding: 0 18px;
@@ -122,33 +128,34 @@
     background 160ms ease,
     transform 160ms ease;
   width: fit-content;
+  white-space: nowrap;
 }
 
 .link:hover {
-  background: #081838;
+  background: var(--ua-navy);
   transform: translateY(-1px);
 }
 
 .missing {
-  border-top: 1px solid #e4e7ec;
+  border-top: 1px solid var(--line);
   padding-top: 24px;
 }
 
 .missingCard {
-  background: #fbfcfe;
+  background: var(--surface-soft);
   box-shadow: none;
 }
 
 .badge {
   align-items: center;
-  background: #eef4ff;
-  border: 1px solid #d8e6ff;
+  background: var(--blue-soft);
+  border: 1px solid var(--line-2);
   border-radius: 999px;
-  color: #34548a;
+  color: var(--muted);
   display: inline-flex;
   font-family: var(--font-en), "Manrope", ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
   justify-content: center;
   padding: 5px 10px;
   width: fit-content;

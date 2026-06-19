@@ -9,20 +9,26 @@ import {
   builderLanguages,
   getPricingCap,
   initialBuilderDraft,
+  normalizeProfileBuilderDraft,
   orgLevels,
   pricingCapText,
   profileBuilderDraftStorageKey,
   profileDraftIsValid,
   setFreeHelp,
+  shuffleMotivationOptionsForUser,
   submitProfileForReview,
   toggleSelection,
+  updateUserMotivationSelection,
   updateDraftOrgLevel,
+  userMotivationOptions,
+  userMotivationOtherTextMaxLength,
   validateAvatarCandidate,
   validateProfileDraft,
   type OrgLevel,
   type ProfileBuilderDraft,
   type ProfileValidationErrors
 } from "@/features/v51/data/my-profile";
+import type { JobField } from "@/features/v51/data/job-fields";
 import { ExperienceTimelineEditor } from "../components/ExperienceTimelineEditor";
 import { JobFieldSelect } from "../components/JobFieldSelect";
 import { BuildProfilePreview, ProfileAvatar, SummaryCounter } from "../components/ProfilePreviewCard";
@@ -30,12 +36,14 @@ import styles from "../components/MyProfile.module.css";
 
 type ProfileBuilderPageProps = {
   initialDraft?: ProfileBuilderDraft;
+  jobFieldOptions?: readonly JobField[];
 };
 
-export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: ProfileBuilderPageProps) {
+export function ProfileBuilderPage({ initialDraft = initialBuilderDraft, jobFieldOptions }: ProfileBuilderPageProps) {
   const [draft, setDraft] = useState(initialDraft);
   const [draftStorageReady, setDraftStorageReady] = useState(false);
   const [avatarError, setAvatarError] = useState("");
+  const [motivationLimitError, setMotivationLimitError] = useState("");
   const [touched, setTouched] = useState<Partial<Record<keyof ProfileValidationErrors, true>>>({});
   const [showErrors, setShowErrors] = useState(false);
   const [draftSaved, setDraftSaved] = useState(false);
@@ -48,6 +56,7 @@ export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: Profi
   const fileInputRef = useRef<HTMLInputElement>(null);
   const errors = useMemo(() => validateProfileDraft(draft), [draft]);
   const isValid = profileDraftIsValid(draft);
+  const visibleMotivationOptions = useMemo(() => shuffleMotivationOptionsForUser(userMotivationOptions, `${initialDraft.displayName || "profile-builder"}:${initialDraft.role || "useravaa"}`), [initialDraft.displayName, initialDraft.role]);
   const statusLabel = submitted ? "در انتظار بررسی" : draftSaved ? "پیش‌نویس ذخیره‌شده" : "پیش‌نویس";
   const currentTimelineItem = draft.timeline.find((item) => item.isCurrent) ?? null;
   const currentJobTitle = currentTimelineItem?.jobTitle ?? draft.role;
@@ -67,7 +76,7 @@ export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: Profi
 
     window.queueMicrotask(() => {
       if (storedDraft) {
-        setDraft({ ...initialBuilderDraft, ...storedDraft, audienceIntents: storedDraft.audienceIntents ?? initialBuilderDraft.audienceIntents });
+        setDraft(normalizeProfileBuilderDraft({ ...initialBuilderDraft, ...storedDraft, audienceIntents: storedDraft.audienceIntents ?? initialBuilderDraft.audienceIntents }));
       }
       setDraftStorageReady(true);
     });
@@ -116,6 +125,20 @@ export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: Profi
       audienceIntents: toggleSelection(current.audienceIntents ?? [], intent)
     }));
     markTouched("audienceIntents");
+    setDraftSaved(false);
+    setSubmitted(false);
+  };
+
+  const toggleUserMotivation = (motivation: (typeof userMotivationOptions)[number]["value"]) => {
+    const result = updateUserMotivationSelection(draft.userMotivations ?? [], motivation);
+
+    setDraft((current) => ({
+      ...current,
+      userMotivations: result.values,
+      userMotivationOtherText: result.otherTextShouldClear ? "" : current.userMotivationOtherText
+    }));
+    setMotivationLimitError(result.error);
+    markTouched("userMotivations", "userMotivationOtherText");
     setDraftSaved(false);
     setSubmitted(false);
   };
@@ -183,6 +206,9 @@ export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: Profi
   };
 
   const saveDraft = () => {
+    const normalizedDraft = normalizeProfileBuilderDraft(draft);
+
+    setDraft(normalizedDraft);
     setDraftSaved(true);
     setSubmitted(false);
   };
@@ -287,6 +313,7 @@ export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: Profi
             <Field label="حوزه شغلی" full error={errorText(errors, "categories", showErrors || Boolean(touched.categories))}>
               <JobFieldSelect
                 value={draft.categories[0] ?? initialBuilderDraft.categories[0]}
+                options={jobFieldOptions}
                 onChange={(jobField) => updateDraft({ categories: [jobField], timeline: draft.timeline.map((item) => (item.isCurrent ? { ...item, jobField } : item)) }, "categories")}
               />
             </Field>
@@ -301,7 +328,7 @@ export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: Profi
                     aria-pressed={draft.languages.includes(language)}
                     onClick={() => toggleLanguage(language)}
                   >
-                    {language}
+                    <span className="button-label">{language}</span>
                   </button>
                 ))}
               </div>
@@ -330,10 +357,62 @@ export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: Profi
 
           <section className={styles.buildCard}>
             <div className={styles.cardHead}>
+              <h2>شناخت بهتر مسیر شما</h2>
+              <p>این انتخاب‌ها به ما کمک می‌کند تجربه‌ها و مسیرهای مرتبط‌تری به شما نشان دهیم.</p>
+            </div>
+
+            <Field label="برای چه موضوعاتی بیشتر به یوزرآوا نیاز دارید؟" full error={motivationLimitError || errorText(errors, "userMotivations", showErrors || Boolean(touched.userMotivations))}>
+              <p className={styles.fieldHelp}>می‌توانید چند گزینه را انتخاب کنید تا تجربه‌ها و مسیرهای مرتبط‌تری به شما پیشنهاد شود.</p>
+              <div className={styles.motivationGrid} role="group" aria-label="برای چه موضوعاتی بیشتر به یوزرآوا نیاز دارید؟">
+                {visibleMotivationOptions.map((option) => {
+                  const selected = (draft.userMotivations ?? []).includes(option.value);
+
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      data-user-motivation={option.value}
+                      className={`${styles.motivationOption} ${selected ? styles.motivationOptionSelected : ""}`}
+                      aria-pressed={selected}
+                      onClick={() => toggleUserMotivation(option.value)}
+                    >
+                      <span>{option.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </Field>
+
+            {(draft.userMotivations ?? []).includes("OTHER") ? (
+              <Field
+                label="موضوع موردنظر خود را کوتاه بنویسید"
+                full
+                error={errorText(errors, "userMotivationOtherText", showErrors || Boolean(touched.userMotivationOtherText))}
+              >
+                <input
+                  value={draft.userMotivationOtherText ?? ""}
+                  placeholder="مثلاً تصمیم برای ورود به فریلنسینگ یا ساخت مسیر مستقل"
+                  onChange={(event) => updateDraft({ userMotivationOtherText: event.target.value }, "userMotivationOtherText")}
+                />
+                <div className={styles.rowHelp}>
+                  <span className={styles.counter}>{`${draft.userMotivationOtherText?.length ?? 0} / ${userMotivationOtherTextMaxLength}`}</span>
+                </div>
+              </Field>
+            ) : null}
+          </section>
+
+          <section className={styles.buildCard}>
+            <div className={styles.cardHead}>
               <h2>سوابق تجربه</h2>
               <p>برای اینکه پروفایل تجربه‌تان دقیق‌تر و پرسش‌های هفتگی مرتبط‌تر باشند، سوابق کاری حداقل پنج سال گذشته را وارد کنید.</p>
             </div>
-            <ExperienceTimelineEditor items={draft.timeline} claimedYears={draft.years} showErrors={showErrors || Boolean(touched.timeline)} onChange={updateTimeline} />
+            <ExperienceTimelineEditor
+              items={draft.timeline}
+              claimedYears={draft.years}
+              showErrors={showErrors || Boolean(touched.timeline)}
+              jobFieldOptions={jobFieldOptions}
+              onChange={updateTimeline}
+            />
             {errorText(errors, "timeline", showErrors || Boolean(touched.timeline)) ? (
               <div className={styles.fieldError}>{errorText(errors, "timeline", showErrors || Boolean(touched.timeline))}</div>
             ) : null}
@@ -345,7 +424,12 @@ export function ProfileBuilderPage({ initialDraft = initialBuilderDraft }: Profi
               <p>کوتاه، مشخص و بدون تبلیغ اضافه.</p>
             </div>
             <Field label="معرفی کوتاه" full>
-              <textarea maxLength={220} value={draft.summary} onChange={(event) => updateDraft({ summary: event.target.value }, "summary")} />
+              <p className={styles.fieldHelp}>در حداکثر ۲۵۰ کاراکتر، تجربه حرفه‌ای و موضوعاتی را بنویسید که می‌توانید درباره‌شان از تجربه واقعی خود صحبت کنید.</p>
+              <textarea
+                value={draft.summary}
+                placeholder="مثلاً: من ۵ سال در طراحی محصول و همکاری با تیم‌های فنی تجربه دارم و می‌توانم درباره ورود به محصول، کار با مهندسان و رشد از جونیور به ارشد صحبت کنم."
+                onChange={(event) => updateDraft({ summary: event.target.value }, "summary")}
+              />
               <div className={styles.rowHelp}>
                 <SummaryCounter summary={draft.summary} />
                 <span className={styles.fieldError}>{errorText(errors, "summary", showErrors || Boolean(touched.summary))}</span>

@@ -24,7 +24,8 @@ describe("Comprehensive V51 consistency fix v7", () => {
   it("header uses official Useravaa logo assets and the scoped RTL nav hierarchy", () => {
     const html = renderToStaticMarkup(<Header />);
 
-    expect(html).toContain("%2Fbrand%2Fuseravaa-logo-horizontal.png");
+    expect(html).toContain("%2Fbrand%2Fuseravaa%2Fuseravaa-primary-logo-lockup-fullcolor-transparent.png");
+    expect(html).toContain("%2Fbrand%2Fuseravaa%2Fuseravaa-responsive-narrow-wordmark-navy-transparent.png");
     expect(html).toContain('alt="Useravaa"');
     expect(html).toContain("کشف تجربه‌ها");
     expect(html).toContain("بینش‌ها");
@@ -33,6 +34,11 @@ describe("Comprehensive V51 consistency fix v7", () => {
     const mainNavHtml = html.slice(html.indexOf('aria-label="ناوبری اصلی"'), html.indexOf('aria-label="ابزارهای حساب"'));
     expect(mainNavHtml).not.toContain("پروفایل من");
     expect(html).toContain("پروفایل من");
+    expect(html).toContain('href="/saved"');
+    expect(html).toContain("ذخیره‌شده‌ها");
+    expect(html).not.toContain("مشاهده پروفایل عمومی");
+    expect(html.indexOf("پروفایل من")).toBeLessThan(html.indexOf("ذخیره‌شده‌ها"));
+    expect(html.indexOf("ذخیره‌شده‌ها")).toBeLessThan(html.indexOf("تنظیمات حساب"));
     expect(html).toContain("خروج از حساب کاربری");
     expect(html).not.toContain(">UA<");
   });
@@ -46,7 +52,7 @@ describe("Comprehensive V51 consistency fix v7", () => {
   });
 
   it("/insights renders the shared active insight question and the page name بینش‌ها", () => {
-    const html = renderToStaticMarkup(<InsightsPage />);
+    const html = renderToStaticMarkup(<InsightsPage viewer={{ id: "user-requester", displayName: "علی" }} />);
 
     expect(html).toContain("<h1>بینش‌ها</h1>");
     expect(html).toContain(currentInsightQuestionCycle.questionText);
@@ -67,7 +73,10 @@ describe("Comprehensive V51 consistency fix v7", () => {
 
     expect(html).toContain('aria-label="ذخیره تجربه"');
     expect(html).toContain("lucide-sparkles");
-    expect(html).toContain("۳ بینش");
+    expect(html).toContain("ua-stat-chip");
+    expect(html).toContain("ua-stat-value");
+    const insightChipHtml = html.slice(html.indexOf("ua-stat-chip"), html.indexOf("مشاهده تجربه"));
+    expect(insightChipHtml.indexOf("۳")).toBeLessThan(insightChipHtml.indexOf("بینش"));
     expect(html).toContain("مشاهده تجربه");
     expect(html).toContain("هماهنگی جلسه");
     expect(html).not.toContain("هماهنگی جلسه مشاوره");

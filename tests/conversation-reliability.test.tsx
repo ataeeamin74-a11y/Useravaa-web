@@ -34,7 +34,7 @@ function addHours(value: string, hours: number) {
 }
 
 describe("Conversation Request Reliability System", () => {
-  it("new request starts with pending_provider_response and a 24 hour deadline", () => {
+  it("new request starts in secure payment before provider visibility", () => {
     const request = createConversationRequest({
       profile: profileOrThrow("ali"),
       duration: 30,
@@ -42,8 +42,9 @@ describe("Conversation Request Reliability System", () => {
       createdAt: reliabilityMockNow
     });
 
-    expect(request.status).toBe("pending_provider_response");
+    expect(request.status).toBe("pending_payment");
     expect(request.providerResponseDeadlineAt).toBe(addHours(reliabilityMockNow, 24));
+    expect(calculateCheckout(request).paymentEnabled).toBe(true);
   });
 
   it("Provider sees badge and countdown for pending_provider_response", () => {
@@ -52,7 +53,7 @@ describe("Conversation Request Reliability System", () => {
 
     const html = renderToStaticMarkup(<ConversationCard conversation={conversation!} bucket="needsAction" />);
 
-    expect(html).toContain(conversationReliabilityCopy.newRequestBadge);
+    expect(html).toContain("درخواست پرداخت‌شده");
     expect(html).toContain(conversationReliabilityCopy.providerDeadlineSample);
     expect(html).toContain(conversationReliabilityCopy.proposeTimesCta);
   });
@@ -74,7 +75,7 @@ describe("Conversation Request Reliability System", () => {
 
   it("proposing 3 times changes status to times_proposed and gives Requester 48 hours", () => {
     const conversation = conversations.find((item) => item.id === "conv-provider-request");
-    const selected = [makeProposedTime("d1", "۰۹:۰۰"), makeProposedTime("d2", "۱۰:۰۰"), makeProposedTime("d3", "۱۵:۰۰")];
+    const selected = [makeProposedTime("d3", "۱۵:۰۰"), makeProposedTime("d4", "۱۰:۰۰"), makeProposedTime("d5", "۱۶:۰۰")];
     const updated = proposeTimesForConversation(conversation!, selected, reliabilityMockNow);
 
     expect(updated.status).toBe("times_proposed");
@@ -94,38 +95,38 @@ describe("Conversation Request Reliability System", () => {
     expect(html).toContain(conversationNotificationCopy.proposedTimes);
   });
 
-  it("selecting time changes status to pending_payment and payment becomes enabled", () => {
+  it("selecting a valid proposed time confirms the session without checkout", () => {
     const conversation = conversations.find((item) => item.id === "conv-time-options");
     const selected = selectTimeForConversation(conversation!, conversation!.proposedTimes[0].id);
 
-    expect(selected.status).toBe("pending_payment");
+    expect(selected.status).toBe("confirmed");
     expect(selected.selectedTimeId).toBe(conversation!.proposedTimes[0].id);
-    expect(calculateCheckout(selected).paymentEnabled).toBe(true);
+    expect(calculateCheckout(selected).paymentEnabled).toBe(false);
   });
 
-  it("payment is disabled before time selection", () => {
+  it("checkout is disabled once proposed times are waiting for requester selection", () => {
     const conversation = conversations.find((item) => item.id === "conv-time-options");
     const checkout = calculateCheckout(conversation!);
 
     expect(checkout.paymentEnabled).toBe(false);
-    expect(checkout.disabledReason).toBe(conversationReliabilityCopy.paymentUnavailable);
   });
 
-  it("mock successful payment changes status to confirmed", () => {
+  it("mock successful payment sends the paid request to provider without confirming the session", () => {
     const conversation = conversations.find((item) => item.id === "conv-awaiting-payment");
     const paid = payConversation(conversation!);
 
-    expect(paid.status).toBe("confirmed");
-    expect(paid.confirmedAt).toBe(reliabilityMockNow);
+    expect(paid.status).toBe("pending_provider_response");
+    expect(paid.paidAt).toBe(reliabilityMockNow);
+    expect(paid.confirmedAt).toBeUndefined();
   });
 
   it("request expires after 24h without Provider response", () => {
-    const request = createConversationRequest({
+    const request = payConversation(createConversationRequest({
       profile: profileOrThrow("ali"),
       duration: 30,
       note: "",
       createdAt: reliabilityMockNow
-    });
+    }));
 
     expect(applyExpiration(request, addHours(reliabilityMockNow, 25)).status).toBe("expired");
   });
@@ -137,7 +138,7 @@ describe("Conversation Request Reliability System", () => {
   });
 
   it("expired request shows 3 to 5 similar experiences without exposing ranking language", () => {
-    const conversation = conversations.find((item) => item.id === "conv-expired");
+    const conversation = conversations.find((item) => item.id === "conv-expired-time-options");
     const html = renderToStaticMarkup(<ConversationDetailPage initialConversation={conversation!} />);
     const similar = getSimilarExperiences(conversation!);
 
@@ -161,7 +162,9 @@ describe("Conversation Request Reliability System", () => {
     const reminders = createConversationRemindersForOneHourWindow(conversations);
 
     expect(reminders).toHaveLength(2);
-    expect(reminders.every((item) => item.notification.message === conversationNotificationCopy.reminder)).toBe(true);
+    expect(reminders.some((item) => item.notification.message === conversationNotificationCopy.reminderRequester)).toBe(true);
+    expect(reminders.some((item) => item.notification.message === conversationNotificationCopy.reminderProvider)).toBe(true);
+    expect(reminders.every((item) => !item.notification.message.match(/\d{5}/))).toBe(true);
     expect(reminders.every((item) => item.emailLog.templateKey === "one_hour_reminder")).toBe(true);
   });
 

@@ -2,6 +2,7 @@ import { getCurrentTimelineItem, type ExperienceTimelineItem } from "./experienc
 import { currentInsightQuestionCycle } from "./insight-question-cycle";
 import { jobFieldTaxonomy, type JobField } from "./job-fields";
 import { profiles, type ExperienceProfileFixture } from "./profiles";
+import { formatFaNumber } from "@/lib/fa-format";
 
 export const discoveryPackageFilesUsed = [
   "CODEX_PROMPT_START_EXPERIENCE_DISCOVERY_SYSTEM.txt",
@@ -473,10 +474,15 @@ export function searchDiscoverExperienceCompanies(query: string, limit = 8, item
     .slice(0, limit);
 }
 
-export function searchDiscoverJobCategories(query: string, limit = 14, items: readonly ExperienceProfileFixture[] = profiles) {
+export function searchDiscoverJobCategories(
+  query: string,
+  limit = 14,
+  items: readonly ExperienceProfileFixture[] = profiles,
+  options: readonly JobField[] = getDiscoverJobCategoryOptions(items)
+) {
   const normalizedQuery = normalizeDiscoveryText(query);
 
-  return getDiscoverJobCategoryOptions(items)
+  return options
     .filter((category) => !normalizedQuery || normalizeDiscoveryText(category).includes(normalizedQuery))
     .slice(0, limit);
 }
@@ -553,7 +559,7 @@ export function filterDiscoverProfiles(
 }
 
 export function getResultCountCopy(count: number, submittedSearchQuery: string, hasFilters: boolean) {
-  const formattedCount = new Intl.NumberFormat("fa-IR").format(count);
+  const formattedCount = formatFaNumber(count);
   const query = submittedSearchQuery.trim();
 
   if (query) {

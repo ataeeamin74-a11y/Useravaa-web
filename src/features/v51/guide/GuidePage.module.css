@@ -3,8 +3,7 @@
 }
 
 .shell {
-  max-width: 1080px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .hero {
@@ -31,12 +30,12 @@
   display: inline-flex;
   align-items: center;
   margin-bottom: 12px;
-  border: 1px solid #dde6ff;
+  border: 1px solid var(--line-2);
   border-radius: 999px;
   background: var(--blue-soft);
   color: var(--blue);
   font-size: 12px;
-  font-weight: 900;
+  font-weight: var(--weight-bold);
   padding: 0 11px;
 }
 
@@ -44,18 +43,19 @@
   max-width: 760px;
   margin: 0 0 10px;
   color: var(--navy);
-  font-size: 38px;
+  font-size: var(--text-h1-internal);
+  font-weight: var(--weight-extra-bold);
   letter-spacing: 0;
-  line-height: 1.35;
+  line-height: var(--leading-tight);
 }
 
 .hero p {
   max-width: 760px;
   margin: 0;
   color: var(--muted);
-  font-size: 15px;
-  font-weight: 650;
-  line-height: 1.9;
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body);
 }
 
 .heroActions {
@@ -83,7 +83,7 @@
   gap: 10px;
   border: 1px solid var(--line);
   border-radius: 20px;
-  background: #fafcff;
+  background: var(--surface-soft);
   padding: 12px;
 }
 
@@ -94,25 +94,25 @@
   place-items: center;
   border-radius: 13px;
   background: var(--teal-soft);
-  color: #007f78;
+  color: var(--ua-navy);
   font-size: 13px;
-  font-weight: 900;
+  font-weight: var(--weight-bold);
 }
 
 .productRow b {
   display: block;
   margin-bottom: 3px;
   color: var(--navy);
-  font-size: 14px;
-  font-weight: 900;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
 }
 
 .productRow small {
   display: block;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-  line-height: 1.6;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-caption);
 }
 
 .section {
@@ -128,14 +128,15 @@
   margin-bottom: 4px;
   color: var(--blue);
   font-size: 12px;
-  font-weight: 900;
+  font-weight: var(--weight-bold);
 }
 
 .sectionHead h2 {
   max-width: 820px;
   margin: 0;
   color: var(--navy);
-  font-size: 25px;
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
   letter-spacing: 0;
   line-height: 1.45;
 }
@@ -158,16 +159,16 @@
   display: block;
   margin-bottom: 6px;
   color: var(--navy);
-  font-size: 16px;
-  font-weight: 900;
+  font-size: var(--text-h4);
+  font-weight: var(--weight-bold);
 }
 
 .audienceGrid p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
-  font-weight: 650;
-  line-height: 1.75;
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  line-height: 27px;
 }
 
 .twoFlows {
@@ -194,17 +195,18 @@
   align-items: center;
   margin-bottom: 8px;
   border-radius: 999px;
-  background: #f7f9fc;
+  background: var(--surface-soft);
   color: var(--muted);
   font-size: 12px;
-  font-weight: 900;
+  font-weight: var(--weight-bold);
   padding: 0 10px;
 }
 
 .flowTop h3 {
   margin: 0;
   color: var(--navy);
-  font-size: 21px;
+  font-size: var(--text-h4);
+  font-weight: var(--weight-bold);
   letter-spacing: 0;
   line-height: 1.45;
 }
@@ -222,7 +224,7 @@
   gap: 9px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #fafcff;
+  background: var(--surface-soft);
   padding: 10px;
 }
 
@@ -236,24 +238,24 @@
   color: var(--blue);
   font-size: 12px;
   font-style: normal;
-  font-weight: 900;
+  font-weight: var(--weight-bold);
 }
 
 .flowList b {
   display: block;
   margin-bottom: 2px;
   color: var(--navy);
-  font-size: 13.5px;
-  font-weight: 900;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
 }
 
 .flowList small {
   display: block;
   grid-column: 2;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-  line-height: 1.6;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-caption);
 }
 
 .finalCta {
@@ -274,14 +276,16 @@
 .finalCta h2 {
   margin: 0 0 5px;
   color: var(--navy);
-  font-size: 24px;
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
 }
 
 .finalCta p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
-  font-weight: 650;
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  line-height: 27px;
 }
 
 .finalCta > div:last-child {
@@ -298,7 +302,7 @@
   }
 
   .hero h1 {
-    font-size: 31px;
+    font-size: 32px;
   }
 
   .finalCta {

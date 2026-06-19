@@ -1,6 +1,6 @@
 import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
 import type { WalletTransactionFilter, WalletTransactionType } from "@/features/v51/data/wallet";
-import { filterWalletTransactions, signedToman, walletTypeLabels, type WalletFixture } from "@/features/v51/data/wallet";
+import { filterWalletTransactions, formatToman, signedToman, walletTypeLabels, type WalletFixture } from "@/features/v51/data/wallet";
 import styles from "./WalletPage.module.css";
 
 const transactionFilterOptions: Array<{ value: WalletTransactionFilter; label: string }> = [
@@ -8,7 +8,10 @@ const transactionFilterOptions: Array<{ value: WalletTransactionFilter; label: s
   { value: "payment", label: "پرداخت" },
   { value: "earning", label: "درآمد" },
   { value: "payout", label: "تسویه" },
-  { value: "refund", label: "برگشت مبلغ" }
+  { value: "refund", label: "برگشت مبلغ" },
+  { value: "CANCELLATION_CREDIT", label: "بازگشت اعتبار" },
+  { value: "CANCELLATION_PROVIDER_COMPENSATION", label: "جبران کنسلی" },
+  { value: "WITHDRAWAL_REQUEST", label: "درخواست برداشت وجه" }
 ];
 
 type WalletTransactionListProps = Readonly<{
@@ -45,6 +48,12 @@ export function WalletTransactionList({ wallet, filter, onFilterChange }: Wallet
               <div>
                 <b>{transaction.title}</b>
                 <small>{transaction.date}</small>
+                {transaction.type === "CANCELLATION_PROVIDER_COMPENSATION" ? (
+                  <small className={styles.walletTransactionMeta}>
+                    مبلغ جبران کنسلی: {formatToman(transaction.providerGrossCompensation ?? 0)} · سهم یوزراوا: {formatToman(transaction.useravaaFeeAmount ?? 0)} · مبلغ قابل تسویه برای شما:{" "}
+                    {formatToman(transaction.providerNetAmount ?? transaction.amount)}
+                  </small>
+                ) : null}
               </div>
               <span className={styles.walletType}>{walletTypeLabels[transaction.type as WalletTransactionType]}</span>
               <span className={`${styles.walletAmount} ${transaction.amount >= 0 ? styles.walletAmountPositive : styles.walletAmountNegative}`}>

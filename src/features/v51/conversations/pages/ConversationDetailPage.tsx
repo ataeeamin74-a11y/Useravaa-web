@@ -13,13 +13,18 @@ type ConversationDetailPageProps = {
 
 export function ConversationDetailPage({ initialConversation }: ConversationDetailPageProps) {
   const [conversation, setConversation] = useState(initialConversation);
+  const isConfirmed = conversation.status === "confirmed" || (conversation.status as string) === "scheduled";
 
   return (
     <div className={styles.shell}>
       <section className={styles.hero}>
         <div className={styles.heroText}>
           <h1>جزئیات جلسه</h1>
-          <p className={styles.lead}>وضعیت درخواست، زمان‌های پیشنهادی و اقدام بعدی را همین‌جا ببین.</p>
+          <p className={styles.lead}>
+            {isConfirmed
+              ? "جلسه قطعی شده است. جزئیات زمان و اطلاعات هماهنگی را در همین صفحه ببینید."
+              : "وضعیت درخواست، زمان‌های پیشنهادی و اقدام بعدی را همین‌جا ببینید."}
+          </p>
         </div>
         <V51LinkButton href="/conversations">
           <UseravaaIcon name="arrowBackRtl" size={16} aria-hidden="true" />

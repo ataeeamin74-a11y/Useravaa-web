@@ -17,6 +17,68 @@ export type { ExperienceTimelineItem, OrgLevel };
 
 export type ExperienceProfileStatus = "none" | "draft" | "pending_review" | "needs_changes" | "active" | "inactive";
 
+export type UserMotivationCode =
+  | "CAREER_GROWTH"
+  | "CAREER_CHOICE"
+  | "CAREER_CHANGE"
+  | "RESUME_INTERVIEW"
+  | "SIDE_INCOME"
+  | "UNDERSTAND_REALITY_OF_ROLE"
+  | "HELP_OTHERS"
+  | "EARN_FROM_EXPERIENCE"
+  | "OTHER";
+
+export const userMotivationOptions = [
+  {
+    value: "CAREER_GROWTH",
+    label: "رشد و پیشرفت در مسیر شغلی"
+  },
+  {
+    value: "CAREER_CHOICE",
+    label: "انتخاب مسیر شغلی"
+  },
+  {
+    value: "CAREER_CHANGE",
+    label: "تغییر مسیر شغلی"
+  },
+  {
+    value: "RESUME_INTERVIEW",
+    label: "بررسی رزومه / آمادگی مصاحبه"
+  },
+  {
+    value: "SIDE_INCOME",
+    label: "کسب درآمد جانبی"
+  },
+  {
+    value: "UNDERSTAND_REALITY_OF_ROLE",
+    label: "شناخت واقعیت یک شغل یا حوزه"
+  },
+  {
+    value: "HELP_OTHERS",
+    label: "کمک به دیگران"
+  },
+  {
+    value: "EARN_FROM_EXPERIENCE",
+    label: "درآمدزایی از تجربه حرفه‌ای"
+  },
+  {
+    value: "OTHER",
+    label: "سایر"
+  }
+] as const satisfies ReadonlyArray<{ value: UserMotivationCode; label: string }>;
+
+export const motivationAnalyticsEvents = {
+  signupMotivationsViewed: "signup_motivations_viewed",
+  signupMotivationsSelected: "signup_motivations_selected",
+  signupMotivationsSubmitted: "signup_motivations_submitted",
+  profileMotivationsUpdated: "profile_motivations_updated",
+  professionalSummaryUpdated: "professional_summary_updated",
+  professionalSummaryValidationFailed: "professional_summary_validation_failed"
+} as const;
+
+export const professionalSummaryMaxLength = 250;
+export const userMotivationOtherTextMaxLength = 120;
+
 export type ProfileBuilderDraft = {
   displayName: string;
   role: string;
@@ -26,6 +88,8 @@ export type ProfileBuilderDraft = {
   companies: string[];
   languages: string[];
   audienceIntents: InsightAudienceIntent[];
+  userMotivations: UserMotivationCode[];
+  userMotivationOtherText?: string;
   summary: string;
   timeline: ExperienceTimelineItem[];
   price30: number;
@@ -47,6 +111,8 @@ export type MyExperienceProfile = {
   publicExperienceCompanyIds: string[];
   languages: string[];
   audienceIntents: InsightAudienceIntent[];
+  userMotivations: UserMotivationCode[];
+  userMotivationOtherText?: string;
   professionalSummary: string;
   pricing: {
     30: number;
@@ -82,7 +148,21 @@ export type MyProfileDashboardFixture = {
 };
 
 export type ProfileValidationErrors = Partial<
-  Record<"displayName" | "role" | "years" | "categories" | "languages" | "audienceIntents" | "summary" | "timeline" | "price30" | "price60", string>
+  Record<
+    | "displayName"
+    | "role"
+    | "years"
+    | "categories"
+    | "languages"
+    | "audienceIntents"
+    | "userMotivations"
+    | "userMotivationOtherText"
+    | "summary"
+    | "timeline"
+    | "price30"
+    | "price60",
+    string
+  >
 >;
 
 export type ProfileStatusAction = "submit_for_review" | "resubmit_for_review" | "deactivate_profile" | "reactivate_requires_review" | "submit_material_changes";
@@ -115,6 +195,8 @@ export const initialBuilderDraft: ProfileBuilderDraft = {
   companies: ["اسنپ", "دیجی‌کالا"],
   languages: ["فارسی"],
   audienceIntents: ["career_path", "current_growth"],
+  userMotivations: ["CAREER_GROWTH", "CAREER_CHOICE"],
+  userMotivationOtherText: "",
   summary: "تجربه در تیم‌های محصول و تحلیل داده، با تمرکز بر تصمیم‌سازی محصولی.",
   timeline: initialExperienceTimeline,
   price30: 1000000,
@@ -138,6 +220,8 @@ export const myProfileDashboardFixture: MyProfileDashboardFixture = {
     publicExperienceCompanyIds: ["timeline-previous-digikala"],
     languages: ["فارسی"],
     audienceIntents: ["career_path", "current_growth"],
+    userMotivations: ["CAREER_GROWTH", "CAREER_CHOICE"],
+    userMotivationOtherText: "",
     professionalSummary: "تجربه در تیم‌های محصول و تحلیل داده، با تمرکز بر تصمیم‌سازی محصولی.",
     pricing: { 30: 1000000, 60: 1800000 },
     freeHelp: false
@@ -260,6 +344,98 @@ export function toggleSelection<TItem extends string>(items: TItem[], item: TIte
   return items.includes(item) ? items.filter((current) => current !== item) : [...items, item];
 }
 
+const currentMotivationCodes = new Set<UserMotivationCode>(userMotivationOptions.map((option) => option.value));
+
+const deprecatedMotivationMap: Partial<Record<string, UserMotivationCode>> = {
+  INCREASE_INCOME: "SIDE_INCOME",
+  HELP_OTHERS_WITH_EXPERIENCE: "HELP_OTHERS"
+};
+
+export function normalizeUserMotivations(values: readonly string[] = []): UserMotivationCode[] {
+  const normalized: UserMotivationCode[] = [];
+
+  values.forEach((value) => {
+    const mapped = deprecatedMotivationMap[value] ?? value;
+
+    if (currentMotivationCodes.has(mapped as UserMotivationCode) && !normalized.includes(mapped as UserMotivationCode)) {
+      normalized.push(mapped as UserMotivationCode);
+    }
+  });
+
+  return normalized;
+}
+
+function seededHash(seed: string) {
+  let hash = 2166136261;
+
+  for (let index = 0; index < seed.length; index += 1) {
+    hash ^= seed.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+
+  return hash >>> 0;
+}
+
+function seededRandom(seed: string) {
+  let state = seededHash(seed) || 1;
+
+  return () => {
+    state = Math.imul(1664525, state) + 1013904223;
+    return (state >>> 0) / 4294967296;
+  };
+}
+
+export function shuffleMotivationOptionsForUser(options: readonly (typeof userMotivationOptions)[number][], stableId: string) {
+  const other = options.find((option) => option.value === "OTHER");
+  const nonOther = options.filter((option) => option.value !== "OTHER");
+  const random = seededRandom(stableId || "useravaa-profile");
+
+  for (let index = nonOther.length - 1; index > 0; index -= 1) {
+    const nextIndex = Math.floor(random() * (index + 1));
+    [nonOther[index], nonOther[nextIndex]] = [nonOther[nextIndex], nonOther[index]];
+  }
+
+  return other ? [...nonOther, other] : nonOther;
+}
+
+export function updateUserMotivationSelection(values: readonly string[], value: UserMotivationCode) {
+  const current = normalizeUserMotivations(values);
+
+  if (current.includes(value)) {
+    return {
+      values: current.filter((item) => item !== value),
+      otherTextShouldClear: value === "OTHER",
+      error: ""
+    };
+  }
+
+  if (current.length >= 3) {
+    return {
+      values: current,
+      otherTextShouldClear: false,
+      error: "حداکثر سه گزینه را انتخاب کنید."
+    };
+  }
+
+  return {
+    values: [...current, value],
+    otherTextShouldClear: false,
+    error: ""
+  };
+}
+
+export function normalizeProfileBuilderDraft(draft: ProfileBuilderDraft): ProfileBuilderDraft {
+  const userMotivations = normalizeUserMotivations(draft.userMotivations ?? []);
+  const hasOther = userMotivations.includes("OTHER");
+
+  return {
+    ...draft,
+    userMotivations,
+    userMotivationOtherText: hasOther ? (draft.userMotivationOtherText ?? "").trim() : "",
+    summary: draft.summary.trim()
+  };
+}
+
 export function validateAvatarCandidate(file: { type: string; size: number } | null | undefined) {
   if (!file) {
     return "";
@@ -346,8 +522,34 @@ export function validateProfileDraft(draft: ProfileBuilderDraft): ProfileValidat
     errors.audienceIntents = "حداقل یک گروه مخاطب را انتخاب کن.";
   }
 
+  const normalizedMotivations = normalizeUserMotivations(draft.userMotivations ?? []);
+
+  if (!normalizedMotivations.length) {
+    errors.userMotivations = "حداقل یک گزینه را انتخاب کنید.";
+  }
+
+  if (normalizedMotivations.length > 3) {
+    errors.userMotivations = "حداکثر سه گزینه را انتخاب کنید.";
+  }
+
+  if (normalizedMotivations.includes("OTHER")) {
+    const otherText = (draft.userMotivationOtherText ?? "").trim();
+
+    if (!otherText) {
+      errors.userMotivationOtherText = "موضوع موردنظر را کوتاه بنویسید.";
+    }
+
+    if (otherText.length > userMotivationOtherTextMaxLength) {
+      errors.userMotivationOtherText = "حداکثر ۱۲۰ کاراکتر بنویسید.";
+    }
+  }
+
   if (!draft.summary.trim() || draft.summary.trim().length < 20) {
     errors.summary = "معرفی حرفه‌ای باید حداقل ۲۰ کاراکتر باشد.";
+  }
+
+  if (draft.summary.trim().length > professionalSummaryMaxLength) {
+    errors.summary = "معرفی حرفه‌ای حداکثر می‌تواند ۲۵۰ کاراکتر باشد.";
   }
 
   if (!experienceTimelineIsValid(draft.timeline)) {
@@ -384,7 +586,9 @@ export function profileDraftIsValid(draft: ProfileBuilderDraft) {
 }
 
 export function submitProfileForReview(draft: ProfileBuilderDraft) {
-  if (!profileDraftIsValid(draft)) {
+  const normalizedDraft = normalizeProfileBuilderDraft(draft);
+
+  if (!profileDraftIsValid(normalizedDraft)) {
     return {
       status: "draft" as ExperienceProfileStatus,
       profile: null
@@ -393,17 +597,18 @@ export function submitProfileForReview(draft: ProfileBuilderDraft) {
 
   return {
     status: "pending_review" as ExperienceProfileStatus,
-    profile: profileFromBuilderDraft(draft)
+    profile: profileFromBuilderDraft(normalizedDraft)
   };
 }
 
 export function profileFromBuilderDraft(draft: ProfileBuilderDraft): MyExperienceProfile {
+  const normalizedDraft = normalizeProfileBuilderDraft(draft);
   const current = getCurrentTimelineItem(draft.timeline);
   const jobField = current?.jobField && isValidJobField(current.jobField) ? current.jobField : draft.categories[0];
 
   return {
-    name: draft.displayName,
-    initials: draft.displayName.trim()[0] ?? "؟",
+    name: normalizedDraft.displayName,
+    initials: normalizedDraft.displayName.trim()[0] ?? "؟",
     roleFa: current?.jobTitle || draft.role,
     orgLevel: current?.orgLevel || draft.orgLevel,
     yearsOfExperience: draft.years,
@@ -414,7 +619,9 @@ export function profileFromBuilderDraft(draft: ProfileBuilderDraft): MyExperienc
     publicExperienceCompanyIds: [],
     languages: draft.languages,
     audienceIntents: draft.audienceIntents?.length ? draft.audienceIntents : ["current_growth"],
-    professionalSummary: draft.summary,
+    userMotivations: normalizedDraft.userMotivations,
+    userMotivationOtherText: normalizedDraft.userMotivationOtherText || undefined,
+    professionalSummary: normalizedDraft.summary,
     pricing: {
       30: draft.price30,
       60: draft.price60
@@ -433,7 +640,7 @@ export function getProfileTimelineErrors(draft: ProfileBuilderDraft) {
 }
 
 export function faSummaryCount(summary: string) {
-  return `${formatter.format(summary.length)} / ۲۲۰`;
+  return `${formatter.format(summary.length)} / ۲۵۰`;
 }
 
 export function formatCsat(csat: number) {
@@ -557,10 +764,6 @@ export function getFeedbackSummary(feedbacks: readonly ReceivedFeedback[] = rece
     average,
     successfulConversations: myProfileDashboardFixture.stats.successfulConversations
   };
-}
-
-export function renderStars(rating: number) {
-  return `${"★".repeat(rating)}${"☆".repeat(Math.max(0, 5 - rating))}`;
 }
 
 export type AccountSettings = {

@@ -1,50 +1,61 @@
-import type { ConversationBucket, ConversationFixture } from "@/features/v51/data/conversations";
-import { bucketConversation } from "@/features/v51/data/conversations";
-import { ConversationCard } from "./ConversationCard";
+import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
+import { conversationSectionIconNames } from "@/features/v51/conversations/conversation-icon-names";
+import type { ConversationBucket, ConversationFixture, ConversationStatusSectionKey } from "@/features/v51/data/conversations";
+import { formatFaNumber } from "@/lib/fa-format";
+import { ConversationStatusRow } from "./ConversationStatusRow";
 import styles from "./ConversationCluster.module.css";
 
 type ConversationStatusGroupProps = {
-  bucket: ConversationBucket;
+  section: ConversationStatusSectionKey;
   conversations: readonly ConversationFixture[];
-  emptyText: string;
+  defaultOpen?: boolean;
 };
 
-const groupCopy: Record<ConversationBucket, { title: string; description: string }> = {
-  needsAction: {
-    title: "نیازمند اقدام",
-    description: "این موارد باید جلو بروند."
+const groupCopy: Record<ConversationStatusSectionKey, { title: string; description: string; bucket: ConversationBucket }> = {
+  inProgress: {
+    title: "در جریان",
+    description: "درخواست‌هایی که هنوز به نتیجه نهایی نرسیده‌اند.",
+    bucket: "tracking"
   },
-  tracking: {
-    title: "در حال پیگیری",
-    description: "فعلاً فقط وضعیتشان را مرور کن."
+  confirmedSessions: {
+    title: "جلسه‌های قطعی",
+    description: "جلسه‌هایی که زمان آن‌ها مشخص شده است.",
+    bucket: "done"
   },
-  done: {
-    title: "تمام‌شده",
-    description: "برای سابقه و بازخورد."
+  history: {
+    title: "گذشته و بسته‌شده",
+    description: "درخواست‌ها و جلسه‌هایی که کامل، لغو یا منقضی شده‌اند.",
+    bucket: "done"
   }
 };
 
-export function ConversationStatusGroup({ bucket, conversations, emptyText }: ConversationStatusGroupProps) {
-  const copy = groupCopy[bucket];
+export function ConversationStatusGroup({ section, conversations, defaultOpen }: ConversationStatusGroupProps) {
+  const copy = groupCopy[section];
+
+  if (conversations.length === 0) {
+    return null;
+  }
 
   return (
-    <section className={`${styles.group} ${bucket === "needsAction" ? styles.groupAction : ""}`}>
-      <div className={styles.groupHead}>
+    <details className={styles.group} open={defaultOpen}>
+      <summary className={styles.groupHead}>
         <div className={styles.groupTitle}>
-          <h2>{copy.title}</h2>
+          <div className={styles.groupTitleLine}>
+            <UseravaaIcon name={conversationSectionIconNames[section]} size={18} aria-hidden="true" />
+            <h2>{copy.title}</h2>
+          </div>
           <p>{copy.description}</p>
         </div>
-        <span className={styles.count}>{conversations.length}</span>
+        <span className={styles.groupSummaryMeta}>
+          <span className={styles.count}>{formatFaNumber(conversations.length)}</span>
+          <UseravaaIcon name="dropdown" size={18} aria-hidden="true" />
+        </span>
+      </summary>
+      <div className={styles.statusRows}>
+        {conversations.map((conversation) => (
+          <ConversationStatusRow key={conversation.id} conversation={conversation} bucket={copy.bucket} />
+        ))}
       </div>
-      {conversations.length > 0 ? (
-        <div className={styles.list}>
-          {conversations.map((conversation) => (
-            <ConversationCard key={conversation.id} conversation={conversation} bucket={bucketConversation(conversation)} />
-          ))}
-        </div>
-      ) : (
-        <div className={styles.empty}>{emptyText}</div>
-      )}
-    </section>
+    </details>
   );
 }

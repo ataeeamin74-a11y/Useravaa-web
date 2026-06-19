@@ -7,6 +7,14 @@ type StateActionButtonProps = {
 };
 
 export function StateActionButton({ action, onAction }: StateActionButtonProps) {
+  if (action.disabled) {
+    return (
+      <V51Button type="button" tone="secondary" disabled aria-disabled="true" title={action.disabledMessage}>
+        {action.label}
+      </V51Button>
+    );
+  }
+
   if (action.href && action.kind !== "cancel") {
     return (
       <V51LinkButton href={action.href} tone={action.tone}>

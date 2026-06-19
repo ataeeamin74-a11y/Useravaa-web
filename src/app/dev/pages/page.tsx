@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { PageContainer } from "@/components/layout/PageContainer";
 import styles from "./DevPages.module.css";
 
 export const metadata: Metadata = {
@@ -70,6 +72,11 @@ const routeGroups: readonly QaGroup[] = [
         title: "جلسه‌ها",
         href: "/sessions",
         note: "نمای مستقل جلسه‌های مشاوره، زمان‌های پیشنهادی، پرداخت و وضعیت‌های پیگیری."
+      },
+      {
+        title: "اقدام‌ها",
+        href: "/actions",
+        note: "صندوق اقدام‌های لازم برای انتخاب زمان، پرداخت، ثبت برگزاری، پروفایل و کیف پول."
       }
     ]
   },
@@ -176,9 +183,9 @@ const routeGroups: readonly QaGroup[] = [
         note: "یک درخواست با گزینه‌های زمانی برای بررسی حالت جزئیات."
       },
       {
-        title: "پیشنهاد زمان",
+        title: "پیشنهاد سه زمان",
         href: dynamicSampleRoutes.proposeTimesProviderRequest,
-        note: "حالت provider برای پیشنهاد چند زمان جلسه."
+        note: "حالت provider برای پیشنهاد دقیقاً سه زمان جلسه."
       },
       {
         title: "انتخاب زمان",
@@ -186,9 +193,14 @@ const routeGroups: readonly QaGroup[] = [
         note: "حالت requester برای انتخاب یکی از زمان‌های پیشنهادی."
       },
       {
-        title: "پرداخت جلسه",
+        title: "پرداخت امن درخواست",
         href: dynamicSampleRoutes.checkoutAwaitingPayment,
-        note: "صفحه پرداخت و نهایی‌سازی جلسه با شناسه fixture."
+        note: "صفحه پرداخت امن پیش از ارسال درخواست برای صاحب تجربه."
+      },
+      {
+        title: "بررسی پرداخت‌های کارت‌به‌کارت",
+        href: "/admin/payments",
+        note: "مسیر داخلی ادمین برای تأیید یا رد پرداخت‌های کارت‌به‌کارت ثبت‌شده."
       }
     ]
   },
@@ -267,15 +279,19 @@ function RouteCard({ route }: Readonly<{ route: QaRoute }>) {
       </div>
       <p className={styles.note}>{route.note}</p>
       <Link className={styles.link} href={route.href}>
-        باز کردن
+        <span className="button-label">باز کردن</span>
       </Link>
     </article>
   );
 }
 
 export default function DevPagesRoute() {
+  if (process.env.NODE_ENV === "production") {
+    notFound();
+  }
+
   return (
-    <main className={styles.page} dir="rtl">
+    <PageContainer as="main" variant="guide" className={styles.page}>
       <header className={styles.hero}>
         <span className={styles.eyebrow}>Internal QA</span>
         <h1>بررسی صفحات Useravaa</h1>
@@ -319,6 +335,6 @@ export default function DevPagesRoute() {
           </div>
         </section>
       </div>
-    </main>
+    </PageContainer>
   );
 }

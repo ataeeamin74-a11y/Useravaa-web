@@ -21,8 +21,8 @@ export function DurationSelector({ profile, selectedDuration, onDurationChange }
           aria-pressed={selectedDuration === duration}
           onClick={() => onDurationChange(duration)}
         >
-          <span className={styles.durationTitle}>{duration === 30 ? "۳۰ دقیقه" : "۱ ساعت"}</span>
-          <span className={styles.durationPrice}>{formatPrice({ profile, duration })}</span>
+          <span className={`${styles.durationTitle} button-label`}>{duration === 30 ? "۳۰ دقیقه" : "۱ ساعت"}</span>
+          <span className={`${styles.durationPrice} button-label`}>{formatPrice({ profile, duration })}</span>
         </button>
       ))}
     </div>

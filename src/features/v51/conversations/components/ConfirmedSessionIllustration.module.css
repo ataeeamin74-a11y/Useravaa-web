@@ -1,0 +1,158 @@
+.illustration {
+  position: relative;
+  min-height: 220px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 78% 22%, var(--teal-soft) 0, transparent 34%),
+    linear-gradient(180deg, #fff 0%, var(--surface-soft) 100%);
+  color: var(--navy);
+  isolation: isolate;
+}
+
+.connector {
+  position: absolute;
+  inset: 18px 8px auto;
+  width: calc(100% - 16px);
+  height: 160px;
+  opacity: 0.9;
+  z-index: 1;
+}
+
+.successNodeSvg {
+  fill: var(--blue-soft);
+  stroke: var(--blue);
+  stroke-width: 2;
+}
+
+.profileCard {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 8px 10px;
+  width: 148px;
+  border: 1px solid var(--line-2);
+  border-radius: 22px;
+  background: rgb(255 255 255 / 92%);
+  box-shadow: 0 14px 34px rgb(15 29 67 / 8%);
+  padding: 12px;
+}
+
+.profileRequester {
+  right: 20px;
+  top: 28px;
+}
+
+.profileProvider {
+  left: 20px;
+  top: 76px;
+}
+
+.avatarDot {
+  grid-row: span 2;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--teal) 0%, var(--blue) 100%);
+}
+
+.cardLineLong,
+.cardLineShort {
+  align-self: center;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+}
+
+.cardLineShort {
+  width: 68%;
+  background: var(--line);
+}
+
+.timeCapsules {
+  position: absolute;
+  right: 50%;
+  bottom: 26px;
+  z-index: 3;
+  display: flex;
+  gap: 8px;
+  transform: translateX(50%);
+}
+
+.timeCapsule {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 74px;
+  min-height: 34px;
+  border: 1px solid var(--line-2);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--muted);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+}
+
+.timeCapsuleSelected {
+  border-color: var(--blue);
+  background: var(--blue);
+  color: #fff;
+}
+
+.sessionMiniCard {
+  position: absolute;
+  left: 44px;
+  bottom: 22px;
+  z-index: 3;
+  display: grid;
+  gap: 4px;
+  min-width: 132px;
+  border: 1px solid var(--teal-soft);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 14px 34px rgb(15 29 67 / 8%);
+  padding: 12px 14px;
+}
+
+.sessionMiniCard strong {
+  color: var(--navy);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
+}
+
+.sessionMiniCard span {
+  color: var(--muted);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .illustration,
+  .illustration * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .illustration {
+    min-height: 250px;
+  }
+
+  .profileCard {
+    width: 136px;
+  }
+
+  .profileProvider {
+    left: 14px;
+    top: 92px;
+  }
+
+  .sessionMiniCard {
+    left: 16px;
+  }
+}

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PageContainer } from "@/components/layout/PageContainer";
+import { Avatar } from "@/components/ui/Avatar";
 import {
   getInsightAuthor,
   getInsightPromptHeader,
@@ -37,7 +39,7 @@ export default async function InsightDetailRoute({ params }: InsightDetailRouteP
   }
 
   return (
-    <main className={styles.page}>
+    <PageContainer as="main" variant="dashboard" className={styles.page}>
       <article className={styles.insightDetail}>
         <Link className={styles.detailBackLink} href="/insights">
           بینش‌ها
@@ -48,7 +50,7 @@ export default async function InsightDetailRoute({ params }: InsightDetailRouteP
         </div>
         <h1>{insight.answerText}</h1>
         <div className={styles.authorLine}>
-          <div className={styles.avatar}>{author.initials}</div>
+          <Avatar src={author.avatarUrl} alt="" size="lg" className={styles.avatar} />
           <div>
             <strong>{author.displayName}</strong>
             <span>
@@ -59,11 +61,11 @@ export default async function InsightDetailRoute({ params }: InsightDetailRouteP
         </div>
         <div className={styles.detailActions}>
           <Link className={styles.primaryAction} href={author.profileUrl}>
-            مشاهده تجربه
+            <span className="button-label">مشاهده تجربه</span>
           </Link>
           <span>{insight.canonicalUrl}</span>
         </div>
       </article>
-    </main>
+    </PageContainer>
   );
 }

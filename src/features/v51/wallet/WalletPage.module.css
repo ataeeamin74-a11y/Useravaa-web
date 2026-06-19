@@ -1,20 +1,22 @@
 .walletShell {
-  max-width: 1080px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .walletShell h1 {
   margin: 0 0 8px;
   color: var(--navy);
+  font-size: var(--text-h1-internal);
+  font-weight: var(--weight-extra-bold);
+  line-height: var(--leading-tight);
   letter-spacing: 0;
 }
 
 .lead {
   margin: 0;
   color: var(--muted);
-  font-size: 15px;
-  font-weight: 640;
-  line-height: 1.85;
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body);
 }
 
 .walletGrid {
@@ -33,42 +35,189 @@
 }
 
 .walletCardPrimary {
-  border-color: #beefeb;
-  background: linear-gradient(180deg, #f4fffd, #fff);
+  border-color: var(--teal-soft);
+  background: linear-gradient(180deg, var(--teal-soft), #fff);
 }
 
-.walletCard span {
-  display: block;
+.walletCard > span {
   margin-bottom: 6px;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 750;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
+}
+
+.walletCardLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.walletCardLabel svg {
+  flex: none;
+  color: var(--blue);
+}
+
+.walletCardNote {
+  display: block;
+  margin: -4px 0 10px;
+  color: var(--muted);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-caption);
 }
 
 .walletCard b {
   display: block;
   margin-bottom: 12px;
   color: var(--navy);
-  font-size: 22px;
-  font-weight: 900;
+  font-size: clamp(28px, 3vw, 32px);
+  font-weight: var(--weight-extra-bold);
+  line-height: var(--leading-tight);
 }
 
 .walletPanel {
+  display: grid;
+  gap: 5px;
   margin-bottom: 14px;
-  border: 1px solid #dde6ff;
+  border: 1px solid var(--line-2);
   border-radius: 20px;
   background: var(--blue-soft);
   color: var(--blue);
-  font-size: 13px;
-  font-weight: 750;
-  line-height: 1.7;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
   padding: 14px;
 }
 
 .walletPanel b {
   color: var(--navy);
-  font-size: 14px;
-  font-weight: 900;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
+}
+
+.panelTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.panelTitle svg {
+  flex: none;
+  color: var(--blue);
+}
+
+.walletPanel > span {
+  display: block;
+}
+
+.withdrawalAmountBox {
+  display: grid;
+  gap: 4px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--muted);
+  padding: 12px;
+}
+
+.withdrawalAmountBox span,
+.withdrawalAmountBox small {
+  color: var(--muted);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-caption);
+}
+
+.withdrawalAmountBox b {
+  color: var(--navy);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-extra-bold);
+  line-height: var(--leading-heading);
+}
+
+.withdrawalForm {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.withdrawalField {
+  display: grid;
+  gap: 6px;
+}
+
+.withdrawalField label {
+  color: var(--navy);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-caption);
+}
+
+.withdrawalField input {
+  width: 100%;
+  min-width: 0;
+  height: 42px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  outline: none;
+  background: #fff;
+  color: var(--navy);
+  font: inherit;
+  padding: 0 12px;
+}
+
+.withdrawalField input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgb(36 87 255 / 9.5%);
+}
+
+.withdrawalField small {
+  color: var(--danger);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-caption);
+}
+
+.pendingWithdrawalNote {
+  margin: 4px 0 0;
+  border: 1px solid var(--teal-soft);
+  border-radius: 14px;
+  background: var(--teal-soft);
+  color: var(--navy);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-body-sm);
+  padding: 10px 12px;
+}
+
+.pendingWithdrawalList {
+  display: grid;
+  gap: 8px;
+}
+
+.pendingWithdrawalItem {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  padding: 10px 12px;
+}
+
+.pendingWithdrawalItem b {
+  color: var(--navy);
+}
+
+.pendingWithdrawalItem span,
+.pendingWithdrawalItem small {
+  color: var(--muted);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-caption);
 }
 
 .panelActions {
@@ -84,24 +233,33 @@
 
 .successBox,
 .errorBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
   margin: 0 0 14px;
   border-radius: 16px;
-  font-size: 13px;
-  font-weight: 850;
-  line-height: 1.7;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-body-sm);
   padding: 12px 14px;
 }
 
+.successBox svg,
+.errorBox svg {
+  flex: none;
+  margin-top: 2px;
+}
+
 .successBox {
-  border: 1px solid #beefeb;
-  background: #f4fffd;
-  color: #007f78;
+  border: 1px solid var(--teal-soft);
+  background: var(--teal-soft);
+  color: var(--ua-navy);
 }
 
 .errorBox {
-  border: 1px solid #fecaca;
-  background: #fff7f6;
-  color: #b42318;
+  border: 1px solid var(--danger-border);
+  background: var(--danger-soft);
+  color: var(--danger);
 }
 
 .walletTableCard {
@@ -122,6 +280,9 @@
 .walletTableHead h2 {
   margin: 0;
   color: var(--navy);
+  font-size: var(--text-h2);
+  font-weight: var(--weight-extra-bold);
+  line-height: var(--leading-heading);
 }
 
 .filterControl {
@@ -141,8 +302,8 @@
   background: #fff;
   color: var(--navy);
   direction: rtl;
-  font-size: 13px;
-  font-weight: 750;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-semibold);
   padding: 0 10px 0 42px;
   text-align: right;
 }
@@ -177,14 +338,20 @@
 
 .walletRow b {
   color: var(--navy);
-  font-size: 13px;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
 }
 
 .walletRow small {
   display: block;
   color: var(--muted);
-  font-size: 11.5px;
-  font-weight: 650;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-caption);
+}
+
+.walletTransactionMeta {
+  margin-top: 4px;
 }
 
 .walletType {
@@ -192,34 +359,35 @@
   display: inline-flex;
   align-items: center;
   border-radius: 999px;
-  background: #f2f4f7;
-  color: #667085;
-  font-size: 11px;
-  font-weight: 900;
+  background: var(--surface-soft);
+  color: var(--muted);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  line-height: 18px;
   padding: 0 8px;
   white-space: nowrap;
 }
 
 .walletAmount {
   color: var(--navy);
-  font-size: 13px;
-  font-weight: 900;
+  font-size: var(--text-body);
+  font-weight: var(--weight-extra-bold);
   white-space: nowrap;
 }
 
 .walletAmountPositive {
-  color: #008f7e;
+  color: var(--ua-teal);
 }
 
 .walletAmountNegative {
-  color: #b42318;
+  color: var(--danger);
 }
 
 .emptyState {
   border-top: 1px solid var(--line);
   color: var(--muted);
-  font-size: 13px;
-  font-weight: 750;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
   padding: 18px 0 4px;
   text-align: center;
 }
@@ -239,6 +407,11 @@
   }
 
   .walletRow {
+    grid-template-columns: 1fr;
+  }
+
+  .withdrawalForm,
+  .pendingWithdrawalItem {
     grid-template-columns: 1fr;
   }
 }

@@ -20,7 +20,7 @@ export function NetworkTabs({ activeTab, counts, onChange }: NetworkTabsProps) {
           className={`${styles.networkTab} ${activeTab === tab.id ? styles.networkTabActive : ""}`}
           onClick={() => onChange(tab.id)}
         >
-          {tab.label}
+          <span className="button-label">{tab.label}</span>
           <b>{formatter.format(counts[tab.id])}</b>
         </button>
       ))}

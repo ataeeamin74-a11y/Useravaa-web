@@ -1,3 +1,4 @@
+import { Avatar } from "@/components/ui/Avatar";
 import { V51Button, V51LinkButton } from "@/features/v51/components/V51Button";
 import { type NetworkProfile, type NetworkTab } from "@/features/v51/data/my-profile";
 import styles from "./MyProfile.module.css";
@@ -14,7 +15,7 @@ export function NetworkProfileCard({ profile, activeTab, onRemoveSaved }: Networ
   return (
     <article className={styles.networkCard}>
       <div className={styles.networkPerson}>
-        <div className={styles.networkAvatar}>{profile.initials || "؟"}</div>
+        <Avatar src={profile.avatarUrl} alt="" size="md" className={styles.networkAvatar} />
         <div>
           <b>{profile.name}</b>
           <span>

@@ -1,4 +1,5 @@
 import { createEmptyTimelineItem, getTimelineCoverageWarning, validateExperienceTimeline, type ExperienceTimelineItem } from "@/features/v51/data/experience-timeline";
+import type { JobField } from "@/features/v51/data/job-fields";
 import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
 import { V51Button } from "@/features/v51/components/V51Button";
 import { ExperienceTimelineItemForm } from "./ExperienceTimelineItemForm";
@@ -9,10 +10,11 @@ type ExperienceTimelineEditorProps = Readonly<{
   items: ExperienceTimelineItem[];
   claimedYears: number;
   showErrors: boolean;
+  jobFieldOptions?: readonly JobField[];
   onChange: (items: ExperienceTimelineItem[]) => void;
 }>;
 
-export function ExperienceTimelineEditor({ items, claimedYears, showErrors, onChange }: ExperienceTimelineEditorProps) {
+export function ExperienceTimelineEditor({ items, claimedYears, showErrors, jobFieldOptions, onChange }: ExperienceTimelineEditorProps) {
   const itemErrors = validateExperienceTimeline(items);
   const warning = getTimelineCoverageWarning(items, claimedYears);
 
@@ -39,6 +41,7 @@ export function ExperienceTimelineEditor({ items, claimedYears, showErrors, onCh
               item={item}
               index={index}
               errors={showErrors ? itemErrors[index] ?? {} : {}}
+              jobFieldOptions={jobFieldOptions}
               onChange={(nextItem) => updateItem(index, nextItem)}
               onRemove={() => removeItem(index)}
             />

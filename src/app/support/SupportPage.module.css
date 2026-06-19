@@ -1,0 +1,111 @@
+.shell {
+  display: grid;
+  gap: 18px;
+}
+
+.hero {
+  display: grid;
+  gap: 8px;
+  margin: 14px 0 4px;
+}
+
+.hero h1 {
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: var(--weight-heavy);
+  line-height: var(--leading-heading);
+}
+
+.hero p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-body);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body);
+}
+
+.card {
+  display: grid;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.cardIntro {
+  display: grid;
+  gap: 6px;
+}
+
+.cardIntro h2,
+.cardIntro p {
+  margin: 0;
+}
+
+.cardIntro h2 {
+  color: var(--navy);
+  font-size: var(--text-h4);
+  font-weight: var(--weight-heavy);
+  line-height: var(--leading-heading);
+}
+
+.cardIntro p {
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
+}
+
+.emailBlock {
+  display: grid;
+  gap: 6px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface-soft);
+  padding: 14px;
+}
+
+.emailBlock span {
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+}
+
+.emailBlock a {
+  color: var(--navy);
+  font-size: var(--text-h4);
+  font-weight: var(--weight-bold);
+  line-height: 1.5;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.emailBlock a:hover,
+.emailBlock a:focus-visible {
+  color: var(--blue);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.helper {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
+}
+
+.feedback {
+  margin: 0;
+  color: var(--teal);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
+}

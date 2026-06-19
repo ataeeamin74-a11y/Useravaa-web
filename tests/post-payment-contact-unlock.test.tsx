@@ -39,7 +39,7 @@ describe("V51 paid session contact unlock", () => {
     expect(getSessionCoordinationContact(conversation!)).toBeNull();
     expect(html).toContain(postPaymentContactCopy.lockedTitle);
     expect(html).toContain(postPaymentContactCopy.lockedHelper);
-    expect(html).toContain("پرداخت و ثبت جلسه");
+    expect(html).toContain("پرداخت امن و ارسال درخواست");
     expectNoContactDetails(html);
   });
 
@@ -74,28 +74,32 @@ describe("V51 paid session contact unlock", () => {
     expect(html).toContain(contact.email);
   });
 
-  it("mock payment unlocks the provider contact details for the paid session", () => {
+  it("mock payment keeps contact locked until requester selects a proposed time", () => {
     const conversation = conversations.find((item) => item.id === "conv-awaiting-payment");
     expect(conversation).toBeDefined();
 
     const paid = payConversation(conversation!);
-    const contact = providerContactFixtures[paid.profile.id];
     const html = renderToStaticMarkup(<ConversationDetailPage initialConversation={paid} />);
 
-    expect(sessionContactDetailsAreUnlocked(paid)).toBe(true);
-    expect(getSessionCoordinationContact(paid)).toEqual(contact);
-    expect(html).toContain(postPaymentContactCopy.unlockedTitle);
-    expect(html).toContain(contact.phoneNumber);
-    expect(html).toContain(contact.email);
+    expect(paid.status).toBe("pending_provider_response");
+    expect(sessionContactDetailsAreUnlocked(paid)).toBe(false);
+    expect(getSessionCoordinationContact(paid)).toBeNull();
+    expect(html).toContain(postPaymentContactCopy.lockedTitle);
+    expectNoContactDetails(html);
   });
 
-  it("checkout explains that contact details are shared after payment for session coordination", () => {
+  it("checkout explains that secure payment sends the request before coordination info unlocks", () => {
     const conversation = conversations.find((item) => item.id === "conv-awaiting-payment");
     expect(conversation).toBeDefined();
 
     const html = renderToStaticMarkup(<CheckoutPage initialConversation={conversation!} />);
+    const heldFundsCopy = "مبلغ تا قطعی‌شدن جلسه نزد یوزراوا نگه داشته می‌شود";
 
-    expect(html).toContain(postPaymentContactCopy.checkoutNotice);
+    expect(html).toContain("با پرداخت، درخواست شما برای تجربه‌آفرین ارسال می‌شود");
+    expect(html).toContain(heldFundsCopy);
+    expect(html.split(heldFundsCopy).length - 1).toBe(1);
+    expect(html).not.toContain(postPaymentContactCopy.checkoutNotice);
+    expect(html).not.toContain(postPaymentContactCopy.unlockedTitle);
   });
 
   it("does not expose phone or email on public discovery, insights, saved, or profile pages", () => {

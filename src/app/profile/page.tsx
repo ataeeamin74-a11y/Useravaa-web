@@ -1,4 +1,8 @@
+import { UnauthorizedState } from "@/components/auth/UnauthorizedState";
+import { PageContainer } from "@/components/layout/PageContainer";
 import { ProfileDashboardPage } from "@/features/v51/my-profile/pages/ProfileDashboardPage";
+import { canEditProfile, V51_PROFILE_FIXTURE_OWNER_ID } from "@/features/v51/permissions";
+import { requireCurrentViewer } from "@/lib/auth/session";
 
 type ProfileRouteProps = Readonly<{
   searchParams: Promise<{
@@ -8,7 +12,20 @@ type ProfileRouteProps = Readonly<{
 }>;
 
 export default async function ProfileRoute({ searchParams }: ProfileRouteProps) {
+  const viewer = await requireCurrentViewer();
   const params = await searchParams;
 
-  return <ProfileDashboardPage state={params.state} activeQuestionAnswered={params.activeQuestionAnswered !== "false"} />;
+  if (!canEditProfile(viewer, V51_PROFILE_FIXTURE_OWNER_ID)) {
+    return (
+      <PageContainer variant="empty">
+        <UnauthorizedState />
+      </PageContainer>
+    );
+  }
+
+  return (
+    <PageContainer variant="dashboard">
+      <ProfileDashboardPage state={params.state} activeQuestionAnswered={params.activeQuestionAnswered !== "false"} />
+    </PageContainer>
+  );
 }

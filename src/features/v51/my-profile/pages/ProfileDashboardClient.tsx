@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Avatar } from "@/components/ui/Avatar";
+import { StatChip } from "@/components/ui/StatChip";
 import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
+import { formatFaCount, formatFaNumber } from "@/lib/fa-format";
 import {
   profileBuilderDraftStorageKey,
   profileFromBuilderDraft,
@@ -82,7 +85,7 @@ function buildPendingActions(fixture: MyProfileDashboardFixture, profile: MyExpe
   if (fixture.incomingRequests > 0) {
     actions.push({
       title: "درخواست جلسه در انتظار بررسی",
-      body: `${formatter.format(fixture.incomingRequests)} درخواست جلسه مشاوره جدید دارید.`,
+      body: `${formatFaCount(fixture.incomingRequests, "درخواست جلسه مشاوره جدید")} دارید.`,
       href: "/conversations",
       cta: "مشاهده درخواست‌ها"
     });
@@ -144,12 +147,10 @@ function UnifiedProfileBanner({
     <section className={styles.profileManagementBanner} aria-label="مدیریت پروفایل تجربه">
       <div className={styles.bannerIdentity}>
         <div className={styles.bannerAvatarWrap}>
-          <div className={styles.bannerAvatar}>
-            {profile.avatarUrl ? <span className={styles.avatarImage} style={{ backgroundImage: `url(${profile.avatarUrl})` }} /> : profile.initials}
-          </div>
+          <Avatar src={profile.avatarUrl} alt={`تصویر پروفایل ${profile.name}`} size="profile" className={styles.bannerAvatar} />
           <Link className={styles.bannerAvatarEdit} href="/profile/build" aria-label="ویرایش تصویر پروفایل">
             <UseravaaIcon name="imageUpload" size={16} />
-            ویرایش تصویر
+            <span className="button-label">ویرایش تصویر</span>
           </Link>
         </div>
         <div className={styles.bannerCopy}>
@@ -167,33 +168,23 @@ function UnifiedProfileBanner({
           پروفایل و اطلاعات تجربه شما در <span className="brand-word">Useravaa</span> نمایش داده می‌شود.
         </p>
         <div className={styles.bannerStats}>
-          <div>
-            <span>بازدید پروفایل</span>
-            <b>{formatter.format(fixture.stats.profileViews)}</b>
-          </div>
-          <div>
-            <span>درخواست‌های جدید</span>
-            <b>{formatter.format(fixture.incomingRequests)}</b>
-          </div>
-          <div>
-            <UseravaaIcon name="insight" size={14} aria-hidden="true" />
-            <span>بینش‌های منتشرشده</span>
-            <b>{formatter.format(publishedInsightCount)}</b>
-          </div>
+          <StatChip className={styles.bannerStatChip} value={fixture.stats.profileViews} label="بازدید پروفایل" />
+          <StatChip className={styles.bannerStatChip} value={fixture.incomingRequests} label="درخواست جدید" />
+          <StatChip className={styles.bannerStatChip} value={publishedInsightCount} label="بینش منتشرشده" icon="insight" />
         </div>
       </div>
 
       <div className={styles.bannerActions}>
         <Link className={styles.primaryDashboardAction} href="/profiles/ali">
           <UseravaaIcon name="view" size={18} />
-          مشاهده پروفایل عمومی
+          <span className="button-label">مشاهده پروفایل عمومی</span>
         </Link>
         <Link className={styles.secondaryDashboardAction} href="/profile/build">
           <UseravaaIcon name="edit" size={18} />
-          ویرایش پروفایل
+          <span className="button-label">ویرایش پروفایل</span>
         </Link>
         <button className={styles.ghostDashboardAction} type="button" onClick={onDeactivate}>
-          توقف دریافت درخواست‌ها
+          <span className="button-label">توقف دریافت درخواست‌ها</span>
         </button>
       </div>
     </section>
@@ -365,7 +356,9 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
                   <article className={styles.compactActionCard} key={action.title}>
                     <h3>{action.title}</h3>
                     <p>{action.body}</p>
-                    <Link href={action.href}>{action.cta}</Link>
+                    <Link href={action.href}>
+                      <span className="button-label">{action.cta}</span>
+                    </Link>
                   </article>
                 ))}
               </div>
@@ -381,22 +374,13 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
                 <p>خلاصه وضعیت جلسه‌های مشاوره شما.</p>
               </div>
               <Link className={styles.secondaryDashboardAction} href="/conversations">
-                مشاهده درخواست‌ها
+                <span className="button-label">مشاهده درخواست‌ها</span>
               </Link>
             </div>
             <div className={styles.sessionStats}>
-              <div>
-                <span>درخواست‌های جدید</span>
-                <b>{formatter.format(fixture.incomingRequests)}</b>
-              </div>
-              <div>
-                <span>جلسه‌های آینده</span>
-                <b>{formatter.format(1)}</b>
-              </div>
-              <div>
-                <span>جلسه‌های انجام‌شده</span>
-                <b>{formatter.format(fixture.stats.successfulConversations)}</b>
-              </div>
+              <StatChip className={styles.dashboardStatCard} value={fixture.incomingRequests} label="درخواست جدید" />
+              <StatChip className={styles.dashboardStatCard} value={1} label="جلسه آینده" />
+              <StatChip className={styles.dashboardStatCard} value={fixture.stats.successfulConversations} label="جلسه انجام‌شده" />
             </div>
           </section>
 
@@ -407,7 +391,7 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
                 <p>بینش‌هایی که از تجربه کاری خود منتشر کرده‌اید.</p>
               </div>
               <Link className={styles.secondaryDashboardAction} href="/profile/insights">
-                مدیریت همه بینش‌ها
+                <span className="button-label">مدیریت همه بینش‌ها</span>
               </Link>
             </div>
             <div className={styles.insightCarousel} tabIndex={0} aria-label="بینش‌های من">
@@ -422,21 +406,21 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
                       <>
                         <button type="button" onClick={() => downloadOwnerInsightCard(insight.id)}>
                           <UseravaaIcon name="download" size={16} />
-                          دانلود تصویر کارت
+                          <span className="button-label">دانلود تصویر کارت</span>
                         </button>
                         <button type="button" onClick={() => copyOwnerInsightLink(insight.id)}>
                           <UseravaaIcon name="link" size={16} />
-                          کپی لینک
+                          <span className="button-label">کپی لینک</span>
                         </button>
                         <button type="button" onClick={() => retractOwnerInsight(insight.id)}>
                           <UseravaaIcon name="archive" size={16} />
-                          برداشتن از انتشار
+                          <span className="button-label">برداشتن از انتشار</span>
                         </button>
                       </>
                     ) : null}
                     <button type="button" onClick={() => beginEditOwnerInsight(insight.id)}>
                       <UseravaaIcon name="edit" size={16} />
-                      ویرایش بینش
+                      <span className="button-label">ویرایش بینش</span>
                     </button>
                   </div>
                 </article>
@@ -487,7 +471,7 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
             <div className={styles.cardActionRow}>
               <Link className={styles.secondaryDashboardAction} href="/profile/build">
                 <UseravaaIcon name="edit" size={18} />
-                ویرایش تجربه
+                <span className="button-label">ویرایش تجربه</span>
               </Link>
             </div>
           </section>
@@ -500,10 +484,7 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
               </div>
             </div>
             <div className={styles.walletGrid}>
-              <div>
-                <span>جلسه موفق</span>
-                <b>{formatter.format(fixture.stats.successfulConversations)}</b>
-              </div>
+              <StatChip className={styles.dashboardStatCard} value={fixture.stats.successfulConversations} label="جلسه موفق" />
               <div>
                 <span>رضایت جلسه‌ها</span>
                 <b>
@@ -517,11 +498,11 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
             </div>
             <div className={styles.cardActionRow}>
               <Link className={styles.primaryDashboardAction} href="/wallet">
-                کیف پول و پرداخت‌ها
+                <span className="button-label">کیف پول و پرداخت‌ها</span>
               </Link>
               <Link className={styles.secondaryDashboardAction} href="/profile/settings">
                 <UseravaaIcon name="edit" size={18} />
-                ثبت یا ویرایش شبا
+                <span className="button-label">ثبت یا ویرایش شبا</span>
               </Link>
             </div>
           </section>
@@ -531,32 +512,25 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
             <div className={styles.feedbackSummaryClean}>
               <b>{formatter.format(fixture.feedbackCount)} بازخورد دریافت‌شده</b>
               <span>
-                میانگین رضایت: <CsatValue value={fixture.stats.csat} /> از ۵
+                میانگین رضایت: <CsatValue value={fixture.stats.csat} />
               </span>
               <p>بر اساس بازخوردهای ثبت‌شده پس از جلسه</p>
             </div>
             <Link className={styles.secondaryDashboardAction} href="/profile/feedback">
               <UseravaaIcon name="star" size={18} />
-              دیدن بازخوردها
+              <span className="button-label">دیدن بازخوردها</span>
             </Link>
           </section>
 
           <section className={styles.dashboardCardSoft}>
             <h2>ذخیره‌شده‌ها</h2>
             <div className={styles.savedShortcutGrid}>
-              <div>
-                <span>افراد ذخیره‌شده</span>
-                <b>{formatter.format(fixture.network.saved)}</b>
-              </div>
-              <div>
-                <UseravaaIcon name="insight" size={14} aria-hidden="true" />
-                <span>بینش‌های ذخیره‌شده</span>
-                <b>{formatter.format(1)}</b>
-              </div>
+              <StatChip className={styles.dashboardStatCard} value={fixture.network.saved} label="نفر ذخیره‌شده" />
+              <StatChip className={styles.dashboardStatCard} value={1} label="بینش ذخیره‌شده" icon="insight" />
             </div>
             <Link className={styles.secondaryDashboardAction} href="/saved">
               <UseravaaIcon name="save" size={18} />
-              مشاهده ذخیره‌شده‌ها
+              <span className="button-label">مشاهده ذخیره‌شده‌ها</span>
             </Link>
           </section>
 
@@ -599,7 +573,7 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
               />
             </label>
             <div className={styles.ownerInsightEditMeta}>
-              <span>{getInsightAnswerCharacterCount(editingInsightText)} / {insightAnswerMaxLength}</span>
+              <span>{formatFaNumber(getInsightAnswerCharacterCount(editingInsightText))} / {formatFaNumber(insightAnswerMaxLength)}</span>
             </div>
             <fieldset className={styles.ownerAudienceOptions}>
               <legend>این نکته بیشتر به درد چه کسانی می‌خورد؟</legend>
@@ -621,10 +595,10 @@ export function ProfileDashboardClient({ fixture, activeQuestionAnswered }: Prof
             </fieldset>
             <div className={styles.cardActionRow}>
               <button className={styles.primaryDashboardAction} type="button" onClick={saveOwnerInsightEdit} disabled={!editingInsightText.trim() || !editingAudienceIntents.length}>
-                ذخیره تغییرات
+                <span className="button-label">ذخیره تغییرات</span>
               </button>
               <button className={styles.secondaryDashboardAction} type="button" onClick={() => setEditingInsightId(null)}>
-                انصراف
+                <span className="button-label">انصراف</span>
               </button>
             </div>
           </div>

@@ -1,4 +1,6 @@
+import { PageContainer } from "@/components/layout/PageContainer";
 import { DiscoverPage } from "@/features/v51/discover/DiscoverPage";
+import { getPublicJobFieldOptionsForUseCase } from "@/features/v51/data/public-category-options";
 import type { DiscoveryState } from "@/features/v51/data/profiles";
 
 type DiscoverRouteProps = Readonly<{
@@ -13,6 +15,11 @@ function parseDiscoveryState(state: string | undefined): DiscoveryState {
 
 export default async function DiscoverRoute({ searchParams }: DiscoverRouteProps) {
   const params = await searchParams;
+  const jobCategoryOptions = await getPublicJobFieldOptionsForUseCase("discovery");
 
-  return <DiscoverPage initialState={parseDiscoveryState(params.state)} />;
+  return (
+    <PageContainer variant="marketplace">
+      <DiscoverPage initialState={parseDiscoveryState(params.state)} jobCategoryOptions={jobCategoryOptions.options} />
+    </PageContainer>
+  );
 }

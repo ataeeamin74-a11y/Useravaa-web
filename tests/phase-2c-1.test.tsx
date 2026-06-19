@@ -5,12 +5,16 @@ import {
   faSummaryCount,
   getDashboardFixture,
   initialBuilderDraft,
+  normalizeUserMotivations,
   profileDraftIsValid,
   removeCompanyTag,
   setFreeHelp,
+  shuffleMotivationOptionsForUser,
   submitProfileForReview,
   toggleSelection,
   transitionProfileStatus,
+  updateUserMotivationSelection,
+  userMotivationOptions,
   updateDraftOrgLevel,
   validateAvatarCandidate,
   validateProfileDraft
@@ -68,6 +72,8 @@ describe("Phase 2C-1 V51 profile dashboard and builder", () => {
     expect(html).toContain("ساخت پروفایل تجربه");
     expect(html).toContain("آپلود عکس");
     expect(html).toContain("حوزه شغلی و زبان‌ها");
+    expect(html).toContain("شناخت بهتر مسیر شما");
+    expect(html).toContain("برای چه موضوعاتی بیشتر به یوزرآوا نیاز دارید؟");
     expect(html).toContain("تجربه شما بیشتر به درد چه کسانی می‌خورد؟");
     expect(html).toContain("سوابق تجربه");
     expect(html).toContain("معرفی حرفه‌ای");
@@ -106,6 +112,60 @@ describe("Phase 2C-1 V51 profile dashboard and builder", () => {
     expect(validateProfileDraft(invalidDraft).summary).toBe("معرفی حرفه‌ای باید حداقل ۲۰ کاراکتر باشد.");
   });
 
+  it("unified profile motivation options render with other last and removed options absent", () => {
+    const html = renderToStaticMarkup(<ProfileBuilderPage />);
+    const labels = userMotivationOptions.map((option) => option.label);
+
+    expect(html).toContain("برای چه موضوعاتی بیشتر به یوزرآوا نیاز دارید؟");
+    expect(html).toContain("رشد و پیشرفت در مسیر شغلی");
+    expect(html).toContain("کسب درآمد جانبی");
+    expect(html).toContain("کمک به دیگران");
+    expect(html).not.toContain("افزایش درآمد");
+    expect(html).not.toContain("کمک به دیگران با تجربه واقعی خودم");
+    expect(html).not.toContain("ساخت اعتبار حرفه‌ای");
+    expect(html).not.toContain("شبکه‌سازی حرفه‌ای");
+    expect(labels.at(-1)).toBe("سایر");
+  });
+
+  it("motivation validation requires one option and blocks more than three", () => {
+    const withoutMotivation = { ...initialBuilderDraft, userMotivations: [] };
+    const three = updateUserMotivationSelection(["CAREER_GROWTH", "CAREER_CHOICE"], "CAREER_CHANGE");
+    const fourthAttempt = updateUserMotivationSelection(three.values, "RESUME_INTERVIEW");
+
+    expect(validateProfileDraft(withoutMotivation).userMotivations).toBe("حداقل یک گزینه را انتخاب کنید.");
+    expect(three.values).toEqual(["CAREER_GROWTH", "CAREER_CHOICE", "CAREER_CHANGE"]);
+    expect(fourthAttempt.values).toEqual(three.values);
+    expect(fourthAttempt.error).toBe("حداکثر سه گزینه را انتخاب کنید.");
+  });
+
+  it("motivation normalization maps deprecated values and drops removed values", () => {
+    expect(normalizeUserMotivations(["INCREASE_INCOME", "HELP_OTHERS_WITH_EXPERIENCE", "PROFESSIONAL_NETWORKING", "BUILD_PROFESSIONAL_CREDIBILITY", "SIDE_INCOME"])).toEqual([
+      "SIDE_INCOME",
+      "HELP_OTHERS"
+    ]);
+  });
+
+  it("motivation option shuffle is stable and keeps other as the final option", () => {
+    const first = shuffleMotivationOptionsForUser(userMotivationOptions, "profile-ali");
+    const second = shuffleMotivationOptionsForUser(userMotivationOptions, "profile-ali");
+    const otherUser = shuffleMotivationOptionsForUser(userMotivationOptions, "profile-sara");
+
+    expect(first.map((option) => option.value)).toEqual(second.map((option) => option.value));
+    expect(first.at(-1)?.value).toBe("OTHER");
+    expect(otherUser.at(-1)?.value).toBe("OTHER");
+  });
+
+  it("other motivation requires trimmed text and clears when deselected", () => {
+    const withOther = { ...initialBuilderDraft, userMotivations: ["OTHER" as const], userMotivationOtherText: "   " };
+    const tooLong = { ...withOther, userMotivationOtherText: "الف".repeat(121) };
+    const deselected = updateUserMotivationSelection(withOther.userMotivations, "OTHER");
+
+    expect(validateProfileDraft(withOther).userMotivationOtherText).toBe("موضوع موردنظر را کوتاه بنویسید.");
+    expect(validateProfileDraft(tooLong).userMotivationOtherText).toBe("حداکثر ۱۲۰ کاراکتر بنویسید.");
+    expect(deselected.values).toEqual([]);
+    expect(deselected.otherTextShouldClear).toBe(true);
+  });
+
   it("free-help mode sets prices to zero and renders disabled price inputs", () => {
     const freeDraft = setFreeHelp(initialBuilderDraft, true);
     const html = renderToStaticMarkup(<ProfileBuilderPage initialDraft={freeDraft} />);
@@ -118,7 +178,19 @@ describe("Phase 2C-1 V51 profile dashboard and builder", () => {
   });
 
   it("professional summary counter preserves V51 Persian format", () => {
-    expect(faSummaryCount("")).toBe("۰ / ۲۲۰");
+    expect(faSummaryCount("")).toBe("۰ / ۲۵۰");
+  });
+
+  it("professional summary validates 250 characters without silent truncation and trims before save", () => {
+    const longSummary = "a".repeat(251);
+    const paddedSummary = `  ${initialBuilderDraft.summary}  `;
+    const longDraft = { ...initialBuilderDraft, summary: longSummary };
+    const result = submitProfileForReview({ ...initialBuilderDraft, summary: paddedSummary });
+
+    expect(validateProfileDraft(longDraft).summary).toBe("معرفی حرفه‌ای حداکثر می‌تواند ۲۵۰ کاراکتر باشد.");
+    expect(profileDraftIsValid(longDraft)).toBe(false);
+    expect(result.profile?.professionalSummary).toBe(initialBuilderDraft.summary);
+    expect(longDraft.summary).toHaveLength(251);
   });
 
   it("mock submit for review moves a valid draft to pending_review", () => {
@@ -126,6 +198,7 @@ describe("Phase 2C-1 V51 profile dashboard and builder", () => {
 
     expect(result.status).toBe("pending_review");
     expect(result.profile?.name).toBe(initialBuilderDraft.displayName);
+    expect(result.profile?.userMotivations).toEqual(initialBuilderDraft.userMotivations);
   });
 
   it("mock profile status actions follow the handoff state machine", () => {

@@ -29,20 +29,19 @@ export function TimeProposalPicker({ selectedDateId, selectedTimes, onDateChange
             aria-pressed={selectedDateId === dateOption.id}
             onClick={() => onDateChange(dateOption.id)}
           >
-            <strong>{dateOption.day}</strong>
-            <br />
-            {dateOption.date}
+            <strong className="button-label">{dateOption.day}</strong>
+            <span className="button-label">{dateOption.date}</span>
           </button>
         ))}
       </div>
 
-      <h2>ساعت‌های مناسب را انتخاب کن</h2>
-      <p className={styles.lead}>با هر کلیک، همان زمان به لیست پیشنهادی اضافه می‌شود.</p>
+      <h2>سه زمان مناسب را انتخاب کنید</h2>
+      <p className={styles.lead}>دقیقاً سه زمان پیشنهادی لازم است.</p>
       <div className={styles.slots}>
         {proposalTimeSlots.map((slot) => {
           const proposedTime = makeProposedTime(selectedDateId, slot);
           const selected = selectedIds.has(proposedTime.id);
-          const blocked = selectedTimes.length >= 6 && !selected;
+          const blocked = selectedTimes.length >= 3 && !selected;
 
           return (
             <button
@@ -53,7 +52,7 @@ export function TimeProposalPicker({ selectedDateId, selectedTimes, onDateChange
               disabled={blocked}
               onClick={() => onToggleTime(proposedTime)}
             >
-              {slot}
+              <span className="button-label">{slot}</span>
             </button>
           );
         })}

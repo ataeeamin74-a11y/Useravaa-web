@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { Avatar } from "@/components/ui/Avatar";
+import { MetaChip } from "@/components/ui/MetaChip";
 import { UseravaaIcon } from "@/components/ui/UseravaaIcon";
 import {
   getCurrentCompany,
@@ -69,7 +71,7 @@ export function SavedPage({
           id="saved-people-tab"
           onClick={() => selectTab("people")}
         >
-          <span>افراد ذخیره‌شده</span>
+          <span className="button-label">افراد ذخیره‌شده</span>
           <b>{formatter.format(savedProfiles.length)}</b>
         </button>
         <button
@@ -81,7 +83,7 @@ export function SavedPage({
           id="saved-insights-tab"
           onClick={() => selectTab("insights")}
         >
-          <span>بینش‌های ذخیره‌شده</span>
+          <span className="button-label">بینش‌های ذخیره‌شده</span>
           <b>
             <UseravaaIcon name="insight" size={14} aria-hidden="true" />
             {formatter.format(savedInsights.length)}
@@ -95,11 +97,12 @@ export function SavedPage({
             <div className={styles.grid}>
               {savedProfiles.map((profile) => {
                 const company = getCurrentCompany(profile);
+                const avatarUrl = "avatarUrl" in profile ? profile.avatarUrl : undefined;
 
                 return (
                   <article className={styles.card} key={profile.id}>
                     <div className={styles.personLine}>
-                      <div className={styles.avatar}>{profile.initials}</div>
+                      <Avatar src={avatarUrl} alt="" size="lg" className={styles.avatar} />
                       <div>
                         <h3>{profile.name}</h3>
                         <p>{getProfileJobTitle(profile)}</p>
@@ -107,20 +110,20 @@ export function SavedPage({
                     </div>
                     <p>{profile.professionalSummary}</p>
                     <div className={styles.meta}>
-                      <span className={styles.chip}>{profile.orgLevel}</span>
-                      <span className={styles.chip}>{profile.jobCategoriesFa[0]}</span>
-                      {company ? <span className={styles.chip}>تجربه کاری در {company}</span> : null}
+                      <MetaChip className={styles.chip}>{profile.orgLevel}</MetaChip>
+                      <MetaChip className={styles.chip}>{profile.jobCategoriesFa[0]}</MetaChip>
+                      {company ? <MetaChip className={styles.chip}>تجربه کاری در {company}</MetaChip> : null}
                     </div>
                     <div className={styles.actions}>
                       <Link className={styles.link} href={`/profiles/${profile.id}`}>
-                        مشاهده تجربه
+                        <span className="button-label">مشاهده تجربه</span>
                       </Link>
                       <Link className={styles.secondaryLink} href={getRequestHref(profile.id, 30)}>
-                        هماهنگی جلسه
+                        <span className="button-label">هماهنگی جلسه</span>
                       </Link>
                       <button className={styles.removeButton} type="button" onClick={() => removeSavedProfile(profile.id)}>
                         <UseravaaIcon name="unsave" size={16} />
-                        حذف از ذخیره‌شده‌ها
+                        <span className="button-label">حذف از ذخیره‌شده‌ها</span>
                       </button>
                     </div>
                   </article>
@@ -132,7 +135,10 @@ export function SavedPage({
               <UseravaaIcon name="save" size={22} />
               <p>هنوز فردی ذخیره نکرده‌اید.</p>
               <Link className={styles.secondaryLink} href="/discover">
-                کشف تجربه‌ها
+                <span className="button-label">کشف تجربه‌ها</span>
+              </Link>
+              <Link className={styles.secondaryLink} href="/guide">
+                <span className="button-label">راهنمای Useravaa</span>
               </Link>
             </div>
           )}
@@ -151,17 +157,17 @@ export function SavedPage({
                     <h3>{getInsightPromptHeader(insight)}</h3>
                     <p>{insight.answerText}</p>
                     <div className={styles.meta}>
-                      <span className={styles.chip}>{author?.displayName}</span>
-                      {author ? <span className={styles.chip}>{author.jobTitle} · {author.orgLevel}</span> : null}
-                      {author ? <span className={styles.chip}>{author.experienceLine}</span> : null}
+                      <MetaChip className={styles.chip}>{author?.displayName}</MetaChip>
+                      {author ? <MetaChip className={styles.chip}>{author.jobTitle} · {author.orgLevel}</MetaChip> : null}
+                      {author ? <MetaChip className={styles.chip}>{author.experienceLine}</MetaChip> : null}
                     </div>
                     <div className={styles.actions}>
                       <Link className={styles.link} href={author?.profileUrl ?? "/insights"}>
-                        مشاهده تجربه
+                        <span className="button-label">مشاهده تجربه</span>
                       </Link>
                       <button className={styles.removeButton} type="button" onClick={() => removeSavedInsight(insight.id)}>
                         <UseravaaIcon name="unsave" size={16} />
-                        حذف از ذخیره‌شده‌ها
+                        <span className="button-label">حذف از ذخیره‌شده‌ها</span>
                       </button>
                     </div>
                   </article>
@@ -173,7 +179,10 @@ export function SavedPage({
               <UseravaaIcon name="insight" size={22} />
               <p>هنوز بینشی ذخیره نکرده‌اید.</p>
               <Link className={styles.secondaryLink} href="/insights">
-                رفتن به بینش‌ها
+                <span className="button-label">رفتن به بینش‌ها</span>
+              </Link>
+              <Link className={styles.secondaryLink} href="/guide">
+                <span className="button-label">راهنمای Useravaa</span>
               </Link>
             </div>
           )}

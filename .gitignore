@@ -5,9 +5,14 @@ dist/
 build/
 .env
 .env.local
+.env.local.txt
 .env.*.local
 .DS_Store
 .vscode/
 coverage/
 *.log
 tsconfig.tsbuildinfo
+.codex-screenshots/
+Downloads/
+artifacts/
+visual-audit-screenshots.zip

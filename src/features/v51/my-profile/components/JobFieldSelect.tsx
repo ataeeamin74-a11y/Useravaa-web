@@ -7,13 +7,16 @@ type JobFieldSelectProps = Readonly<{
   onChange: (value: JobField) => void;
   id?: string;
   label?: string;
+  options?: readonly JobField[];
 }>;
 
-export function JobFieldSelect({ value, onChange, id, label = "حوزه شغلی" }: JobFieldSelectProps) {
+export function JobFieldSelect({ value, onChange, id, label = "حوزه شغلی", options }: JobFieldSelectProps) {
+  const optionValues = Array.from(new Set([value, ...(options ?? jobFieldTaxonomy)].filter(Boolean)));
+
   return (
     <span className={styles.selectWrap}>
       <select id={id} aria-label={label} value={value} onChange={(event) => onChange(event.target.value as JobField)}>
-        {jobFieldTaxonomy.map((field) => (
+        {optionValues.map((field) => (
           <option key={field} value={field}>
             {field}
           </option>

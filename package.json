@@ -3,18 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "prisma:generate": "prisma generate"
+    "visual:audit": "node tools/visual-audit/capture-screenshots.mjs",
+    "prisma:generate": "prisma generate",
+    "taxonomy:seed": "node tools/taxonomy/seed-mvp-job-categories.mjs"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "latest",
     "lucide-react": "latest",
     "next": "latest",
+    "pg": "^8.21.0",
     "react": "latest",
     "react-dom": "latest",
     "zod": "latest"
@@ -25,6 +29,7 @@
     "@types/react-dom": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
+    "playwright": "^1.60.0",
     "prisma": "latest",
     "typescript": "latest",
     "vitest": "latest"

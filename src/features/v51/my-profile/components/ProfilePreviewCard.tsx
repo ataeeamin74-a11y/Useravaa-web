@@ -1,10 +1,6 @@
-import {
-  faSummaryCount,
-  formatCsat,
-  moneyOrFree,
-  type MyExperienceProfile,
-  type ProfileBuilderDraft
-} from "@/features/v51/data/my-profile";
+import { RatingDisplay } from "@/components/ui/RatingDisplay";
+import { Avatar } from "@/components/ui/Avatar";
+import { faSummaryCount, moneyOrFree, type MyExperienceProfile, type ProfileBuilderDraft } from "@/features/v51/data/my-profile";
 import { derivePreviousCompaniesFromTimeline, getCurrentTimelineItem } from "@/features/v51/data/experience-timeline";
 import { formatter, toman } from "@/features/v51/data/profiles";
 import styles from "./MyProfile.module.css";
@@ -16,14 +12,11 @@ type AvatarProps = {
   size: "dashboard" | "builder" | "preview";
 };
 
-export function ProfileAvatar({ label, initials, avatarUrl, size }: AvatarProps) {
+export function ProfileAvatar({ label, avatarUrl, size }: AvatarProps) {
   const className = size === "dashboard" ? styles.avatar : size === "builder" ? styles.avatarPreview : styles.previewAvatar;
+  const avatarSize = size === "dashboard" ? "lg" : size === "builder" ? "profile" : "xl";
 
-  return (
-    <span className={className} aria-label={label}>
-      {avatarUrl ? <span className={styles.avatarImage} style={{ backgroundImage: `url(${avatarUrl})` }} /> : initials}
-    </span>
-  );
+  return <Avatar src={avatarUrl} alt={label || "تصویر پروفایل"} size={avatarSize} className={className} />;
 }
 
 export function DashboardProfilePreview({ profile }: { profile: MyExperienceProfile }) {
@@ -115,5 +108,5 @@ export function SummaryCounter({ summary }: { summary: string }) {
 }
 
 export function CsatValue({ value }: { value: number }) {
-  return <>★ {formatCsat(value)}</>;
+  return <RatingDisplay value={value} showStars size="sm" className={styles.csatInline} />;
 }

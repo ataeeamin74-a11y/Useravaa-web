@@ -12,19 +12,27 @@
 .lead {
   max-width: 780px;
   color: var(--muted);
-  font-size: 15px;
-  font-weight: 640;
-  line-height: 1.85;
+  font-size: 17px;
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-lg);
 }
 
 .guidanceLine {
   max-width: 920px;
   margin: 0 auto 10px;
-  color: #007f78;
+  color: var(--ua-navy);
   font-size: 13px;
-  font-weight: 760;
+  font-weight: var(--weight-semibold);
   line-height: 1.8;
   text-align: center;
+}
+
+.guidanceLine a {
+  display: inline-flex;
+  margin-inline-start: 10px;
+  color: var(--blue);
+  font-weight: var(--weight-bold);
+  white-space: nowrap;
 }
 
 .heroLinkRow {
@@ -38,7 +46,7 @@
   background: transparent;
   color: var(--blue);
   font-size: 13px;
-  font-weight: 850;
+  font-weight: var(--weight-bold);
   padding: 0 4px;
 }
 
@@ -72,8 +80,8 @@
   background: transparent;
   color: var(--navy);
   direction: rtl;
-  font-size: 14px;
-  font-weight: 760;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
   text-align: right;
 }
 
@@ -84,8 +92,10 @@
   border-radius: 14px;
   background: linear-gradient(135deg, var(--teal), var(--blue));
   color: #fff;
-  font-size: 14px;
-  font-weight: 900;
+  font-size: var(--text-button);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .filterShell {
@@ -147,8 +157,8 @@
   background: #fff;
   color: var(--navy);
   direction: rtl;
-  font-size: 13px;
-  font-weight: 760;
+  font-size: 14px;
+  font-weight: var(--weight-semibold);
   text-align: right;
   padding: 0 12px 0 36px;
   transition: 140ms ease;
@@ -176,7 +186,7 @@
   background: #fff;
   color: var(--muted);
   font-size: 16px;
-  font-weight: 900;
+  font-weight: var(--weight-bold);
   line-height: 1;
 }
 
@@ -196,8 +206,8 @@
 }
 
 .companyCombobox.active .companyInputWrap input {
-  border-color: #bbd0ff;
-  background: #f9fbff;
+  border-color: var(--line-2);
+  background: var(--surface-soft);
 }
 
 .companyResults {
@@ -219,27 +229,32 @@
 .companyOption {
   width: 100%;
   min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
   border: 0;
   border-radius: 10px;
   background: transparent;
   color: var(--navy);
-  font-size: 13px;
-  font-weight: 760;
+  font-size: 14px;
+  font-weight: var(--weight-semibold);
+  line-height: 1;
   padding: 7px 9px;
   text-align: right;
+  white-space: nowrap;
 }
 
 .companyOption:hover,
 .companyOptionActive {
   background: var(--teal-soft);
-  color: #007f78;
+  color: var(--ua-navy);
 }
 
 .companyEmpty {
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 760;
-  line-height: 1.7;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-caption);
   padding: 8px;
 }
 
@@ -258,8 +273,8 @@
   background: #fff;
   color: var(--navy);
   direction: rtl;
-  font-size: 13px;
-  font-weight: 760;
+  font-size: 14px;
+  font-weight: var(--weight-semibold);
   text-align: right;
   transition: 140ms ease;
 }
@@ -283,8 +298,8 @@
 
 .field.active input,
 .field.active select {
-  border-color: #bbd0ff;
-  background: #f9fbff;
+  border-color: var(--line-2);
+  background: var(--surface-soft);
 }
 
 .searchIcon {
@@ -333,8 +348,8 @@
 
 .activeLabel {
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 850;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
 }
 
 .activeChip {
@@ -342,12 +357,12 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #dde6ff;
+  border: 1px solid var(--line-2);
   border-radius: 999px;
   background: var(--blue-soft);
   color: var(--blue);
-  font-size: 12px;
-  font-weight: 850;
+  font-size: var(--text-chip);
+  font-weight: var(--weight-bold);
   padding: 5px 10px;
 }
 
@@ -374,12 +389,17 @@
 }
 
 .clearAll {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 850;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  line-height: 1;
   padding: 4px 0;
+  white-space: nowrap;
 }
 
 .clearAll:hover {
@@ -396,8 +416,8 @@
 .resultCount,
 .sortBox {
   color: var(--muted);
-  font-size: 13px;
-  font-weight: 850;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
 }
 
 .grid {
@@ -416,7 +436,7 @@
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 20px;
-  background: linear-gradient(180deg, #fff 0%, #fcfdff 100%);
+  background: linear-gradient(180deg, #fff 0%, var(--surface-soft) 100%);
   box-shadow: var(--shadow);
   padding: 16px;
   transition: 160ms ease;
@@ -447,8 +467,8 @@
   border-radius: 13px;
   background: #fff;
   color: var(--navy);
-  font-size: 11px;
-  font-weight: 900;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
   transition: 140ms ease;
 }
 
@@ -466,12 +486,12 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid #dbe7ff;
+  border: 1px solid var(--line-2);
   border-radius: 999px;
   background: #fff;
   color: var(--blue);
-  font-size: 11px;
-  font-weight: 900;
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
   padding: 0 9px;
   white-space: nowrap;
 }
@@ -482,7 +502,7 @@
 
 .bookmark:hover {
   border-color: var(--blue);
-  background: #f8faff;
+  background: var(--surface-soft);
   color: var(--blue);
 }
 
@@ -516,13 +536,13 @@
   display: grid;
   place-items: center;
   border-radius: 999px;
-  background: radial-gradient(circle at 36% 24%, #f8fbff 0%, #e8eeff 48%, #dce7ff 100%);
+  background: radial-gradient(circle at 36% 24%, var(--surface-soft) 0%, var(--blue-soft) 48%, var(--line-2) 100%);
   box-shadow:
     inset 0 0 0 4px rgb(255 255 255 / 92%),
-    0 0 0 1px #dde6ff;
+    0 0 0 1px var(--line-2);
   color: var(--navy);
   font-size: 29px;
-  font-weight: 900;
+  font-weight: var(--weight-bold);
 }
 
 .avatar::after {
@@ -544,9 +564,9 @@
   margin: 0 0 2px;
   color: var(--navy);
   font-size: 20px;
-  font-weight: 900;
+  font-weight: var(--weight-bold);
   letter-spacing: 0;
-  line-height: 1.15;
+  line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -554,9 +574,10 @@
 .role {
   overflow: hidden;
   margin: 0;
-  color: #7a8398;
-  font-size: 13px;
-  font-weight: 720;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: var(--weight-medium);
+  line-height: 24px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -571,34 +592,36 @@
 }
 
 .chip {
-  height: 28px;
+  min-height: var(--ua-meta-chip-height);
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  gap: var(--ua-meta-chip-gap);
   border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #fafcff;
+  border-radius: var(--ua-meta-chip-radius);
+  background: var(--surface-soft);
   color: var(--navy);
-  font-size: 11px;
-  font-weight: 850;
-  padding: 0 9px;
+  font-size: var(--text-chip);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  padding-inline: var(--ua-meta-chip-padding-x);
   white-space: nowrap;
 }
 
 .level {
-  border-color: #beefeb;
+  border-color: var(--teal-soft);
   background: var(--teal-soft);
-  color: #007f78;
+  color: var(--ua-navy);
 }
 
 .csat {
-  border-color: #ffe2a8;
-  background: var(--gold-soft);
+  border-color: var(--line-2);
+  background: var(--surface-soft);
 }
 
 .star {
-  color: var(--gold);
-  font-size: 13px;
+  color: var(--ua-rating-star);
+  font-size: var(--text-caption);
   line-height: 1;
 }
 
@@ -606,9 +629,9 @@
   overflow: hidden;
   margin-bottom: 5px;
   color: var(--navy);
-  font-size: 12px;
-  font-weight: 820;
-  line-height: 1.75;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-body-sm);
   padding: 0 2px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -617,9 +640,9 @@
 .companies {
   overflow: hidden;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 760;
-  line-height: 1.75;
+  font-size: 14px;
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
   padding: 0 2px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -633,9 +656,9 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   color: var(--muted);
-  font-size: 12px;
-  font-weight: 650;
-  line-height: 1.8;
+  font-size: 14px;
+  font-weight: var(--weight-medium);
+  line-height: 24px;
   text-align: right;
 }
 
@@ -659,9 +682,11 @@
   justify-content: center;
   border: 0;
   border-radius: 14px;
-  font-size: 13px;
-  font-weight: 850;
+  font-size: var(--text-button);
+  font-weight: var(--weight-bold);
+  line-height: 1;
   transition: 140ms ease;
+  white-space: nowrap;
 }
 
 .cta:hover {
@@ -684,6 +709,17 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
+}
+
+.guideLink {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--blue);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
+  padding-inline: 10px;
 }
 
 .empty,
@@ -741,7 +777,7 @@
   position: relative;
   overflow: hidden;
   border-radius: 999px;
-  background: #eef2f7;
+  background: var(--surface-soft);
 }
 
 .skeletonAvatar {
@@ -807,7 +843,9 @@
   border-radius: 16px;
   background: var(--navy);
   color: #fff;
-  font-weight: 850;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-body-sm);
   padding: 12px 15px;
 }
 
@@ -832,14 +870,19 @@
   border-radius: 14px;
   background: #fff;
   color: var(--navy);
-  font-size: 13px;
-  font-weight: 850;
+  font-size: var(--text-button);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .mobileFilterHeader button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .mobileFilterCount {
@@ -850,8 +893,8 @@
   border-radius: 999px;
   background: var(--blue);
   color: #fff;
-  font-size: 11px;
-  font-weight: 900;
+  font-size: 12px;
+  font-weight: var(--weight-bold);
 }
 
 .mobileFilterCount.show {
@@ -932,7 +975,7 @@
     background: #fff;
     color: var(--navy);
     font-size: 13px;
-    font-weight: 850;
+    font-weight: var(--weight-bold);
     padding: 7px 12px;
   }
 
