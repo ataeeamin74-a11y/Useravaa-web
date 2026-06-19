@@ -59,6 +59,10 @@ type InsightsPageProps = Readonly<{
   initialSavedInsightIds?: readonly string[];
   viewer?: InsightsViewer;
   jobCategoryOptions?: readonly JobField[];
+  mastheadCopy?: {
+    title: string;
+    description: string;
+  };
 }>;
 
 const initialVisibleCount = 4;
@@ -105,12 +109,22 @@ function InlineFilterPopover({
   );
 }
 
-function InsightMasthead() {
+function InsightMasthead({
+  copy = {
+    title: "بینش‌ها",
+    description: "تجربه‌های کوتاه و واقعی برای تصمیم‌های شغلی بهتر."
+  }
+}: Readonly<{
+  copy?: {
+    title: string;
+    description: string;
+  };
+}>) {
   return (
     <header className={styles.masthead}>
       <div className={styles.mastheadCopy}>
-        <h1>بینش‌ها</h1>
-        <p>تجربه‌های کوتاه و واقعی برای تصمیم‌های شغلی بهتر.</p>
+        <h1>{copy.title}</h1>
+        <p>{copy.description}</p>
       </div>
     </header>
   );
@@ -522,7 +536,8 @@ export function InsightsPage({
   initialHasExperienceProfile = true,
   initialSavedInsightIds = emptySavedInsightIds,
   viewer = null,
-  jobCategoryOptions
+  jobCategoryOptions,
+  mastheadCopy
 }: InsightsPageProps) {
   const isAuthenticated = Boolean(viewer);
   const [selectedJobCategory, setSelectedJobCategory] = useState<JobField | "">(initialCategory);
@@ -645,7 +660,7 @@ export function InsightsPage({
 
   return (
     <section className={styles.page}>
-      <InsightMasthead />
+      <InsightMasthead copy={mastheadCopy} />
       {initialHasExperienceProfile ? (
         <ActiveQuestionBar viewer={viewer} onOpenAnswerComposer={openAnswerFlow} onOpenAuthPrompt={() => setAuthPromptOpen(true)} />
       ) : null}

@@ -44,6 +44,10 @@ type DiscoverPageProps = Readonly<{
   initialJobCategorySearchQuery?: string;
   initialCompanyComboboxOpen?: boolean;
   initialCompanySearchQuery?: string;
+  heroCopy?: {
+    title: string;
+    description: string;
+  };
 }>;
 
 type FilterGroup = keyof DiscoverFilters;
@@ -336,7 +340,11 @@ export function DiscoverPage({
   initialJobCategoryComboboxOpen = false,
   initialJobCategorySearchQuery = "",
   initialCompanyComboboxOpen = false,
-  initialCompanySearchQuery = ""
+  initialCompanySearchQuery = "",
+  heroCopy = {
+    title: "کشف تجربه‌ها",
+    description: "آدم‌های باتجربه را پیدا کنید، تجربه‌شان را بررسی کنید، و در صورت نیاز جلسه مشاوره هماهنگ کنید."
+  }
 }: DiscoverPageProps) {
   const [searchDraft, setSearchDraft] = useState("");
   const [submittedSearchQuery, setSubmittedSearchQuery] = useState("");
@@ -453,8 +461,8 @@ export function DiscoverPage({
       />
 
       <div className={styles.discoverHero}>
-        <h1>کشف تجربه‌ها</h1>
-        <p className={styles.lead}>آدم‌های باتجربه را پیدا کنید، تجربه‌شان را بررسی کنید، و در صورت نیاز جلسه مشاوره هماهنگ کنید.</p>
+        <h1>{heroCopy.title}</h1>
+        <p className={styles.lead}>{heroCopy.description}</p>
       </div>
       <p className={styles.guidanceLine}>
         تجربه‌ها را ببینید، مشاوره بگیرید و مسیر شغلی خود را آگاهانه‌تر انتخاب کنید.

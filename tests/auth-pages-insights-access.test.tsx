@@ -77,8 +77,8 @@ describe("Auth pages copy, password layout, and Insights public access", () => {
     expect(projectFile("src/app/register/page.tsx")).not.toContain("Useravaa");
   });
 
-  it("login page uses the approved Persian copy and removes distracting in-card links", () => {
-    const html = renderToStaticMarkup(<LoginPage />);
+  it("login page uses the approved Persian copy and removes distracting in-card links", async () => {
+    const html = renderToStaticMarkup(await LoginPage());
 
     expect(html).toContain("<h1>ورود به یوزراوا</h1>");
     expect(html).toContain("وارد حساب خود شوید و مسیر گفت‌وگوها، تجربه‌ها و پروفایل خود را ادامه دهید.");
