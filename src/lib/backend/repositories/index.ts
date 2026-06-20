@@ -1,6 +1,7 @@
 export { adminPaymentReviewRepository } from "./admin-payment-review";
 export { adminCategoryRepository } from "./admin-category";
 export { adminContentRepository } from "./admin-content";
+export { adminSupportRepository } from "./admin-support";
 export { adminAuditRepository } from "./admin-audit";
 export { adminReadModelRepository } from "./admin-read-model";
 export { attendanceVerificationRepository } from "./attendance";
@@ -29,6 +30,14 @@ export type {
   AdminContentEntryWriteInput
 } from "./admin-content";
 export type {
+  AdminSupportTicketFilters,
+  AdminSupportTicketNoteRecord,
+  AdminSupportTicketNoteWriteInput,
+  AdminSupportTicketRecord,
+  AdminSupportTicketUpdateInput,
+  AdminSupportTicketWriteInput
+} from "./admin-support";
+export type {
   AdminAuditAction,
   AdminAuditEventRecord,
   AdminCategoryAuditEventInput,
@@ -38,7 +47,8 @@ export type {
   AdminInsightAuditEventInput,
   AdminInsightAnswerAuditEventInput,
   AdminPaymentAuditEventInput,
-  AdminPricingRuleAuditEventInput
+  AdminPricingRuleAuditEventInput,
+  AdminSupportTicketAuditEventInput
 } from "./admin-audit";
 export type { AdminCancellationSupportReviewRecord } from "./cancellation";
 export type {

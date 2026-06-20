@@ -181,6 +181,7 @@ export const adminOptionalRoutePatterns = [
   "/admin/categories",
   "/admin/categories/[categoryId]",
   "/admin/support",
+  "/admin/support/[ticketId]",
   "/admin/settings"
 ] as const;
 
@@ -200,6 +201,7 @@ export function adminHrefIsKnown(href: string) {
     /^\/admin\/insights\/[^/]+$/.test(href) ||
     /^\/admin\/pricing\/[^/]+$/.test(href) ||
     /^\/admin\/content\/[^/]+$/.test(href) ||
-    /^\/admin\/categories\/[^/]+$/.test(href)
+    /^\/admin\/categories\/[^/]+$/.test(href) ||
+    /^\/admin\/support\/[^/]+$/.test(href)
   );
 }

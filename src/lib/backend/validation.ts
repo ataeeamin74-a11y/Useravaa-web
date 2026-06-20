@@ -55,6 +55,50 @@ const adminContentEditableStatuses = ["DRAFT", "PUBLISHED", "HIDDEN"] as const;
 const adminContentNamespaceSchema = z.string().trim().regex(/^[a-z0-9]+(?:[._-][a-z0-9]+)*$/).min(2).max(100);
 const adminContentKeySchema = z.string().trim().regex(/^[a-z0-9]+(?:[._-][a-z0-9]+)*$/).min(2).max(140);
 const adminContentLocaleSchema = z.string().trim().regex(/^[a-z]{2}(?:-[A-Z]{2})?$/).default("fa");
+const adminSupportTicketEditableStatuses = [
+  "NEW",
+  "OPEN",
+  "IN_PROGRESS",
+  "WAITING_FOR_USER",
+  "WAITING_FOR_PROVIDER",
+  "ESCALATED",
+  "RESOLVED"
+] as const;
+const adminSupportTicketPriorities = ["LOW", "NORMAL", "HIGH", "URGENT"] as const;
+const adminSupportTicketCategories = [
+  "CONVERSATION",
+  "PAYMENT",
+  "CANCELLATION_REFUND_WALLET",
+  "PROFILE_EXPERIENCE_CREATOR",
+  "INSIGHT_CONTENT",
+  "ACCOUNT_AUTH",
+  "PRICING_CATEGORY",
+  "TECHNICAL_ISSUE",
+  "TRUST_SAFETY",
+  "GENERAL_QUESTION"
+] as const;
+const adminSupportTicketSources = [
+  "ADMIN_CREATED",
+  "USER_REPORTED",
+  "SYSTEM_FLAGGED",
+  "PAYMENT_REVIEW",
+  "CONVERSATION_FLOW",
+  "PROFILE_REVIEW",
+  "INSIGHT_REPORT",
+  "MANUAL"
+] as const;
+const adminSupportRelatedEntityTypes = [
+  "USER",
+  "CONVERSATION",
+  "PAYMENT",
+  "PROFILE",
+  "INSIGHT",
+  "WALLET_TRANSACTION",
+  "CONTENT_ENTRY",
+  "NONE"
+] as const;
+const adminSupportNoteTypes = ["INTERNAL", "PUBLIC_DRAFT"] as const;
+const supportOptionalIdSchema = z.string().trim().max(160).nullable().optional();
 
 export const userMotivationCodeSchema = z.enum(USER_MOTIVATION_CODES);
 export const insightAudienceIntentSchema = z.enum(INSIGHT_AUDIENCE_INTENT_CODES);
@@ -484,6 +528,75 @@ export const adminContentEntryRestoreSchema = z
   })
   .strict();
 
+export const adminSupportTicketCreateSchema = z
+  .object({
+    subject: trimmedString(180),
+    description: trimmedString(4_000),
+    priority: z.enum(adminSupportTicketPriorities).default("NORMAL"),
+    category: z.enum(adminSupportTicketCategories).default("GENERAL_QUESTION"),
+    subcategory: z.string().trim().max(120).nullable().optional(),
+    source: z.enum(adminSupportTicketSources).default("ADMIN_CREATED"),
+    requesterUserId: supportOptionalIdSchema,
+    assigneeAdminId: supportOptionalIdSchema,
+    relatedEntityType: z.enum(adminSupportRelatedEntityTypes).nullable().optional(),
+    relatedEntityId: supportOptionalIdSchema
+  })
+  .strict();
+
+export const adminSupportTicketUpdateSchema = z
+  .object({
+    subject: trimmedString(180).optional(),
+    description: trimmedString(4_000).optional(),
+    status: z.enum(adminSupportTicketEditableStatuses).optional(),
+    priority: z.enum(adminSupportTicketPriorities).optional(),
+    category: z.enum(adminSupportTicketCategories).optional(),
+    subcategory: z.string().trim().max(120).nullable().optional(),
+    source: z.enum(adminSupportTicketSources).optional(),
+    requesterUserId: supportOptionalIdSchema,
+    assigneeAdminId: supportOptionalIdSchema,
+    relatedEntityType: z.enum(adminSupportRelatedEntityTypes).nullable().optional(),
+    relatedEntityId: supportOptionalIdSchema
+  })
+  .strict()
+  .refine((value) => Object.keys(value).length > 0, {
+    message: "At least one support ticket field must be provided."
+  });
+
+export const adminSupportTicketAssignSchema = z
+  .object({
+    assigneeAdminId: z.string().trim().max(160).nullable()
+  })
+  .strict();
+
+export const adminSupportTicketNoteCreateSchema = z
+  .object({
+    body: trimmedString(2_000),
+    noteType: z.enum(adminSupportNoteTypes).default("INTERNAL")
+  })
+  .strict();
+
+export const adminSupportTicketResolveSchema = z
+  .object({
+    resolutionSummary: trimmedString(1_000),
+    resolutionReason: trimmedString(300),
+    internalNote: z.string().trim().max(800).optional()
+  })
+  .strict();
+
+export const adminSupportTicketReopenSchema = z
+  .object({
+    reason: trimmedString(500),
+    internalNote: z.string().trim().max(800).optional()
+  })
+  .strict();
+
+export const adminSupportTicketArchiveSchema = z
+  .object({
+    reason: trimmedString(500),
+    internalNote: z.string().trim().max(800).optional()
+  })
+  .strict();
+
 export const backendValidationSchemas = {
   profileUpdateSchema,
   requestCreationSchema,
@@ -519,5 +632,12 @@ export const backendValidationSchemas = {
   adminContentEntryCreateSchema,
   adminContentEntryUpdateSchema,
   adminContentEntryArchiveSchema,
-  adminContentEntryRestoreSchema
+  adminContentEntryRestoreSchema,
+  adminSupportTicketCreateSchema,
+  adminSupportTicketUpdateSchema,
+  adminSupportTicketAssignSchema,
+  adminSupportTicketNoteCreateSchema,
+  adminSupportTicketResolveSchema,
+  adminSupportTicketReopenSchema,
+  adminSupportTicketArchiveSchema
 } as const;

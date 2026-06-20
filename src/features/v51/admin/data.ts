@@ -492,6 +492,95 @@ export type AdminContentDetailData = {
   viewerCanMutate: boolean;
 };
 
+export type AdminSupportFilterOption = {
+  label: string;
+  value: string;
+  href: string;
+  active: boolean;
+};
+
+export type AdminSupportTicketNoteItem = {
+  id: string;
+  body: string;
+  noteType: string;
+  noteTypeLabel: string;
+  createdBySummary: string;
+  createdAt: string;
+};
+
+export type AdminSupportTicketItem = {
+  id: string;
+  ticketNumber: string;
+  subject: string;
+  description: string;
+  preview: string;
+  status: string;
+  statusLabel: string;
+  priority: string;
+  priorityLabel: string;
+  category: string;
+  categoryLabel: string;
+  subcategory: string;
+  sourceCode: string;
+  sourceLabel: string;
+  requesterSummary: string;
+  requesterHref?: string;
+  assigneeSummary: string;
+  relatedEntityType: string;
+  relatedEntityLabel: string;
+  relatedEntityId: string;
+  relatedEntityHref?: string;
+  resolutionSummary: string;
+  resolutionReason: string;
+  createdAt: string;
+  updatedAt: string;
+  resolvedAt: string;
+  archivedAt: string;
+  ageLabel: string;
+  href: string;
+  source: AdminDataSource;
+  actionsAvailable: boolean;
+  notes: readonly AdminSupportTicketNoteItem[];
+  auditItems?: readonly AdminAuditLogItem[];
+};
+
+export type AdminSupportInboxData = {
+  items: readonly AdminSupportTicketItem[];
+  metrics: readonly AdminMetric[];
+  queueOptions: readonly AdminSupportFilterOption[];
+  statusOptions: readonly AdminSupportFilterOption[];
+  priorityOptions: readonly AdminSupportFilterOption[];
+  categoryOptions: readonly AdminSupportFilterOption[];
+  sourceOptions: readonly AdminSupportFilterOption[];
+  relatedEntityOptions: readonly AdminSupportFilterOption[];
+  activeFilters: {
+    view: string;
+    status: string;
+    priority: string;
+    category: string;
+    source: string;
+    relatedEntityType: string;
+    assignee: string;
+    search: string;
+  };
+  sourceNote: string;
+  source: AdminDataSource;
+  viewerCanCreate: boolean;
+  viewerCanMutate: boolean;
+  viewerCanArchive: boolean;
+  viewerId: string;
+};
+
+export type AdminSupportDetailData = {
+  item: AdminSupportTicketItem | null;
+  sourceNote: string;
+  source: AdminDataSource;
+  viewerCanCreate: boolean;
+  viewerCanMutate: boolean;
+  viewerCanArchive: boolean;
+  viewerId: string;
+};
+
 export type AdminAuditLogData = {
   implemented: boolean;
   rows: readonly AdminAuditLogItem[];
@@ -516,6 +605,7 @@ export type AdminAuditLogItem = {
   pricingHref?: string;
   categoryHref?: string;
   contentHref?: string;
+  supportHref?: string;
   source: AdminDataSource;
 };
 
@@ -995,11 +1085,9 @@ export function getPlaceholderData(routeId: string): AdminPlaceholderData {
     },
     support: {
       title: "پشتیبانی",
-      description: "نمای پایه از موارد نیازمند بررسی پشتیبانی.",
-      status: "اسکلت خواندنی",
-      items: getCancellationAdminItems()
-        .filter((item) => item.supportStatus === "در بررسی پشتیبانی")
-        .map((item) => ({ label: item.title, value: item.supportStatus }))
+      description: "صندوق پشتیبانی DB-backed است و داده نمایشی از لغوها یا fixtureها نشان نمی‌دهد.",
+      status: "DB-backed",
+      items: []
     },
     settings: {
       title: "تنظیمات پنل عملیات",

@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
 import { requireAdminPageAccess } from "@/features/v51/admin/access";
-import { AdminAccessDenied, AdminPlaceholder } from "@/features/v51/admin/AdminSurfaces";
-import { getPlaceholderData } from "@/features/v51/admin/data";
+import { AdminAccessDenied, AdminSupportInbox } from "@/features/v51/admin/AdminSurfaces";
+import { getAdminSupportRouteData, type AdminSupportSearchParams } from "@/features/v51/admin/server-data";
 
 export const metadata: Metadata = {
   title: "پشتیبانی ادمین | Useravaa"
 };
 
-export default async function AdminSupportPage() {
+type AdminSupportPageProps = Readonly<{
+  searchParams?: Promise<AdminSupportSearchParams>;
+}>;
+
+export default async function AdminSupportPage({ searchParams }: AdminSupportPageProps) {
   const viewer = await requireAdminPageAccess();
 
   if (!viewer) {
     return <AdminAccessDenied />;
   }
 
-  return <AdminPlaceholder data={getPlaceholderData("support")} />;
+  const routeData = await getAdminSupportRouteData(viewer, await searchParams);
+
+  return <AdminSupportInbox data={routeData} />;
 }

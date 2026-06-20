@@ -299,6 +299,64 @@ enum ContentEntryStatus {
   ARCHIVED
 }
 
+enum SupportTicketStatus {
+  NEW
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_USER
+  WAITING_FOR_PROVIDER
+  ESCALATED
+  RESOLVED
+  ARCHIVED
+}
+
+enum SupportTicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum SupportTicketCategory {
+  CONVERSATION
+  PAYMENT
+  CANCELLATION_REFUND_WALLET
+  PROFILE_EXPERIENCE_CREATOR
+  INSIGHT_CONTENT
+  ACCOUNT_AUTH
+  PRICING_CATEGORY
+  TECHNICAL_ISSUE
+  TRUST_SAFETY
+  GENERAL_QUESTION
+}
+
+enum SupportTicketSource {
+  ADMIN_CREATED
+  USER_REPORTED
+  SYSTEM_FLAGGED
+  PAYMENT_REVIEW
+  CONVERSATION_FLOW
+  PROFILE_REVIEW
+  INSIGHT_REPORT
+  MANUAL
+}
+
+enum SupportTicketNoteType {
+  INTERNAL
+  PUBLIC_DRAFT
+}
+
+enum SupportRelatedEntityType {
+  USER
+  CONVERSATION
+  PAYMENT
+  PROFILE
+  INSIGHT
+  WALLET_TRANSACTION
+  CONTENT_ENTRY
+  NONE
+}
+
 model User {
   id                    String                @id @default(cuid())
   role                  UserRole              @default(USER)
@@ -330,6 +388,9 @@ model User {
   updatedJobCategories  JobCategory[]          @relation("JobCategoryUpdatedByAdmin")
   createdContentEntries ContentEntry[]          @relation("ContentEntryCreatedByAdmin")
   updatedContentEntries ContentEntry[]          @relation("ContentEntryUpdatedByAdmin")
+  requestedSupportTickets SupportTicket[]       @relation("SupportTicketRequester")
+  assignedSupportTickets  SupportTicket[]       @relation("SupportTicketAssignee")
+  createdSupportNotes     SupportTicketNote[]   @relation("SupportTicketNoteCreatedByAdmin")
   notifications         Notification[]
   insightAnswers        InsightAnswer[]
   officialInsights      Insight[]             @relation("InsightCreatedBy")
@@ -976,6 +1037,55 @@ model ContentEntry {
   @@index([namespace, contentType, status])
   @@index([status, archivedAt])
   @@index([isSystem, isEditable])
+}
+
+model SupportTicket {
+  id                String                   @id @default(cuid())
+  ticketNumber      String                   @unique
+  subject           String
+  description       String
+  status            SupportTicketStatus      @default(NEW)
+  priority          SupportTicketPriority    @default(NORMAL)
+  category          SupportTicketCategory    @default(GENERAL_QUESTION)
+  subcategory       String?
+  source            SupportTicketSource      @default(ADMIN_CREATED)
+  requesterUserId   String?
+  assigneeAdminId   String?
+  relatedEntityType SupportRelatedEntityType?
+  relatedEntityId   String?
+  resolutionSummary String?
+  resolutionReason  String?
+  archivedAt        DateTime?
+  resolvedAt        DateTime?
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+
+  requesterUser     User?                    @relation("SupportTicketRequester", fields: [requesterUserId], references: [id], onDelete: SetNull)
+  assigneeAdmin     User?                    @relation("SupportTicketAssignee", fields: [assigneeAdminId], references: [id], onDelete: SetNull)
+  notes             SupportTicketNote[]
+
+  @@index([status, priority, updatedAt])
+  @@index([category, status])
+  @@index([assigneeAdminId, status])
+  @@index([requesterUserId])
+  @@index([relatedEntityType, relatedEntityId])
+  @@index([archivedAt])
+}
+
+model SupportTicketNote {
+  id               String                @id @default(cuid())
+  ticketId         String
+  body             String
+  noteType         SupportTicketNoteType @default(INTERNAL)
+  createdByAdminId String?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  ticket           SupportTicket         @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  createdByAdmin   User?                 @relation("SupportTicketNoteCreatedByAdmin", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+
+  @@index([ticketId, createdAt])
+  @@index([createdByAdminId])
 }
 
 model AdminAuditEvent {

@@ -22,5 +22,6 @@ export type BackendArea =
   | "admin_pricing"
   | "admin_categories"
   | "admin_content"
+  | "admin_support"
   | "admin_audit"
   | "admin_read_model";

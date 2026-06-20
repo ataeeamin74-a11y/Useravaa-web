@@ -363,6 +363,18 @@ export const backendImplementationClassification = {
     blocksProductionLaunch: true,
     notes: "ADMIN-only content entry create, update, archive, and restore actions persist ContentEntry rows with AdminAuditEvent records. SUPPORT is read-only. UGC moderation remains in insight/profile moderation surfaces and user-authored text is not silently rewritten."
   },
+  adminSupport: {
+    classification: "transaction_ready",
+    prismaSchemaExists: true,
+    prismaClientBoundaryExists: true,
+    repositoryBoundaryExists: true,
+    apiRouteExists: true,
+    readsUseRepository: true,
+    writesImplemented: true,
+    productionProviderConfigured: false,
+    blocksProductionLaunch: true,
+    notes: "Admin Support Inbox uses DB-backed SupportTicket and SupportTicketNote rows with audited create/update/assign/note/resolve/reopen/archive actions. It links to related entities without directly mutating payment, wallet, conversation, cancellation, payout, settlement, notification, or lead data."
+  },
   adminAudit: {
     classification: "transaction_ready",
     prismaSchemaExists: true,
@@ -373,7 +385,7 @@ export const backendImplementationClassification = {
     writesImplemented: true,
     productionProviderConfigured: false,
     blocksProductionLaunch: true,
-    notes: "AdminAuditEvent persistence exists for payment review, cancellation support-review, experience profile review, and insight moderation actions and powers the admin audit-log read surface. Broader audit coverage remains deferred."
+    notes: "AdminAuditEvent persistence exists for payment review, cancellation support-review, experience profile review, insight moderation, pricing, category, content, and support ticket actions and powers the admin audit-log read surface. Broader audit coverage remains deferred."
   },
   adminReadModels: {
     classification: "read_only_persistent",

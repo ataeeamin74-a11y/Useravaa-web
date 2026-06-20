@@ -22,11 +22,28 @@ import {
   buildAdminPaidSessionsKpiTree,
   buildUnavailableAdminPaidSessionsKpiTree
 } from "@/lib/backend/admin-kpi-tree";
-import { ContentEntryStatus, ContentEntryType, JobField, type JobField as PrismaJobField } from "@prisma/client";
-import { adminCategoryService, adminContentService, adminPaymentService, adminPricingService } from "@/lib/backend/services";
+import {
+  ContentEntryStatus,
+  ContentEntryType,
+  JobField,
+  SupportRelatedEntityType,
+  SupportTicketCategory,
+  SupportTicketPriority,
+  SupportTicketSource,
+  SupportTicketStatus,
+  type JobField as PrismaJobField
+} from "@prisma/client";
+import {
+  adminCategoryService,
+  adminContentService,
+  adminPaymentService,
+  adminPricingService,
+  adminSupportService
+} from "@/lib/backend/services";
 import type {
   AdminCategoryRecord,
   AdminContentEntryRecord,
+  AdminSupportTicketRecord,
   PricingRuleCategoryOption,
   PricingRuleRecord
 } from "@/lib/backend/repositories";
@@ -64,6 +81,10 @@ import {
   type AdminContentEntryItem,
   type AdminContentFilterOption,
   type AdminUgcOverviewItem,
+  type AdminSupportDetailData,
+  type AdminSupportFilterOption,
+  type AdminSupportInboxData,
+  type AdminSupportTicketItem,
   type AdminConversationListItem,
   type AdminDataSource,
   type AdminDetailField,
@@ -129,6 +150,7 @@ export type AdminHomeRouteData = {
 
 export type AdminAnalyticsSearchParams = Record<string, string | string[] | undefined>;
 export type AdminContentSearchParams = Record<string, string | string[] | undefined>;
+export type AdminSupportSearchParams = Record<string, string | string[] | undefined>;
 
 export type AdminListRouteData<T> = {
   items: T[];
@@ -241,6 +263,64 @@ const contentStatusLabels: Record<ContentEntryStatus, string> = {
   ARCHIVED: "آرشیوشده"
 };
 
+const supportStatusLabels: Record<SupportTicketStatus, string> = {
+  NEW: "جدید",
+  OPEN: "باز",
+  IN_PROGRESS: "در حال پیگیری",
+  WAITING_FOR_USER: "در انتظار کاربر",
+  WAITING_FOR_PROVIDER: "در انتظار تجربه‌آفرین",
+  ESCALATED: "ارجاع‌شده",
+  RESOLVED: "حل‌شده",
+  ARCHIVED: "آرشیوشده"
+};
+
+const supportPriorityLabels: Record<SupportTicketPriority, string> = {
+  LOW: "کم",
+  NORMAL: "معمولی",
+  HIGH: "بالا",
+  URGENT: "فوری"
+};
+
+const supportCategoryLabels: Record<SupportTicketCategory, string> = {
+  CONVERSATION: "گفت‌وگو",
+  PAYMENT: "پرداخت",
+  CANCELLATION_REFUND_WALLET: "لغو / مبلغ برگشتی / کیف پول",
+  PROFILE_EXPERIENCE_CREATOR: "پروفایل تجربه‌آفرین",
+  INSIGHT_CONTENT: "بینش / محتوا",
+  ACCOUNT_AUTH: "حساب و ورود",
+  PRICING_CATEGORY: "قیمت‌گذاری / دسته‌بندی",
+  TECHNICAL_ISSUE: "مسئله فنی",
+  TRUST_SAFETY: "اعتماد و ایمنی",
+  GENERAL_QUESTION: "پرسش عمومی"
+};
+
+const supportSourceLabels: Record<SupportTicketSource, string> = {
+  ADMIN_CREATED: "ساخته‌شده توسط ادمین",
+  USER_REPORTED: "گزارش کاربر",
+  SYSTEM_FLAGGED: "پرچم سیستمی",
+  PAYMENT_REVIEW: "بررسی پرداخت",
+  CONVERSATION_FLOW: "مسیر گفت‌وگو",
+  PROFILE_REVIEW: "بررسی پروفایل",
+  INSIGHT_REPORT: "گزارش بینش",
+  MANUAL: "دستی"
+};
+
+const supportRelatedEntityLabels: Record<SupportRelatedEntityType, string> = {
+  USER: "کاربر",
+  CONVERSATION: "گفت‌وگو",
+  PAYMENT: "پرداخت",
+  PROFILE: "پروفایل تجربه‌آفرین",
+  INSIGHT: "بینش",
+  WALLET_TRANSACTION: "تراکنش کیف پول",
+  CONTENT_ENTRY: "محتوا",
+  NONE: "بدون ارتباط"
+};
+
+const supportNoteTypeLabels = {
+  INTERNAL: "یادداشت داخلی",
+  PUBLIC_DRAFT: "پیش‌نویس عمومی"
+} as const;
+
 const contentDefaultNamespaces = [
   "public.insights",
   "public.auth",
@@ -248,6 +328,23 @@ const contentDefaultNamespaces = [
   "product.conversation",
   "product.checkout",
   "admin.empty_states"
+] as const;
+
+const supportQueueViews = [
+  { value: "", label: "همه فعال‌ها" },
+  { value: "new", label: "جدید" },
+  { value: "unassigned", label: "بدون مسئول" },
+  { value: "mine", label: "تیکت‌های من" },
+  { value: "urgent", label: "فوری" },
+  { value: "waiting_user", label: "در انتظار کاربر" },
+  { value: "waiting_provider", label: "در انتظار تجربه‌آفرین" },
+  { value: "escalated", label: "ارجاع‌شده" },
+  { value: "payment", label: "پرداخت" },
+  { value: "conversation", label: "گفت‌وگو" },
+  { value: "profile", label: "پروفایل" },
+  { value: "insight", label: "بینش / محتوا" },
+  { value: "resolved", label: "حل‌شده" },
+  { value: "archived", label: "آرشیوشده" }
 ] as const;
 
 function firstSearchParam(params: AdminAnalyticsSearchParams | undefined, key: string) {
@@ -302,6 +399,26 @@ function isContentEntryStatus(value: string | null | undefined): value is Conten
   return Boolean(value && Object.values(ContentEntryStatus).includes(value as ContentEntryStatus));
 }
 
+function isSupportTicketStatus(value: string | null | undefined): value is SupportTicketStatus {
+  return Boolean(value && Object.values(SupportTicketStatus).includes(value as SupportTicketStatus));
+}
+
+function isSupportTicketPriority(value: string | null | undefined): value is SupportTicketPriority {
+  return Boolean(value && Object.values(SupportTicketPriority).includes(value as SupportTicketPriority));
+}
+
+function isSupportTicketCategory(value: string | null | undefined): value is SupportTicketCategory {
+  return Boolean(value && Object.values(SupportTicketCategory).includes(value as SupportTicketCategory));
+}
+
+function isSupportTicketSource(value: string | null | undefined): value is SupportTicketSource {
+  return Boolean(value && Object.values(SupportTicketSource).includes(value as SupportTicketSource));
+}
+
+function isSupportRelatedEntityType(value: string | null | undefined): value is SupportRelatedEntityType {
+  return Boolean(value && Object.values(SupportRelatedEntityType).includes(value as SupportRelatedEntityType));
+}
+
 function parseAdminContentFilters(params: AdminContentSearchParams | undefined) {
   const namespace = firstSearchParam(params, "namespace")?.trim() ?? "";
   const contentType = firstSearchParam(params, "contentType")?.trim() ?? "";
@@ -312,6 +429,28 @@ function parseAdminContentFilters(params: AdminContentSearchParams | undefined) 
     namespace,
     contentType: isContentEntryType(contentType) ? contentType : "",
     status: isContentEntryStatus(status) ? status : "",
+    search
+  };
+}
+
+function parseAdminSupportFilters(params: AdminSupportSearchParams | undefined) {
+  const view = firstSearchParam(params, "view")?.trim() ?? "";
+  const status = firstSearchParam(params, "status")?.trim() ?? "";
+  const priority = firstSearchParam(params, "priority")?.trim() ?? "";
+  const category = firstSearchParam(params, "category")?.trim() ?? "";
+  const source = firstSearchParam(params, "source")?.trim() ?? "";
+  const relatedEntityType = firstSearchParam(params, "relatedEntityType")?.trim() ?? "";
+  const assignee = firstSearchParam(params, "assignee")?.trim() ?? "";
+  const search = firstSearchParam(params, "search")?.trim() ?? "";
+
+  return {
+    view: supportQueueViews.some((option) => option.value === view) ? view : "",
+    status: isSupportTicketStatus(status) ? status : "",
+    priority: isSupportTicketPriority(priority) ? priority : "",
+    category: isSupportTicketCategory(category) ? category : "",
+    source: isSupportTicketSource(source) ? source : "",
+    relatedEntityType: isSupportRelatedEntityType(relatedEntityType) ? relatedEntityType : "",
+    assignee: assignee === "me" || assignee === "unassigned" ? assignee : "",
     search
   };
 }
@@ -344,6 +483,28 @@ function adminContentHref(filters: {
   return query ? `/admin/content?${query}` : "/admin/content";
 }
 
+function adminSupportHref(filters: {
+  view?: string;
+  status?: string;
+  priority?: string;
+  category?: string;
+  source?: string;
+  relatedEntityType?: string;
+  assignee?: string;
+  search?: string;
+}) {
+  const params = new URLSearchParams();
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value) {
+      params.set(key, value);
+    }
+  });
+
+  const query = params.toString();
+  return query ? `/admin/support?${query}` : "/admin/support";
+}
+
 function mapContentFilterOption(
   label: string,
   value: string,
@@ -360,6 +521,20 @@ function mapContentFilterOption(
     value,
     active,
     href: adminContentHref(nextFilters)
+  };
+}
+
+function mapSupportFilterOption(
+  label: string,
+  value: string,
+  active: boolean,
+  nextFilters: ReturnType<typeof parseAdminSupportFilters>
+): AdminSupportFilterOption {
+  return {
+    label,
+    value,
+    active,
+    href: adminSupportHref(nextFilters)
   };
 }
 
@@ -675,6 +850,284 @@ function mapAdminContentEntryItem(
   };
 }
 
+function supportTicketPreview(description: string) {
+  const normalized = description.replace(/\s+/g, " ").trim();
+  return normalized.length > 160 ? `${normalized.slice(0, 157)}...` : normalized;
+}
+
+function supportParticipantSummary(user: { id: string; displayName: string | null; email?: string | null; role?: string | null } | null) {
+  if (!user) {
+    return notRecorded;
+  }
+
+  return `${safeText(user.displayName, user.email ?? user.id)} · ${user.id}`;
+}
+
+function supportRelatedHref(type: SupportRelatedEntityType | null, id: string | null) {
+  if (!type || !id || type === "NONE") {
+    return undefined;
+  }
+
+  if (type === "USER") {
+    return `/admin/users/${id}`;
+  }
+
+  if (type === "CONVERSATION") {
+    return `/admin/conversations/${id}`;
+  }
+
+  if (type === "PAYMENT") {
+    return `/admin/payments/${id}`;
+  }
+
+  if (type === "PROFILE") {
+    return `/admin/experience-profiles/${id}`;
+  }
+
+  if (type === "INSIGHT") {
+    return `/admin/insights/${id}`;
+  }
+
+  if (type === "CONTENT_ENTRY") {
+    return `/admin/content/${id}`;
+  }
+
+  return undefined;
+}
+
+function supportAgeLabel(createdAt: Date | string) {
+  const created = createdAt instanceof Date ? createdAt : new Date(createdAt);
+  const time = created.getTime();
+
+  if (Number.isNaN(time)) {
+    return notRecorded;
+  }
+
+  const days = Math.max(0, Math.floor((Date.now() - time) / 86_400_000));
+
+  if (days === 0) {
+    return "امروز";
+  }
+
+  return `${formatFaNumber(days)} روز`;
+}
+
+function mapAdminSupportTicketItem(
+  ticket: AdminSupportTicketRecord,
+  auditItems: readonly AdminAuditLogItem[] = []
+): AdminSupportTicketItem {
+  const relatedEntityLabel = ticket.relatedEntityType ? supportRelatedEntityLabels[ticket.relatedEntityType] : "بدون ارتباط";
+
+  return {
+    id: ticket.id,
+    ticketNumber: ticket.ticketNumber,
+    subject: ticket.subject,
+    description: ticket.description,
+    preview: supportTicketPreview(ticket.description),
+    status: ticket.status,
+    statusLabel: supportStatusLabels[ticket.status],
+    priority: ticket.priority,
+    priorityLabel: supportPriorityLabels[ticket.priority],
+    category: ticket.category,
+    categoryLabel: supportCategoryLabels[ticket.category],
+    subcategory: ticket.subcategory ?? notRecorded,
+    sourceCode: ticket.source,
+    sourceLabel: supportSourceLabels[ticket.source],
+    requesterSummary: supportParticipantSummary(ticket.requesterUser),
+    requesterHref: ticket.requesterUserId ? `/admin/users/${ticket.requesterUserId}` : undefined,
+    assigneeSummary: supportParticipantSummary(ticket.assigneeAdmin),
+    relatedEntityType: ticket.relatedEntityType ?? "NONE",
+    relatedEntityLabel,
+    relatedEntityId: ticket.relatedEntityId ?? notRecorded,
+    relatedEntityHref: supportRelatedHref(ticket.relatedEntityType, ticket.relatedEntityId),
+    resolutionSummary: ticket.resolutionSummary ?? notRecorded,
+    resolutionReason: ticket.resolutionReason ?? notRecorded,
+    createdAt: formatDateLike(ticket.createdAt),
+    updatedAt: formatDateLike(ticket.updatedAt),
+    resolvedAt: formatDateLike(ticket.resolvedAt),
+    archivedAt: formatDateLike(ticket.archivedAt),
+    ageLabel: supportAgeLabel(ticket.createdAt),
+    href: `/admin/support/${ticket.id}`,
+    source: "backend_repository",
+    actionsAvailable: !ticket.archivedAt && ticket.status !== "ARCHIVED",
+    notes: ticket.notes.map((note) => ({
+      id: note.id,
+      body: note.body,
+      noteType: note.noteType,
+      noteTypeLabel: supportNoteTypeLabels[note.noteType],
+      createdBySummary: supportParticipantSummary(note.createdByAdmin),
+      createdAt: formatDateLike(note.createdAt)
+    })),
+    auditItems
+  };
+}
+
+function supportRepositoryFilters(viewer: Viewer, filters: ReturnType<typeof parseAdminSupportFilters>) {
+  const repositoryFilters = {
+    status: (filters.status || null) as SupportTicketStatus | null,
+    priority: (filters.priority || null) as SupportTicketPriority | null,
+    category: (filters.category || null) as SupportTicketCategory | null,
+    source: (filters.source || null) as SupportTicketSource | null,
+    relatedEntityType: (filters.relatedEntityType || null) as SupportRelatedEntityType | null,
+    assigneeAdminId: filters.assignee === "me" ? viewer.id : null,
+    unassigned: filters.assignee === "unassigned" ? true : null,
+    includeArchived: filters.status === "ARCHIVED" || filters.view === "archived" ? true : null,
+    search: filters.search || null
+  };
+
+  if (filters.view === "new" && !repositoryFilters.status) {
+    repositoryFilters.status = "NEW";
+  }
+
+  if (filters.view === "unassigned") {
+    repositoryFilters.unassigned = true;
+  }
+
+  if (filters.view === "mine") {
+    repositoryFilters.assigneeAdminId = viewer.id;
+  }
+
+  if (filters.view === "urgent" && !repositoryFilters.priority) {
+    repositoryFilters.priority = "URGENT";
+  }
+
+  if (filters.view === "waiting_user" && !repositoryFilters.status) {
+    repositoryFilters.status = "WAITING_FOR_USER";
+  }
+
+  if (filters.view === "waiting_provider" && !repositoryFilters.status) {
+    repositoryFilters.status = "WAITING_FOR_PROVIDER";
+  }
+
+  if (filters.view === "escalated" && !repositoryFilters.status) {
+    repositoryFilters.status = "ESCALATED";
+  }
+
+  if (filters.view === "payment" && !repositoryFilters.category) {
+    repositoryFilters.category = "PAYMENT";
+  }
+
+  if (filters.view === "conversation" && !repositoryFilters.category) {
+    repositoryFilters.category = "CONVERSATION";
+  }
+
+  if (filters.view === "profile" && !repositoryFilters.category) {
+    repositoryFilters.category = "PROFILE_EXPERIENCE_CREATOR";
+  }
+
+  if (filters.view === "insight" && !repositoryFilters.category) {
+    repositoryFilters.category = "INSIGHT_CONTENT";
+  }
+
+  if (filters.view === "resolved" && !repositoryFilters.status) {
+    repositoryFilters.status = "RESOLVED";
+  }
+
+  if (filters.view === "archived") {
+    repositoryFilters.status = "ARCHIVED";
+    repositoryFilters.includeArchived = true;
+  }
+
+  return repositoryFilters;
+}
+
+function mapSupportQueueOptions(filters: ReturnType<typeof parseAdminSupportFilters>): AdminSupportFilterOption[] {
+  return supportQueueViews.map((option) =>
+    mapSupportFilterOption(option.label, option.value, filters.view === option.value, {
+      ...filters,
+      view: option.value
+    })
+  );
+}
+
+function mapSupportStatusOptions(filters: ReturnType<typeof parseAdminSupportFilters>): AdminSupportFilterOption[] {
+  return [
+    mapSupportFilterOption("همه وضعیت‌ها", "", !filters.status, { ...filters, status: "" }),
+    ...Object.values(SupportTicketStatus).map((status) =>
+      mapSupportFilterOption(supportStatusLabels[status], status, filters.status === status, { ...filters, status })
+    )
+  ];
+}
+
+function mapSupportPriorityOptions(filters: ReturnType<typeof parseAdminSupportFilters>): AdminSupportFilterOption[] {
+  return [
+    mapSupportFilterOption("همه اولویت‌ها", "", !filters.priority, { ...filters, priority: "" }),
+    ...Object.values(SupportTicketPriority).map((priority) =>
+      mapSupportFilterOption(supportPriorityLabels[priority], priority, filters.priority === priority, { ...filters, priority })
+    )
+  ];
+}
+
+function mapSupportCategoryOptions(filters: ReturnType<typeof parseAdminSupportFilters>): AdminSupportFilterOption[] {
+  return [
+    mapSupportFilterOption("همه دسته‌ها", "", !filters.category, { ...filters, category: "" }),
+    ...Object.values(SupportTicketCategory).map((category) =>
+      mapSupportFilterOption(supportCategoryLabels[category], category, filters.category === category, { ...filters, category })
+    )
+  ];
+}
+
+function mapSupportSourceOptions(filters: ReturnType<typeof parseAdminSupportFilters>): AdminSupportFilterOption[] {
+  return [
+    mapSupportFilterOption("همه منابع", "", !filters.source, { ...filters, source: "" }),
+    ...Object.values(SupportTicketSource).map((source) =>
+      mapSupportFilterOption(supportSourceLabels[source], source, filters.source === source, { ...filters, source })
+    )
+  ];
+}
+
+function mapSupportRelatedEntityOptions(filters: ReturnType<typeof parseAdminSupportFilters>): AdminSupportFilterOption[] {
+  return [
+    mapSupportFilterOption("همه ارتباط‌ها", "", !filters.relatedEntityType, { ...filters, relatedEntityType: "" }),
+    ...Object.values(SupportRelatedEntityType).map((type) =>
+      mapSupportFilterOption(supportRelatedEntityLabels[type], type, filters.relatedEntityType === type, { ...filters, relatedEntityType: type })
+    )
+  ];
+}
+
+function supportTicketIsOpen(ticket: AdminSupportTicketRecord) {
+  return !ticket.archivedAt && ticket.status !== "ARCHIVED" && ticket.status !== "RESOLVED";
+}
+
+function isSameDay(first: Date | string | null, second: Date) {
+  if (!first) {
+    return false;
+  }
+
+  const date = first instanceof Date ? first : new Date(first);
+
+  if (Number.isNaN(date.getTime())) {
+    return false;
+  }
+
+  return date.toISOString().slice(0, 10) === second.toISOString().slice(0, 10);
+}
+
+function buildSupportMetrics(tickets: readonly AdminSupportTicketRecord[]): AdminMetric[] {
+  const now = new Date();
+  const agingThreshold = now.getTime() - 72 * 60 * 60 * 1000;
+
+  const metric = (id: string, label: string, value: number, helper: string, href?: string): AdminMetric => ({
+    id,
+    label,
+    value: countLabel(value),
+    helper,
+    href,
+    source: "backend_repository"
+  });
+
+  return [
+    metric("support-open", "تیکت‌های باز", tickets.filter(supportTicketIsOpen).length, "بدون ردیف نمایشی", "/admin/support"),
+    metric("support-urgent", "فوری", tickets.filter((ticket) => supportTicketIsOpen(ticket) && ticket.priority === "URGENT").length, "اولویت فوری", adminSupportHref({ view: "urgent" })),
+    metric("support-unassigned", "بدون مسئول", tickets.filter((ticket) => supportTicketIsOpen(ticket) && !ticket.assigneeAdminId).length, "برای triage", adminSupportHref({ view: "unassigned" })),
+    metric("support-waiting-user", "در انتظار کاربر", tickets.filter((ticket) => ticket.status === "WAITING_FOR_USER").length, "بدون ارسال پیام خودکار", adminSupportHref({ view: "waiting_user" })),
+    metric("support-waiting-provider", "در انتظار تجربه‌آفرین", tickets.filter((ticket) => ticket.status === "WAITING_FOR_PROVIDER").length, "بدون اعلان خودکار", adminSupportHref({ view: "waiting_provider" })),
+    metric("support-escalated", "ارجاع‌شده", tickets.filter((ticket) => ticket.status === "ESCALATED").length, "نیازمند تصمیم ادمین", adminSupportHref({ view: "escalated" })),
+    metric("support-resolved-today", "حل‌شده امروز", tickets.filter((ticket) => isSameDay(ticket.resolvedAt, now)).length, "براساس resolvedAt", adminSupportHref({ view: "resolved" })),
+    metric("support-aging", "بیش از ۷۲ ساعت", tickets.filter((ticket) => supportTicketIsOpen(ticket) && new Date(ticket.createdAt).getTime() < agingThreshold).length, "تیکت‌های باز قدیمی‌تر", "/admin/support")
+  ];
+}
+
 function mapContentNamespaceOptions(
   filters: ReturnType<typeof parseAdminContentFilters>,
   entries: readonly AdminContentEntryRecord[]
@@ -987,6 +1440,46 @@ function auditActionLabel(action: string) {
     return "بازگردانی محتوای مدیریت‌شده";
   }
 
+  if (action === "SUPPORT_TICKET_CREATED") {
+    return "ثبت تیکت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_UPDATED") {
+    return "ویرایش تیکت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_ASSIGNED") {
+    return "تخصیص تیکت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_STATUS_CHANGED") {
+    return "تغییر وضعیت تیکت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_PRIORITY_CHANGED") {
+    return "تغییر اولویت تیکت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_CATEGORY_CHANGED") {
+    return "تغییر دسته تیکت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_NOTE_ADDED") {
+    return "افزودن یادداشت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_RESOLVED") {
+    return "حل تیکت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_REOPENED") {
+    return "بازگشایی تیکت پشتیبانی";
+  }
+
+  if (action === "SUPPORT_TICKET_ARCHIVED") {
+    return "آرشیو تیکت پشتیبانی";
+  }
+
   return action;
 }
 
@@ -1022,6 +1515,7 @@ function mapAuditItem(row: {
     pricingHref: row.targetType === "PRICING_RULE" && row.targetId ? `/admin/pricing/${row.targetId}` : undefined,
     categoryHref: row.targetType === "JOB_CATEGORY" && row.targetId ? `/admin/categories/${row.targetId}` : undefined,
     contentHref: row.targetType === "CONTENT_ENTRY" && row.targetId ? `/admin/content/${row.targetId}` : undefined,
+    supportHref: row.targetType === "SUPPORT_TICKET" && row.targetId ? `/admin/support/${row.targetId}` : undefined,
     source: "backend_repository"
   };
 }
@@ -2381,6 +2875,89 @@ export async function getAdminContentDetailRouteData(
     source: "placeholder",
     sourceNote: placeholderSourceNote,
     viewerCanMutate: false
+  };
+}
+
+export async function getAdminSupportRouteData(
+  viewer: Viewer,
+  params?: AdminSupportSearchParams
+): Promise<AdminSupportInboxData> {
+  const filters = parseAdminSupportFilters(params);
+  const [ticketsResult, summaryResult] = await Promise.all([
+    adminSupportService.list(viewer, supportRepositoryFilters(viewer, filters)),
+    adminSupportService.list(viewer, { includeArchived: true })
+  ]);
+  const summaryTickets = summaryResult.ok ? summaryResult.data : [];
+
+  if (ticketsResult.ok) {
+    return {
+      items: ticketsResult.data.map((ticket) => mapAdminSupportTicketItem(ticket)),
+      metrics: buildSupportMetrics(summaryTickets.length ? summaryTickets : ticketsResult.data),
+      queueOptions: mapSupportQueueOptions(filters),
+      statusOptions: mapSupportStatusOptions(filters),
+      priorityOptions: mapSupportPriorityOptions(filters),
+      categoryOptions: mapSupportCategoryOptions(filters),
+      sourceOptions: mapSupportSourceOptions(filters),
+      relatedEntityOptions: mapSupportRelatedEntityOptions(filters),
+      activeFilters: filters,
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanCreate: viewer.role === "ADMIN" || viewer.role === "SUPPORT",
+      viewerCanMutate: viewer.role === "ADMIN" || viewer.role === "SUPPORT",
+      viewerCanArchive: viewer.role === "ADMIN",
+      viewerId: viewer.id
+    };
+  }
+
+  return {
+    items: [],
+    metrics: buildSupportMetrics([]),
+    queueOptions: mapSupportQueueOptions(filters),
+    statusOptions: mapSupportStatusOptions(filters),
+    priorityOptions: mapSupportPriorityOptions(filters),
+    categoryOptions: mapSupportCategoryOptions(filters),
+    sourceOptions: mapSupportSourceOptions(filters),
+    relatedEntityOptions: mapSupportRelatedEntityOptions(filters),
+    activeFilters: filters,
+    source: "placeholder",
+    sourceNote: "پایگاه داده یا مدل پشتیبانی در دسترس نیست؛ تیکت ساختگی نمایش داده نمی‌شود.",
+    viewerCanCreate: false,
+    viewerCanMutate: false,
+    viewerCanArchive: false,
+    viewerId: viewer.id
+  };
+}
+
+export async function getAdminSupportDetailRouteData(
+  viewer: Viewer,
+  ticketId: string
+): Promise<AdminSupportDetailData> {
+  const [detailResult, auditResult] = await Promise.all([
+    adminSupportService.getDetail(viewer, ticketId),
+    adminReadModelService.getSupportTicketAuditLog(viewer, ticketId)
+  ]);
+  const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+
+  if (detailResult.ok) {
+    return {
+      item: mapAdminSupportTicketItem(detailResult.data, auditItems),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanCreate: viewer.role === "ADMIN" || viewer.role === "SUPPORT",
+      viewerCanMutate: viewer.role === "ADMIN" || viewer.role === "SUPPORT",
+      viewerCanArchive: viewer.role === "ADMIN",
+      viewerId: viewer.id
+    };
+  }
+
+  return {
+    item: null,
+    source: "placeholder",
+    sourceNote: "تیکت پشتیبانی پیدا نشد یا پایگاه داده در دسترس نیست؛ جزئیات ساختگی نمایش داده نمی‌شود.",
+    viewerCanCreate: false,
+    viewerCanMutate: false,
+    viewerCanArchive: false,
+    viewerId: viewer.id
   };
 }
 

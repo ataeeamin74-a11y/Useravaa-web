@@ -1,4 +1,14 @@
-import { Prisma, type ContentEntryStatus, type ContentEntryType } from "@prisma/client";
+import {
+  Prisma,
+  type ContentEntryStatus,
+  type ContentEntryType,
+  type SupportRelatedEntityType,
+  type SupportTicketCategory,
+  type SupportTicketNoteType,
+  type SupportTicketPriority,
+  type SupportTicketSource,
+  type SupportTicketStatus
+} from "@prisma/client";
 import { apiError, apiOk } from "./api-response";
 import { calculateRequesterCancellationPolicy } from "./cancellation-policy";
 import { isPrismaClientConfigurationError } from "./db/prisma";
@@ -16,6 +26,8 @@ import type {
   AdminCategoryRecord,
   AdminContentEntryFilters,
   AdminContentEntryRecord,
+  AdminSupportTicketFilters,
+  AdminSupportTicketRecord,
   PricingRuleListReadModel,
   PricingRuleRecord,
   RepositoryResult
@@ -29,6 +41,13 @@ import {
   adminContentEntryCreateSchema,
   adminContentEntryRestoreSchema,
   adminContentEntryUpdateSchema,
+  adminSupportTicketArchiveSchema,
+  adminSupportTicketAssignSchema,
+  adminSupportTicketCreateSchema,
+  adminSupportTicketNoteCreateSchema,
+  adminSupportTicketReopenSchema,
+  adminSupportTicketResolveSchema,
+  adminSupportTicketUpdateSchema,
   adminCancellationCreditApprovalSchema,
   adminCancellationCreditRejectionSchema,
   adminExperienceProfileApprovalSchema,
@@ -401,6 +420,12 @@ type AdminCategoryServiceOptions = {
 type AdminContentServiceOptions = {
   runInTransaction?: typeof withUseravaaTransaction;
   now?: () => Date;
+};
+
+type AdminSupportServiceOptions = {
+  runInTransaction?: typeof withUseravaaTransaction;
+  now?: () => Date;
+  ticketNumberGenerator?: () => string;
 };
 
 export type RequesterAttendanceCodeDto = {
@@ -2804,6 +2829,93 @@ function contentEntryCannotBeEditedResult(reason: string) {
   });
 }
 
+function supportTicketStatus(ticket: Pick<AdminSupportTicketRecord, "status" | "archivedAt">) {
+  return ticket.archivedAt ? "ARCHIVED" : ticket.status;
+}
+
+function supportTicketAuditSnapshot(
+  ticket: Pick<
+    AdminSupportTicketRecord,
+    | "ticketNumber"
+    | "status"
+    | "priority"
+    | "category"
+    | "subcategory"
+    | "source"
+    | "requesterUserId"
+    | "assigneeAdminId"
+    | "relatedEntityType"
+    | "relatedEntityId"
+    | "resolvedAt"
+    | "archivedAt"
+  >
+) {
+  return {
+    ticketNumber: ticket.ticketNumber,
+    status: ticket.status,
+    priority: ticket.priority,
+    category: ticket.category,
+    subcategory: ticket.subcategory,
+    source: ticket.source,
+    requesterUserId: ticket.requesterUserId,
+    assigneeAdminId: ticket.assigneeAdminId,
+    relatedEntityType: ticket.relatedEntityType,
+    relatedEntityId: ticket.relatedEntityId,
+    resolvedAt: ticket.resolvedAt?.toISOString() ?? null,
+    archivedAt: ticket.archivedAt?.toISOString() ?? null
+  };
+}
+
+function defaultSupportTicketNumber() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `SUP-${timestamp}-${suffix}`;
+}
+
+function supportRelatedConversationId(ticket: Pick<AdminSupportTicketRecord, "relatedEntityType" | "relatedEntityId">) {
+  return ticket.relatedEntityType === "CONVERSATION" ? ticket.relatedEntityId : null;
+}
+
+function supportRelatedPaymentId(ticket: Pick<AdminSupportTicketRecord, "relatedEntityType" | "relatedEntityId">) {
+  return ticket.relatedEntityType === "PAYMENT" ? ticket.relatedEntityId : null;
+}
+
+function supportUpdateAction(
+  before: AdminSupportTicketRecord,
+  after: AdminSupportTicketRecord
+):
+  | "SUPPORT_TICKET_UPDATED"
+  | "SUPPORT_TICKET_STATUS_CHANGED"
+  | "SUPPORT_TICKET_PRIORITY_CHANGED"
+  | "SUPPORT_TICKET_CATEGORY_CHANGED" {
+  if (before.status !== after.status) {
+    return "SUPPORT_TICKET_STATUS_CHANGED";
+  }
+
+  if (before.priority !== after.priority) {
+    return "SUPPORT_TICKET_PRIORITY_CHANGED";
+  }
+
+  if (before.category !== after.category) {
+    return "SUPPORT_TICKET_CATEGORY_CHANGED";
+  }
+
+  return "SUPPORT_TICKET_UPDATED";
+}
+
+function supportTicketCannotBeEditedResult(reason: string) {
+  return invalidStateResult("admin_support", {
+    reason
+  });
+}
+
+function supportUniqueConstraintResult(details?: unknown) {
+  return validationErrorResult("admin_support", {
+    reason: "duplicate_support_ticket_number",
+    details
+  });
+}
+
 async function validateCategoryParent(
   parentId: string | null | undefined,
   tx: UseravaaTransactionClient,
@@ -2837,6 +2949,654 @@ async function validateCategoryParent(
 
   return null;
 }
+
+export const adminSupportService = {
+  list(viewer: AdminViewer, filters: AdminSupportTicketFilters = {}): Promise<ServiceResult<AdminSupportTicketRecord[]>> {
+    if (!isAdminOrSupport(viewer)) {
+      return Promise.resolve(unauthorizedResult("admin_support"));
+    }
+
+    return useravaaRepository.adminSupport
+      .listSupportTickets(filters)
+      .then((result) => repositoryResultToService("admin_support", result));
+  },
+  getDetail(viewer: AdminViewer, ticketId: string): Promise<ServiceResult<AdminSupportTicketRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return Promise.resolve(unauthorizedResult("admin_support"));
+    }
+
+    return useravaaRepository.adminSupport.getSupportTicket(ticketId).then((result) => {
+      if (!result.ok) {
+        return repositoryResultToService("admin_support", result);
+      }
+
+      if (!result.data) {
+        return targetNotFoundResult("admin_support");
+      }
+
+      return {
+        ok: true,
+        data: result.data
+      } satisfies ServiceResult<typeof result.data>;
+    });
+  },
+  async create(
+    viewer: AdminViewer,
+    payload: unknown,
+    options: AdminSupportServiceOptions = {}
+  ): Promise<ServiceResult<AdminSupportTicketRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_support");
+    }
+
+    const parsed = adminSupportTicketCreateSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_support", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const ticketNumber = options.ticketNumberGenerator?.() ?? defaultSupportTicketNumber();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const created = await useravaaRepository.adminSupport.createSupportTicket(
+          {
+            ticketNumber,
+            subject: parsed.data.subject,
+            description: parsed.data.description,
+            status: "NEW",
+            priority: parsed.data.priority as SupportTicketPriority,
+            category: parsed.data.category as SupportTicketCategory,
+            subcategory: parsed.data.subcategory,
+            source: parsed.data.source as SupportTicketSource,
+            requesterUserId: parsed.data.requesterUserId,
+            assigneeAdminId: parsed.data.assigneeAdminId,
+            relatedEntityType: parsed.data.relatedEntityType as SupportRelatedEntityType | null | undefined,
+            relatedEntityId: parsed.data.relatedEntityId,
+            now
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createSupportTicketEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "SUPPORT_TICKET_CREATED",
+            ticketId: created.id,
+            beforeStatus: null,
+            afterStatus: supportTicketStatus(created),
+            relatedConversationId: supportRelatedConversationId(created),
+            relatedPaymentId: supportRelatedPaymentId(created),
+            metadata: {
+              after: supportTicketAuditSnapshot(created)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: created,
+          status: 201
+        } satisfies ServiceResult<typeof created>;
+      });
+    } catch (error) {
+      if (isPrismaUniqueConstraintError(error)) {
+        return supportUniqueConstraintResult(error.meta);
+      }
+
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_support", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async update(
+    viewer: AdminViewer,
+    ticketId: string,
+    payload: unknown,
+    options: AdminSupportServiceOptions = {}
+  ): Promise<ServiceResult<AdminSupportTicketRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_support");
+    }
+
+    const parsed = adminSupportTicketUpdateSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_support", parsed.error.flatten());
+    }
+
+    if (!isAdmin(viewer)) {
+      if (parsed.data.status === "RESOLVED") {
+        return unauthorizedResult("admin_support", {
+          reason: "support_role_must_use_admin_for_resolution"
+        });
+      }
+
+      if (parsed.data.assigneeAdminId !== undefined && parsed.data.assigneeAdminId !== null && parsed.data.assigneeAdminId !== viewer.id) {
+        return unauthorizedResult("admin_support", {
+          reason: "support_role_can_only_assign_to_self"
+        });
+      }
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminSupport.getSupportTicket(ticketId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_support", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_support");
+        }
+
+        if (existing.archivedAt || existing.status === "ARCHIVED") {
+          return supportTicketCannotBeEditedResult("archived_support_ticket_cannot_be_updated");
+        }
+
+        const updated = await useravaaRepository.adminSupport.updateSupportTicket(
+          ticketId,
+          {
+            ...(parsed.data.subject === undefined ? {} : { subject: parsed.data.subject }),
+            ...(parsed.data.description === undefined ? {} : { description: parsed.data.description }),
+            ...(parsed.data.status === undefined
+              ? {}
+              : {
+                  status: parsed.data.status as SupportTicketStatus,
+                  resolvedAt: parsed.data.status === "RESOLVED" ? now : null
+                }),
+            ...(parsed.data.priority === undefined ? {} : { priority: parsed.data.priority as SupportTicketPriority }),
+            ...(parsed.data.category === undefined ? {} : { category: parsed.data.category as SupportTicketCategory }),
+            ...(parsed.data.subcategory === undefined ? {} : { subcategory: parsed.data.subcategory }),
+            ...(parsed.data.source === undefined ? {} : { source: parsed.data.source as SupportTicketSource }),
+            ...(parsed.data.requesterUserId === undefined ? {} : { requesterUserId: parsed.data.requesterUserId }),
+            ...(parsed.data.assigneeAdminId === undefined ? {} : { assigneeAdminId: parsed.data.assigneeAdminId }),
+            ...(parsed.data.relatedEntityType === undefined
+              ? {}
+              : { relatedEntityType: parsed.data.relatedEntityType as SupportRelatedEntityType | null }),
+            ...(parsed.data.relatedEntityId === undefined ? {} : { relatedEntityId: parsed.data.relatedEntityId })
+          },
+          tx
+        );
+        const action = supportUpdateAction(existing, updated);
+
+        await useravaaRepository.adminAudit.createSupportTicketEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action,
+            ticketId: updated.id,
+            beforeStatus: supportTicketStatus(existing),
+            afterStatus: supportTicketStatus(updated),
+            relatedConversationId: supportRelatedConversationId(updated),
+            relatedPaymentId: supportRelatedPaymentId(updated),
+            metadata: {
+              before: supportTicketAuditSnapshot(existing),
+              after: supportTicketAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaUniqueConstraintError(error)) {
+        return supportUniqueConstraintResult(error.meta);
+      }
+
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_support", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async assign(
+    viewer: AdminViewer,
+    ticketId: string,
+    payload: unknown,
+    options: AdminSupportServiceOptions = {}
+  ): Promise<ServiceResult<AdminSupportTicketRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_support");
+    }
+
+    const parsed = adminSupportTicketAssignSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_support", parsed.error.flatten());
+    }
+
+    if (!isAdmin(viewer) && parsed.data.assigneeAdminId !== null && parsed.data.assigneeAdminId !== viewer.id) {
+      return unauthorizedResult("admin_support", {
+        reason: "support_role_can_only_assign_to_self"
+      });
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminSupport.getSupportTicket(ticketId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_support", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_support");
+        }
+
+        if (existing.archivedAt || existing.status === "ARCHIVED") {
+          return supportTicketCannotBeEditedResult("archived_support_ticket_cannot_be_assigned");
+        }
+
+        const updated = await useravaaRepository.adminSupport.updateSupportTicket(
+          ticketId,
+          {
+            assigneeAdminId: parsed.data.assigneeAdminId,
+            status: existing.status === "NEW" || existing.status === "OPEN" ? "IN_PROGRESS" : existing.status
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createSupportTicketEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "SUPPORT_TICKET_ASSIGNED",
+            ticketId: updated.id,
+            beforeStatus: supportTicketStatus(existing),
+            afterStatus: supportTicketStatus(updated),
+            relatedConversationId: supportRelatedConversationId(updated),
+            relatedPaymentId: supportRelatedPaymentId(updated),
+            metadata: {
+              previousAssigneeAdminId: existing.assigneeAdminId,
+              nextAssigneeAdminId: updated.assigneeAdminId
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_support", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async addNote(
+    viewer: AdminViewer,
+    ticketId: string,
+    payload: unknown,
+    options: AdminSupportServiceOptions = {}
+  ): Promise<ServiceResult<AdminSupportTicketRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_support");
+    }
+
+    const parsed = adminSupportTicketNoteCreateSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_support", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminSupport.getSupportTicket(ticketId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_support", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_support");
+        }
+
+        await useravaaRepository.adminSupport.addSupportTicketNote(
+          {
+            ticketId,
+            body: parsed.data.body,
+            noteType: parsed.data.noteType as SupportTicketNoteType,
+            createdByAdminId: viewer.id,
+            now
+          },
+          tx
+        );
+
+        const updatedResult = await useravaaRepository.adminSupport.getSupportTicket(ticketId, tx);
+        const updated = updatedResult.ok && updatedResult.data ? updatedResult.data : existing;
+
+        await useravaaRepository.adminAudit.createSupportTicketEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "SUPPORT_TICKET_NOTE_ADDED",
+            ticketId: existing.id,
+            beforeStatus: supportTicketStatus(existing),
+            afterStatus: supportTicketStatus(existing),
+            relatedConversationId: supportRelatedConversationId(existing),
+            relatedPaymentId: supportRelatedPaymentId(existing),
+            metadata: {
+              noteType: parsed.data.noteType
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_support", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async resolve(
+    viewer: AdminViewer,
+    ticketId: string,
+    payload: unknown,
+    options: AdminSupportServiceOptions = {}
+  ): Promise<ServiceResult<AdminSupportTicketRecord>> {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_support");
+    }
+
+    const parsed = adminSupportTicketResolveSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_support", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminSupport.getSupportTicket(ticketId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_support", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_support");
+        }
+
+        if (existing.archivedAt || existing.status === "ARCHIVED") {
+          return supportTicketCannotBeEditedResult("archived_support_ticket_cannot_be_resolved");
+        }
+
+        const updated = await useravaaRepository.adminSupport.updateSupportTicket(
+          ticketId,
+          {
+            status: "RESOLVED",
+            resolvedAt: now,
+            resolutionSummary: parsed.data.resolutionSummary,
+            resolutionReason: parsed.data.resolutionReason
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createSupportTicketEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "SUPPORT_TICKET_RESOLVED",
+            ticketId: updated.id,
+            beforeStatus: supportTicketStatus(existing),
+            afterStatus: supportTicketStatus(updated),
+            reason: parsed.data.resolutionReason,
+            note: parsed.data.internalNote,
+            relatedConversationId: supportRelatedConversationId(updated),
+            relatedPaymentId: supportRelatedPaymentId(updated),
+            metadata: {
+              before: supportTicketAuditSnapshot(existing),
+              after: supportTicketAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_support", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async reopen(
+    viewer: AdminViewer,
+    ticketId: string,
+    payload: unknown,
+    options: AdminSupportServiceOptions = {}
+  ): Promise<ServiceResult<AdminSupportTicketRecord>> {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_support");
+    }
+
+    const parsed = adminSupportTicketReopenSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_support", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminSupport.getSupportTicket(ticketId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_support", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_support");
+        }
+
+        if (existing.archivedAt || existing.status === "ARCHIVED") {
+          return supportTicketCannotBeEditedResult("archived_support_ticket_cannot_be_reopened");
+        }
+
+        const updated = await useravaaRepository.adminSupport.updateSupportTicket(
+          ticketId,
+          {
+            status: "OPEN",
+            resolvedAt: null,
+            resolutionSummary: null,
+            resolutionReason: null
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createSupportTicketEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "SUPPORT_TICKET_REOPENED",
+            ticketId: updated.id,
+            beforeStatus: supportTicketStatus(existing),
+            afterStatus: supportTicketStatus(updated),
+            reason: parsed.data.reason,
+            note: parsed.data.internalNote,
+            relatedConversationId: supportRelatedConversationId(updated),
+            relatedPaymentId: supportRelatedPaymentId(updated),
+            metadata: {
+              before: supportTicketAuditSnapshot(existing),
+              after: supportTicketAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_support", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async archive(
+    viewer: AdminViewer,
+    ticketId: string,
+    payload: unknown,
+    options: AdminSupportServiceOptions = {}
+  ): Promise<ServiceResult<AdminSupportTicketRecord>> {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_support");
+    }
+
+    const parsed = adminSupportTicketArchiveSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_support", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminSupport.getSupportTicket(ticketId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_support", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_support");
+        }
+
+        if (existing.archivedAt || existing.status === "ARCHIVED") {
+          return supportTicketCannotBeEditedResult("support_ticket_already_archived");
+        }
+
+        const updated = await useravaaRepository.adminSupport.updateSupportTicket(
+          ticketId,
+          {
+            status: "ARCHIVED",
+            archivedAt: now
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createSupportTicketEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "SUPPORT_TICKET_ARCHIVED",
+            ticketId: updated.id,
+            beforeStatus: supportTicketStatus(existing),
+            afterStatus: supportTicketStatus(updated),
+            reason: parsed.data.reason,
+            note: parsed.data.internalNote,
+            relatedConversationId: supportRelatedConversationId(updated),
+            relatedPaymentId: supportRelatedPaymentId(updated),
+            metadata: {
+              before: supportTicketAuditSnapshot(existing),
+              after: supportTicketAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_support", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  }
+} as const;
 
 export const adminContentService = {
   list(viewer: AdminViewer, filters: AdminContentEntryFilters = {}): Promise<ServiceResult<AdminContentEntryRecord[]>> {

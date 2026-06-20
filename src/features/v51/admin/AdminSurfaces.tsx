@@ -9,6 +9,7 @@ import { AdminInsightAnswerModerationActions } from "./AdminInsightAnswerModerat
 import { AdminInsightModerationActions } from "./AdminInsightModerationActions";
 import { AdminPaymentReviewActions } from "./AdminPaymentReviewActions";
 import { AdminPricingRuleActions } from "./AdminPricingRuleActions";
+import { AdminSupportActions } from "./AdminSupportActions";
 import {
   getConversationTimeline,
   getQualityChecklist,
@@ -33,6 +34,8 @@ import {
   type AdminPricingRuleDetailData,
   type AdminPricingRulesData,
   type AdminReadDetail,
+  type AdminSupportDetailData,
+  type AdminSupportInboxData,
   type AdminUserItem,
   type AdminWalletLedgerItem
 } from "./data";
@@ -1574,6 +1577,392 @@ export function AdminContentDetail({ data }: Readonly<{ data: AdminContentDetail
   );
 }
 
+export function AdminSupportInbox({ data }: Readonly<{ data: AdminSupportInboxData }>) {
+  return (
+    <div className={styles.pageStack}>
+      <AdminPageHeader
+        title="صندوق پشتیبانی"
+        description="پیگیری عملیاتی تیکت‌ها بدون تغییر مستقیم پرداخت، کیف پول، لغو یا چرخه گفت‌وگو."
+        sourceNote={data.sourceNote}
+      />
+      <section className={styles.metricGrid} aria-label="شاخص‌های پشتیبانی">
+        {data.metrics.map((metric) =>
+          metric.href ? (
+            <Link className={styles.metricCard} href={metric.href} key={metric.id}>
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+              <small>{metric.helper}</small>
+            </Link>
+          ) : (
+            <article className={styles.metricCard} key={metric.id}>
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+              <small>{metric.helper}</small>
+            </article>
+          )
+        )}
+      </section>
+      <section className={styles.surface}>
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>صف‌ها و فیلترها</h3>
+            <p>فقط ردیف‌های SupportTicket از پایگاه داده نمایش داده می‌شود؛ داده نمایشی جایگزین نمی‌شود.</p>
+          </div>
+          <DataSourceBadge source={data.source} />
+        </div>
+        <div>
+          <p className={styles.filterTitle}>صف سریع</p>
+          <div className={styles.filters}>
+            {data.queueOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`queue-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>وضعیت</p>
+          <div className={styles.filters}>
+            {data.statusOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`status-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>اولویت</p>
+          <div className={styles.filters}>
+            {data.priorityOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`priority-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>دسته و منبع</p>
+          <div className={styles.filters}>
+            {data.categoryOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`category-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+            {data.sourceOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`source-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>موجودیت مرتبط</p>
+          <div className={styles.filters}>
+            {data.relatedEntityOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`related-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <form className={styles.reviewBox} action="/admin/support">
+          {data.activeFilters.view ? <input type="hidden" name="view" value={data.activeFilters.view} /> : null}
+          {data.activeFilters.status ? <input type="hidden" name="status" value={data.activeFilters.status} /> : null}
+          {data.activeFilters.priority ? <input type="hidden" name="priority" value={data.activeFilters.priority} /> : null}
+          {data.activeFilters.category ? <input type="hidden" name="category" value={data.activeFilters.category} /> : null}
+          {data.activeFilters.source ? <input type="hidden" name="source" value={data.activeFilters.source} /> : null}
+          {data.activeFilters.relatedEntityType ? <input type="hidden" name="relatedEntityType" value={data.activeFilters.relatedEntityType} /> : null}
+          <label>
+            <span>مسئول</span>
+            <select name="assignee" defaultValue={data.activeFilters.assignee}>
+              <option value="">همه</option>
+              <option value="me">تیکت‌های من</option>
+              <option value="unassigned">بدون مسئول</option>
+            </select>
+          </label>
+          <label>
+            <span>جست‌وجو</span>
+            <input name="search" defaultValue={data.activeFilters.search} placeholder="شماره، موضوع، شرح یا شناسه مرتبط" />
+          </label>
+          <button className={styles.secondaryButton} type="submit">
+            اعمال فیلتر
+          </button>
+        </form>
+      </section>
+      <section className={styles.detailGrid}>
+        <article className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>تیکت‌ها</h3>
+              <p>کنش‌های حساس از صفحه رسمی همان موجودیت انجام می‌شود، نه از صندوق پشتیبانی.</p>
+            </div>
+          </div>
+          {data.items.length ? (
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>تیکت</th>
+                    <th>وضعیت</th>
+                    <th>اولویت</th>
+                    <th>دسته</th>
+                    <th>کاربر / مسئول</th>
+                    <th>ارتباط</th>
+                    <th>سن / آخرین تغییر</th>
+                    <th>کنش</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.items.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <strong className={styles.rowTitle}>{item.subject}</strong>
+                        <span dir="ltr">{item.ticketNumber}</span>
+                        <br />
+                        {item.preview}
+                      </td>
+                      <td>{item.statusLabel}</td>
+                      <td>{item.priorityLabel}</td>
+                      <td>
+                        {item.categoryLabel}
+                        <br />
+                        {item.subcategory}
+                      </td>
+                      <td>
+                        {item.requesterSummary}
+                        <br />
+                        {item.assigneeSummary}
+                      </td>
+                      <td>
+                        {item.relatedEntityHref ? (
+                          <Link className={styles.secondaryLink} href={item.relatedEntityHref}>
+                            {item.relatedEntityLabel}
+                          </Link>
+                        ) : (
+                          item.relatedEntityLabel
+                        )}
+                        <br />
+                        <span dir="ltr">{item.relatedEntityId}</span>
+                      </td>
+                      <td>
+                        {item.ageLabel}
+                        <br />
+                        {item.updatedAt}
+                      </td>
+                      <td>
+                        <Link className={styles.secondaryLink} href={item.href}>
+                          جزئیات
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <EmptyState title="تیکتی برای نمایش نیست" body="اگر DB یا ردیف پشتیبانی در دسترس نباشد، این بخش ردیف نمایشی نشان نمی‌دهد." />
+          )}
+        </article>
+        <aside className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>تیکت تازه</h3>
+              <p>برای ثبت پیگیری داخلی؛ ارسال پیام، اعلان یا تغییر چرخه محصول انجام نمی‌شود.</p>
+            </div>
+          </div>
+          <AdminSupportActions
+            mode="create"
+            viewerCanCreate={data.viewerCanCreate}
+            viewerCanMutate={data.viewerCanMutate}
+            viewerCanArchive={data.viewerCanArchive}
+            viewerId={data.viewerId}
+          />
+        </aside>
+      </section>
+    </div>
+  );
+}
+
+export function AdminSupportDetail({ data }: Readonly<{ data: AdminSupportDetailData }>) {
+  const item = data.item;
+
+  if (!item) {
+    return (
+      <div className={styles.pageStack}>
+        <AdminPageHeader title="جزئیات تیکت پشتیبانی" description="تیکت پیدا نشد." sourceNote={data.sourceNote} />
+        <section className={styles.surface}>
+          <EmptyState title="تیکت پیدا نشد" body="هیچ ردیف ساختگی برای این جزئیات نمایش داده نمی‌شود." />
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.pageStack}>
+      <AdminPageHeader
+        title="جزئیات تیکت پشتیبانی"
+        description="پیگیری امن تیکت و لینک به مسیرهای رسمی برای کنش‌های حساس."
+        sourceNote={data.sourceNote}
+      />
+      <section className={styles.detailGrid}>
+        <article className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>{item.subject}</h3>
+              <p dir="ltr">{item.ticketNumber}</p>
+            </div>
+            <DataSourceBadge source={item.source} />
+          </div>
+          <dl className={styles.detailList}>
+            <div>
+              <dt>وضعیت</dt>
+              <dd>{item.statusLabel}</dd>
+            </div>
+            <div>
+              <dt>اولویت</dt>
+              <dd>{item.priorityLabel}</dd>
+            </div>
+            <div>
+              <dt>دسته</dt>
+              <dd>{item.categoryLabel}</dd>
+            </div>
+            <div>
+              <dt>زیردسته</dt>
+              <dd>{item.subcategory}</dd>
+            </div>
+            <div>
+              <dt>منبع</dt>
+              <dd>{item.sourceLabel}</dd>
+            </div>
+            <div>
+              <dt>کاربر</dt>
+              <dd>
+                {item.requesterHref ? (
+                  <Link className={styles.secondaryLink} href={item.requesterHref}>
+                    {item.requesterSummary}
+                  </Link>
+                ) : (
+                  item.requesterSummary
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt>مسئول</dt>
+              <dd>{item.assigneeSummary}</dd>
+            </div>
+            <div>
+              <dt>موجودیت مرتبط</dt>
+              <dd>
+                {item.relatedEntityHref ? (
+                  <Link className={styles.secondaryLink} href={item.relatedEntityHref}>
+                    {item.relatedEntityLabel} · {item.relatedEntityId}
+                  </Link>
+                ) : (
+                  `${item.relatedEntityLabel} · ${item.relatedEntityId}`
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt>ایجاد</dt>
+              <dd>{item.createdAt}</dd>
+            </div>
+            <div>
+              <dt>آخرین فعالیت</dt>
+              <dd>{item.updatedAt}</dd>
+            </div>
+            <div>
+              <dt>حل</dt>
+              <dd>{item.resolvedAt}</dd>
+            </div>
+            <div>
+              <dt>آرشیو</dt>
+              <dd>{item.archivedAt}</dd>
+            </div>
+          </dl>
+          <section className={styles.emptyState}>
+            <strong>شرح مسئله</strong>
+            <p>{item.description}</p>
+          </section>
+          <section className={styles.emptyState}>
+            <strong>نتیجه پیگیری</strong>
+            <p>{item.resolutionSummary}</p>
+            <p>{item.resolutionReason}</p>
+          </section>
+          <div className={styles.actions}>
+            <Link className={styles.secondaryLink} href="/admin/support">
+              بازگشت به صندوق پشتیبانی
+            </Link>
+            <Link className={styles.secondaryLink} href="/admin/audit-log">
+              گزارش ممیزی
+            </Link>
+          </div>
+        </article>
+        <aside className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>کنش‌های تیکت</h3>
+              <p>برای پرداخت، لغو، کیف پول یا گفت‌وگو از لینک موجودیت مرتبط استفاده کنید.</p>
+            </div>
+          </div>
+          <AdminSupportActions
+            mode="detail"
+            ticket={item}
+            viewerCanCreate={data.viewerCanCreate}
+            viewerCanMutate={data.viewerCanMutate}
+            viewerCanArchive={data.viewerCanArchive}
+            viewerId={data.viewerId}
+          />
+        </aside>
+      </section>
+      <section className={styles.surface}>
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>یادداشت‌ها</h3>
+            <p>PUBLIC_DRAFT فقط پیش‌نویس است و در این چک‌پوینت ارسال بیرونی ندارد.</p>
+          </div>
+        </div>
+        {item.notes.length ? (
+          <ol className={styles.timeline}>
+            {item.notes.map((note) => (
+              <li key={note.id}>
+                <strong>{note.noteTypeLabel}</strong>
+                <span>{note.body}</span>
+                <span>
+                  {note.createdBySummary} · {note.createdAt}
+                </span>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <EmptyState title="یادداشتی ثبت نشده" body="یادداشت داخلی پس از ثبت در همین صفحه نمایش داده می‌شود." />
+        )}
+      </section>
+      <section className={styles.surface} aria-label="گزارش ممیزی پشتیبانی">
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>گزارش ممیزی</h3>
+            <p>رویدادهای ایجاد، ویرایش، تخصیص، یادداشت، حل، بازگشایی و آرشیو این تیکت.</p>
+          </div>
+        </div>
+        {item.auditItems?.length ? (
+          <dl className={styles.detailList}>
+            {item.auditItems.map((event) => (
+              <div key={event.id}>
+                <dt>{event.actionLabel}</dt>
+                <dd>
+                  {event.actorSummary} · {event.statusChange} · {event.createdAt}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <EmptyState title="رویدادی ثبت نشده" body="پس از ثبت کنش پشتیبانی، این بخش از پایگاه داده به‌روز می‌شود." />
+        )}
+      </section>
+    </div>
+  );
+}
+
 export function AdminCategories({ data }: Readonly<{ data: AdminCategoriesData }>) {
   return (
     <div className={styles.pageStack}>
@@ -2229,6 +2618,14 @@ export function AdminAuditLog({ data }: Readonly<{ data?: AdminAuditLogData }> =
                       {" "}
                       <Link className={styles.secondaryLink} href={row.contentHref}>
                         محتوا
+                      </Link>
+                    </>
+                  ) : null}
+                  {row.supportHref ? (
+                    <>
+                      {" "}
+                      <Link className={styles.secondaryLink} href={row.supportHref}>
+                        تیکت پشتیبانی
                       </Link>
                     </>
                   ) : null}

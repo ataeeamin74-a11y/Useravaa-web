@@ -377,5 +377,77 @@ export const apiEndpointPersistenceClassification = {
     usesRepository: true,
     writesImplemented: true,
     notes: "ADMIN-only content restore returns archived ContentEntry rows to DRAFT and writes audit; publication remains an explicit update decision."
+  },
+  "GET /api/admin/support": {
+    classification: "read_only_persistent",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: false,
+    notes: "ADMIN/SUPPORT-only support inbox list reads SupportTicket rows without fixture fallback."
+  },
+  "POST /api/admin/support": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT support ticket creation persists SupportTicket and audit event without mutating payment, wallet, conversation, cancellation, notification, or lead data."
+  },
+  "GET /api/admin/support/[ticketId]": {
+    classification: "read_only_persistent",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: false,
+    notes: "ADMIN/SUPPORT-only support ticket detail reads SupportTicket and notes without fake fallback rows."
+  },
+  "PATCH /api/admin/support/[ticketId]": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT support ticket update changes only SupportTicket fields and writes audit; sensitive product lifecycle mutation remains in official admin pages."
+  },
+  "POST /api/admin/support/[ticketId]/assign": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN can assign any operator and SUPPORT can assign to self; actor is server-derived and an audit event is written."
+  },
+  "POST /api/admin/support/[ticketId]/notes": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT note creation persists SupportTicketNote and audit; PUBLIC_DRAFT does not send email or notifications."
+  },
+  "POST /api/admin/support/[ticketId]/resolve": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only support resolve sets resolvedAt server-side and writes audit without mutating linked payment, wallet, cancellation, or conversation rows."
+  },
+  "POST /api/admin/support/[ticketId]/reopen": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only support reopen clears resolved state server-side and writes audit without mutating linked entities."
+  },
+  "POST /api/admin/support/[ticketId]/archive": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only support archive soft-archives SupportTicket and writes audit without deleting ticket notes or related entity data."
   }
 } satisfies Record<string, ApiEndpointClassification>;

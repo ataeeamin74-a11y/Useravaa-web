@@ -24,7 +24,17 @@ export type AdminAuditAction =
   | "CONTENT_ENTRY_CREATED"
   | "CONTENT_ENTRY_UPDATED"
   | "CONTENT_ENTRY_ARCHIVED"
-  | "CONTENT_ENTRY_RESTORED";
+  | "CONTENT_ENTRY_RESTORED"
+  | "SUPPORT_TICKET_CREATED"
+  | "SUPPORT_TICKET_UPDATED"
+  | "SUPPORT_TICKET_ASSIGNED"
+  | "SUPPORT_TICKET_STATUS_CHANGED"
+  | "SUPPORT_TICKET_PRIORITY_CHANGED"
+  | "SUPPORT_TICKET_CATEGORY_CHANGED"
+  | "SUPPORT_TICKET_NOTE_ADDED"
+  | "SUPPORT_TICKET_RESOLVED"
+  | "SUPPORT_TICKET_REOPENED"
+  | "SUPPORT_TICKET_ARCHIVED";
 
 export type AdminPaymentAuditEventInput = {
   actorAdminUserId: string;
@@ -146,6 +156,33 @@ export type AdminContentEntryAuditEventInput = {
   now: Date;
 };
 
+export type AdminSupportTicketAuditEventInput = {
+  actorAdminUserId: string;
+  actorRole: "ADMIN" | "SUPPORT";
+  action: Extract<
+    AdminAuditAction,
+    | "SUPPORT_TICKET_CREATED"
+    | "SUPPORT_TICKET_UPDATED"
+    | "SUPPORT_TICKET_ASSIGNED"
+    | "SUPPORT_TICKET_STATUS_CHANGED"
+    | "SUPPORT_TICKET_PRIORITY_CHANGED"
+    | "SUPPORT_TICKET_CATEGORY_CHANGED"
+    | "SUPPORT_TICKET_NOTE_ADDED"
+    | "SUPPORT_TICKET_RESOLVED"
+    | "SUPPORT_TICKET_REOPENED"
+    | "SUPPORT_TICKET_ARCHIVED"
+  >;
+  ticketId: string;
+  beforeStatus?: string | null;
+  afterStatus: string;
+  relatedConversationId?: string | null;
+  relatedPaymentId?: string | null;
+  reason?: string;
+  note?: string;
+  metadata?: Prisma.InputJsonValue;
+  now: Date;
+};
+
 const adminAuditEventSelect = {
   id: true,
   actorAdminUserId: true,
@@ -180,6 +217,7 @@ export const adminAuditRepository = {
     createPricingRuleEvent: "database_persistent",
     createCategoryEvent: "database_persistent",
     createContentEntryEvent: "database_persistent",
+    createSupportTicketEvent: "database_persistent",
     listForPayment: "read_only_persistent",
     listForCancellation: "read_only_persistent",
     listForExperienceProfile: "read_only_persistent",
@@ -188,6 +226,7 @@ export const adminAuditRepository = {
     listForPricingRule: "read_only_persistent",
     listForCategory: "read_only_persistent",
     listForContentEntry: "read_only_persistent",
+    listForSupportTicket: "read_only_persistent",
     listRecent: "read_only_persistent"
   },
   async createPaymentReviewEvent(input: AdminPaymentAuditEventInput, tx: UseravaaTransactionClient) {
@@ -360,6 +399,26 @@ export const adminAuditRepository = {
       select: adminAuditEventSelect
     });
   },
+  async createSupportTicketEvent(input: AdminSupportTicketAuditEventInput, tx: UseravaaTransactionClient) {
+    return tx.adminAuditEvent.create({
+      data: {
+        actorAdminUserId: input.actorAdminUserId,
+        actorRole: input.actorRole,
+        action: input.action,
+        entityType: "SUPPORT_TICKET",
+        entityId: input.ticketId,
+        relatedConversationId: input.relatedConversationId ?? null,
+        relatedPaymentId: input.relatedPaymentId ?? null,
+        beforeStatus: input.beforeStatus ?? null,
+        afterStatus: input.afterStatus,
+        reason: input.reason ?? null,
+        note: input.note ?? null,
+        metadata: input.metadata,
+        createdAt: input.now
+      },
+      select: adminAuditEventSelect
+    });
+  },
   listForPayment(paymentId: string) {
     return readOnlyRepositoryOperation("admin_audit", "listForPayment", (db) =>
       db.adminAuditEvent.findMany({
@@ -469,6 +528,19 @@ export const adminAuditRepository = {
         select: adminAuditEventSelect,
         orderBy: { createdAt: "desc" },
         take: 30
+      })
+    );
+  },
+  listForSupportTicket(ticketId: string) {
+    return readOnlyRepositoryOperation("admin_audit", "listForSupportTicket", (db) =>
+      db.adminAuditEvent.findMany({
+        where: {
+          entityType: "SUPPORT_TICKET",
+          entityId: ticketId
+        },
+        select: adminAuditEventSelect,
+        orderBy: { createdAt: "desc" },
+        take: 40
       })
     );
   },
