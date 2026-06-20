@@ -16,6 +16,7 @@ import {
   getQualityChecklist,
   type AdminActionItem,
   type AdminAnalyticsData,
+  type AdminOpsAnalyticsData,
   type AdminAttendanceItem,
   type AdminAuditLogData,
   type AdminCancellationItem,
@@ -2948,6 +2949,231 @@ export function AdminAnalyticsSummary({ data }: Readonly<{ data: AdminAnalyticsD
           <div>
             <h3>یادداشت‌های کیفیت داده</h3>
             <p>مرزهای محاسبه و fallbackهای صادقانه این صفحه.</p>
+          </div>
+        </div>
+        <ol className={styles.timeline}>
+          {data.dataQualityNotes.map((note) => (
+            <li key={note}>
+              <strong>یادداشت</strong>
+              <span>{note}</span>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+  );
+}
+
+export function AdminOpsAnalyticsDashboard({ data }: Readonly<{ data: AdminOpsAnalyticsData }>) {
+  const metricGroups = [
+    { id: "executive", title: "نمای اجرایی", description: "شاخص‌های فوری برای تصمیم عملیاتی.", metrics: data.executiveMetrics },
+    { id: "leads", title: "هوش سرنخ‌ها", description: "وضعیت صف رشد بدون نمایش اطلاعات تماس.", metrics: data.leadMetrics },
+    { id: "support", title: "هوش پشتیبانی", description: "وضعیت تیکت‌ها، اولویت‌ها و سن صف.", metrics: data.supportMetrics },
+    { id: "content", title: "عملیات محتوا", description: "سلامت محتوای مدیریت‌شده و وضعیت انتشار.", metrics: data.contentMetrics },
+    { id: "conversation-finance", title: "گفت‌وگو و مالی", description: "خلاصه خواندنی از چرخه گفت‌وگو، پرداخت، لغو و کیف پول.", metrics: data.conversationFinanceMetrics }
+  ];
+
+  return (
+    <div className={styles.pageStack}>
+      <AdminPageHeader
+        title="هوش عملیاتی"
+        description={`نمای خواندنی عملیات با بازه ${data.activeDateRangeLabel}. این صفحه داده را تغییر نمی‌دهد.`}
+        sourceNote={data.sourceNote}
+      />
+
+      <section className={styles.surface} aria-label="فیلترهای هوش عملیاتی">
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>فیلتر بازه</h3>
+            <p>فیلترها از query param خوانده می‌شوند و فقط محاسبه read model را تغییر می‌دهند.</p>
+          </div>
+          <DataSourceBadge source={data.source} />
+        </div>
+        <nav className={styles.filters} aria-label="فیلتر بازه زمانی هوش عملیاتی">
+          {data.dateRangeOptions.map((option) => (
+            <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={option.value}>
+              {option.label}
+            </Link>
+          ))}
+        </nav>
+      </section>
+
+      {metricGroups.map((group) => (
+        <section className={styles.surface} aria-label={group.title} key={group.id}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>{group.title}</h3>
+              <p>{group.description}</p>
+            </div>
+          </div>
+          {group.metrics.length ? (
+            <div className={styles.metricGrid}>
+              {group.metrics.map((metric) =>
+                metric.href ? (
+                  <Link className={styles.metricCard} href={metric.href} key={metric.id}>
+                    <DataSourceBadge source={metric.source} />
+                    <strong>{metric.value}</strong>
+                    <span>{metric.label}</span>
+                    <small>{metric.helper}</small>
+                  </Link>
+                ) : (
+                  <article className={styles.metricCard} key={metric.id}>
+                    <DataSourceBadge source={metric.source} />
+                    <strong>{metric.value}</strong>
+                    <span>{metric.label}</span>
+                    <small>{metric.helper}</small>
+                  </article>
+                )
+              )}
+            </div>
+          ) : (
+            <EmptyState title="شاخصی برای نمایش نیست" body="در حالت نبود DB یا داده، ردیف ساختگی نمایش داده نمی‌شود." />
+          )}
+        </section>
+      ))}
+
+      <section className={styles.surface} aria-label="موارد نیازمند توجه">
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>موارد نیازمند توجه</h3>
+            <p>ترکیبی از سرنخ‌ها، پشتیبانی، محتوا، پرداخت و گفت‌وگوهایی که بررسی عملیاتی می‌خواهند.</p>
+          </div>
+        </div>
+        {data.needsAttention.length ? (
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>حوزه</th>
+                  <th>اولویت</th>
+                  <th>مورد</th>
+                  <th>خلاصه</th>
+                  <th>زمان</th>
+                  <th>اقدام</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.needsAttention.map((item) => (
+                  <tr key={item.id}>
+                    <td>{item.areaLabel}</td>
+                    <td>{item.priorityLabel}</td>
+                    <td>{item.title}</td>
+                    <td>{item.summary}</td>
+                    <td>{item.createdAt}</td>
+                    <td>
+                      <Link className={styles.actionLink} href={item.href}>
+                        مشاهده
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <EmptyState title="مورد فوری ثبت نشده" body="برای این بازه و وضعیت فعلی، صف توجه خالی است یا DB در دسترس نیست." />
+        )}
+      </section>
+
+      {data.breakdownSections.map((section) => (
+        <section className={styles.surface} aria-label={section.title} key={section.id}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>{section.title}</h3>
+              <p>{section.description}</p>
+            </div>
+          </div>
+          {section.rows.length ? (
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>معیار</th>
+                    <th>مقدار</th>
+                    <th>یادداشت</th>
+                    <th>منبع</th>
+                    <th>مسیر</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {section.rows.map((row) => (
+                    <tr key={`${section.id}-${row.id}`}>
+                      <td>{row.label}</td>
+                      <td>{row.value}</td>
+                      <td>{row.helper}</td>
+                      <td>
+                        <DataSourceBadge source={row.source} />
+                      </td>
+                      <td>
+                        {row.href ? (
+                          <Link className={styles.secondaryLink} href={row.href}>
+                            مشاهده
+                          </Link>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <EmptyState title="شکست داده‌ای موجود نیست" body="برای این بخش ردیف واقعی پیدا نشد و داده ساختگی نمایش داده نمی‌شود." />
+          )}
+        </section>
+      ))}
+
+      <section className={styles.surface} aria-label="فعالیت اخیر ممیزی">
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>فعالیت اخیر ممیزی</h3>
+            <p>فقط خلاصه امن رویدادهای ادمین نمایش داده می‌شود؛ payload کامل ممیزی در این صفحه نیست.</p>
+          </div>
+        </div>
+        {data.recentActions.length ? (
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>کنش</th>
+                  <th>اپراتور</th>
+                  <th>هدف</th>
+                  <th>زمان</th>
+                  <th>مسیر</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.recentActions.map((action) => (
+                  <tr key={action.id}>
+                    <td>{action.actionLabel}</td>
+                    <td>{action.actorSummary}</td>
+                    <td>{action.targetSummary}</td>
+                    <td>{action.createdAt}</td>
+                    <td>
+                      {action.href ? (
+                        <Link className={styles.secondaryLink} href={action.href}>
+                          مشاهده
+                        </Link>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <EmptyState title="رویداد ممیزی در بازه نیست" body="اگر رویدادی ثبت نشده باشد، این بخش خالی می‌ماند." />
+        )}
+      </section>
+
+      <section className={styles.surface}>
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>یادداشت‌های کیفیت داده</h3>
+            <p>مرزهای محاسبه، حریم خصوصی و fallback این داشبورد.</p>
           </div>
         </div>
         <ol className={styles.timeline}>

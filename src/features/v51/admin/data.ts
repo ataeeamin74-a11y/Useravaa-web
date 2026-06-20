@@ -306,6 +306,64 @@ export type AdminAnalyticsData = {
   source: AdminDataSource;
 };
 
+export type AdminOpsAnalyticsFilterOption = {
+  label: string;
+  value: string;
+  href: string;
+  active: boolean;
+};
+
+export type AdminOpsAnalyticsBreakdownRow = {
+  id: string;
+  label: string;
+  value: string;
+  helper: string;
+  href?: string;
+  source: AdminDataSource;
+};
+
+export type AdminOpsAnalyticsBreakdownSection = {
+  id: string;
+  title: string;
+  description: string;
+  rows: readonly AdminOpsAnalyticsBreakdownRow[];
+};
+
+export type AdminOpsAnalyticsAttentionItem = {
+  id: string;
+  areaLabel: string;
+  priorityLabel: string;
+  title: string;
+  summary: string;
+  href: string;
+  createdAt: string;
+};
+
+export type AdminOpsAnalyticsRecentActionItem = {
+  id: string;
+  actionLabel: string;
+  actorSummary: string;
+  targetSummary: string;
+  href?: string;
+  createdAt: string;
+};
+
+export type AdminOpsAnalyticsData = {
+  activeDateRangeLabel: string;
+  dateRangeOptions: readonly AdminOpsAnalyticsFilterOption[];
+  executiveMetrics: readonly AdminMetric[];
+  leadMetrics: readonly AdminMetric[];
+  supportMetrics: readonly AdminMetric[];
+  contentMetrics: readonly AdminMetric[];
+  conversationFinanceMetrics: readonly AdminMetric[];
+  breakdownSections: readonly AdminOpsAnalyticsBreakdownSection[];
+  needsAttention: readonly AdminOpsAnalyticsAttentionItem[];
+  recentActions: readonly AdminOpsAnalyticsRecentActionItem[];
+  dataQualityNotes: readonly string[];
+  sourceNote: string;
+  source: AdminDataSource;
+};
+
 export type AdminPricingCategoryOption = {
   label: string;
   value: string;

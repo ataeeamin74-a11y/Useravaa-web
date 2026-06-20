@@ -4,6 +4,9 @@ import {
   type AdminAnalyticsDateRange,
   type AdminAnalyticsFilters,
   type AdminAnalyticsSummary as RepositoryAnalyticsSummary,
+  type AdminOpsAnalyticsDateRange,
+  type AdminOpsAnalyticsFilters,
+  type AdminOpsAnalyticsSummary as RepositoryOpsAnalyticsSummary,
   type AdminAttendanceRow as RepositoryAttendanceRow,
   type AdminCancellationDetail as RepositoryCancellationDetail,
   type AdminCancellationRow as RepositoryCancellationRow,
@@ -56,7 +59,7 @@ import type {
   PricingRuleCategoryOption,
   PricingRuleRecord
 } from "@/lib/backend/repositories";
-import { adminAnalyticsFilterSchema } from "@/lib/backend/validation";
+import { adminAnalyticsFilterSchema, adminOpsAnalyticsFilterSchema } from "@/lib/backend/validation";
 import type { Viewer } from "@/lib/auth/types";
 import { formatFaNumber } from "@/lib/fa-format";
 import {
@@ -77,6 +80,8 @@ import {
   type AdminActionPriority,
   type AdminAnalyticsBreakdownRow,
   type AdminAnalyticsData,
+  type AdminOpsAnalyticsBreakdownRow,
+  type AdminOpsAnalyticsData,
   type AdminAttendanceItem,
   type AdminAuditLogItem,
   type AdminAuditLogData,
@@ -162,6 +167,7 @@ export type AdminHomeRouteData = {
 };
 
 export type AdminAnalyticsSearchParams = Record<string, string | string[] | undefined>;
+export type AdminOpsAnalyticsSearchParams = Record<string, string | string[] | undefined>;
 export type AdminContentSearchParams = Record<string, string | string[] | undefined>;
 export type AdminLeadSearchParams = Record<string, string | string[] | undefined>;
 export type AdminSupportSearchParams = Record<string, string | string[] | undefined>;
@@ -240,6 +246,13 @@ const analyticsDateRangeLabels: Record<AdminAnalyticsDateRange, string> = {
   all_time: "همه زمان‌ها"
 };
 const analyticsDateRanges = Object.keys(analyticsDateRangeLabels) as AdminAnalyticsDateRange[];
+const opsAnalyticsDateRangeLabels: Record<AdminOpsAnalyticsDateRange, string> = {
+  today: "امروز",
+  last_7_days: "۷ روز گذشته",
+  last_30_days: "۳۰ روز گذشته",
+  all_time: "همه زمان‌ها"
+};
+const opsAnalyticsDateRanges = Object.keys(opsAnalyticsDateRangeLabels) as AdminOpsAnalyticsDateRange[];
 const unsupportedAnalyticsMetrics = [
   {
     id: "nmv",
@@ -396,6 +409,38 @@ const supportRelatedEntityLabels: Record<SupportRelatedEntityType, string> = {
   NONE: "بدون ارتباط"
 };
 
+const opsConversationStatusLabels: Record<string, string> = {
+  CREATED: "ایجادشده",
+  AWAITING_PAYMENT: "در انتظار پرداخت",
+  PAYMENT_PROCESSING: "پرداخت در حال بررسی",
+  PAYMENT_FAILED: "پرداخت ناموفق",
+  PAYMENT_FINALIZED: "پرداخت نهایی‌شده",
+  AWAITING_TIME_PROPOSAL: "در انتظار سه زمان پیشنهادی",
+  TIMES_PROPOSED: "زمان‌های پیشنهادی ارسال‌شده",
+  NEW_TIME_REQUESTED: "درخواست زمان‌های تازه",
+  CONFIRMED: "جلسه قطعی",
+  COMPLETED: "تکمیل‌شده",
+  REJECTED: "ردشده",
+  CANCELLED: "لغوشده",
+  EXPIRED: "منقضی‌شده",
+  REFUNDED: "بازگشت داده‌شده"
+};
+
+const opsAreaLabels: Record<string, string> = {
+  lead: "سرنخ",
+  support: "پشتیبانی",
+  content: "محتوا",
+  conversation: "گفت‌وگو",
+  payment: "پرداخت",
+  cancellation: "لغو"
+};
+
+const opsPriorityLabels: Record<string, string> = {
+  urgent: "فوری",
+  high: "بالا",
+  normal: "معمولی"
+};
+
 const supportNoteTypeLabels = {
   INTERNAL: "یادداشت داخلی",
   PUBLIC_DRAFT: "پیش‌نویس عمومی"
@@ -473,6 +518,16 @@ function parseAdminAnalyticsFilters(params: AdminAnalyticsSearchParams | undefin
   };
 }
 
+function parseAdminOpsAnalyticsFilters(params: AdminOpsAnalyticsSearchParams | undefined): AdminOpsAnalyticsFilters {
+  const parsed = adminOpsAnalyticsFilterSchema.safeParse({
+    range: firstSearchParam(params, "range") ?? "last_7_days"
+  });
+
+  return {
+    dateRange: parsed.success ? parsed.data.range : "last_7_days"
+  };
+}
+
 function adminAnalyticsHref(dateRange: AdminAnalyticsDateRange, category: string | null) {
   const params = new URLSearchParams();
   params.set("range", dateRange);
@@ -482,6 +537,13 @@ function adminAnalyticsHref(dateRange: AdminAnalyticsDateRange, category: string
   }
 
   return `/admin/analytics?${params.toString()}`;
+}
+
+function adminOpsAnalyticsHref(dateRange: AdminOpsAnalyticsDateRange) {
+  const params = new URLSearchParams();
+  params.set("range", dateRange);
+
+  return `/admin/ops-analytics?${params.toString()}`;
 }
 
 function isContentEntryType(value: string | null | undefined): value is ContentEntryType {
@@ -2614,6 +2676,192 @@ function notImplementedMetric(id: string, label: string, reason: string) {
   };
 }
 
+function opsMetric(
+  id: string,
+  label: string,
+  value: string,
+  helper: string,
+  href?: string,
+  source: AdminDataSource = "backend_repository"
+): AdminMetric {
+  return {
+    id,
+    label,
+    value,
+    helper,
+    href,
+    source
+  };
+}
+
+function opsBreakdownRow(
+  row: { id: string; label: string; count: number; href?: string },
+  labels: Record<string, string> = {},
+  helper = "خوانده‌شده از وضعیت فعلی پایگاه داده"
+): AdminOpsAnalyticsBreakdownRow {
+  return {
+    id: row.id,
+    label: labels[row.id] ?? labels[row.label] ?? row.label,
+    value: countLabel(row.count),
+    helper,
+    href: row.href,
+    source: "backend_repository"
+  };
+}
+
+function opsBreakdownRows(
+  rows: readonly { id: string; label: string; count: number; href?: string }[],
+  labels: Record<string, string> = {},
+  helper?: string
+) {
+  return rows.map((row) => opsBreakdownRow(row, labels, helper));
+}
+
+function mapOpsAnalytics(summary: RepositoryOpsAnalyticsSummary): AdminOpsAnalyticsData {
+  const activeDateRangeLabel = opsAnalyticsDateRangeLabels[summary.filters.dateRange];
+  const dateRangeOptions = opsAnalyticsDateRanges.map((dateRange) => ({
+    label: opsAnalyticsDateRangeLabels[dateRange],
+    value: dateRange,
+    href: adminOpsAnalyticsHref(dateRange),
+    active: dateRange === summary.filters.dateRange
+  }));
+  const sourceNote = `${repositorySourceNote} این صفحه فقط داده تجمیعی عملیاتی را نمایش می‌دهد و هیچ event tracking بیرونی ندارد.`;
+
+  return {
+    source: "backend_repository",
+    sourceNote,
+    activeDateRangeLabel,
+    dateRangeOptions,
+    executiveMetrics: [
+      opsMetric("open-support", "تیکت‌های باز", countLabel(summary.executive.openSupportTickets), "موارد پشتیبانی حل‌نشده.", "/admin/support"),
+      opsMetric("urgent-support", "تیکت فوری", countLabel(summary.executive.urgentSupportTickets), "Priority = URGENT.", "/admin/support?priority=URGENT"),
+      opsMetric("hot-leads", "سرنخ داغ", countLabel(summary.executive.hotLeads), "سرنخ‌های فعال با دمای HOT.", "/admin/leads?temperature=HOT"),
+      opsMetric("overdue-follow-ups", "پیگیری عقب‌افتاده", countLabel(summary.executive.overdueFollowUps), "سرنخ‌های فعال با تاریخ پیگیری گذشته.", "/admin/leads?view=follow_up"),
+      opsMetric("pending-content", "محتوای پیش‌نویس", countLabel(summary.executive.pendingContentEntries), "ContentEntry.status = DRAFT.", "/admin/content?status=DRAFT"),
+      opsMetric("recent-audit", "کنش ممیزی در بازه", countLabel(summary.executive.recentAdminActions), activeDateRangeLabel, "/admin/audit-log"),
+      opsMetric("pending-payment-review", "بررسی پرداخت", countLabel(summary.executive.pendingPaymentReviews), "ManualPaymentReview در صف بررسی.", "/admin/payments"),
+      opsMetric("active-conversations", "گفت‌وگوهای فعال", countLabel(summary.executive.activeConversations), "وضعیت‌های باز چرخه گفت‌وگو.", "/admin/conversations"),
+      opsMetric("cancellation-review", "لغو در بررسی", countLabel(summary.executive.cancellationSupportReviews), "Cancellation.status = UNDER_SUPPORT_REVIEW.", "/admin/cancellations")
+    ],
+    leadMetrics: [
+      opsMetric("lead-total", "کل سرنخ‌ها", countLabel(summary.leads.total), "شامل فعال و آرشیوشده.", "/admin/leads"),
+      opsMetric("lead-new", "جدید", countLabel(summary.leads.new), "Lead.stage = NEW.", "/admin/leads?stage=NEW"),
+      opsMetric("lead-qualified", "واجد شرایط", countLabel(summary.leads.qualified), "stage یا temperature واجد شرایط.", "/admin/leads?stage=QUALIFIED"),
+      opsMetric("lead-converted", "تبدیل‌شده", countLabel(summary.leads.converted), "stage/temperature یا convertedAt.", "/admin/leads?view=converted"),
+      opsMetric("lead-lost", "از دست‌رفته", countLabel(summary.leads.lost), "stage/temperature یا lostAt.", "/admin/leads?view=lost"),
+      opsMetric(
+        "lead-average-follow-up",
+        "میانگین پیگیری",
+        summary.leads.averageFollowUpCount === null ? notRecorded : countLabel(summary.leads.averageFollowUpCount),
+        "میانگین Lead.followUpCount."
+      )
+    ],
+    supportMetrics: [
+      opsMetric("support-total", "کل تیکت‌ها", countLabel(summary.support.total), "همه وضعیت‌ها.", "/admin/support"),
+      opsMetric("support-unassigned", "بدون مسئول", countLabel(summary.support.unassigned), "تیکت‌های باز بدون assignee.", "/admin/support?view=unassigned"),
+      opsMetric("support-escalated", "ارجاع‌شده", countLabel(summary.support.escalated), "SupportTicket.status = ESCALATED.", "/admin/support?status=ESCALATED"),
+      opsMetric("support-waiting-user", "در انتظار کاربر", countLabel(summary.support.waitingForUser), "SupportTicket.status = WAITING_FOR_USER.", "/admin/support?status=WAITING_FOR_USER"),
+      opsMetric("support-older-48h", "باز بیش از ۴۸ ساعت", countLabel(summary.support.olderThan48h), "تیکت‌های باز با updatedAt قدیمی."),
+      opsMetric(
+        "support-average-open-age",
+        "میانگین سن تیکت باز",
+        summary.support.averageOpenAgeHours === null ? notRecorded : `${formatFaNumber(summary.support.averageOpenAgeHours)} ساعت`,
+        "بر اساس updatedAt تیکت‌های باز."
+      )
+    ],
+    contentMetrics: [
+      opsMetric("content-total", "کل محتوا", countLabel(summary.content.total), "ContentEntry.", "/admin/content"),
+      opsMetric("content-published", "منتشرشده", countLabel(summary.content.published), "ContentEntry.status = PUBLISHED.", "/admin/content?status=PUBLISHED"),
+      opsMetric("content-draft", "پیش‌نویس", countLabel(summary.content.draft), "ContentEntry.status = DRAFT.", "/admin/content?status=DRAFT"),
+      opsMetric("content-hidden", "مخفی", countLabel(summary.content.hidden), "ContentEntry.status = HIDDEN.", "/admin/content?status=HIDDEN"),
+      opsMetric("content-editable", "قابل ویرایش", countLabel(summary.content.editable), "isEditable = true."),
+      opsMetric("content-system", "سیستمی", countLabel(summary.content.system), "isSystem = true.")
+    ],
+    conversationFinanceMetrics: [
+      opsMetric("conversation-total", "کل گفت‌وگوها", countLabel(summary.conversations.total), "ConversationRequest.", "/admin/conversations"),
+      opsMetric("conversation-waiting-provider", "در انتظار زمان پیشنهادی", countLabel(summary.conversations.awaitingProviderTimes), "AWAITING_TIME_PROPOSAL.", "/admin/conversations?status=AWAITING_TIME_PROPOSAL"),
+      opsMetric("conversation-waiting-requester", "در انتظار انتخاب زمان", countLabel(summary.conversations.waitingRequesterSelection), "TIMES_PROPOSED یا NEW_TIME_REQUESTED.", "/admin/conversations?status=TIMES_PROPOSED"),
+      opsMetric("conversation-confirmed", "جلسه قطعی", countLabel(summary.conversations.confirmed), "ConversationRequest.status = CONFIRMED.", "/admin/conversations?status=CONFIRMED"),
+      opsMetric("manual-approved", "پرداخت دستی تأییدشده", countLabel(summary.finance.approvedManualPaymentReviews), activeDateRangeLabel, "/admin/payments"),
+      opsMetric("manual-rejected", "پرداخت دستی ردشده", countLabel(summary.finance.rejectedManualPaymentReviews), activeDateRangeLabel, "/admin/payments"),
+      opsMetric("wallet-cancellation-credit", "اعتبار برگشتی لغو", amountLabel(summary.finance.cancellationWalletCreditsToman), "فقط CANCELLATION_REFUND_CREDIT تکمیل‌شده.", "/admin/wallet-transactions"),
+      opsMetric("wallet-credit-pending", "اعتبار برگشتی در انتظار", countLabel(summary.finance.pendingWalletCredits), "WalletTransaction.status = PENDING.", "/admin/wallet-transactions")
+    ],
+    breakdownSections: [
+      {
+        id: "lead-breakdown",
+        title: "جزئیات سرنخ‌ها",
+        description: "منبع، نوع، دما و مرحله سرنخ بدون نمایش اطلاعات تماس.",
+        rows: [
+          ...opsBreakdownRows(summary.leads.bySource, leadSourceLabels, "Lead.source"),
+          ...opsBreakdownRows(summary.leads.byType, leadTypeLabels, "Lead.leadType"),
+          ...opsBreakdownRows(summary.leads.byTemperature, leadTemperatureLabels, "Lead.temperature"),
+          ...opsBreakdownRows(summary.leads.byStage, leadStageLabels, "Lead.stage"),
+          ...opsBreakdownRows(summary.leads.byJobCategory, {}, "Lead.jobCategory")
+        ]
+      },
+      {
+        id: "lead-outcomes",
+        title: "نتیجه‌های رشد",
+        description: "تبدیل، از دست‌رفتن و دلایل ثبت‌شده بدون اطلاعات تماس.",
+        rows: [
+          ...opsBreakdownRows(summary.leads.convertedBySource, leadSourceLabels, "سرنخ‌های تبدیل‌شده بر اساس منبع."),
+          ...opsBreakdownRows(summary.leads.lostReasons, {}, "دلایل از دست‌رفتن ثبت‌شده.")
+        ]
+      },
+      {
+        id: "support-breakdown",
+        title: "جزئیات پشتیبانی",
+        description: "وضعیت صف پشتیبانی، اولویت، دسته و منبع.",
+        rows: [
+          ...opsBreakdownRows(summary.support.byCategory, supportCategoryLabels, "SupportTicket.category"),
+          ...opsBreakdownRows(summary.support.byPriority, supportPriorityLabels, "SupportTicket.priority"),
+          ...opsBreakdownRows(summary.support.byStatus, supportStatusLabels, "SupportTicket.status"),
+          ...opsBreakdownRows(summary.support.bySource, supportSourceLabels, "SupportTicket.source")
+        ]
+      },
+      {
+        id: "content-breakdown",
+        title: "عملیات محتوا",
+        description: "namespace، نوع محتوا و ردیف‌های اخیراً به‌روزشده.",
+        rows: [
+          ...opsBreakdownRows(summary.content.byNamespace, {}, "ContentEntry.namespace"),
+          ...opsBreakdownRows(summary.content.byContentType, contentTypeLabels, "ContentEntry.contentType"),
+          ...summary.content.recentlyUpdated.map((row) => opsBreakdownRow(row, {}, "آخرین به‌روزرسانی‌های محتوا"))
+        ]
+      },
+      {
+        id: "conversation-audit-breakdown",
+        title: "گفت‌وگو و ممیزی",
+        description: "شکست وضعیت گفت‌وگوها و فعالیت‌های ادمین در بازه انتخابی.",
+        rows: [
+          ...opsBreakdownRows(summary.conversations.byStatus, opsConversationStatusLabels, "ConversationRequest.status"),
+          ...opsBreakdownRows(summary.audit.byAction, {}, "AdminAuditEvent.action"),
+          ...opsBreakdownRows(summary.audit.byActorRole, {}, "AdminAuditEvent.actorRole")
+        ]
+      }
+    ],
+    needsAttention: summary.needsAttention.map((item) => ({
+      id: item.id,
+      areaLabel: opsAreaLabels[item.area] ?? item.area,
+      priorityLabel: opsPriorityLabels[item.priority] ?? item.priority,
+      title: item.label,
+      summary: item.summary,
+      href: item.href,
+      createdAt: formatDateLike(item.createdAt)
+    })),
+    recentActions: summary.audit.recentActions.map((row) => ({
+      id: row.id,
+      actionLabel: auditActionLabel(row.action),
+      actorSummary: `${row.actorLabel} · ${row.actorRole}`,
+      targetSummary: `${row.targetType} · ${row.targetId ?? notRecorded}`,
+      href: row.href ?? undefined,
+      createdAt: formatDateLike(row.createdAt)
+    })),
+    dataQualityNotes: summary.dataQualityNotes
+  };
+}
+
 function mapAnalytics(summary: RepositoryAnalyticsSummary): AdminAnalyticsData {
   const selectedCategory = summary.filters.category;
   const activeCategoryLabel =
@@ -3624,6 +3872,53 @@ export async function getAdminAnalyticsRouteData(
     dataQualityNotes: [
       "پایگاه داده یا read model در دسترس نبود؛ این صفحه ردیف یا عدد نمایشی جعلی نشان نمی‌دهد.",
       "برای مشاهده معیارهای واقعی، اتصال DB امن و نقش ADMIN/SUPPORT لازم است."
+    ]
+  };
+}
+
+export async function getAdminOpsAnalyticsRouteData(
+  viewer: Viewer,
+  searchParams?: AdminOpsAnalyticsSearchParams
+): Promise<AdminOpsAnalyticsData> {
+  const filters = parseAdminOpsAnalyticsFilters(searchParams);
+  const result = await adminReadModelService.getOpsAnalyticsSummary(viewer, filters);
+
+  if (result.ok) {
+    return mapOpsAnalytics(result.data);
+  }
+
+  const activeDateRangeLabel = opsAnalyticsDateRangeLabels[filters.dateRange];
+
+  return {
+    source: "placeholder",
+    sourceNote: placeholderSourceNote,
+    activeDateRangeLabel,
+    dateRangeOptions: opsAnalyticsDateRanges.map((dateRange) => ({
+      label: opsAnalyticsDateRangeLabels[dateRange],
+      value: dateRange,
+      href: adminOpsAnalyticsHref(dateRange),
+      active: dateRange === filters.dateRange
+    })),
+    executiveMetrics: [
+      opsMetric(
+        "ops-analytics-unavailable",
+        "داده عملیات",
+        "ناموجود",
+        "پایگاه داده یا read model در دسترس نبود؛ ردیف نمایشی ساخته نمی‌شود.",
+        undefined,
+        "placeholder"
+      )
+    ],
+    leadMetrics: [],
+    supportMetrics: [],
+    contentMetrics: [],
+    conversationFinanceMetrics: [],
+    breakdownSections: [],
+    needsAttention: [],
+    recentActions: [],
+    dataQualityNotes: [
+      "این صفحه در حالت خطا یا نبود اتصال DB داده ساختگی نمایش نمی‌دهد.",
+      "برای مشاهده شاخص‌های واقعی، اتصال امن پایگاه داده و نقش ADMIN/SUPPORT لازم است."
     ]
   };
 }

@@ -399,6 +399,12 @@ export const adminAnalyticsFilterSchema = z
   })
   .strict();
 
+export const adminOpsAnalyticsFilterSchema = z
+  .object({
+    range: z.enum(["today", "last_7_days", "last_30_days", "all_time"]).default("last_7_days")
+  })
+  .strict();
+
 function pricingRangeIsValid(value: {
   minPriceToman?: number;
   maxPriceToman?: number;
@@ -802,6 +808,7 @@ export const backendValidationSchemas = {
   adminInsightDeleteSchema,
   adminInsightAnswerHideSchema,
   adminAnalyticsFilterSchema,
+  adminOpsAnalyticsFilterSchema,
   adminPricingRuleCreateSchema,
   adminPricingRuleUpdateSchema,
   adminPricingRuleDeactivateSchema,

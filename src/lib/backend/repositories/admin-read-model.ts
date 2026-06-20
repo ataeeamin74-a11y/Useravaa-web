@@ -118,6 +118,156 @@ export type AdminAnalyticsSummary = {
   unsupportedMetrics: AdminAnalyticsUnsupportedMetric[];
 };
 
+export type AdminOpsAnalyticsDateRange = "today" | "last_7_days" | "last_30_days" | "all_time";
+
+export type AdminOpsAnalyticsFilters = {
+  dateRange: AdminOpsAnalyticsDateRange;
+  now?: Date;
+};
+
+export type AdminOpsAnalyticsAppliedFilters = {
+  dateRange: AdminOpsAnalyticsDateRange;
+  startedAt: Date | null;
+  endedAt: Date;
+};
+
+export type AdminOpsAnalyticsCountRow = {
+  id: string;
+  label: string;
+  count: number;
+  href?: string;
+};
+
+export type AdminOpsAnalyticsAttentionItem = {
+  id: string;
+  area: "lead" | "support" | "content" | "conversation" | "payment" | "cancellation";
+  priority: "urgent" | "high" | "normal";
+  label: string;
+  summary: string;
+  href: string;
+  createdAt: Date | null;
+};
+
+export type AdminOpsAnalyticsRecentAction = {
+  id: string;
+  action: string;
+  actorLabel: string;
+  actorRole: string;
+  targetType: string;
+  targetId: string | null;
+  href: string | null;
+  createdAt: Date;
+};
+
+export type AdminOpsAnalyticsSummary = {
+  filters: AdminOpsAnalyticsAppliedFilters;
+  executive: {
+    openSupportTickets: number;
+    urgentSupportTickets: number;
+    unassignedSupportTickets: number;
+    overdueSupportTickets: number;
+    newLeads: number;
+    hotLeads: number;
+    followUpsDueToday: number;
+    overdueFollowUps: number;
+    convertedLeads: number;
+    lostLeads: number;
+    pendingContentEntries: number;
+    recentAdminActions: number;
+    pendingPaymentReviews: number;
+    activeConversations: number;
+    cancellationSupportReviews: number;
+  };
+  leads: {
+    total: number;
+    new: number;
+    hot: number;
+    warm: number;
+    cold: number;
+    qualified: number;
+    converted: number;
+    lost: number;
+    archived: number;
+    unassigned: number;
+    followUpsDueToday: number;
+    overdueFollowUps: number;
+    noResponse: number;
+    noResponseAfterTwoFollowUps: number;
+    averageFollowUpCount: number | null;
+    withBlocker: number;
+    bySource: AdminOpsAnalyticsCountRow[];
+    byType: AdminOpsAnalyticsCountRow[];
+    byTemperature: AdminOpsAnalyticsCountRow[];
+    byStage: AdminOpsAnalyticsCountRow[];
+    byJobCategory: AdminOpsAnalyticsCountRow[];
+    convertedBySource: AdminOpsAnalyticsCountRow[];
+    lostReasons: AdminOpsAnalyticsCountRow[];
+  };
+  support: {
+    total: number;
+    open: number;
+    urgent: number;
+    unassigned: number;
+    escalated: number;
+    waitingForUser: number;
+    waitingForProvider: number;
+    resolvedToday: number;
+    archived: number;
+    olderThan24h: number;
+    olderThan48h: number;
+    olderThan7d: number;
+    averageOpenAgeHours: number | null;
+    byCategory: AdminOpsAnalyticsCountRow[];
+    byPriority: AdminOpsAnalyticsCountRow[];
+    byStatus: AdminOpsAnalyticsCountRow[];
+    bySource: AdminOpsAnalyticsCountRow[];
+  };
+  content: {
+    total: number;
+    published: number;
+    draft: number;
+    hidden: number;
+    archived: number;
+    editable: number;
+    system: number;
+    byNamespace: AdminOpsAnalyticsCountRow[];
+    byContentType: AdminOpsAnalyticsCountRow[];
+    recentlyUpdated: AdminOpsAnalyticsCountRow[];
+  };
+  conversations: {
+    total: number;
+    active: number;
+    awaitingProviderTimes: number;
+    waitingRequesterSelection: number;
+    paymentPending: number;
+    confirmed: number;
+    completed: number;
+    cancelled: number;
+    expired: number;
+    needingAction: number;
+    byStatus: AdminOpsAnalyticsCountRow[];
+  };
+  finance: {
+    pendingManualPaymentReviews: number;
+    approvedManualPaymentReviews: number;
+    rejectedManualPaymentReviews: number;
+    cancellationSupportReviews: number;
+    cancellationWalletCreditsToman: number;
+    pendingWalletCredits: number;
+    availableWalletCredits: number;
+  };
+  audit: {
+    totalInRange: number;
+    last24h: number;
+    last7d: number;
+    byAction: AdminOpsAnalyticsCountRow[];
+    byActorRole: AdminOpsAnalyticsCountRow[];
+    recentActions: AdminOpsAnalyticsRecentAction[];
+  };
+  needsAttention: AdminOpsAnalyticsAttentionItem[];
+  dataQualityNotes: string[];
+};
+
 export type AdminDashboardSummary = {
   manualPaymentsAwaitingReview: number;
   supportReviewCancellations: number;
@@ -800,6 +950,42 @@ function resolveAnalyticsFilters(filters: Partial<AdminAnalyticsFilters> = {}): 
   };
 }
 
+function resolveOpsAnalyticsFilters(filters: Partial<AdminOpsAnalyticsFilters> = {}): AdminOpsAnalyticsAppliedFilters {
+  const endedAt = filters.now ?? new Date();
+  const dateRange = filters.dateRange ?? "last_7_days";
+
+  if (dateRange === "all_time") {
+    return {
+      dateRange,
+      startedAt: null,
+      endedAt
+    };
+  }
+
+  if (dateRange === "today") {
+    const startedAt = new Date(endedAt);
+    startedAt.setHours(0, 0, 0, 0);
+
+    return {
+      dateRange,
+      startedAt,
+      endedAt
+    };
+  }
+
+  const ranges: Record<Exclude<AdminOpsAnalyticsDateRange, "today" | "all_time">, number> = {
+    last_7_days: 7,
+    last_30_days: 30
+  };
+  const days = ranges[dateRange];
+
+  return {
+    dateRange,
+    startedAt: new Date(endedAt.getTime() - days * 24 * 60 * 60 * 1000),
+    endedAt
+  };
+}
+
 function createdAtRangeWhere(startedAt: Date | null, endedAt: Date) {
   return startedAt
     ? {
@@ -885,6 +1071,45 @@ function countByKey<T extends string>(items: readonly T[]) {
   }, {} as Record<T, number>);
 }
 
+function countRowsFromGroup<T extends Record<string, unknown>>(
+  rows: readonly T[],
+  key: keyof T,
+  labels: Record<string, string> = {},
+  hrefFor?: (value: string) => string | undefined
+): AdminOpsAnalyticsCountRow[] {
+  return rows
+    .map((row) => {
+      const rawValue = row[key];
+      const value = rawValue === null || rawValue === undefined ? "NOT_RECORDED" : String(rawValue);
+      const count = typeof row._count === "object" && row._count && "_all" in row._count
+        ? Number((row._count as { _all: number })._all)
+        : 0;
+
+      return {
+        id: value,
+        label: labels[value] ?? value,
+        count,
+        href: hrefFor?.(value)
+      };
+    })
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, "fa"));
+}
+
+function recentActionHref(targetType: string, targetId: string | null, relatedPaymentId: string | null, relatedConversationId: string | null) {
+  if (targetType === "LEAD" && targetId) return `/admin/leads/${targetId}`;
+  if (targetType === "SUPPORT_TICKET" && targetId) return `/admin/support/${targetId}`;
+  if (targetType === "CONTENT_ENTRY" && targetId) return `/admin/content/${targetId}`;
+  if (targetType === "PAYMENT" && (targetId || relatedPaymentId)) return `/admin/payments/${targetId ?? relatedPaymentId}`;
+  if (targetType === "CANCELLATION" && targetId) return `/admin/cancellations/${targetId}`;
+  if (targetType === "CONVERSATION" && (targetId || relatedConversationId)) return `/admin/conversations/${targetId ?? relatedConversationId}`;
+  if (targetType === "EXPERIENCE_PROFILE" && targetId) return `/admin/experience-profiles/${targetId}`;
+  if (targetType === "INSIGHT" && targetId) return `/admin/insights/${targetId}`;
+  if (targetType === "PRICING_RULE" && targetId) return `/admin/pricing/${targetId}`;
+  if (targetType === "JOB_CATEGORY" && targetId) return `/admin/categories/${targetId}`;
+
+  return null;
+}
+
 type AnalyticsProfileCategoryShape = {
   jobField: PrismaJobField | null;
   categories?: readonly {
@@ -950,7 +1175,8 @@ export const adminReadModelRepository = {
     getInsightDetail: "read_only_persistent",
     listWalletTransactions: "read_only_persistent",
     listAttendance: "read_only_persistent",
-    getAnalyticsSummary: "read_only_persistent"
+    getAnalyticsSummary: "read_only_persistent",
+    getOpsAnalyticsSummary: "read_only_persistent"
   },
   getDashboard() {
     return readOnlyRepositoryOperation("admin_read_model", "getDashboard", async (db) => {
@@ -1278,6 +1504,482 @@ export const adminReadModelRepository = {
         take: 100
       })
     );
+  },
+  async getOpsAnalyticsSummary(filters: Partial<AdminOpsAnalyticsFilters> = {}, reader?: PrismaReader) {
+    const readOpsAnalytics = async (db: PrismaReader) => {
+      const appliedFilters = resolveOpsAnalyticsFilters(filters);
+      const rangeWhere = createdAtRangeWhere(appliedFilters.startedAt, appliedFilters.endedAt);
+      const todayStart = new Date(appliedFilters.endedAt);
+      todayStart.setHours(0, 0, 0, 0);
+      const dayMs = 24 * 60 * 60 * 1000;
+      const olderThan24h = new Date(appliedFilters.endedAt.getTime() - dayMs);
+      const olderThan48h = new Date(appliedFilters.endedAt.getTime() - 2 * dayMs);
+      const olderThan7d = new Date(appliedFilters.endedAt.getTime() - 7 * dayMs);
+      const activeLeadStages = ["NEW", "CONTACTED", "QUALIFIED", "FOLLOW_UP"] as const;
+      const openSupportStatuses = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_USER", "WAITING_FOR_PROVIDER", "ESCALATED"] as const;
+      const activeConversationStatusList = [...activeConversationStatuses];
+      const supportOpenWhere: Prisma.SupportTicketWhereInput = {
+        status: { in: [...openSupportStatuses] },
+        archivedAt: null
+      };
+      const activeLeadWhere: Prisma.LeadWhereInput = {
+        stage: { in: [...activeLeadStages] },
+        archivedAt: null
+      };
+      const activeConversationWhere: Prisma.ConversationRequestWhereInput = {
+        status: { in: activeConversationStatusList }
+      };
+
+      const [
+        totalLeads,
+        newLeads,
+        hotLeads,
+        warmLeads,
+        coldLeads,
+        qualifiedLeads,
+        convertedLeads,
+        lostLeads,
+        archivedLeads,
+        unassignedLeads,
+        followUpsDueToday,
+        overdueFollowUps,
+        noResponseLeads,
+        noResponseAfterTwoFollowUps,
+        leadAverage,
+        leadsWithBlocker,
+        leadsBySourceRows,
+        leadsByTypeRows,
+        leadsByTemperatureRows,
+        leadsByStageRows,
+        leadsByJobCategoryRows,
+        convertedBySourceRows,
+        lostReasonRows,
+        totalSupportTickets,
+        openSupportTickets,
+        urgentSupportTickets,
+        unassignedSupportTickets,
+        escalatedSupportTickets,
+        waitingForUserTickets,
+        waitingForProviderTickets,
+        resolvedTodayTickets,
+        archivedSupportTickets,
+        supportOlderThan24h,
+        supportOlderThan48h,
+        supportOlderThan7d,
+        openSupportRowsForAge,
+        supportByCategoryRows,
+        supportByPriorityRows,
+        supportByStatusRows,
+        supportBySourceRows,
+        totalContentEntries,
+        publishedContentEntries,
+        draftContentEntries,
+        hiddenContentEntries,
+        archivedContentEntries,
+        editableContentEntries,
+        systemContentEntries,
+        contentByNamespaceRows,
+        contentByTypeRows,
+        recentlyUpdatedContentRows,
+        totalConversations,
+        activeConversations,
+        awaitingProviderTimes,
+        waitingRequesterSelection,
+        paymentPendingConversations,
+        confirmedConversations,
+        completedConversations,
+        cancelledConversations,
+        expiredConversations,
+        conversationStatusRows,
+        pendingManualPaymentReviews,
+        approvedManualPaymentReviews,
+        rejectedManualPaymentReviews,
+        cancellationSupportReviews,
+        cancellationCreditAggregate,
+        pendingWalletCredits,
+        completedWalletCredits,
+        auditTotalInRange,
+        auditLast24h,
+        auditLast7d,
+        auditByActionRows,
+        auditByActorRoleRows,
+        recentAuditRows,
+        urgentTicketRows,
+        unassignedTicketRows,
+        overdueFollowUpRows,
+        hotLeadNoFollowUpRows,
+        unassignedHotLeadRows,
+        pendingManualPaymentRows,
+        stuckConversationRows,
+        draftContentRows
+      ] = await Promise.all([
+        db.lead.count(),
+        db.lead.count({ where: { stage: "NEW", archivedAt: null } }),
+        db.lead.count({ where: { temperature: "HOT", archivedAt: null } }),
+        db.lead.count({ where: { temperature: "WARM", archivedAt: null } }),
+        db.lead.count({ where: { temperature: "COLD", archivedAt: null } }),
+        db.lead.count({ where: { OR: [{ temperature: "QUALIFIED" }, { stage: "QUALIFIED" }], archivedAt: null } }),
+        db.lead.count({ where: { OR: [{ temperature: "CONVERTED" }, { stage: "CONVERTED" }, { convertedAt: { not: null } }] } }),
+        db.lead.count({ where: { OR: [{ temperature: "LOST" }, { stage: "LOST" }, { lostAt: { not: null } }] } }),
+        db.lead.count({ where: { OR: [{ stage: "ARCHIVED" }, { archivedAt: { not: null } }] } }),
+        db.lead.count({ where: { ...activeLeadWhere, ownerAdminId: null } }),
+        db.lead.count({ where: { ...activeLeadWhere, nextFollowUpAt: { gte: todayStart, lte: appliedFilters.endedAt } } }),
+        db.lead.count({ where: { ...activeLeadWhere, nextFollowUpAt: { lt: todayStart } } }),
+        db.lead.count({ where: { lastFollowUpOutcome: "NO_RESPONSE", archivedAt: null } }),
+        db.lead.count({ where: { lastFollowUpOutcome: "NO_RESPONSE", followUpCount: { gte: 2 }, archivedAt: null } }),
+        db.lead.aggregate({ _avg: { followUpCount: true } }),
+        db.lead.count({ where: { blocker: { not: null }, archivedAt: null } }),
+        db.lead.groupBy({ by: ["source"], _count: { _all: true }, orderBy: { _count: { source: "desc" } } }),
+        db.lead.groupBy({ by: ["leadType"], _count: { _all: true }, orderBy: { _count: { leadType: "desc" } } }),
+        db.lead.groupBy({ by: ["temperature"], _count: { _all: true }, orderBy: { _count: { temperature: "desc" } } }),
+        db.lead.groupBy({ by: ["stage"], _count: { _all: true }, orderBy: { _count: { stage: "desc" } } }),
+        db.lead.groupBy({ by: ["jobCategory"], _count: { _all: true }, where: { jobCategory: { not: null } }, orderBy: { _count: { jobCategory: "desc" } }, take: 12 }),
+        db.lead.groupBy({ by: ["source"], _count: { _all: true }, where: { OR: [{ stage: "CONVERTED" }, { convertedAt: { not: null } }] }, orderBy: { _count: { source: "desc" } } }),
+        db.lead.groupBy({ by: ["lostReason"], _count: { _all: true }, where: { lostReason: { not: null } }, orderBy: { _count: { lostReason: "desc" } }, take: 12 }),
+        db.supportTicket.count(),
+        db.supportTicket.count({ where: supportOpenWhere }),
+        db.supportTicket.count({ where: { ...supportOpenWhere, priority: "URGENT" } }),
+        db.supportTicket.count({ where: { ...supportOpenWhere, assigneeAdminId: null } }),
+        db.supportTicket.count({ where: { ...supportOpenWhere, status: "ESCALATED" } }),
+        db.supportTicket.count({ where: { ...supportOpenWhere, status: "WAITING_FOR_USER" } }),
+        db.supportTicket.count({ where: { ...supportOpenWhere, status: "WAITING_FOR_PROVIDER" } }),
+        db.supportTicket.count({ where: { status: "RESOLVED", resolvedAt: { gte: todayStart, lte: appliedFilters.endedAt } } }),
+        db.supportTicket.count({ where: { status: "ARCHIVED" } }),
+        db.supportTicket.count({ where: { ...supportOpenWhere, updatedAt: { lt: olderThan24h } } }),
+        db.supportTicket.count({ where: { ...supportOpenWhere, updatedAt: { lt: olderThan48h } } }),
+        db.supportTicket.count({ where: { ...supportOpenWhere, updatedAt: { lt: olderThan7d } } }),
+        db.supportTicket.findMany({ where: supportOpenWhere, select: { updatedAt: true }, take: 500 }),
+        db.supportTicket.groupBy({ by: ["category"], _count: { _all: true }, orderBy: { _count: { category: "desc" } } }),
+        db.supportTicket.groupBy({ by: ["priority"], _count: { _all: true }, orderBy: { _count: { priority: "desc" } } }),
+        db.supportTicket.groupBy({ by: ["status"], _count: { _all: true }, orderBy: { _count: { status: "desc" } } }),
+        db.supportTicket.groupBy({ by: ["source"], _count: { _all: true }, orderBy: { _count: { source: "desc" } } }),
+        db.contentEntry.count(),
+        db.contentEntry.count({ where: { status: "PUBLISHED" } }),
+        db.contentEntry.count({ where: { status: "DRAFT" } }),
+        db.contentEntry.count({ where: { status: "HIDDEN" } }),
+        db.contentEntry.count({ where: { OR: [{ status: "ARCHIVED" }, { archivedAt: { not: null } }] } }),
+        db.contentEntry.count({ where: { isEditable: true } }),
+        db.contentEntry.count({ where: { isSystem: true } }),
+        db.contentEntry.groupBy({ by: ["namespace"], _count: { _all: true }, orderBy: { _count: { namespace: "desc" } }, take: 12 }),
+        db.contentEntry.groupBy({ by: ["contentType"], _count: { _all: true }, orderBy: { _count: { contentType: "desc" } } }),
+        db.contentEntry.findMany({ select: { id: true, key: true, namespace: true, status: true, updatedAt: true }, orderBy: { updatedAt: "desc" }, take: 8 }),
+        db.conversationRequest.count(),
+        db.conversationRequest.count({ where: activeConversationWhere }),
+        db.conversationRequest.count({ where: { status: "AWAITING_TIME_PROPOSAL" } }),
+        db.conversationRequest.count({ where: { status: { in: ["TIMES_PROPOSED", "NEW_TIME_REQUESTED"] } } }),
+        db.conversationRequest.count({ where: { status: { in: ["AWAITING_PAYMENT", "PAYMENT_PROCESSING", "PAYMENT_FAILED"] } } }),
+        db.conversationRequest.count({ where: { status: "CONFIRMED" } }),
+        db.conversationRequest.count({ where: { status: "COMPLETED" } }),
+        db.conversationRequest.count({ where: { status: "CANCELLED" } }),
+        db.conversationRequest.count({ where: { status: "EXPIRED" } }),
+        db.conversationRequest.groupBy({ by: ["status"], _count: { _all: true }, orderBy: { _count: { status: "desc" } } }),
+        db.manualPaymentReview.count({ where: { status: { in: ["SUBMITTED", "NEEDS_REVIEW"] } } }),
+        db.manualPaymentReview.count({ where: { status: "APPROVED", reviewedAt: createdAtRangeWhere(appliedFilters.startedAt, appliedFilters.endedAt) } }),
+        db.manualPaymentReview.count({ where: { status: "REJECTED", reviewedAt: createdAtRangeWhere(appliedFilters.startedAt, appliedFilters.endedAt) } }),
+        db.cancellation.count({ where: { status: "UNDER_SUPPORT_REVIEW" } }),
+        db.walletTransaction.aggregate({ _sum: { amountToman: true }, where: { type: "CANCELLATION_REFUND_CREDIT", status: "COMPLETED" } }),
+        db.walletTransaction.count({ where: { type: "CANCELLATION_REFUND_CREDIT", status: "PENDING" } }),
+        db.walletTransaction.count({ where: { type: "CANCELLATION_REFUND_CREDIT", status: "COMPLETED" } }),
+        db.adminAuditEvent.count({ where: { createdAt: rangeWhere } }),
+        db.adminAuditEvent.count({ where: { createdAt: { gte: olderThan24h, lte: appliedFilters.endedAt } } }),
+        db.adminAuditEvent.count({ where: { createdAt: { gte: olderThan7d, lte: appliedFilters.endedAt } } }),
+        db.adminAuditEvent.groupBy({ by: ["action"], _count: { _all: true }, where: { createdAt: rangeWhere }, orderBy: { _count: { action: "desc" } }, take: 16 }),
+        db.adminAuditEvent.groupBy({ by: ["actorRole"], _count: { _all: true }, where: { createdAt: rangeWhere }, orderBy: { _count: { actorRole: "desc" } } }),
+        db.adminAuditEvent.findMany({
+          where: { createdAt: rangeWhere },
+          select: {
+            id: true,
+            action: true,
+            actorRole: true,
+            entityType: true,
+            entityId: true,
+            relatedConversationId: true,
+            relatedPaymentId: true,
+            createdAt: true,
+            actorAdminUser: { select: { id: true, displayName: true } }
+          },
+          orderBy: { createdAt: "desc" },
+          take: 12
+        }),
+        db.supportTicket.findMany({
+          where: { ...supportOpenWhere, priority: "URGENT" },
+          select: { id: true, ticketNumber: true, status: true, category: true, updatedAt: true },
+          orderBy: { updatedAt: "asc" },
+          take: 6
+        }),
+        db.supportTicket.findMany({
+          where: { ...supportOpenWhere, assigneeAdminId: null },
+          select: { id: true, ticketNumber: true, status: true, category: true, updatedAt: true },
+          orderBy: { updatedAt: "asc" },
+          take: 6
+        }),
+        db.lead.findMany({
+          where: { ...activeLeadWhere, nextFollowUpAt: { lt: todayStart } },
+          select: { id: true, leadNumber: true, stage: true, temperature: true, nextFollowUpAt: true },
+          orderBy: { nextFollowUpAt: "asc" },
+          take: 6
+        }),
+        db.lead.findMany({
+          where: { ...activeLeadWhere, temperature: "HOT", nextFollowUpAt: null },
+          select: { id: true, leadNumber: true, stage: true, temperature: true, createdAt: true },
+          orderBy: { updatedAt: "asc" },
+          take: 6
+        }),
+        db.lead.findMany({
+          where: { ...activeLeadWhere, temperature: "HOT", ownerAdminId: null },
+          select: { id: true, leadNumber: true, stage: true, temperature: true, createdAt: true },
+          orderBy: { updatedAt: "asc" },
+          take: 6
+        }),
+        db.manualPaymentReview.findMany({
+          where: { status: { in: ["SUBMITTED", "NEEDS_REVIEW"] } },
+          select: { id: true, status: true, submittedAt: true, createdAt: true, payment: { select: { id: true } } },
+          orderBy: { submittedAt: "asc" },
+          take: 6
+        }),
+        db.conversationRequest.findMany({
+          where: {
+            status: { in: ["AWAITING_TIME_PROPOSAL", "TIMES_PROPOSED", "NEW_TIME_REQUESTED", "AWAITING_PAYMENT", "PAYMENT_PROCESSING"] }
+          },
+          select: { id: true, status: true, createdAt: true },
+          orderBy: { updatedAt: "asc" },
+          take: 6
+        }),
+        db.contentEntry.findMany({
+          where: { status: { in: ["DRAFT", "HIDDEN"] } },
+          select: { id: true, key: true, namespace: true, status: true, updatedAt: true },
+          orderBy: { updatedAt: "asc" },
+          take: 6
+        })
+      ]);
+
+      const averageOpenAgeHours = openSupportRowsForAge.length
+        ? Math.round(
+            openSupportRowsForAge.reduce((sum, row) => sum + Math.max(0, appliedFilters.endedAt.getTime() - row.updatedAt.getTime()), 0) /
+              openSupportRowsForAge.length /
+              (60 * 60 * 1000)
+          )
+        : null;
+      const supportNeedingAction = urgentSupportTickets + unassignedSupportTickets + escalatedSupportTickets + supportOlderThan48h;
+      const conversationNeedingAction = awaitingProviderTimes + waitingRequesterSelection + paymentPendingConversations;
+      const needsAttention: AdminOpsAnalyticsAttentionItem[] = [
+        ...urgentTicketRows.map((ticket) => ({
+          id: `urgent-support:${ticket.id}`,
+          area: "support" as const,
+          priority: "urgent" as const,
+          label: "تیکت فوری باز",
+          summary: `${ticket.ticketNumber} · ${ticket.category} · ${ticket.status}`,
+          href: `/admin/support/${ticket.id}`,
+          createdAt: ticket.updatedAt
+        })),
+        ...overdueFollowUpRows.map((lead) => ({
+          id: `overdue-lead:${lead.id}`,
+          area: "lead" as const,
+          priority: "high" as const,
+          label: "پیگیری سرنخ عقب افتاده",
+          summary: `${lead.leadNumber} · ${lead.temperature} · ${lead.stage}`,
+          href: `/admin/leads/${lead.id}`,
+          createdAt: lead.nextFollowUpAt
+        })),
+        ...hotLeadNoFollowUpRows.map((lead) => ({
+          id: `hot-lead-no-follow-up:${lead.id}`,
+          area: "lead" as const,
+          priority: "high" as const,
+          label: "سرنخ داغ بدون پیگیری بعدی",
+          summary: `${lead.leadNumber} · ${lead.temperature} · ${lead.stage}`,
+          href: `/admin/leads/${lead.id}`,
+          createdAt: lead.createdAt
+        })),
+        ...unassignedHotLeadRows.map((lead) => ({
+          id: `unassigned-hot-lead:${lead.id}`,
+          area: "lead" as const,
+          priority: "high" as const,
+          label: "سرنخ داغ بدون مسئول",
+          summary: `${lead.leadNumber} · ${lead.temperature} · ${lead.stage}`,
+          href: `/admin/leads/${lead.id}`,
+          createdAt: lead.createdAt
+        })),
+        ...unassignedTicketRows.map((ticket) => ({
+          id: `unassigned-support:${ticket.id}`,
+          area: "support" as const,
+          priority: "high" as const,
+          label: "تیکت بدون مسئول",
+          summary: `${ticket.ticketNumber} · ${ticket.category} · ${ticket.status}`,
+          href: `/admin/support/${ticket.id}`,
+          createdAt: ticket.updatedAt
+        })),
+        ...pendingManualPaymentRows.map((review) => ({
+          id: `pending-payment:${review.id}`,
+          area: "payment" as const,
+          priority: "urgent" as const,
+          label: "بررسی پرداخت دستی",
+          summary: `ManualPaymentReview · ${review.status}`,
+          href: `/admin/payments/${review.payment.id}`,
+          createdAt: review.submittedAt ?? review.createdAt
+        })),
+        ...stuckConversationRows.map((conversation) => ({
+          id: `stuck-conversation:${conversation.id}`,
+          area: "conversation" as const,
+          priority: "normal" as const,
+          label: "گفت‌وگو در وضعیت انتظار",
+          summary: `Conversation · ${conversation.status}`,
+          href: `/admin/conversations/${conversation.id}`,
+          createdAt: conversation.createdAt
+        })),
+        ...draftContentRows.map((entry) => ({
+          id: `content-review:${entry.id}`,
+          area: "content" as const,
+          priority: "normal" as const,
+          label: "محتوای نیازمند بررسی",
+          summary: `${entry.namespace} · ${entry.key} · ${entry.status}`,
+          href: `/admin/content/${entry.id}`,
+          createdAt: entry.updatedAt
+        }))
+      ].sort((a, b) => {
+        const priorityOrder = { urgent: 0, high: 1, normal: 2 };
+        return priorityOrder[a.priority] - priorityOrder[b.priority] || (a.createdAt?.getTime() ?? 0) - (b.createdAt?.getTime() ?? 0);
+      }).slice(0, 40);
+
+      return {
+        filters: appliedFilters,
+        executive: {
+          openSupportTickets,
+          urgentSupportTickets,
+          unassignedSupportTickets,
+          overdueSupportTickets: supportOlderThan48h,
+          newLeads,
+          hotLeads,
+          followUpsDueToday,
+          overdueFollowUps,
+          convertedLeads,
+          lostLeads,
+          pendingContentEntries: draftContentEntries,
+          recentAdminActions: auditTotalInRange,
+          pendingPaymentReviews: pendingManualPaymentReviews,
+          activeConversations,
+          cancellationSupportReviews
+        },
+        leads: {
+          total: totalLeads,
+          new: newLeads,
+          hot: hotLeads,
+          warm: warmLeads,
+          cold: coldLeads,
+          qualified: qualifiedLeads,
+          converted: convertedLeads,
+          lost: lostLeads,
+          archived: archivedLeads,
+          unassigned: unassignedLeads,
+          followUpsDueToday,
+          overdueFollowUps,
+          noResponse: noResponseLeads,
+          noResponseAfterTwoFollowUps,
+          averageFollowUpCount: leadAverage._avg.followUpCount === null ? null : Math.round(leadAverage._avg.followUpCount),
+          withBlocker: leadsWithBlocker,
+          bySource: countRowsFromGroup(leadsBySourceRows, "source", {}, (source) => `/admin/leads?source=${encodeURIComponent(source)}`),
+          byType: countRowsFromGroup(leadsByTypeRows, "leadType", {}, (leadType) => `/admin/leads?leadType=${encodeURIComponent(leadType)}`),
+          byTemperature: countRowsFromGroup(leadsByTemperatureRows, "temperature", {}, (temperature) => `/admin/leads?temperature=${encodeURIComponent(temperature)}`),
+          byStage: countRowsFromGroup(leadsByStageRows, "stage", {}, (stage) => `/admin/leads?stage=${encodeURIComponent(stage)}`),
+          byJobCategory: countRowsFromGroup(leadsByJobCategoryRows, "jobCategory"),
+          convertedBySource: countRowsFromGroup(convertedBySourceRows, "source", {}, (source) => `/admin/leads?view=converted&source=${encodeURIComponent(source)}`),
+          lostReasons: countRowsFromGroup(lostReasonRows, "lostReason")
+        },
+        support: {
+          total: totalSupportTickets,
+          open: openSupportTickets,
+          urgent: urgentSupportTickets,
+          unassigned: unassignedSupportTickets,
+          escalated: escalatedSupportTickets,
+          waitingForUser: waitingForUserTickets,
+          waitingForProvider: waitingForProviderTickets,
+          resolvedToday: resolvedTodayTickets,
+          archived: archivedSupportTickets,
+          olderThan24h: supportOlderThan24h,
+          olderThan48h: supportOlderThan48h,
+          olderThan7d: supportOlderThan7d,
+          averageOpenAgeHours,
+          byCategory: countRowsFromGroup(supportByCategoryRows, "category", {}, (category) => `/admin/support?category=${encodeURIComponent(category)}`),
+          byPriority: countRowsFromGroup(supportByPriorityRows, "priority", {}, (priority) => `/admin/support?priority=${encodeURIComponent(priority)}`),
+          byStatus: countRowsFromGroup(supportByStatusRows, "status", {}, (status) => `/admin/support?status=${encodeURIComponent(status)}`),
+          bySource: countRowsFromGroup(supportBySourceRows, "source")
+        },
+        content: {
+          total: totalContentEntries,
+          published: publishedContentEntries,
+          draft: draftContentEntries,
+          hidden: hiddenContentEntries,
+          archived: archivedContentEntries,
+          editable: editableContentEntries,
+          system: systemContentEntries,
+          byNamespace: countRowsFromGroup(contentByNamespaceRows, "namespace", {}, (namespace) => `/admin/content?namespace=${encodeURIComponent(namespace)}`),
+          byContentType: countRowsFromGroup(contentByTypeRows, "contentType", {}, (contentType) => `/admin/content?contentType=${encodeURIComponent(contentType)}`),
+          recentlyUpdated: recentlyUpdatedContentRows.map((entry) => ({
+            id: entry.id,
+            label: `${entry.namespace} · ${entry.key}`,
+            count: 1,
+            href: `/admin/content/${entry.id}`
+          }))
+        },
+        conversations: {
+          total: totalConversations,
+          active: activeConversations,
+          awaitingProviderTimes,
+          waitingRequesterSelection,
+          paymentPending: paymentPendingConversations,
+          confirmed: confirmedConversations,
+          completed: completedConversations,
+          cancelled: cancelledConversations,
+          expired: expiredConversations,
+          needingAction: conversationNeedingAction,
+          byStatus: countRowsFromGroup(conversationStatusRows, "status", {}, (status) => `/admin/conversations?status=${encodeURIComponent(status)}`)
+        },
+        finance: {
+          pendingManualPaymentReviews,
+          approvedManualPaymentReviews,
+          rejectedManualPaymentReviews,
+          cancellationSupportReviews,
+          cancellationWalletCreditsToman: amountOrZero(cancellationCreditAggregate._sum.amountToman),
+          pendingWalletCredits,
+          availableWalletCredits: completedWalletCredits
+        },
+        audit: {
+          totalInRange: auditTotalInRange,
+          last24h: auditLast24h,
+          last7d: auditLast7d,
+          byAction: countRowsFromGroup(auditByActionRows, "action"),
+          byActorRole: countRowsFromGroup(auditByActorRoleRows, "actorRole"),
+          recentActions: recentAuditRows.map((row) => ({
+            id: row.id,
+            action: row.action,
+            actorLabel: row.actorAdminUser?.displayName ?? row.actorAdminUser?.id ?? row.actorRole,
+            actorRole: row.actorRole,
+            targetType: row.entityType,
+            targetId: row.entityId,
+            href: recentActionHref(row.entityType, row.entityId, row.relatedPaymentId, row.relatedConversationId),
+            createdAt: row.createdAt
+          }))
+        },
+        needsAttention,
+        dataQualityNotes: [
+          "این داشبورد فقط از وضعیت‌های پایگاه داده فعلی می‌خواند و event tracking یا SDK تحلیلی بیرونی ندارد.",
+          "اطلاعات تماس سرنخ‌ها، فایل‌های رسید پرداخت، کد حضور و payload کامل ممیزی در این سطح تجمیعی نمایش داده نمی‌شود.",
+          `شاخص‌های صف اقدام فعلی هستند؛ بازه ${appliedFilters.dateRange} برای فعالیت‌های اخیر و شمارش‌های زمانی استفاده می‌شود.`,
+          `شاخص‌های پشتیبانی نیازمند توجه: ${supportNeedingAction}.`
+        ]
+      } satisfies AdminOpsAnalyticsSummary;
+    };
+
+    if (reader) {
+      return {
+        ok: true,
+        area: "admin_read_model",
+        method: "getOpsAnalyticsSummary",
+        classification: "read_only_persistent",
+        data: await readOpsAnalytics(reader)
+      } as const;
+    }
+
+    return readOnlyRepositoryOperation("admin_read_model", "getOpsAnalyticsSummary", readOpsAnalytics);
   },
   async getAnalyticsSummary(filters: Partial<AdminAnalyticsFilters> = {}, reader?: PrismaReader) {
     const readAnalytics = async (db: PrismaReader) => {

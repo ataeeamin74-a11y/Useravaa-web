@@ -5,6 +5,9 @@ import type {
   AdminAnalyticsDateRange,
   AdminAnalyticsFilters,
   AdminAnalyticsSummary,
+  AdminOpsAnalyticsDateRange,
+  AdminOpsAnalyticsFilters,
+  AdminOpsAnalyticsSummary,
   AdminAttendanceRow,
   AdminCancellationDetail,
   AdminCancellationRow,
@@ -26,6 +29,9 @@ export type {
   AdminAnalyticsDateRange,
   AdminAnalyticsFilters,
   AdminAnalyticsSummary,
+  AdminOpsAnalyticsDateRange,
+  AdminOpsAnalyticsFilters,
+  AdminOpsAnalyticsSummary,
   AdminAttendanceRow,
   AdminCancellationDetail,
   AdminCancellationRow,
@@ -198,6 +204,9 @@ export const adminReadModelService = {
   },
   getAnalyticsSummary(viewer: AdminReadViewer, filters: Partial<AdminAnalyticsFilters> = {}, reader?: PrismaReader) {
     return guardedRead(viewer, () => useravaaRepository.adminReadModels.getAnalyticsSummary(filters, reader));
+  },
+  getOpsAnalyticsSummary(viewer: AdminReadViewer, filters: Partial<AdminOpsAnalyticsFilters> = {}, reader?: PrismaReader) {
+    return guardedRead(viewer, () => useravaaRepository.adminReadModels.getOpsAnalyticsSummary(filters, reader));
   },
   async getAuditLog(viewer: AdminReadViewer): Promise<AdminReadModelResult<AdminAuditLogReadModel>> {
     if (!canReadAdminModels(viewer)) {

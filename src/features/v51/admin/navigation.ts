@@ -133,6 +133,12 @@ export const adminNavigationGroups = [
         href: "/admin/analytics",
         description: "جایگاه امن برای گزارش‌های آینده.",
         implemented: true
+      },
+      {
+        label: "هوش عملیاتی",
+        href: "/admin/ops-analytics",
+        description: "نمای خواندنی سرنخ، پشتیبانی، محتوا، گفت‌وگو، پرداخت و ممیزی.",
+        implemented: true
       }
     ]
   },
@@ -182,6 +188,7 @@ export const adminCoreRoutePatterns = [
 export const adminOptionalRoutePatterns = [
   "/admin/attendance",
   "/admin/analytics",
+  "/admin/ops-analytics",
   "/admin/pricing",
   "/admin/pricing/[ruleId]",
   "/admin/content",

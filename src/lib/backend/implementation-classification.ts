@@ -410,5 +410,17 @@ export const backendImplementationClassification = {
     productionProviderConfigured: false,
     blocksProductionLaunch: true,
     notes: "Admin/Ops page read models use server-side read-only repository methods behind ADMIN/SUPPORT guards. Payment, cancellation support-review, experience profile review, and insight moderation mutations are handled by separate transaction-ready services."
+  },
+  adminOpsAnalytics: {
+    classification: "read_only_persistent",
+    prismaSchemaExists: true,
+    prismaClientBoundaryExists: true,
+    repositoryBoundaryExists: true,
+    apiRouteExists: false,
+    readsUseRepository: true,
+    writesImplemented: false,
+    productionProviderConfigured: false,
+    blocksProductionLaunch: true,
+    notes: "Admin Ops Analytics is a guarded server-rendered read model at /admin/ops-analytics. It aggregates existing Lead, SupportTicket, ContentEntry, ConversationRequest, ManualPaymentReview, Cancellation, WalletTransaction, and AdminAuditEvent state without external analytics SDKs, event tracking, or mutations."
   }
 } satisfies Record<string, BackendAreaClassification>;
