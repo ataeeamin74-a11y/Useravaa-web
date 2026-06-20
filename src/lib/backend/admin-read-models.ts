@@ -362,6 +362,26 @@ export const adminReadModelService = {
       }
     };
   },
+  async getLeadAuditLog(viewer: AdminReadViewer, leadId: string): Promise<AdminReadModelResult<AdminAuditLogReadModel>> {
+    if (!canReadAdminModels(viewer)) {
+      return unauthorizedResult<AdminAuditLogReadModel>();
+    }
+
+    const result = await useravaaRepository.adminAudit.listForLead(leadId);
+
+    if (!result.ok) {
+      return repositoryToAdminReadResult(result);
+    }
+
+    return {
+      ok: true,
+      data: {
+        implemented: true,
+        rows: mapAuditRows(result.data),
+        note: "Lead inbox audit events are read from admin audit persistence."
+      }
+    };
+  },
   async getSupportTicketAuditLog(viewer: AdminReadViewer, ticketId: string): Promise<AdminReadModelResult<AdminAuditLogReadModel>> {
     if (!canReadAdminModels(viewer)) {
       return unauthorizedResult<AdminAuditLogReadModel>();

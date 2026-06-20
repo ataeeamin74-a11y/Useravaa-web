@@ -357,6 +357,76 @@ enum SupportRelatedEntityType {
   NONE
 }
 
+enum LeadType {
+  REQUESTER_LEAD
+  EXPERIENCE_CREATOR_LEAD
+  PARTNER_LEAD
+  GENERAL_LEAD
+}
+
+enum LeadTemperature {
+  COLD
+  WARM
+  HOT
+  QUALIFIED
+  CONVERTED
+  LOST
+}
+
+enum LeadStage {
+  NEW
+  CONTACTED
+  QUALIFIED
+  FOLLOW_UP
+  CONVERTED
+  LOST
+  ARCHIVED
+}
+
+enum LeadSource {
+  ORGANIC
+  REFERRAL
+  LINKEDIN
+  TELEGRAM
+  INSTAGRAM
+  EVENT
+  MANUAL_IMPORT
+  ADMIN_CREATED
+  WAITLIST
+  INSIGHT_INTERACTION
+  PROFILE_VIEW
+  CHECKOUT_ABANDONED
+  CONVERSATION_REQUEST_STARTED
+  OTHER
+}
+
+enum LeadFollowUpChannel {
+  PHONE
+  WHATSAPP
+  TELEGRAM
+  EMAIL
+  LINKEDIN
+  IN_APP
+  MANUAL
+}
+
+enum LeadFollowUpOutcome {
+  NO_RESPONSE
+  INTERESTED
+  NOT_NOW
+  ASKED_FOR_MORE_INFO
+  WANTS_SPECIFIC_EXPERIENCE
+  PRICE_CONCERN
+  NEEDS_TRUST
+  BAD_FIT
+  CONVERTED
+  LOST
+}
+
+enum LeadNoteType {
+  INTERNAL
+}
+
 model User {
   id                    String                @id @default(cuid())
   role                  UserRole              @default(USER)
@@ -391,6 +461,12 @@ model User {
   requestedSupportTickets SupportTicket[]       @relation("SupportTicketRequester")
   assignedSupportTickets  SupportTicket[]       @relation("SupportTicketAssignee")
   createdSupportNotes     SupportTicketNote[]   @relation("SupportTicketNoteCreatedByAdmin")
+  ownedLeads              Lead[]                @relation("LeadOwner")
+  relatedLeads            Lead[]                @relation("LeadRelatedUser")
+  createdLeadNotes        LeadNote[]            @relation("LeadNoteCreatedByAdmin")
+  createdLeadFollowUps    LeadFollowUp[]        @relation("LeadFollowUpCreatedByAdmin")
+  completedLeadFollowUps  LeadFollowUp[]        @relation("LeadFollowUpCompletedByAdmin")
+  createdLeadTags         LeadTagAssignment[]   @relation("LeadTagAssignmentCreatedByAdmin")
   notifications         Notification[]
   insightAnswers        InsightAnswer[]
   officialInsights      Insight[]             @relation("InsightCreatedBy")
@@ -447,6 +523,7 @@ model ExperienceProfile {
   experienceAnswers           InsightAnswer[]
   officialInsights            Insight[]
   conversations               ConversationRequest[]
+  relatedLeads                Lead[]
 
   @@index([status, orgLevel])
 }
@@ -501,6 +578,7 @@ model JobCategory {
   createdByAdmin   User?             @relation("JobCategoryCreatedByAdmin", fields: [createdByAdminId], references: [id], onDelete: SetNull)
   updatedByAdmin   User?             @relation("JobCategoryUpdatedByAdmin", fields: [updatedByAdminId], references: [id], onDelete: SetNull)
   profiles         ProfileCategory[]
+  leads            Lead[]
 
   @@index([parentId])
   @@index([isActive, archivedAt])
@@ -643,6 +721,7 @@ model ConversationRequest {
   feedback                     Feedback?
   walletTransactions           WalletTransaction[]
   notifications                Notification[]
+  relatedLeads                 Lead[]
 
   @@index([requesterId, status])
   @@index([providerId, status])
@@ -967,6 +1046,7 @@ model Insight {
   authorUser          User?               @relation("InsightCreatedBy", fields: [authorUserId], references: [id])
   experienceProfile   ExperienceProfile?  @relation(fields: [experienceProfileId], references: [id])
   answers             InsightAnswer[]
+  relatedLeads        Lead[]
 
   @@index([status, publishedAt])
 }
@@ -1086,6 +1166,132 @@ model SupportTicketNote {
 
   @@index([ticketId, createdAt])
   @@index([createdByAdminId])
+}
+
+model Lead {
+  id                    String               @id @default(cuid())
+  leadNumber            String               @unique
+  firstName             String
+  lastName              String
+  phone                 String?
+  normalizedPhone       String?              @unique
+  email                 String?
+  normalizedEmail       String?              @unique
+  lastCompany           String?
+  jobTitle              String?
+  jobCategory           String?
+  jobCategoryId         String?
+  yearsOfExperience     Int?
+  leadType              LeadType             @default(GENERAL_LEAD)
+  temperature           LeadTemperature      @default(WARM)
+  stage                 LeadStage            @default(NEW)
+  source                LeadSource           @default(ADMIN_CREATED)
+  notes                 String?
+  ownerAdminId          String?
+  relatedUserId         String?
+  relatedConversationId String?
+  relatedProfileId      String?
+  relatedInsightId      String?
+  intentSummary         String?
+  blocker               String?
+  score                 Int?
+  lastContactedAt       DateTime?
+  nextFollowUpAt        DateTime?
+  followUpCount         Int                  @default(0)
+  lastFollowUpOutcome   LeadFollowUpOutcome?
+  convertedAt           DateTime?
+  lostAt                DateTime?
+  lostReason            String?
+  archivedAt            DateTime?
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+
+  ownerAdmin            User?                @relation("LeadOwner", fields: [ownerAdminId], references: [id], onDelete: SetNull)
+  relatedUser           User?                @relation("LeadRelatedUser", fields: [relatedUserId], references: [id], onDelete: SetNull)
+  relatedConversation   ConversationRequest? @relation(fields: [relatedConversationId], references: [id], onDelete: SetNull)
+  relatedProfile        ExperienceProfile?   @relation(fields: [relatedProfileId], references: [id], onDelete: SetNull)
+  relatedInsight        Insight?             @relation(fields: [relatedInsightId], references: [id], onDelete: SetNull)
+  jobCategoryRecord     JobCategory?         @relation(fields: [jobCategoryId], references: [id], onDelete: SetNull)
+  tagAssignments        LeadTagAssignment[]
+  leadNotes             LeadNote[]
+  followUps             LeadFollowUp[]
+
+  @@index([stage, temperature, updatedAt])
+  @@index([leadType, stage])
+  @@index([source, createdAt])
+  @@index([ownerAdminId, stage])
+  @@index([relatedUserId])
+  @@index([relatedConversationId])
+  @@index([relatedProfileId])
+  @@index([relatedInsightId])
+  @@index([jobCategoryId])
+  @@index([archivedAt])
+  @@index([nextFollowUpAt])
+}
+
+model LeadTag {
+  id             String              @id @default(cuid())
+  name           String
+  normalizedName String              @unique
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  assignments    LeadTagAssignment[]
+}
+
+model LeadTagAssignment {
+  id               String   @id @default(cuid())
+  leadId           String
+  tagId            String
+  createdByAdminId String?
+  createdAt        DateTime @default(now())
+
+  lead             Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  tag              LeadTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  createdByAdmin   User?    @relation("LeadTagAssignmentCreatedByAdmin", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+
+  @@unique([leadId, tagId])
+  @@index([tagId])
+  @@index([createdByAdminId])
+}
+
+model LeadNote {
+  id               String       @id @default(cuid())
+  leadId           String
+  body             String
+  noteType         LeadNoteType @default(INTERNAL)
+  createdByAdminId String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  lead             Lead         @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  createdByAdmin   User?        @relation("LeadNoteCreatedByAdmin", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, createdAt])
+  @@index([createdByAdminId])
+}
+
+model LeadFollowUp {
+  id                 String               @id @default(cuid())
+  leadId             String
+  channel            LeadFollowUpChannel
+  scheduledAt        DateTime
+  completedAt        DateTime?
+  outcome            LeadFollowUpOutcome?
+  summary            String?
+  createdByAdminId   String?
+  completedByAdminId String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+
+  lead               Lead                 @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  createdByAdmin     User?                @relation("LeadFollowUpCreatedByAdmin", fields: [createdByAdminId], references: [id], onDelete: SetNull)
+  completedByAdmin   User?                @relation("LeadFollowUpCompletedByAdmin", fields: [completedByAdminId], references: [id], onDelete: SetNull)
+
+  @@index([leadId, scheduledAt])
+  @@index([scheduledAt, completedAt])
+  @@index([createdByAdminId])
+  @@index([completedByAdminId])
 }
 
 model AdminAuditEvent {

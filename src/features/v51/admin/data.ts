@@ -581,6 +581,128 @@ export type AdminSupportDetailData = {
   viewerId: string;
 };
 
+export type AdminLeadFilterOption = {
+  label: string;
+  value: string;
+  href: string;
+  active: boolean;
+};
+
+export type AdminLeadTagItem = {
+  id: string;
+  tagId: string;
+  name: string;
+  normalizedName: string;
+};
+
+export type AdminLeadNoteItem = {
+  id: string;
+  body: string;
+  noteType: string;
+  createdBySummary: string;
+  createdAt: string;
+};
+
+export type AdminLeadFollowUpItem = {
+  id: string;
+  channel: string;
+  channelLabel: string;
+  scheduledAt: string;
+  completedAt: string;
+  outcome: string;
+  outcomeLabel: string;
+  summary: string;
+  createdBySummary: string;
+  completedBySummary: string;
+};
+
+export type AdminLeadItem = {
+  id: string;
+  leadNumber: string;
+  fullName: string;
+  phone: string;
+  email: string;
+  contactSummary: string;
+  companySummary: string;
+  jobTitle: string;
+  jobCategory: string;
+  yearsOfExperienceLabel: string;
+  leadType: string;
+  leadTypeLabel: string;
+  temperature: string;
+  temperatureLabel: string;
+  stage: string;
+  stageLabel: string;
+  sourceCode: string;
+  sourceLabel: string;
+  ownerSummary: string;
+  ownerAdminId: string;
+  relatedUserHref?: string;
+  relatedConversationHref?: string;
+  relatedProfileHref?: string;
+  relatedInsightHref?: string;
+  relatedSummary: string;
+  intentSummary: string;
+  blocker: string;
+  notes: string;
+  scoreValue: number | null;
+  scoreLabel: string;
+  lastContactedAt: string;
+  nextFollowUpAt: string;
+  followUpCountLabel: string;
+  lastFollowUpOutcome: string;
+  convertedAt: string;
+  lostAt: string;
+  lostReason: string;
+  archivedAt: string;
+  createdAt: string;
+  updatedAt: string;
+  href: string;
+  source: AdminDataSource;
+  actionsAvailable: boolean;
+  tags: readonly AdminLeadTagItem[];
+  leadNotes: readonly AdminLeadNoteItem[];
+  followUps: readonly AdminLeadFollowUpItem[];
+  auditItems?: readonly AdminAuditLogItem[];
+};
+
+export type AdminLeadInboxData = {
+  items: readonly AdminLeadItem[];
+  metrics: readonly AdminMetric[];
+  queueOptions: readonly AdminLeadFilterOption[];
+  stageOptions: readonly AdminLeadFilterOption[];
+  temperatureOptions: readonly AdminLeadFilterOption[];
+  leadTypeOptions: readonly AdminLeadFilterOption[];
+  sourceOptions: readonly AdminLeadFilterOption[];
+  activeFilters: {
+    view: string;
+    stage: string;
+    temperature: string;
+    leadType: string;
+    source: string;
+    owner: string;
+    search: string;
+  };
+  sourceNote: string;
+  source: AdminDataSource;
+  viewerCanCreate: boolean;
+  viewerCanMutate: boolean;
+  viewerCanImport: boolean;
+  viewerCanArchive: boolean;
+  viewerId: string;
+};
+
+export type AdminLeadDetailData = {
+  item: AdminLeadItem | null;
+  sourceNote: string;
+  source: AdminDataSource;
+  viewerCanCreate: boolean;
+  viewerCanMutate: boolean;
+  viewerCanImport: boolean;
+  viewerCanArchive: boolean;
+  viewerId: string;
+};
+
 export type AdminAuditLogData = {
   implemented: boolean;
   rows: readonly AdminAuditLogItem[];
@@ -605,6 +727,7 @@ export type AdminAuditLogItem = {
   pricingHref?: string;
   categoryHref?: string;
   contentHref?: string;
+  leadHref?: string;
   supportHref?: string;
   source: AdminDataSource;
 };

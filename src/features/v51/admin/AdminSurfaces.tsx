@@ -7,6 +7,7 @@ import { AdminContentActions } from "./AdminContentActions";
 import { AdminExperienceProfileReviewActions } from "./AdminExperienceProfileReviewActions";
 import { AdminInsightAnswerModerationActions } from "./AdminInsightAnswerModerationActions";
 import { AdminInsightModerationActions } from "./AdminInsightModerationActions";
+import { AdminLeadActions } from "./AdminLeadActions";
 import { AdminPaymentReviewActions } from "./AdminPaymentReviewActions";
 import { AdminPricingRuleActions } from "./AdminPricingRuleActions";
 import { AdminSupportActions } from "./AdminSupportActions";
@@ -28,6 +29,8 @@ import {
   type AdminExperienceProfileItem,
   type AdminInsightDetailItem,
   type AdminInsightItem,
+  type AdminLeadDetailData,
+  type AdminLeadInboxData,
   type AdminMetric,
   type AdminPaymentQueueItem,
   type AdminPlaceholderData,
@@ -1577,6 +1580,381 @@ export function AdminContentDetail({ data }: Readonly<{ data: AdminContentDetail
   );
 }
 
+export function AdminLeadInbox({ data }: Readonly<{ data: AdminLeadInboxData }>) {
+  return (
+    <div className={styles.pageStack}>
+      <AdminPageHeader
+        title="صندوق سرنخ‌ها"
+        description="پیگیری رشد و فروش بدون تغییر مستقیم پرداخت، کیف پول، گفت‌وگو، لغو یا تیکت پشتیبانی."
+        sourceNote={data.sourceNote}
+      />
+      <section className={styles.metricGrid} aria-label="شاخص‌های سرنخ">
+        {data.metrics.map((metric) =>
+          metric.href ? (
+            <Link className={styles.metricCard} href={metric.href} key={metric.id}>
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+              <small>{metric.helper}</small>
+            </Link>
+          ) : (
+            <article className={styles.metricCard} key={metric.id}>
+              <span>{metric.label}</span>
+              <strong>{metric.value}</strong>
+              <small>{metric.helper}</small>
+            </article>
+          )
+        )}
+      </section>
+      <section className={styles.surface}>
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>صف‌ها و فیلترها</h3>
+            <p>فقط ردیف‌های Lead از پایگاه داده نمایش داده می‌شود؛ داده نمایشی جایگزین نمی‌شود.</p>
+          </div>
+          <DataSourceBadge source={data.source} />
+        </div>
+        <div>
+          <p className={styles.filterTitle}>نمای سرنخ</p>
+          <div className={styles.filters}>
+            {data.queueOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`lead-view-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>وضعیت</p>
+          <div className={styles.filters}>
+            {data.stageOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`lead-stage-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>دما</p>
+          <div className={styles.filters}>
+            {data.temperatureOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`lead-temp-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div>
+          <p className={styles.filterTitle}>نوع و منبع</p>
+          <div className={styles.filters}>
+            {data.leadTypeOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`lead-type-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+            {data.sourceOptions.map((option) => (
+              <Link className={option.active ? styles.filterLinkActive : styles.filterLink} href={option.href} key={`lead-source-${option.value || "all"}`}>
+                {option.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+      <section className={styles.detailGrid}>
+        <article className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>فهرست سرنخ‌ها</h3>
+              <p>کنش‌های حساس مانند تبدیل کاربر یا ساخت گفت‌وگو از این مسیر انجام نمی‌شود.</p>
+            </div>
+          </div>
+          {data.items.length ? (
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th>سرنخ</th>
+                    <th>تماس</th>
+                    <th>نقش / شرکت</th>
+                    <th>وضعیت</th>
+                    <th>مسئول</th>
+                    <th>پیگیری بعدی</th>
+                    <th>برچسب</th>
+                    <th>کنش</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.items.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <strong>{item.fullName}</strong>
+                        <br />
+                        <span dir="ltr">{item.leadNumber}</span>
+                      </td>
+                      <td>{item.contactSummary}</td>
+                      <td>
+                        {item.jobTitle} / {item.companySummary}
+                      </td>
+                      <td>
+                        {item.stageLabel} / {item.temperatureLabel}
+                      </td>
+                      <td>{item.ownerSummary}</td>
+                      <td>{item.nextFollowUpAt}</td>
+                      <td>{item.tags.map((tag) => tag.name).join("، ") || "ثبت نشده"}</td>
+                      <td>
+                        <Link className={styles.secondaryLink} href={item.href}>
+                          جزئیات
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <EmptyState title="سرنخی برای نمایش نیست" body="اگر DB یا ردیف سرنخ در دسترس نباشد، این بخش ردیف نمایشی نشان نمی‌دهد." />
+          )}
+        </article>
+        <aside className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>سرنخ تازه</h3>
+              <p>برای ثبت پیگیری رشد؛ ارسال پیام، اعلان یا ساخت گفت‌وگو انجام نمی‌شود.</p>
+            </div>
+          </div>
+          <AdminLeadActions
+            mode="create"
+            viewerCanCreate={data.viewerCanCreate}
+            viewerCanMutate={data.viewerCanMutate}
+            viewerCanImport={data.viewerCanImport}
+            viewerCanArchive={data.viewerCanArchive}
+            viewerId={data.viewerId}
+          />
+        </aside>
+      </section>
+    </div>
+  );
+}
+
+export function AdminLeadDetail({ data }: Readonly<{ data: AdminLeadDetailData }>) {
+  const item = data.item;
+
+  if (!item) {
+    return (
+      <div className={styles.pageStack}>
+        <AdminPageHeader title="جزئیات سرنخ" description="سرنخ پیدا نشد." sourceNote={data.sourceNote} />
+        <section className={styles.surface}>
+          <EmptyState title="سرنخ پیدا نشد" body="هیچ ردیف ساختگی برای این جزئیات نمایش داده نمی‌شود." />
+        </section>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.pageStack}>
+      <AdminPageHeader
+        title="جزئیات سرنخ"
+        description="پیگیری امن سرنخ، یادداشت‌ها، برچسب‌ها و پیگیری‌های دستی بدون تغییر چرخه محصول."
+        sourceNote={data.sourceNote}
+      />
+      <section className={styles.detailGrid}>
+        <article className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>{item.fullName}</h3>
+              <p dir="ltr">{item.leadNumber}</p>
+            </div>
+            <DataSourceBadge source={item.source} />
+          </div>
+          <dl className={styles.detailList}>
+            <div>
+              <dt>تماس</dt>
+              <dd>{item.contactSummary}</dd>
+            </div>
+            <div>
+              <dt>شرکت و نقش</dt>
+              <dd>
+                {item.jobTitle} / {item.companySummary}
+              </dd>
+            </div>
+            <div>
+              <dt>دسته و تجربه</dt>
+              <dd>
+                {item.jobCategory} / {item.yearsOfExperienceLabel}
+              </dd>
+            </div>
+            <div>
+              <dt>نوع / دما / وضعیت</dt>
+              <dd>
+                {item.leadTypeLabel} / {item.temperatureLabel} / {item.stageLabel}
+              </dd>
+            </div>
+            <div>
+              <dt>منبع</dt>
+              <dd>{item.sourceLabel}</dd>
+            </div>
+            <div>
+              <dt>مسئول</dt>
+              <dd>{item.ownerSummary}</dd>
+            </div>
+            <div>
+              <dt>امتیاز</dt>
+              <dd>{item.scoreLabel}</dd>
+            </div>
+            <div>
+              <dt>خلاصه نیت</dt>
+              <dd>{item.intentSummary}</dd>
+            </div>
+            <div>
+              <dt>مانع</dt>
+              <dd>{item.blocker}</dd>
+            </div>
+            <div>
+              <dt>پیگیری</dt>
+              <dd>
+                آخرین تماس: {item.lastContactedAt} / بعدی: {item.nextFollowUpAt} / تعداد: {item.followUpCountLabel}
+              </dd>
+            </div>
+            <div>
+              <dt>تبدیل / lost / آرشیو</dt>
+              <dd>
+                {item.convertedAt} / {item.lostAt} / {item.archivedAt}
+              </dd>
+            </div>
+            <div>
+              <dt>ارتباط‌ها</dt>
+              <dd>{item.relatedSummary}</dd>
+            </div>
+          </dl>
+          <div className={styles.actions}>
+            <Link className={styles.secondaryLink} href="/admin/leads">
+              بازگشت به سرنخ‌ها
+            </Link>
+            {item.relatedUserHref ? (
+              <Link className={styles.secondaryLink} href={item.relatedUserHref}>
+                کاربر مرتبط
+              </Link>
+            ) : null}
+            {item.relatedConversationHref ? (
+              <Link className={styles.secondaryLink} href={item.relatedConversationHref}>
+                گفت‌وگوی مرتبط
+              </Link>
+            ) : null}
+            {item.relatedProfileHref ? (
+              <Link className={styles.secondaryLink} href={item.relatedProfileHref}>
+                پروفایل مرتبط
+              </Link>
+            ) : null}
+            {item.relatedInsightHref ? (
+              <Link className={styles.secondaryLink} href={item.relatedInsightHref}>
+                بینش مرتبط
+              </Link>
+            ) : null}
+          </div>
+        </article>
+        <aside className={styles.surface}>
+          <div className={styles.surfaceHeader}>
+            <div>
+              <h3>ویرایش و پیگیری</h3>
+              <p>SUPPORT می‌تواند پیگیری کند؛ تبدیل، lost و آرشیو فقط برای ADMIN فعال است.</p>
+            </div>
+          </div>
+          <AdminLeadActions
+            mode="detail"
+            lead={item}
+            viewerCanCreate={data.viewerCanCreate}
+            viewerCanMutate={data.viewerCanMutate}
+            viewerCanImport={data.viewerCanImport}
+            viewerCanArchive={data.viewerCanArchive}
+            viewerId={data.viewerId}
+          />
+        </aside>
+      </section>
+      <section className={styles.surface} aria-label="برچسب‌ها، یادداشت‌ها و پیگیری‌های سرنخ">
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>تاریخچه سرنخ</h3>
+            <p>یادداشت‌ها و پیگیری‌ها فقط داخلی هستند و هیچ پیام خارجی ارسال نمی‌کنند.</p>
+          </div>
+        </div>
+        <dl className={styles.detailList}>
+          <div>
+            <dt>برچسب‌ها</dt>
+            <dd>{item.tags.map((tag) => tag.name).join("، ") || "ثبت نشده"}</dd>
+          </div>
+          <div>
+            <dt>یادداشت پایه</dt>
+            <dd>{item.notes}</dd>
+          </div>
+        </dl>
+        {item.leadNotes.length ? (
+          <dl className={styles.detailList}>
+            {item.leadNotes.map((note) => (
+              <div key={note.id}>
+                <dt>{note.createdBySummary}</dt>
+                <dd>
+                  {note.body} · {note.createdAt}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <EmptyState title="یادداشتی ثبت نشده" body="یادداشت داخلی پس از ثبت در همین صفحه نمایش داده می‌شود." />
+        )}
+        {item.followUps.length ? (
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>کانال</th>
+                  <th>زمان</th>
+                  <th>نتیجه</th>
+                  <th>خلاصه</th>
+                </tr>
+              </thead>
+              <tbody>
+                {item.followUps.map((followUp) => (
+                  <tr key={followUp.id}>
+                    <td>{followUp.channelLabel}</td>
+                    <td>
+                      {followUp.scheduledAt} / {followUp.completedAt}
+                    </td>
+                    <td>{followUp.outcomeLabel}</td>
+                    <td>{followUp.summary}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <EmptyState title="پیگیری ثبت نشده" body="پیگیری‌ها پس از زمان‌بندی یا تکمیل در همین بخش نمایش داده می‌شوند." />
+        )}
+      </section>
+      <section className={styles.surface} aria-label="گزارش ممیزی سرنخ">
+        <div className={styles.surfaceHeader}>
+          <div>
+            <h3>گزارش ممیزی</h3>
+            <p>رویدادهای ایجاد، ویرایش، تخصیص، برچسب، یادداشت، پیگیری، تبدیل، lost، بازگشایی و آرشیو این سرنخ.</p>
+          </div>
+        </div>
+        {item.auditItems?.length ? (
+          <dl className={styles.detailList}>
+            {item.auditItems.map((event) => (
+              <div key={event.id}>
+                <dt>{event.actionLabel}</dt>
+                <dd>
+                  {event.actorSummary} · {event.statusChange} · {event.createdAt}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        ) : (
+          <EmptyState title="رویدادی ثبت نشده" body="پس از ثبت کنش سرنخ، این بخش از پایگاه داده به‌روز می‌شود." />
+        )}
+      </section>
+    </div>
+  );
+}
+
 export function AdminSupportInbox({ data }: Readonly<{ data: AdminSupportInboxData }>) {
   return (
     <div className={styles.pageStack}>
@@ -2618,6 +2996,14 @@ export function AdminAuditLog({ data }: Readonly<{ data?: AdminAuditLogData }> =
                       {" "}
                       <Link className={styles.secondaryLink} href={row.contentHref}>
                         محتوا
+                      </Link>
+                    </>
+                  ) : null}
+                  {row.leadHref ? (
+                    <>
+                      {" "}
+                      <Link className={styles.secondaryLink} href={row.leadHref}>
+                        سرنخ
                       </Link>
                     </>
                   ) : null}

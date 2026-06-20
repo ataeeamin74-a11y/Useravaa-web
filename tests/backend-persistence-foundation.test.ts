@@ -45,7 +45,20 @@ const apiRouteFiles = [
   "src/app/api/insights/answers/route.ts",
   "src/app/api/admin/payments/route.ts",
   "src/app/api/admin/payments/[paymentId]/approve/route.ts",
-  "src/app/api/admin/payments/[paymentId]/reject/route.ts"
+  "src/app/api/admin/payments/[paymentId]/reject/route.ts",
+  "src/app/api/admin/leads/route.ts",
+  "src/app/api/admin/leads/[leadId]/route.ts",
+  "src/app/api/admin/leads/[leadId]/assign/route.ts",
+  "src/app/api/admin/leads/[leadId]/notes/route.ts",
+  "src/app/api/admin/leads/[leadId]/tags/route.ts",
+  "src/app/api/admin/leads/[leadId]/tags/[tagId]/route.ts",
+  "src/app/api/admin/leads/[leadId]/follow-ups/route.ts",
+  "src/app/api/admin/leads/[leadId]/follow-ups/[followUpId]/complete/route.ts",
+  "src/app/api/admin/leads/[leadId]/convert/route.ts",
+  "src/app/api/admin/leads/[leadId]/lost/route.ts",
+  "src/app/api/admin/leads/[leadId]/reopen/route.ts",
+  "src/app/api/admin/leads/[leadId]/archive/route.ts",
+  "src/app/api/admin/leads/import/route.ts"
 ] as const;
 
 const repositoryFiles = [
@@ -61,7 +74,8 @@ const repositoryFiles = [
   "src/lib/backend/repositories/withdrawal.ts",
   "src/lib/backend/repositories/notification.ts",
   "src/lib/backend/repositories/insights.ts",
-  "src/lib/backend/repositories/admin-payment-review.ts"
+  "src/lib/backend/repositories/admin-payment-review.ts",
+  "src/lib/backend/repositories/admin-leads.ts"
 ] as const;
 
 describe("Checkpoint 2B-1 database persistence foundation", () => {
@@ -128,6 +142,8 @@ describe("Checkpoint 2B-1 database persistence foundation", () => {
     expect(useravaaRepository.cancellation.methods.createRequesterCancellation).toBe("database_persistent");
     expect(useravaaRepository.walletTransaction.methods.createLedgerEntry).toBe("database_persistent");
     expect(useravaaRepository.adminPayments.methods.approve).toBe("database_persistent");
+    expect(useravaaRepository.adminLeads.methods.createLead).toBe("database_persistent");
+    expect(useravaaRepository.adminLeads.methods.listLeads).toBe("read_only_persistent");
   });
 
   it("keeps production-shaped API routes fixture-free and service-boundary based", () => {
@@ -246,6 +262,19 @@ describe("Checkpoint 2B-1 database persistence foundation", () => {
       "PATCH /api/admin/content/[contentId]",
       "POST /api/admin/content/[contentId]/archive",
       "POST /api/admin/content/[contentId]/restore",
+      "POST /api/admin/leads",
+      "PATCH /api/admin/leads/[leadId]",
+      "POST /api/admin/leads/[leadId]/assign",
+      "POST /api/admin/leads/[leadId]/notes",
+      "POST /api/admin/leads/[leadId]/tags",
+      "DELETE /api/admin/leads/[leadId]/tags/[tagId]",
+      "POST /api/admin/leads/[leadId]/follow-ups",
+      "POST /api/admin/leads/[leadId]/follow-ups/[followUpId]/complete",
+      "POST /api/admin/leads/[leadId]/convert",
+      "POST /api/admin/leads/[leadId]/lost",
+      "POST /api/admin/leads/[leadId]/reopen",
+      "POST /api/admin/leads/[leadId]/archive",
+      "POST /api/admin/leads/import",
       "POST /api/admin/support",
       "PATCH /api/admin/support/[ticketId]",
       "POST /api/admin/support/[ticketId]/assign",
@@ -275,6 +304,7 @@ describe("Checkpoint 2B-1 database persistence foundation", () => {
         "adminContent",
         "adminExperienceProfileReview",
         "adminInsightModeration",
+        "adminLeads",
         "adminPaymentReview",
         "adminPricingRules",
         "adminSupport",

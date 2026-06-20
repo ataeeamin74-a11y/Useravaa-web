@@ -2,6 +2,13 @@ import {
   Prisma,
   type ContentEntryStatus,
   type ContentEntryType,
+  type LeadFollowUpChannel,
+  type LeadFollowUpOutcome,
+  type LeadNoteType,
+  type LeadSource,
+  type LeadStage,
+  type LeadTemperature,
+  type LeadType,
   type SupportRelatedEntityType,
   type SupportTicketCategory,
   type SupportTicketNoteType,
@@ -14,6 +21,13 @@ import { calculateRequesterCancellationPolicy } from "./cancellation-policy";
 import { isPrismaClientConfigurationError } from "./db/prisma";
 import { withUseravaaTransaction, type UseravaaTransactionClient } from "./db/transaction";
 import { toConversationResponseDto, toConversationResponseDtos, type ConversationResponseDto } from "./dto/conversation";
+import {
+  normalizeLeadEmail,
+  normalizeLeadPhone,
+  normalizeLeadTag,
+  normalizeLeadTags,
+  parseLeadImportCsv
+} from "./lead-import";
 import type { BackendArea } from "./domain";
 import { useravaaRepository } from "./repository";
 import {
@@ -26,6 +40,8 @@ import type {
   AdminCategoryRecord,
   AdminContentEntryFilters,
   AdminContentEntryRecord,
+  AdminLeadFilters,
+  AdminLeadRecord,
   AdminSupportTicketFilters,
   AdminSupportTicketRecord,
   PricingRuleListReadModel,
@@ -41,6 +57,18 @@ import {
   adminContentEntryCreateSchema,
   adminContentEntryRestoreSchema,
   adminContentEntryUpdateSchema,
+  adminLeadArchiveSchema,
+  adminLeadAssignSchema,
+  adminLeadConvertSchema,
+  adminLeadCreateSchema,
+  adminLeadFollowUpCompleteSchema,
+  adminLeadFollowUpScheduleSchema,
+  adminLeadImportOptionsSchema,
+  adminLeadLostSchema,
+  adminLeadNoteCreateSchema,
+  adminLeadReopenSchema,
+  adminLeadTagAddSchema,
+  adminLeadUpdateSchema,
   adminSupportTicketArchiveSchema,
   adminSupportTicketAssignSchema,
   adminSupportTicketCreateSchema,
@@ -426,6 +454,22 @@ type AdminSupportServiceOptions = {
   runInTransaction?: typeof withUseravaaTransaction;
   now?: () => Date;
   ticketNumberGenerator?: () => string;
+};
+
+type AdminLeadServiceOptions = {
+  runInTransaction?: typeof withUseravaaTransaction;
+  now?: () => Date;
+  leadNumberGenerator?: () => string;
+  importIdGenerator?: () => string;
+};
+
+export type AdminLeadImportSummary = {
+  totalRows: number;
+  imported: number;
+  skippedDuplicates: number;
+  invalidRows: number;
+  errorsPreview: { rowNumber: number; reason: string }[];
+  dryRun: boolean;
 };
 
 export type RequesterAttendanceCodeDto = {
@@ -2916,6 +2960,130 @@ function supportUniqueConstraintResult(details?: unknown) {
   });
 }
 
+function defaultLeadNumber() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `LEAD-${timestamp}-${suffix}`;
+}
+
+function defaultLeadImportId() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const suffix = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `lead-import-${timestamp}-${suffix}`;
+}
+
+function leadStatus(lead: Pick<AdminLeadRecord, "stage" | "temperature" | "archivedAt">) {
+  return `stage:${lead.archivedAt ? "ARCHIVED" : lead.stage};temperature:${lead.temperature}`;
+}
+
+function leadAuditSnapshot(
+  lead: Pick<
+    AdminLeadRecord,
+    | "leadNumber"
+    | "leadType"
+    | "temperature"
+    | "stage"
+    | "source"
+    | "ownerAdminId"
+    | "relatedUserId"
+    | "relatedConversationId"
+    | "relatedProfileId"
+    | "relatedInsightId"
+    | "score"
+    | "nextFollowUpAt"
+    | "lastFollowUpOutcome"
+    | "convertedAt"
+    | "lostAt"
+    | "archivedAt"
+  >
+) {
+  return {
+    leadNumber: lead.leadNumber,
+    leadType: lead.leadType,
+    temperature: lead.temperature,
+    stage: lead.stage,
+    source: lead.source,
+    ownerAdminId: lead.ownerAdminId,
+    relatedUserId: lead.relatedUserId,
+    relatedConversationId: lead.relatedConversationId,
+    relatedProfileId: lead.relatedProfileId,
+    relatedInsightId: lead.relatedInsightId,
+    score: lead.score,
+    nextFollowUpAt: lead.nextFollowUpAt?.toISOString() ?? null,
+    lastFollowUpOutcome: lead.lastFollowUpOutcome,
+    convertedAt: lead.convertedAt?.toISOString() ?? null,
+    lostAt: lead.lostAt?.toISOString() ?? null,
+    archivedAt: lead.archivedAt?.toISOString() ?? null
+  };
+}
+
+function leadDuplicateResult(details?: unknown) {
+  return validationErrorResult("admin_leads", {
+    reason: "duplicate_lead_contact",
+    details
+  });
+}
+
+function leadCannotBeEditedResult(reason: string) {
+  return invalidStateResult("admin_leads", {
+    reason
+  });
+}
+
+function leadContactUpdate(input: { phone?: string | null; email?: string | null }) {
+  return {
+    ...(input.phone === undefined
+      ? {}
+      : {
+          phone: input.phone,
+          normalizedPhone: normalizeLeadPhone(input.phone)
+        }),
+    ...(input.email === undefined
+      ? {}
+      : {
+          email: input.email,
+          normalizedEmail: normalizeLeadEmail(input.email)
+        })
+  };
+}
+
+async function addTagsToLead(
+  leadId: string,
+  tags: readonly string[] | undefined,
+  viewer: AdminViewer,
+  now: Date,
+  tx: UseravaaTransactionClient
+) {
+  const normalizedTags = normalizeLeadTags(tags ?? []);
+
+  for (const tagName of normalizedTags) {
+    const tag = await useravaaRepository.adminLeads.upsertLeadTag(
+      {
+        name: tagName,
+        normalizedName: normalizeLeadTag(tagName),
+        now
+      },
+      tx
+    );
+
+    await useravaaRepository.adminLeads.addLeadTagAssignmentByTagId(
+      {
+        leadId,
+        tagId: tag.id,
+        createdByAdminId: viewer.id,
+        now
+      },
+      tx
+    );
+  }
+}
+
+function leadCsvImportFileError(reason: string) {
+  return validationErrorResult("admin_leads", {
+    reason
+  });
+}
+
 async function validateCategoryParent(
   parentId: string | null | undefined,
   tx: UseravaaTransactionClient,
@@ -2949,6 +3117,1205 @@ async function validateCategoryParent(
 
   return null;
 }
+
+export const adminLeadService = {
+  list(viewer: AdminViewer, filters: AdminLeadFilters = {}): Promise<ServiceResult<AdminLeadRecord[]>> {
+    if (!isAdminOrSupport(viewer)) {
+      return Promise.resolve(unauthorizedResult("admin_leads"));
+    }
+
+    return useravaaRepository.adminLeads.listLeads(filters).then((result) => repositoryResultToService("admin_leads", result));
+  },
+  getDetail(viewer: AdminViewer, leadId: string): Promise<ServiceResult<AdminLeadRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return Promise.resolve(unauthorizedResult("admin_leads"));
+    }
+
+    return useravaaRepository.adminLeads.getLead(leadId).then((result) => {
+      if (!result.ok) {
+        return repositoryResultToService("admin_leads", result);
+      }
+
+      if (!result.data) {
+        return targetNotFoundResult("admin_leads");
+      }
+
+      return {
+        ok: true,
+        data: result.data
+      } satisfies ServiceResult<typeof result.data>;
+    });
+  },
+  async create(
+    viewer: AdminViewer,
+    payload: unknown,
+    options: AdminLeadServiceOptions = {}
+  ): Promise<ServiceResult<AdminLeadRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadCreateSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    if (parsed.data.stage === "ARCHIVED") {
+      return leadCannotBeEditedResult("lead_creation_cannot_start_archived");
+    }
+
+    if (!isAdmin(viewer) && parsed.data.ownerAdminId && parsed.data.ownerAdminId !== viewer.id) {
+      return unauthorizedResult("admin_leads", {
+        reason: "support_role_can_only_assign_lead_to_self"
+      });
+    }
+
+    const now = options.now?.() ?? new Date();
+    const leadNumber = options.leadNumberGenerator?.() ?? defaultLeadNumber();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+    const normalizedEmail = normalizeLeadEmail(parsed.data.email);
+    const normalizedPhone = normalizeLeadPhone(parsed.data.phone);
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const duplicateResult = await useravaaRepository.adminLeads.findDuplicateLead({ normalizedEmail, normalizedPhone }, tx);
+
+        if (!duplicateResult.ok) {
+          return repositoryResultToService("admin_leads", duplicateResult);
+        }
+
+        if (duplicateResult.data) {
+          return leadDuplicateResult();
+        }
+
+        const created = await useravaaRepository.adminLeads.createLead(
+          {
+            leadNumber,
+            firstName: parsed.data.firstName,
+            lastName: parsed.data.lastName,
+            phone: parsed.data.phone,
+            normalizedPhone,
+            email: parsed.data.email,
+            normalizedEmail,
+            lastCompany: parsed.data.lastCompany,
+            jobTitle: parsed.data.jobTitle,
+            jobCategory: parsed.data.jobCategory,
+            jobCategoryId: parsed.data.jobCategoryId,
+            yearsOfExperience: parsed.data.yearsOfExperience,
+            leadType: parsed.data.leadType as LeadType,
+            temperature: parsed.data.temperature as LeadTemperature,
+            stage: parsed.data.stage as LeadStage,
+            source: parsed.data.source as LeadSource,
+            notes: parsed.data.notes,
+            ownerAdminId: parsed.data.ownerAdminId ?? viewer.id,
+            relatedUserId: parsed.data.relatedUserId,
+            relatedConversationId: parsed.data.relatedConversationId,
+            relatedProfileId: parsed.data.relatedProfileId,
+            relatedInsightId: parsed.data.relatedInsightId,
+            intentSummary: parsed.data.intentSummary,
+            blocker: parsed.data.blocker,
+            score: parsed.data.score,
+            nextFollowUpAt: parsed.data.nextFollowUpAt,
+            now
+          },
+          tx
+        );
+
+        await addTagsToLead(created.id, parsed.data.tags, viewer, now, tx);
+
+        const updatedResult = await useravaaRepository.adminLeads.getLead(created.id, tx);
+        const lead = updatedResult.ok && updatedResult.data ? updatedResult.data : created;
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "LEAD_CREATED",
+            leadId: lead.id,
+            beforeStatus: null,
+            afterStatus: leadStatus(lead),
+            relatedConversationId: lead.relatedConversationId,
+            metadata: {
+              after: leadAuditSnapshot(lead),
+              tagsCount: parsed.data.tags?.length ?? 0
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: lead,
+          status: 201
+        } satisfies ServiceResult<typeof lead>;
+      });
+    } catch (error) {
+      if (isPrismaUniqueConstraintError(error)) {
+        return leadDuplicateResult(error.meta);
+      }
+
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async update(
+    viewer: AdminViewer,
+    leadId: string,
+    payload: unknown,
+    options: AdminLeadServiceOptions = {}
+  ): Promise<ServiceResult<AdminLeadRecord>> {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadUpdateSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    if (!isAdmin(viewer)) {
+      if (parsed.data.ownerAdminId !== undefined) {
+        return unauthorizedResult("admin_leads", {
+          reason: "support_role_must_use_assign_to_self"
+        });
+      }
+
+      if (parsed.data.stage && ["CONVERTED", "LOST", "ARCHIVED"].includes(parsed.data.stage)) {
+        return unauthorizedResult("admin_leads", {
+          reason: "support_role_cannot_close_or_archive_lead"
+        });
+      }
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+    const contactPatch = leadContactUpdate(parsed.data);
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        if (existing.archivedAt || existing.stage === "ARCHIVED") {
+          return leadCannotBeEditedResult("archived_lead_cannot_be_updated");
+        }
+
+        if (contactPatch.normalizedEmail || contactPatch.normalizedPhone) {
+          const duplicateResult = await useravaaRepository.adminLeads.findDuplicateLead(
+            {
+              normalizedEmail: contactPatch.normalizedEmail ?? existing.normalizedEmail,
+              normalizedPhone: contactPatch.normalizedPhone ?? existing.normalizedPhone
+            },
+            tx
+          );
+
+          if (!duplicateResult.ok) {
+            return repositoryResultToService("admin_leads", duplicateResult);
+          }
+
+          if (duplicateResult.data && duplicateResult.data.id !== existing.id) {
+            return leadDuplicateResult();
+          }
+        }
+
+        const updated = await useravaaRepository.adminLeads.updateLead(
+          leadId,
+          {
+            ...contactPatch,
+            ...(parsed.data.firstName === undefined ? {} : { firstName: parsed.data.firstName }),
+            ...(parsed.data.lastName === undefined ? {} : { lastName: parsed.data.lastName }),
+            ...(parsed.data.lastCompany === undefined ? {} : { lastCompany: parsed.data.lastCompany }),
+            ...(parsed.data.jobTitle === undefined ? {} : { jobTitle: parsed.data.jobTitle }),
+            ...(parsed.data.jobCategory === undefined ? {} : { jobCategory: parsed.data.jobCategory }),
+            ...(parsed.data.jobCategoryId === undefined ? {} : { jobCategoryId: parsed.data.jobCategoryId }),
+            ...(parsed.data.yearsOfExperience === undefined ? {} : { yearsOfExperience: parsed.data.yearsOfExperience }),
+            ...(parsed.data.leadType === undefined ? {} : { leadType: parsed.data.leadType as LeadType }),
+            ...(parsed.data.temperature === undefined ? {} : { temperature: parsed.data.temperature as LeadTemperature }),
+            ...(parsed.data.stage === undefined ? {} : { stage: parsed.data.stage as LeadStage }),
+            ...(parsed.data.source === undefined ? {} : { source: parsed.data.source as LeadSource }),
+            ...(parsed.data.notes === undefined ? {} : { notes: parsed.data.notes }),
+            ...(parsed.data.ownerAdminId === undefined ? {} : { ownerAdminId: parsed.data.ownerAdminId }),
+            ...(parsed.data.relatedUserId === undefined ? {} : { relatedUserId: parsed.data.relatedUserId }),
+            ...(parsed.data.relatedConversationId === undefined ? {} : { relatedConversationId: parsed.data.relatedConversationId }),
+            ...(parsed.data.relatedProfileId === undefined ? {} : { relatedProfileId: parsed.data.relatedProfileId }),
+            ...(parsed.data.relatedInsightId === undefined ? {} : { relatedInsightId: parsed.data.relatedInsightId }),
+            ...(parsed.data.intentSummary === undefined ? {} : { intentSummary: parsed.data.intentSummary }),
+            ...(parsed.data.blocker === undefined ? {} : { blocker: parsed.data.blocker }),
+            ...(parsed.data.score === undefined ? {} : { score: parsed.data.score }),
+            ...(parsed.data.nextFollowUpAt === undefined ? {} : { nextFollowUpAt: parsed.data.nextFollowUpAt })
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "LEAD_UPDATED",
+            leadId: updated.id,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            relatedConversationId: updated.relatedConversationId,
+            metadata: {
+              before: leadAuditSnapshot(existing),
+              after: leadAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: updated
+        } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaUniqueConstraintError(error)) {
+        return leadDuplicateResult(error.meta);
+      }
+
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async assign(viewer: AdminViewer, leadId: string, payload: unknown, options: AdminLeadServiceOptions = {}) {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadAssignSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    if (!isAdmin(viewer) && parsed.data.ownerAdminId !== viewer.id) {
+      return unauthorizedResult("admin_leads", {
+        reason: "support_role_can_only_assign_lead_to_self"
+      });
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        if (existing.archivedAt || existing.stage === "ARCHIVED") {
+          return leadCannotBeEditedResult("archived_lead_cannot_be_assigned");
+        }
+
+        const updated = await useravaaRepository.adminLeads.updateLead(
+          leadId,
+          {
+            ownerAdminId: parsed.data.ownerAdminId,
+            stage: existing.stage === "NEW" ? "CONTACTED" : existing.stage
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "LEAD_ASSIGNED",
+            leadId: updated.id,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            relatedConversationId: updated.relatedConversationId,
+            metadata: {
+              previousOwnerAdminId: existing.ownerAdminId,
+              nextOwnerAdminId: updated.ownerAdminId
+            },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async addNote(viewer: AdminViewer, leadId: string, payload: unknown, options: AdminLeadServiceOptions = {}) {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadNoteCreateSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        await useravaaRepository.adminLeads.addLeadNote(
+          {
+            leadId,
+            body: parsed.data.body,
+            noteType: parsed.data.noteType as LeadNoteType,
+            createdByAdminId: viewer.id,
+            now
+          },
+          tx
+        );
+
+        const updatedResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+        const updated = updatedResult.ok && updatedResult.data ? updatedResult.data : existing;
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "LEAD_NOTE_ADDED",
+            leadId: existing.id,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            relatedConversationId: existing.relatedConversationId,
+            metadata: {
+              noteType: parsed.data.noteType
+            },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async addTag(viewer: AdminViewer, leadId: string, payload: unknown, options: AdminLeadServiceOptions = {}) {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadTagAddSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+    const tagName = parsed.data.tag.trim().replace(/\s+/g, " ");
+    const normalizedName = normalizeLeadTag(tagName);
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        if (existing.archivedAt || existing.stage === "ARCHIVED") {
+          return leadCannotBeEditedResult("archived_lead_cannot_be_tagged");
+        }
+
+        const tag = await useravaaRepository.adminLeads.upsertLeadTag({ name: tagName, normalizedName, now }, tx);
+        await useravaaRepository.adminLeads.addLeadTagAssignmentByTagId(
+          {
+            leadId,
+            tagId: tag.id,
+            createdByAdminId: viewer.id,
+            now
+          },
+          tx
+        );
+
+        const updatedResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+        const updated = updatedResult.ok && updatedResult.data ? updatedResult.data : existing;
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "LEAD_TAG_ADDED",
+            leadId,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            relatedConversationId: existing.relatedConversationId,
+            metadata: { tag: normalizedName },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async removeTag(viewer: AdminViewer, leadId: string, tagId: string, options: AdminLeadServiceOptions = {}) {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        if (existing.archivedAt || existing.stage === "ARCHIVED") {
+          return leadCannotBeEditedResult("archived_lead_cannot_remove_tags");
+        }
+
+        await useravaaRepository.adminLeads.removeLeadTagAssignment(leadId, tagId, tx);
+        const updatedResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+        const updated = updatedResult.ok && updatedResult.data ? updatedResult.data : existing;
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "LEAD_TAG_REMOVED",
+            leadId,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            relatedConversationId: existing.relatedConversationId,
+            metadata: { tagId },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async scheduleFollowUp(viewer: AdminViewer, leadId: string, payload: unknown, options: AdminLeadServiceOptions = {}) {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadFollowUpScheduleSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        if (existing.archivedAt || existing.stage === "ARCHIVED") {
+          return leadCannotBeEditedResult("archived_lead_cannot_schedule_follow_up");
+        }
+
+        await useravaaRepository.adminLeads.createLeadFollowUp(
+          {
+            leadId,
+            channel: parsed.data.channel as LeadFollowUpChannel,
+            scheduledAt: parsed.data.scheduledAt,
+            summary: parsed.data.summary,
+            createdByAdminId: viewer.id,
+            now
+          },
+          tx
+        );
+
+        const updated = await useravaaRepository.adminLeads.updateLead(
+          leadId,
+          {
+            nextFollowUpAt: parsed.data.scheduledAt,
+            stage: existing.stage === "CONVERTED" || existing.stage === "LOST" ? existing.stage : "FOLLOW_UP"
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "LEAD_FOLLOW_UP_SCHEDULED",
+            leadId,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            relatedConversationId: updated.relatedConversationId,
+            metadata: {
+              channel: parsed.data.channel,
+              scheduledAt: parsed.data.scheduledAt.toISOString()
+            },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async completeFollowUp(
+    viewer: AdminViewer,
+    leadId: string,
+    followUpId: string,
+    payload: unknown,
+    options: AdminLeadServiceOptions = {}
+  ) {
+    if (!isAdminOrSupport(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadFollowUpCompleteSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        const followUp = existing.followUps.find((item) => item.id === followUpId);
+
+        if (!followUp) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        await useravaaRepository.adminLeads.updateLeadFollowUp(
+          followUpId,
+          {
+            outcome: parsed.data.outcome as LeadFollowUpOutcome,
+            summary: parsed.data.summary,
+            completedByAdminId: viewer.id,
+            completedAt: now
+          },
+          tx
+        );
+
+        const updated = await useravaaRepository.adminLeads.updateLead(
+          leadId,
+          {
+            lastContactedAt: now,
+            lastFollowUpOutcome: parsed.data.outcome as LeadFollowUpOutcome,
+            followUpCount: existing.followUpCount + 1,
+            nextFollowUpAt: null,
+            stage: existing.stage === "CONVERTED" || existing.stage === "LOST" ? existing.stage : "CONTACTED"
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: adminAuditActorRole(viewer),
+            action: "LEAD_FOLLOW_UP_COMPLETED",
+            leadId,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            relatedConversationId: updated.relatedConversationId,
+            metadata: {
+              followUpId,
+              outcome: parsed.data.outcome
+            },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async convert(viewer: AdminViewer, leadId: string, payload: unknown, options: AdminLeadServiceOptions = {}) {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadConvertSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        const updated = await useravaaRepository.adminLeads.updateLead(
+          leadId,
+          {
+            stage: "CONVERTED",
+            temperature: "CONVERTED",
+            convertedAt: now,
+            lostAt: null,
+            lostReason: null,
+            archivedAt: null
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "LEAD_CONVERTED",
+            leadId,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            note: parsed.data.internalNote ?? undefined,
+            relatedConversationId: updated.relatedConversationId,
+            metadata: {
+              before: leadAuditSnapshot(existing),
+              after: leadAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async markLost(viewer: AdminViewer, leadId: string, payload: unknown, options: AdminLeadServiceOptions = {}) {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadLostSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        const updated = await useravaaRepository.adminLeads.updateLead(
+          leadId,
+          {
+            stage: "LOST",
+            temperature: "LOST",
+            lostAt: now,
+            lostReason: parsed.data.lostReason,
+            convertedAt: null
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "LEAD_MARKED_LOST",
+            leadId,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            reason: parsed.data.lostReason,
+            note: parsed.data.internalNote ?? undefined,
+            relatedConversationId: updated.relatedConversationId,
+            metadata: {
+              before: leadAuditSnapshot(existing),
+              after: leadAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async reopen(viewer: AdminViewer, leadId: string, payload: unknown, options: AdminLeadServiceOptions = {}) {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadReopenSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        const updated = await useravaaRepository.adminLeads.updateLead(
+          leadId,
+          {
+            stage: "FOLLOW_UP",
+            temperature: "WARM",
+            convertedAt: null,
+            lostAt: null,
+            lostReason: null,
+            archivedAt: null
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "LEAD_REOPENED",
+            leadId,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            reason: parsed.data.reason,
+            note: parsed.data.internalNote ?? undefined,
+            relatedConversationId: updated.relatedConversationId,
+            metadata: {
+              before: leadAuditSnapshot(existing),
+              after: leadAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async archive(viewer: AdminViewer, leadId: string, payload: unknown, options: AdminLeadServiceOptions = {}) {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsed = adminLeadArchiveSchema.safeParse(payload);
+
+    if (!parsed.success) {
+      return validationErrorResult("admin_leads", parsed.error.flatten());
+    }
+
+    const now = options.now?.() ?? new Date();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingResult = await useravaaRepository.adminLeads.getLead(leadId, tx);
+
+        if (!existingResult.ok) {
+          return repositoryResultToService("admin_leads", existingResult);
+        }
+
+        const existing = existingResult.data;
+
+        if (!existing) {
+          return targetNotFoundResult("admin_leads");
+        }
+
+        if (existing.archivedAt || existing.stage === "ARCHIVED") {
+          return leadCannotBeEditedResult("lead_already_archived");
+        }
+
+        const updated = await useravaaRepository.adminLeads.updateLead(
+          leadId,
+          {
+            stage: "ARCHIVED",
+            archivedAt: now
+          },
+          tx
+        );
+
+        await useravaaRepository.adminAudit.createLeadEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            action: "LEAD_ARCHIVED",
+            leadId,
+            beforeStatus: leadStatus(existing),
+            afterStatus: leadStatus(updated),
+            reason: parsed.data.reason,
+            note: parsed.data.internalNote ?? undefined,
+            relatedConversationId: updated.relatedConversationId,
+            metadata: {
+              before: leadAuditSnapshot(existing),
+              after: leadAuditSnapshot(updated)
+            },
+            now
+          },
+          tx
+        );
+
+        return { ok: true, data: updated } satisfies ServiceResult<typeof updated>;
+      });
+    } catch (error) {
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  async importCsv(
+    viewer: AdminViewer,
+    csvText: string,
+    payload: unknown = {},
+    options: AdminLeadServiceOptions = {}
+  ): Promise<ServiceResult<AdminLeadImportSummary>> {
+    if (!isAdmin(viewer)) {
+      return unauthorizedResult("admin_leads");
+    }
+
+    const parsedOptions = adminLeadImportOptionsSchema.safeParse(payload);
+
+    if (!parsedOptions.success) {
+      return validationErrorResult("admin_leads", parsedOptions.error.flatten());
+    }
+
+    const parsedCsv = parseLeadImportCsv(csvText);
+    const now = options.now?.() ?? new Date();
+    const importId = options.importIdGenerator?.() ?? defaultLeadImportId();
+    const runInTransaction = options.runInTransaction ?? withUseravaaTransaction;
+    const dryRun = parsedOptions.data.dryRun;
+
+    try {
+      return await runInTransaction(async (tx: UseravaaTransactionClient) => {
+        const existingKeysResult = await useravaaRepository.adminLeads.listExistingContactKeys(
+          {
+            normalizedEmails: parsedCsv.rows.flatMap((row) => (row.normalizedEmail ? [row.normalizedEmail] : [])),
+            normalizedPhones: parsedCsv.rows.flatMap((row) => (row.normalizedPhone ? [row.normalizedPhone] : []))
+          },
+          tx
+        );
+
+        if (!existingKeysResult.ok) {
+          return repositoryResultToService("admin_leads", existingKeysResult);
+        }
+
+        const existingEmails = new Set(existingKeysResult.data.flatMap((row) => (row.normalizedEmail ? [row.normalizedEmail] : [])));
+        const existingPhones = new Set(existingKeysResult.data.flatMap((row) => (row.normalizedPhone ? [row.normalizedPhone] : [])));
+        const seenEmails = new Set<string>();
+        const seenPhones = new Set<string>();
+        let imported = 0;
+        let skippedDuplicates = 0;
+
+        for (const row of parsedCsv.rows) {
+          const isDuplicate =
+            (row.normalizedEmail && (existingEmails.has(row.normalizedEmail) || seenEmails.has(row.normalizedEmail))) ||
+            (row.normalizedPhone && (existingPhones.has(row.normalizedPhone) || seenPhones.has(row.normalizedPhone)));
+
+          if (isDuplicate) {
+            skippedDuplicates += 1;
+            continue;
+          }
+
+          if (row.normalizedEmail) {
+            seenEmails.add(row.normalizedEmail);
+          }
+
+          if (row.normalizedPhone) {
+            seenPhones.add(row.normalizedPhone);
+          }
+
+          if (!dryRun) {
+            const created = await useravaaRepository.adminLeads.createLead(
+              {
+                leadNumber: defaultLeadNumber(),
+                firstName: row.payload.firstName,
+                lastName: row.payload.lastName,
+                phone: row.payload.phone,
+                normalizedPhone: row.normalizedPhone,
+                email: row.payload.email,
+                normalizedEmail: row.normalizedEmail,
+                lastCompany: row.payload.lastCompany,
+                jobTitle: row.payload.jobTitle,
+                jobCategory: row.payload.jobCategory,
+                jobCategoryId: row.payload.jobCategoryId,
+                yearsOfExperience: row.payload.yearsOfExperience,
+                leadType: row.payload.leadType as LeadType,
+                temperature: row.payload.temperature as LeadTemperature,
+                stage: row.payload.stage as LeadStage,
+                source: "MANUAL_IMPORT",
+                notes: row.payload.notes,
+                ownerAdminId: row.payload.ownerAdminId ?? viewer.id,
+                intentSummary: row.payload.intentSummary,
+                blocker: row.payload.blocker,
+                score: row.payload.score,
+                nextFollowUpAt: row.payload.nextFollowUpAt,
+                now
+              },
+              tx
+            );
+            await addTagsToLead(created.id, row.payload.tags, viewer, now, tx);
+          }
+
+          imported += 1;
+        }
+
+        const summary: AdminLeadImportSummary = {
+          totalRows: parsedCsv.totalRows,
+          imported: dryRun ? 0 : imported,
+          skippedDuplicates,
+          invalidRows: parsedCsv.invalidRows,
+          errorsPreview: parsedCsv.errorsPreview,
+          dryRun
+        };
+
+        await useravaaRepository.adminAudit.createLeadImportEvent(
+          {
+            actorAdminUserId: viewer.id,
+            actorRole: "ADMIN",
+            importId,
+            afterStatus: dryRun ? "DRY_RUN" : "COMPLETED",
+            metadata: {
+              totalRows: summary.totalRows,
+              imported: summary.imported,
+              skippedDuplicates: summary.skippedDuplicates,
+              invalidRows: summary.invalidRows,
+              dryRun
+            },
+            now
+          },
+          tx
+        );
+
+        return {
+          ok: true,
+          data: summary
+        } satisfies ServiceResult<AdminLeadImportSummary>;
+      });
+    } catch (error) {
+      if (isPrismaUniqueConstraintError(error)) {
+        return leadDuplicateResult(error.meta);
+      }
+
+      if (isPrismaClientConfigurationError(error)) {
+        return providerNotConfiguredFromRuntime("admin_leads", {
+          code: error.code,
+          details: error.details
+        });
+      }
+
+      throw error;
+    }
+  },
+  validateCsvFile(input: { size: number; type?: string; name?: string }) {
+    const isCsvType = input.type === "text/csv" || input.name?.toLowerCase().endsWith(".csv");
+
+    if (!isCsvType) {
+      return leadCsvImportFileError("lead_import_requires_csv_file");
+    }
+
+    if (input.size > 5_000_000) {
+      return leadCsvImportFileError("lead_import_file_too_large");
+    }
+
+    return null;
+  }
+} as const;
 
 export const adminSupportService = {
   list(viewer: AdminViewer, filters: AdminSupportTicketFilters = {}): Promise<ServiceResult<AdminSupportTicketRecord[]>> {

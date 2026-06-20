@@ -518,7 +518,7 @@ describe("Checkpoint 3A-11 admin support inbox foundation", () => {
     expect(archivedList.ok && archivedList.data.some((ticket) => ticket.id === created.data.id)).toBe(true);
   });
 
-  it("keeps support inbox scoped away from lifecycle mutation, lead inbox, and notification/email sending", () => {
+  it("keeps support inbox scoped away from lifecycle mutation, lead mutation, and notification/email sending", () => {
     const servicesSource = readProjectFile("src/lib/backend/services.ts");
     const supportServiceSource = servicesSource.slice(
       servicesSource.indexOf("export const adminSupportService"),
@@ -538,8 +538,8 @@ describe("Checkpoint 3A-11 admin support inbox foundation", () => {
     expect(combined).not.toContain("getConversationOrFallback");
     expect(combined).not.toMatch(/\.(payment|walletTransaction|conversationRequest|cancellation|attendanceVerification)\.(create|update|upsert|delete|deleteMany)\(/);
     expect(combined).not.toMatch(/\.(notification|email|mail|lead)\.(create|update|send|upsert|delete)/i);
-    expect(readProjectFile("prisma/schema.prisma")).not.toContain("model Lead");
-    expect(projectFileExists("src/app/admin/leads/page.tsx")).toBe(false);
+    expect(readProjectFile("prisma/schema.prisma")).toContain("model Lead");
+    expect(projectFileExists("src/app/admin/leads/page.tsx")).toBe(true);
     expect(projectFileExists("src/app/api/admin/support/public/route.ts")).toBe(false);
   });
 

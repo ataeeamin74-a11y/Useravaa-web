@@ -378,6 +378,134 @@ export const apiEndpointPersistenceClassification = {
     writesImplemented: true,
     notes: "ADMIN-only content restore returns archived ContentEntry rows to DRAFT and writes audit; publication remains an explicit update decision."
   },
+  "GET /api/admin/leads": {
+    classification: "read_only_persistent",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: false,
+    notes: "ADMIN/SUPPORT-only Lead Inbox list reads Lead rows without fixture fallback."
+  },
+  "POST /api/admin/leads": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT lead creation persists Lead, optional tags, and audit without mutating support, payment, wallet, conversation, cancellation, notification, or user lifecycle data."
+  },
+  "GET /api/admin/leads/[leadId]": {
+    classification: "read_only_persistent",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: false,
+    notes: "ADMIN/SUPPORT-only lead detail reads Lead, tags, notes, follow-ups, and related links without fake fallback rows."
+  },
+  "PATCH /api/admin/leads/[leadId]": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT lead update changes only Lead fields and writes audit. SUPPORT cannot convert, lose, archive, or assign to another operator."
+  },
+  "POST /api/admin/leads/[leadId]/assign": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN can assign any owner and SUPPORT can assign only to self; actor is server-derived and audit is written."
+  },
+  "POST /api/admin/leads/[leadId]/notes": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT note creation persists LeadNote and audit without sending email or notification."
+  },
+  "POST /api/admin/leads/[leadId]/tags": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT tag add upserts LeadTag and LeadTagAssignment, then writes audit."
+  },
+  "DELETE /api/admin/leads/[leadId]/tags/[tagId]": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT tag removal deletes only the LeadTagAssignment and writes audit."
+  },
+  "POST /api/admin/leads/[leadId]/follow-ups": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT follow-up scheduling persists LeadFollowUp and updates only Lead follow-up fields; no external message is sent."
+  },
+  "POST /api/admin/leads/[leadId]/follow-ups/[followUpId]/complete": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN/SUPPORT follow-up completion persists outcome and updates only Lead contact summary fields."
+  },
+  "POST /api/admin/leads/[leadId]/convert": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only lead conversion marks Lead as converted and writes audit without creating users, profiles, requests, payments, or support tickets."
+  },
+  "POST /api/admin/leads/[leadId]/lost": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only lost action marks Lead lost and stores reason without mutating other product lifecycles."
+  },
+  "POST /api/admin/leads/[leadId]/reopen": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only reopen clears converted/lost/archive fields and writes audit without touching related entities."
+  },
+  "POST /api/admin/leads/[leadId]/archive": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only archive soft-archives Lead rows and writes audit without deleting notes, tags, or follow-ups."
+  },
+  "GET /api/admin/leads/import/template": {
+    classification: "api_skeleton_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: false,
+    writesImplemented: false,
+    notes: "Returns the exact CSV template headers for admin lead import."
+  },
+  "POST /api/admin/leads/import": {
+    classification: "transaction_ready",
+    requiresViewer: true,
+    requiresAdmin: true,
+    usesRepository: true,
+    writesImplemented: true,
+    notes: "ADMIN-only CSV import validates exact headers, skips duplicates by normalized phone/email, creates only Lead-owned rows, and writes one compact audit event without storing the uploaded file."
+  },
   "GET /api/admin/support": {
     classification: "read_only_persistent",
     requiresViewer: true,

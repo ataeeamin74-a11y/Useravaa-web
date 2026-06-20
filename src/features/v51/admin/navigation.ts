@@ -67,6 +67,12 @@ export const adminNavigationGroups = [
         implemented: true
       },
       {
+        label: "سرنخ‌ها",
+        href: "/admin/leads",
+        description: "صندوق رشد برای پیگیری سرنخ‌ها، برچسب‌ها و پیگیری‌های دستی.",
+        implemented: true
+      },
+      {
         label: "پروفایل‌های تجربه‌آفرین",
         href: "/admin/experience-profiles",
         description: "صف بررسی و وضعیت آمادگی پروفایل تجربه‌آفرین.",
@@ -163,6 +169,8 @@ export const adminCoreRoutePatterns = [
   "/admin/cancellations/[cancellationId]",
   "/admin/users",
   "/admin/users/[userId]",
+  "/admin/leads",
+  "/admin/leads/[leadId]",
   "/admin/experience-profiles",
   "/admin/experience-profiles/[profileId]",
   "/admin/insights",
@@ -197,6 +205,7 @@ export function adminHrefIsKnown(href: string) {
     /^\/admin\/conversations\/[^/]+$/.test(href) ||
     /^\/admin\/cancellations\/[^/]+$/.test(href) ||
     /^\/admin\/users\/[^/]+$/.test(href) ||
+    /^\/admin\/leads\/[^/]+$/.test(href) ||
     /^\/admin\/experience-profiles\/[^/]+$/.test(href) ||
     /^\/admin\/insights\/[^/]+$/.test(href) ||
     /^\/admin\/pricing\/[^/]+$/.test(href) ||

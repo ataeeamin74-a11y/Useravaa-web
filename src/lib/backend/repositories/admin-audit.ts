@@ -34,7 +34,20 @@ export type AdminAuditAction =
   | "SUPPORT_TICKET_NOTE_ADDED"
   | "SUPPORT_TICKET_RESOLVED"
   | "SUPPORT_TICKET_REOPENED"
-  | "SUPPORT_TICKET_ARCHIVED";
+  | "SUPPORT_TICKET_ARCHIVED"
+  | "LEAD_CREATED"
+  | "LEAD_UPDATED"
+  | "LEAD_ASSIGNED"
+  | "LEAD_TAG_ADDED"
+  | "LEAD_TAG_REMOVED"
+  | "LEAD_NOTE_ADDED"
+  | "LEAD_FOLLOW_UP_SCHEDULED"
+  | "LEAD_FOLLOW_UP_COMPLETED"
+  | "LEAD_CONVERTED"
+  | "LEAD_MARKED_LOST"
+  | "LEAD_REOPENED"
+  | "LEAD_ARCHIVED"
+  | "LEAD_IMPORT_COMPLETED";
 
 export type AdminPaymentAuditEventInput = {
   actorAdminUserId: string;
@@ -183,6 +196,43 @@ export type AdminSupportTicketAuditEventInput = {
   now: Date;
 };
 
+export type AdminLeadAuditEventInput = {
+  actorAdminUserId: string;
+  actorRole: "ADMIN" | "SUPPORT";
+  action: Extract<
+    AdminAuditAction,
+    | "LEAD_CREATED"
+    | "LEAD_UPDATED"
+    | "LEAD_ASSIGNED"
+    | "LEAD_TAG_ADDED"
+    | "LEAD_TAG_REMOVED"
+    | "LEAD_NOTE_ADDED"
+    | "LEAD_FOLLOW_UP_SCHEDULED"
+    | "LEAD_FOLLOW_UP_COMPLETED"
+    | "LEAD_CONVERTED"
+    | "LEAD_MARKED_LOST"
+    | "LEAD_REOPENED"
+    | "LEAD_ARCHIVED"
+  >;
+  leadId: string;
+  beforeStatus?: string | null;
+  afterStatus: string;
+  relatedConversationId?: string | null;
+  reason?: string;
+  note?: string;
+  metadata?: Prisma.InputJsonValue;
+  now: Date;
+};
+
+export type AdminLeadImportAuditEventInput = {
+  actorAdminUserId: string;
+  actorRole: "ADMIN";
+  importId: string;
+  afterStatus: string;
+  metadata: Prisma.InputJsonValue;
+  now: Date;
+};
+
 const adminAuditEventSelect = {
   id: true,
   actorAdminUserId: true,
@@ -217,6 +267,8 @@ export const adminAuditRepository = {
     createPricingRuleEvent: "database_persistent",
     createCategoryEvent: "database_persistent",
     createContentEntryEvent: "database_persistent",
+    createLeadEvent: "database_persistent",
+    createLeadImportEvent: "database_persistent",
     createSupportTicketEvent: "database_persistent",
     listForPayment: "read_only_persistent",
     listForCancellation: "read_only_persistent",
@@ -226,6 +278,7 @@ export const adminAuditRepository = {
     listForPricingRule: "read_only_persistent",
     listForCategory: "read_only_persistent",
     listForContentEntry: "read_only_persistent",
+    listForLead: "read_only_persistent",
     listForSupportTicket: "read_only_persistent",
     listRecent: "read_only_persistent"
   },
@@ -399,6 +452,46 @@ export const adminAuditRepository = {
       select: adminAuditEventSelect
     });
   },
+  async createLeadEvent(input: AdminLeadAuditEventInput, tx: UseravaaTransactionClient) {
+    return tx.adminAuditEvent.create({
+      data: {
+        actorAdminUserId: input.actorAdminUserId,
+        actorRole: input.actorRole,
+        action: input.action,
+        entityType: "LEAD",
+        entityId: input.leadId,
+        relatedConversationId: input.relatedConversationId ?? null,
+        relatedPaymentId: null,
+        beforeStatus: input.beforeStatus ?? null,
+        afterStatus: input.afterStatus,
+        reason: input.reason ?? null,
+        note: input.note ?? null,
+        metadata: input.metadata,
+        createdAt: input.now
+      },
+      select: adminAuditEventSelect
+    });
+  },
+  async createLeadImportEvent(input: AdminLeadImportAuditEventInput, tx: UseravaaTransactionClient) {
+    return tx.adminAuditEvent.create({
+      data: {
+        actorAdminUserId: input.actorAdminUserId,
+        actorRole: input.actorRole,
+        action: "LEAD_IMPORT_COMPLETED",
+        entityType: "LEAD_IMPORT",
+        entityId: input.importId,
+        relatedConversationId: null,
+        relatedPaymentId: null,
+        beforeStatus: null,
+        afterStatus: input.afterStatus,
+        reason: null,
+        note: null,
+        metadata: input.metadata,
+        createdAt: input.now
+      },
+      select: adminAuditEventSelect
+    });
+  },
   async createSupportTicketEvent(input: AdminSupportTicketAuditEventInput, tx: UseravaaTransactionClient) {
     return tx.adminAuditEvent.create({
       data: {
@@ -528,6 +621,19 @@ export const adminAuditRepository = {
         select: adminAuditEventSelect,
         orderBy: { createdAt: "desc" },
         take: 30
+      })
+    );
+  },
+  listForLead(leadId: string) {
+    return readOnlyRepositoryOperation("admin_audit", "listForLead", (db) =>
+      db.adminAuditEvent.findMany({
+        where: {
+          entityType: "LEAD",
+          entityId: leadId
+        },
+        select: adminAuditEventSelect,
+        orderBy: { createdAt: "desc" },
+        take: 50
       })
     );
   },

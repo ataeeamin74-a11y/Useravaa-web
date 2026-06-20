@@ -2,6 +2,7 @@ export {
   adminAuditRepository,
   adminCategoryRepository,
   adminContentRepository,
+  adminLeadRepository,
   adminSupportRepository,
   adminPaymentReviewRepository,
   adminReadModelRepository,
@@ -24,6 +25,7 @@ import {
   adminAuditRepository,
   adminCategoryRepository,
   adminContentRepository,
+  adminLeadRepository,
   adminSupportRepository,
   adminPaymentReviewRepository,
   adminReadModelRepository,
@@ -59,6 +61,7 @@ export const useravaaRepository = {
   adminPayments: adminPaymentReviewRepository,
   adminCategories: adminCategoryRepository,
   adminContent: adminContentRepository,
+  adminLeads: adminLeadRepository,
   adminSupport: adminSupportRepository,
   adminAudit: adminAuditRepository,
   adminReadModels: adminReadModelRepository

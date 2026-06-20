@@ -363,6 +363,18 @@ export const backendImplementationClassification = {
     blocksProductionLaunch: true,
     notes: "ADMIN-only content entry create, update, archive, and restore actions persist ContentEntry rows with AdminAuditEvent records. SUPPORT is read-only. UGC moderation remains in insight/profile moderation surfaces and user-authored text is not silently rewritten."
   },
+  adminLeads: {
+    classification: "transaction_ready",
+    prismaSchemaExists: true,
+    prismaClientBoundaryExists: true,
+    repositoryBoundaryExists: true,
+    apiRouteExists: true,
+    readsUseRepository: true,
+    writesImplemented: true,
+    productionProviderConfigured: false,
+    blocksProductionLaunch: true,
+    notes: "Admin Lead Inbox uses DB-backed Lead, LeadTag, LeadTagAssignment, LeadNote, and LeadFollowUp rows with audited create/update/assign/tag/note/follow-up/convert/lost/reopen/archive/import actions. It links to related entities without directly mutating support tickets, users, profiles, requests, payments, wallet, cancellation, notification, or analytics data."
+  },
   adminSupport: {
     classification: "transaction_ready",
     prismaSchemaExists: true,
@@ -385,7 +397,7 @@ export const backendImplementationClassification = {
     writesImplemented: true,
     productionProviderConfigured: false,
     blocksProductionLaunch: true,
-    notes: "AdminAuditEvent persistence exists for payment review, cancellation support-review, experience profile review, insight moderation, pricing, category, content, and support ticket actions and powers the admin audit-log read surface. Broader audit coverage remains deferred."
+    notes: "AdminAuditEvent persistence exists for payment review, cancellation support-review, experience profile review, insight moderation, pricing, category, content, lead, and support ticket actions and powers the admin audit-log read surface. Broader audit coverage remains deferred."
   },
   adminReadModels: {
     classification: "read_only_persistent",

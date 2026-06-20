@@ -99,6 +99,58 @@ const adminSupportRelatedEntityTypes = [
 ] as const;
 const adminSupportNoteTypes = ["INTERNAL", "PUBLIC_DRAFT"] as const;
 const supportOptionalIdSchema = z.string().trim().max(160).nullable().optional();
+export const adminLeadTypes = ["REQUESTER_LEAD", "EXPERIENCE_CREATOR_LEAD", "PARTNER_LEAD", "GENERAL_LEAD"] as const;
+export const adminLeadTemperatures = ["COLD", "WARM", "HOT", "QUALIFIED", "CONVERTED", "LOST"] as const;
+export const adminLeadStages = ["NEW", "CONTACTED", "QUALIFIED", "FOLLOW_UP", "CONVERTED", "LOST", "ARCHIVED"] as const;
+export const adminLeadSources = [
+  "ORGANIC",
+  "REFERRAL",
+  "LINKEDIN",
+  "TELEGRAM",
+  "INSTAGRAM",
+  "EVENT",
+  "MANUAL_IMPORT",
+  "ADMIN_CREATED",
+  "WAITLIST",
+  "INSIGHT_INTERACTION",
+  "PROFILE_VIEW",
+  "CHECKOUT_ABANDONED",
+  "CONVERSATION_REQUEST_STARTED",
+  "OTHER"
+] as const;
+export const adminLeadFollowUpChannels = ["PHONE", "WHATSAPP", "TELEGRAM", "EMAIL", "LINKEDIN", "IN_APP", "MANUAL"] as const;
+export const adminLeadFollowUpOutcomes = [
+  "NO_RESPONSE",
+  "INTERESTED",
+  "NOT_NOW",
+  "ASKED_FOR_MORE_INFO",
+  "WANTS_SPECIFIC_EXPERIENCE",
+  "PRICE_CONCERN",
+  "NEEDS_TRUST",
+  "BAD_FIT",
+  "CONVERTED",
+  "LOST"
+] as const;
+const leadOptionalIdSchema = z.string().trim().max(160).nullable().optional();
+const leadSafeText = (maxLength: number) =>
+  z
+    .string()
+    .trim()
+    .max(maxLength)
+    .refine((value) => !/[<>]/.test(value), {
+      message: "HTML-like content is not allowed."
+    });
+const leadRequiredText = (maxLength: number) => leadSafeText(maxLength).min(1);
+const leadOptionalText = (maxLength: number) => leadSafeText(maxLength).nullable().optional();
+const leadContactEmailSchema = z.string().trim().email().max(254).nullable().optional();
+const leadContactPhoneSchema = z.string().trim().min(3).max(40).nullable().optional();
+const leadTagsSchema = z.array(leadRequiredText(60)).max(20).optional();
+const leadScoreSchema = z.number().int().min(0).max(100).nullable().optional();
+const leadYearsSchema = z.number().int().min(0).max(70).nullable().optional();
+const leadContactRefinement = {
+  message: "Phone or email is required.",
+  path: ["phone"]
+};
 
 export const userMotivationCodeSchema = z.enum(USER_MOTIVATION_CODES);
 export const insightAudienceIntentSchema = z.enum(INSIGHT_AUDIENCE_INTENT_CODES);
@@ -597,6 +649,134 @@ export const adminSupportTicketArchiveSchema = z
   })
   .strict();
 
+export const adminLeadCreateSchema = z
+  .object({
+    firstName: leadRequiredText(80),
+    lastName: leadRequiredText(80),
+    phone: leadContactPhoneSchema,
+    email: leadContactEmailSchema,
+    lastCompany: leadOptionalText(160),
+    jobTitle: leadOptionalText(160),
+    jobCategory: leadOptionalText(160),
+    jobCategoryId: leadOptionalIdSchema,
+    yearsOfExperience: leadYearsSchema,
+    leadType: z.enum(adminLeadTypes).default("GENERAL_LEAD"),
+    temperature: z.enum(adminLeadTemperatures).default("WARM"),
+    stage: z.enum(adminLeadStages).default("NEW"),
+    source: z.enum(adminLeadSources).default("ADMIN_CREATED"),
+    tags: leadTagsSchema,
+    notes: leadOptionalText(2_000),
+    ownerAdminId: leadOptionalIdSchema,
+    relatedUserId: leadOptionalIdSchema,
+    relatedConversationId: leadOptionalIdSchema,
+    relatedProfileId: leadOptionalIdSchema,
+    relatedInsightId: leadOptionalIdSchema,
+    intentSummary: leadOptionalText(1_000),
+    blocker: leadOptionalText(800),
+    score: leadScoreSchema,
+    nextFollowUpAt: z.coerce.date().nullable().optional()
+  })
+  .strict()
+  .refine((value) => Boolean(value.phone?.trim() || value.email?.trim()), leadContactRefinement);
+
+export const adminLeadUpdateSchema = z
+  .object({
+    firstName: leadRequiredText(80).optional(),
+    lastName: leadRequiredText(80).optional(),
+    phone: leadContactPhoneSchema,
+    email: leadContactEmailSchema,
+    lastCompany: leadOptionalText(160),
+    jobTitle: leadOptionalText(160),
+    jobCategory: leadOptionalText(160),
+    jobCategoryId: leadOptionalIdSchema,
+    yearsOfExperience: leadYearsSchema,
+    leadType: z.enum(adminLeadTypes).optional(),
+    temperature: z.enum(adminLeadTemperatures).optional(),
+    stage: z.enum(adminLeadStages).optional(),
+    source: z.enum(adminLeadSources).optional(),
+    notes: leadOptionalText(2_000),
+    ownerAdminId: leadOptionalIdSchema,
+    relatedUserId: leadOptionalIdSchema,
+    relatedConversationId: leadOptionalIdSchema,
+    relatedProfileId: leadOptionalIdSchema,
+    relatedInsightId: leadOptionalIdSchema,
+    intentSummary: leadOptionalText(1_000),
+    blocker: leadOptionalText(800),
+    score: leadScoreSchema,
+    nextFollowUpAt: z.coerce.date().nullable().optional()
+  })
+  .strict()
+  .refine((value) => Object.keys(value).length > 0, {
+    message: "At least one lead field must be provided."
+  });
+
+export const adminLeadAssignSchema = z
+  .object({
+    ownerAdminId: z.string().trim().max(160).nullable()
+  })
+  .strict();
+
+export const adminLeadNoteCreateSchema = z
+  .object({
+    body: leadRequiredText(2_000),
+    noteType: z.literal("INTERNAL").default("INTERNAL")
+  })
+  .strict();
+
+export const adminLeadTagAddSchema = z
+  .object({
+    tag: leadRequiredText(60)
+  })
+  .strict();
+
+export const adminLeadFollowUpScheduleSchema = z
+  .object({
+    channel: z.enum(adminLeadFollowUpChannels),
+    scheduledAt: z.coerce.date(),
+    summary: leadOptionalText(800)
+  })
+  .strict();
+
+export const adminLeadFollowUpCompleteSchema = z
+  .object({
+    outcome: z.enum(adminLeadFollowUpOutcomes),
+    summary: leadOptionalText(1_000)
+  })
+  .strict();
+
+export const adminLeadConvertSchema = z
+  .object({
+    internalNote: leadOptionalText(800)
+  })
+  .strict();
+
+export const adminLeadLostSchema = z
+  .object({
+    lostReason: leadRequiredText(500),
+    internalNote: leadOptionalText(800)
+  })
+  .strict();
+
+export const adminLeadReopenSchema = z
+  .object({
+    reason: leadRequiredText(500),
+    internalNote: leadOptionalText(800)
+  })
+  .strict();
+
+export const adminLeadArchiveSchema = z
+  .object({
+    reason: leadRequiredText(500),
+    internalNote: leadOptionalText(800)
+  })
+  .strict();
+
+export const adminLeadImportOptionsSchema = z
+  .object({
+    dryRun: z.boolean().default(false)
+  })
+  .strict();
+
 export const backendValidationSchemas = {
   profileUpdateSchema,
   requestCreationSchema,
@@ -639,5 +819,17 @@ export const backendValidationSchemas = {
   adminSupportTicketNoteCreateSchema,
   adminSupportTicketResolveSchema,
   adminSupportTicketReopenSchema,
-  adminSupportTicketArchiveSchema
+  adminSupportTicketArchiveSchema,
+  adminLeadCreateSchema,
+  adminLeadUpdateSchema,
+  adminLeadAssignSchema,
+  adminLeadNoteCreateSchema,
+  adminLeadTagAddSchema,
+  adminLeadFollowUpScheduleSchema,
+  adminLeadFollowUpCompleteSchema,
+  adminLeadConvertSchema,
+  adminLeadLostSchema,
+  adminLeadReopenSchema,
+  adminLeadArchiveSchema,
+  adminLeadImportOptionsSchema
 } as const;

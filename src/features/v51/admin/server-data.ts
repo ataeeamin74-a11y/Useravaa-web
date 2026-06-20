@@ -26,6 +26,12 @@ import {
   ContentEntryStatus,
   ContentEntryType,
   JobField,
+  LeadFollowUpChannel,
+  LeadFollowUpOutcome,
+  LeadSource,
+  LeadStage,
+  LeadTemperature,
+  LeadType,
   SupportRelatedEntityType,
   SupportTicketCategory,
   SupportTicketPriority,
@@ -36,6 +42,7 @@ import {
 import {
   adminCategoryService,
   adminContentService,
+  adminLeadService,
   adminPaymentService,
   adminPricingService,
   adminSupportService
@@ -43,6 +50,8 @@ import {
 import type {
   AdminCategoryRecord,
   AdminContentEntryRecord,
+  AdminLeadFilters,
+  AdminLeadRecord,
   AdminSupportTicketRecord,
   PricingRuleCategoryOption,
   PricingRuleRecord
@@ -81,6 +90,10 @@ import {
   type AdminContentEntryItem,
   type AdminContentFilterOption,
   type AdminUgcOverviewItem,
+  type AdminLeadDetailData,
+  type AdminLeadFilterOption,
+  type AdminLeadInboxData,
+  type AdminLeadItem,
   type AdminSupportDetailData,
   type AdminSupportFilterOption,
   type AdminSupportInboxData,
@@ -150,6 +163,7 @@ export type AdminHomeRouteData = {
 
 export type AdminAnalyticsSearchParams = Record<string, string | string[] | undefined>;
 export type AdminContentSearchParams = Record<string, string | string[] | undefined>;
+export type AdminLeadSearchParams = Record<string, string | string[] | undefined>;
 export type AdminSupportSearchParams = Record<string, string | string[] | undefined>;
 
 export type AdminListRouteData<T> = {
@@ -263,6 +277,72 @@ const contentStatusLabels: Record<ContentEntryStatus, string> = {
   ARCHIVED: "آرشیوشده"
 };
 
+const leadTypeLabels: Record<LeadType, string> = {
+  REQUESTER_LEAD: "سرنخ درخواست‌کننده",
+  EXPERIENCE_CREATOR_LEAD: "سرنخ تجربه‌آفرین",
+  PARTNER_LEAD: "سرنخ شریک",
+  GENERAL_LEAD: "سرنخ عمومی"
+};
+
+const leadTemperatureLabels: Record<LeadTemperature, string> = {
+  COLD: "سرد",
+  WARM: "گرم",
+  HOT: "داغ",
+  QUALIFIED: "واجد شرایط",
+  CONVERTED: "تبدیل‌شده",
+  LOST: "از دست‌رفته"
+};
+
+const leadStageLabels: Record<LeadStage, string> = {
+  NEW: "جدید",
+  CONTACTED: "تماس گرفته‌شده",
+  QUALIFIED: "واجد شرایط",
+  FOLLOW_UP: "پیگیری بعدی",
+  CONVERTED: "تبدیل‌شده",
+  LOST: "از دست‌رفته",
+  ARCHIVED: "آرشیوشده"
+};
+
+const leadSourceLabels: Record<LeadSource, string> = {
+  ORGANIC: "ارگانیک",
+  REFERRAL: "معرفی",
+  LINKEDIN: "لینکدین",
+  TELEGRAM: "تلگرام",
+  INSTAGRAM: "اینستاگرام",
+  EVENT: "رویداد",
+  MANUAL_IMPORT: "ورود CSV",
+  ADMIN_CREATED: "ساخته‌شده توسط ادمین",
+  WAITLIST: "لیست انتظار",
+  INSIGHT_INTERACTION: "تعامل با بینش",
+  PROFILE_VIEW: "مشاهده پروفایل",
+  CHECKOUT_ABANDONED: "رهاسازی پرداخت",
+  CONVERSATION_REQUEST_STARTED: "شروع درخواست گفت‌وگو",
+  OTHER: "سایر"
+};
+
+const leadFollowUpChannelLabels: Record<LeadFollowUpChannel, string> = {
+  PHONE: "تلفن",
+  WHATSAPP: "واتساپ",
+  TELEGRAM: "تلگرام",
+  EMAIL: "ایمیل",
+  LINKEDIN: "لینکدین",
+  IN_APP: "داخل محصول",
+  MANUAL: "دستی"
+};
+
+const leadFollowUpOutcomeLabels: Record<LeadFollowUpOutcome, string> = {
+  NO_RESPONSE: "بدون پاسخ",
+  INTERESTED: "علاقه‌مند",
+  NOT_NOW: "فعلاً نه",
+  ASKED_FOR_MORE_INFO: "درخواست اطلاعات بیشتر",
+  WANTS_SPECIFIC_EXPERIENCE: "نیاز به تجربه مشخص",
+  PRICE_CONCERN: "نگرانی قیمت",
+  NEEDS_TRUST: "نیاز به اعتماد بیشتر",
+  BAD_FIT: "نامتناسب",
+  CONVERTED: "تبدیل‌شده",
+  LOST: "از دست‌رفته"
+};
+
 const supportStatusLabels: Record<SupportTicketStatus, string> = {
   NEW: "جدید",
   OPEN: "باز",
@@ -347,6 +427,19 @@ const supportQueueViews = [
   { value: "archived", label: "آرشیوشده" }
 ] as const;
 
+const leadQueueViews = [
+  { value: "", label: "همه فعال‌ها" },
+  { value: "new", label: "جدید" },
+  { value: "mine", label: "سرنخ‌های من" },
+  { value: "unassigned", label: "بدون مسئول" },
+  { value: "hot", label: "داغ" },
+  { value: "qualified", label: "واجد شرایط" },
+  { value: "follow_up", label: "نیازمند پیگیری" },
+  { value: "converted", label: "تبدیل‌شده" },
+  { value: "lost", label: "از دست‌رفته" },
+  { value: "archived", label: "آرشیوشده" }
+] as const;
+
 function firstSearchParam(params: AdminAnalyticsSearchParams | undefined, key: string) {
   const value = params?.[key];
 
@@ -419,6 +512,22 @@ function isSupportRelatedEntityType(value: string | null | undefined): value is 
   return Boolean(value && Object.values(SupportRelatedEntityType).includes(value as SupportRelatedEntityType));
 }
 
+function isLeadStage(value: string | null | undefined): value is LeadStage {
+  return Boolean(value && Object.values(LeadStage).includes(value as LeadStage));
+}
+
+function isLeadTemperature(value: string | null | undefined): value is LeadTemperature {
+  return Boolean(value && Object.values(LeadTemperature).includes(value as LeadTemperature));
+}
+
+function isLeadType(value: string | null | undefined): value is LeadType {
+  return Boolean(value && Object.values(LeadType).includes(value as LeadType));
+}
+
+function isLeadSource(value: string | null | undefined): value is LeadSource {
+  return Boolean(value && Object.values(LeadSource).includes(value as LeadSource));
+}
+
 function parseAdminContentFilters(params: AdminContentSearchParams | undefined) {
   const namespace = firstSearchParam(params, "namespace")?.trim() ?? "";
   const contentType = firstSearchParam(params, "contentType")?.trim() ?? "";
@@ -429,6 +538,26 @@ function parseAdminContentFilters(params: AdminContentSearchParams | undefined) 
     namespace,
     contentType: isContentEntryType(contentType) ? contentType : "",
     status: isContentEntryStatus(status) ? status : "",
+    search
+  };
+}
+
+function parseAdminLeadFilters(params: AdminLeadSearchParams | undefined) {
+  const view = firstSearchParam(params, "view")?.trim() ?? "";
+  const stage = firstSearchParam(params, "stage")?.trim() ?? "";
+  const temperature = firstSearchParam(params, "temperature")?.trim() ?? "";
+  const leadType = firstSearchParam(params, "leadType")?.trim() ?? "";
+  const source = firstSearchParam(params, "source")?.trim() ?? "";
+  const owner = firstSearchParam(params, "owner")?.trim() ?? "";
+  const search = firstSearchParam(params, "search")?.trim() ?? "";
+
+  return {
+    view: leadQueueViews.some((option) => option.value === view) ? view : "",
+    stage: isLeadStage(stage) ? stage : "",
+    temperature: isLeadTemperature(temperature) ? temperature : "",
+    leadType: isLeadType(leadType) ? leadType : "",
+    source: isLeadSource(source) ? source : "",
+    owner: owner === "me" || owner === "unassigned" ? owner : "",
     search
   };
 }
@@ -505,6 +634,27 @@ function adminSupportHref(filters: {
   return query ? `/admin/support?${query}` : "/admin/support";
 }
 
+function adminLeadHref(filters: {
+  view?: string;
+  stage?: string;
+  temperature?: string;
+  leadType?: string;
+  source?: string;
+  owner?: string;
+  search?: string;
+}) {
+  const params = new URLSearchParams();
+
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value) {
+      params.set(key, value);
+    }
+  });
+
+  const query = params.toString();
+  return query ? `/admin/leads?${query}` : "/admin/leads";
+}
+
 function mapContentFilterOption(
   label: string,
   value: string,
@@ -535,6 +685,20 @@ function mapSupportFilterOption(
     value,
     active,
     href: adminSupportHref(nextFilters)
+  };
+}
+
+function mapLeadFilterOption(
+  label: string,
+  value: string,
+  active: boolean,
+  nextFilters: ReturnType<typeof parseAdminLeadFilters>
+): AdminLeadFilterOption {
+  return {
+    label,
+    value,
+    active,
+    href: adminLeadHref(nextFilters)
   };
 }
 
@@ -912,6 +1076,195 @@ function supportAgeLabel(createdAt: Date | string) {
   return `${formatFaNumber(days)} روز`;
 }
 
+function leadRelatedSummary(lead: AdminLeadRecord) {
+  const parts = [
+    lead.relatedUser ? `کاربر: ${safeText(lead.relatedUser.displayName, lead.relatedUser.email ?? lead.relatedUser.id)}` : null,
+    lead.relatedConversation ? `گفت‌وگو: ${safeText(lead.relatedConversation.requestTopic, lead.relatedConversation.id)}` : null,
+    lead.relatedProfile ? `پروفایل: ${lead.relatedProfile.displayName}` : null,
+    lead.relatedInsight ? `بینش: ${lead.relatedInsight.title}` : null
+  ].filter(Boolean);
+
+  return parts.length ? parts.join(" / ") : notRecorded;
+}
+
+function mapAdminLeadItem(lead: AdminLeadRecord, auditItems: readonly AdminAuditLogItem[] = []): AdminLeadItem {
+  const fullName = `${lead.firstName} ${lead.lastName}`.trim();
+  const contact = [lead.phone, lead.email].filter(Boolean).join(" / ");
+  const jobCategory = lead.jobCategoryRecord?.labelFa ?? lead.jobCategory ?? notRecorded;
+
+  return {
+    id: lead.id,
+    leadNumber: lead.leadNumber,
+    fullName,
+    phone: lead.phone ?? notRecorded,
+    email: lead.email ?? notRecorded,
+    contactSummary: contact || notRecorded,
+    companySummary: lead.lastCompany ?? notRecorded,
+    jobTitle: lead.jobTitle ?? notRecorded,
+    jobCategory,
+    yearsOfExperienceLabel: lead.yearsOfExperience === null ? notRecorded : `${formatFaNumber(lead.yearsOfExperience)} سال`,
+    leadType: lead.leadType,
+    leadTypeLabel: leadTypeLabels[lead.leadType],
+    temperature: lead.temperature,
+    temperatureLabel: leadTemperatureLabels[lead.temperature],
+    stage: lead.stage,
+    stageLabel: leadStageLabels[lead.stage],
+    sourceCode: lead.source,
+    sourceLabel: leadSourceLabels[lead.source],
+    ownerSummary: supportParticipantSummary(lead.ownerAdmin),
+    ownerAdminId: lead.ownerAdminId ?? "",
+    relatedUserHref: lead.relatedUserId ? `/admin/users/${lead.relatedUserId}` : undefined,
+    relatedConversationHref: lead.relatedConversationId ? `/admin/conversations/${lead.relatedConversationId}` : undefined,
+    relatedProfileHref: lead.relatedProfileId ? `/admin/experience-profiles/${lead.relatedProfileId}` : undefined,
+    relatedInsightHref: lead.relatedInsightId ? `/admin/insights/${lead.relatedInsightId}` : undefined,
+    relatedSummary: leadRelatedSummary(lead),
+    intentSummary: lead.intentSummary ?? notRecorded,
+    blocker: lead.blocker ?? notRecorded,
+    notes: lead.notes ?? notRecorded,
+    scoreValue: lead.score,
+    scoreLabel: lead.score === null ? notRecorded : formatFaNumber(lead.score),
+    lastContactedAt: formatDateLike(lead.lastContactedAt),
+    nextFollowUpAt: formatDateLike(lead.nextFollowUpAt),
+    followUpCountLabel: formatFaNumber(lead.followUpCount),
+    lastFollowUpOutcome: lead.lastFollowUpOutcome ? leadFollowUpOutcomeLabels[lead.lastFollowUpOutcome] : notRecorded,
+    convertedAt: formatDateLike(lead.convertedAt),
+    lostAt: formatDateLike(lead.lostAt),
+    lostReason: lead.lostReason ?? notRecorded,
+    archivedAt: formatDateLike(lead.archivedAt),
+    createdAt: formatDateLike(lead.createdAt),
+    updatedAt: formatDateLike(lead.updatedAt),
+    href: `/admin/leads/${lead.id}`,
+    source: "backend_repository",
+    actionsAvailable: !lead.archivedAt && lead.stage !== "ARCHIVED",
+    tags: lead.tagAssignments.map((assignment) => ({
+      id: assignment.id,
+      tagId: assignment.tagId,
+      name: assignment.tag.name,
+      normalizedName: assignment.tag.normalizedName
+    })),
+    leadNotes: lead.leadNotes.map((note) => ({
+      id: note.id,
+      body: note.body,
+      noteType: note.noteType,
+      createdBySummary: supportParticipantSummary(note.createdByAdmin),
+      createdAt: formatDateLike(note.createdAt)
+    })),
+    followUps: lead.followUps.map((followUp) => ({
+      id: followUp.id,
+      channel: followUp.channel,
+      channelLabel: leadFollowUpChannelLabels[followUp.channel],
+      scheduledAt: formatDateLike(followUp.scheduledAt),
+      completedAt: formatDateLike(followUp.completedAt),
+      outcome: followUp.outcome ?? "",
+      outcomeLabel: followUp.outcome ? leadFollowUpOutcomeLabels[followUp.outcome] : notRecorded,
+      summary: followUp.summary ?? notRecorded,
+      createdBySummary: supportParticipantSummary(followUp.createdByAdmin),
+      completedBySummary: supportParticipantSummary(followUp.completedByAdmin)
+    })),
+    auditItems
+  };
+}
+
+function leadRepositoryFilters(viewer: Viewer, filters: ReturnType<typeof parseAdminLeadFilters>): AdminLeadFilters {
+  const repositoryFilters: AdminLeadFilters = {
+    stage: (filters.stage || null) as LeadStage | null,
+    temperature: (filters.temperature || null) as LeadTemperature | null,
+    leadType: (filters.leadType || null) as LeadType | null,
+    source: (filters.source || null) as LeadSource | null,
+    ownerAdminId: filters.owner === "me" ? viewer.id : null,
+    unassigned: filters.owner === "unassigned" ? true : null,
+    includeArchived: filters.stage === "ARCHIVED" || filters.view === "archived" ? true : null,
+    search: filters.search || null
+  };
+
+  if (filters.view === "new" && !repositoryFilters.stage) {
+    repositoryFilters.stage = "NEW";
+  }
+
+  if (filters.view === "mine") {
+    repositoryFilters.ownerAdminId = viewer.id;
+  }
+
+  if (filters.view === "unassigned") {
+    repositoryFilters.unassigned = true;
+  }
+
+  if (filters.view === "hot" && !repositoryFilters.temperature) {
+    repositoryFilters.temperature = "HOT";
+  }
+
+  if (filters.view === "qualified" && !repositoryFilters.stage) {
+    repositoryFilters.stage = "QUALIFIED";
+  }
+
+  if (filters.view === "follow_up") {
+    repositoryFilters.stage = "FOLLOW_UP";
+  }
+
+  if (filters.view === "converted") {
+    repositoryFilters.stage = "CONVERTED";
+  }
+
+  if (filters.view === "lost") {
+    repositoryFilters.stage = "LOST";
+  }
+
+  if (filters.view === "archived") {
+    repositoryFilters.stage = "ARCHIVED";
+    repositoryFilters.includeArchived = true;
+  }
+
+  return repositoryFilters;
+}
+
+function mapLeadQueueOptions(filters: ReturnType<typeof parseAdminLeadFilters>): AdminLeadFilterOption[] {
+  return leadQueueViews.map((option) =>
+    mapLeadFilterOption(option.label, option.value, filters.view === option.value, {
+      ...filters,
+      view: option.value
+    })
+  );
+}
+
+function mapLeadStageOptions(filters: ReturnType<typeof parseAdminLeadFilters>): AdminLeadFilterOption[] {
+  return [
+    mapLeadFilterOption("همه وضعیت‌ها", "", !filters.stage, { ...filters, stage: "" }),
+    ...Object.values(LeadStage).map((stage) =>
+      mapLeadFilterOption(leadStageLabels[stage], stage, filters.stage === stage, { ...filters, stage })
+    )
+  ];
+}
+
+function mapLeadTemperatureOptions(filters: ReturnType<typeof parseAdminLeadFilters>): AdminLeadFilterOption[] {
+  return [
+    mapLeadFilterOption("همه دماها", "", !filters.temperature, { ...filters, temperature: "" }),
+    ...Object.values(LeadTemperature).map((temperature) =>
+      mapLeadFilterOption(leadTemperatureLabels[temperature], temperature, filters.temperature === temperature, {
+        ...filters,
+        temperature
+      })
+    )
+  ];
+}
+
+function mapLeadTypeOptions(filters: ReturnType<typeof parseAdminLeadFilters>): AdminLeadFilterOption[] {
+  return [
+    mapLeadFilterOption("همه نوع‌ها", "", !filters.leadType, { ...filters, leadType: "" }),
+    ...Object.values(LeadType).map((leadType) =>
+      mapLeadFilterOption(leadTypeLabels[leadType], leadType, filters.leadType === leadType, { ...filters, leadType })
+    )
+  ];
+}
+
+function mapLeadSourceOptions(filters: ReturnType<typeof parseAdminLeadFilters>): AdminLeadFilterOption[] {
+  return [
+    mapLeadFilterOption("همه منابع", "", !filters.source, { ...filters, source: "" }),
+    ...Object.values(LeadSource).map((source) =>
+      mapLeadFilterOption(leadSourceLabels[source], source, filters.source === source, { ...filters, source })
+    )
+  ];
+}
+
 function mapAdminSupportTicketItem(
   ticket: AdminSupportTicketRecord,
   auditItems: readonly AdminAuditLogItem[] = []
@@ -1125,6 +1478,51 @@ function buildSupportMetrics(tickets: readonly AdminSupportTicketRecord[]): Admi
     metric("support-escalated", "ارجاع‌شده", tickets.filter((ticket) => ticket.status === "ESCALATED").length, "نیازمند تصمیم ادمین", adminSupportHref({ view: "escalated" })),
     metric("support-resolved-today", "حل‌شده امروز", tickets.filter((ticket) => isSameDay(ticket.resolvedAt, now)).length, "براساس resolvedAt", adminSupportHref({ view: "resolved" })),
     metric("support-aging", "بیش از ۷۲ ساعت", tickets.filter((ticket) => supportTicketIsOpen(ticket) && new Date(ticket.createdAt).getTime() < agingThreshold).length, "تیکت‌های باز قدیمی‌تر", "/admin/support")
+  ];
+}
+
+function buildLeadMetrics(leads: readonly AdminLeadRecord[]): AdminMetric[] {
+  const activeLeads = leads.filter((lead) => !lead.archivedAt && lead.stage !== "ARCHIVED");
+  const metric = (id: string, label: string, value: number, helper: string, href?: string): AdminMetric => ({
+    id,
+    label,
+    value: countLabel(value),
+    helper,
+    href,
+    source: "backend_repository"
+  });
+
+  return [
+    metric("active-leads", "سرنخ‌های فعال", activeLeads.length, "ردیف‌های Lead فعال از پایگاه داده.", "/admin/leads"),
+    metric("hot-leads", "سرنخ‌های داغ", leads.filter((lead) => lead.temperature === "HOT").length, "دمای HOT برای پیگیری سریع.", adminLeadHref({ view: "hot" })),
+    metric(
+      "follow-up-leads",
+      "نیازمند پیگیری",
+      leads.filter((lead) => lead.stage === "FOLLOW_UP").length,
+      "سرنخ‌هایی که پیگیری بعدی دارند.",
+      adminLeadHref({ view: "follow_up" })
+    ),
+    metric(
+      "unassigned-leads",
+      "بدون مسئول",
+      activeLeads.filter((lead) => !lead.ownerAdminId).length,
+      "سرنخ‌های فعال بدون مسئول.",
+      adminLeadHref({ view: "unassigned" })
+    ),
+    metric(
+      "converted-leads",
+      "تبدیل‌شده",
+      leads.filter((lead) => lead.stage === "CONVERTED").length,
+      "تبدیل‌ها فقط وضعیت Lead را نشان می‌دهند.",
+      adminLeadHref({ view: "converted" })
+    ),
+    metric(
+      "lost-leads",
+      "از دست‌رفته",
+      leads.filter((lead) => lead.stage === "LOST").length,
+      "دلایل lost در جزئیات Lead ثبت می‌شود.",
+      adminLeadHref({ view: "lost" })
+    )
   ];
 }
 
@@ -1480,6 +1878,58 @@ function auditActionLabel(action: string) {
     return "آرشیو تیکت پشتیبانی";
   }
 
+  if (action === "LEAD_CREATED") {
+    return "ثبت سرنخ";
+  }
+
+  if (action === "LEAD_UPDATED") {
+    return "ویرایش سرنخ";
+  }
+
+  if (action === "LEAD_ASSIGNED") {
+    return "تخصیص سرنخ";
+  }
+
+  if (action === "LEAD_TAG_ADDED") {
+    return "افزودن برچسب سرنخ";
+  }
+
+  if (action === "LEAD_TAG_REMOVED") {
+    return "حذف برچسب سرنخ";
+  }
+
+  if (action === "LEAD_NOTE_ADDED") {
+    return "افزودن یادداشت سرنخ";
+  }
+
+  if (action === "LEAD_FOLLOW_UP_SCHEDULED") {
+    return "زمان‌بندی پیگیری سرنخ";
+  }
+
+  if (action === "LEAD_FOLLOW_UP_COMPLETED") {
+    return "ثبت نتیجه پیگیری سرنخ";
+  }
+
+  if (action === "LEAD_CONVERTED") {
+    return "تبدیل سرنخ";
+  }
+
+  if (action === "LEAD_MARKED_LOST") {
+    return "ثبت سرنخ از دست‌رفته";
+  }
+
+  if (action === "LEAD_REOPENED") {
+    return "بازگشایی سرنخ";
+  }
+
+  if (action === "LEAD_ARCHIVED") {
+    return "آرشیو سرنخ";
+  }
+
+  if (action === "LEAD_IMPORT_COMPLETED") {
+    return "ورود گروهی سرنخ";
+  }
+
   return action;
 }
 
@@ -1515,6 +1965,7 @@ function mapAuditItem(row: {
     pricingHref: row.targetType === "PRICING_RULE" && row.targetId ? `/admin/pricing/${row.targetId}` : undefined,
     categoryHref: row.targetType === "JOB_CATEGORY" && row.targetId ? `/admin/categories/${row.targetId}` : undefined,
     contentHref: row.targetType === "CONTENT_ENTRY" && row.targetId ? `/admin/content/${row.targetId}` : undefined,
+    leadHref: row.targetType === "LEAD" && row.targetId ? `/admin/leads/${row.targetId}` : undefined,
     supportHref: row.targetType === "SUPPORT_TICKET" && row.targetId ? `/admin/support/${row.targetId}` : undefined,
     source: "backend_repository"
   };
@@ -2875,6 +3326,85 @@ export async function getAdminContentDetailRouteData(
     source: "placeholder",
     sourceNote: placeholderSourceNote,
     viewerCanMutate: false
+  };
+}
+
+export async function getAdminLeadRouteData(viewer: Viewer, params?: AdminLeadSearchParams): Promise<AdminLeadInboxData> {
+  const filters = parseAdminLeadFilters(params);
+  const [leadsResult, summaryResult] = await Promise.all([
+    adminLeadService.list(viewer, leadRepositoryFilters(viewer, filters)),
+    adminLeadService.list(viewer, { includeArchived: true })
+  ]);
+  const summaryLeads = summaryResult.ok ? summaryResult.data : [];
+
+  if (leadsResult.ok) {
+    return {
+      items: leadsResult.data.map((lead) => mapAdminLeadItem(lead)),
+      metrics: buildLeadMetrics(summaryLeads.length ? summaryLeads : leadsResult.data),
+      queueOptions: mapLeadQueueOptions(filters),
+      stageOptions: mapLeadStageOptions(filters),
+      temperatureOptions: mapLeadTemperatureOptions(filters),
+      leadTypeOptions: mapLeadTypeOptions(filters),
+      sourceOptions: mapLeadSourceOptions(filters),
+      activeFilters: filters,
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanCreate: viewer.role === "ADMIN" || viewer.role === "SUPPORT",
+      viewerCanMutate: viewer.role === "ADMIN" || viewer.role === "SUPPORT",
+      viewerCanImport: viewer.role === "ADMIN",
+      viewerCanArchive: viewer.role === "ADMIN",
+      viewerId: viewer.id
+    };
+  }
+
+  return {
+    items: [],
+    metrics: buildLeadMetrics([]),
+    queueOptions: mapLeadQueueOptions(filters),
+    stageOptions: mapLeadStageOptions(filters),
+    temperatureOptions: mapLeadTemperatureOptions(filters),
+    leadTypeOptions: mapLeadTypeOptions(filters),
+    sourceOptions: mapLeadSourceOptions(filters),
+    activeFilters: filters,
+    source: "placeholder",
+    sourceNote: "پایگاه داده یا مدل سرنخ در دسترس نیست؛ سرنخ ساختگی نمایش داده نمی‌شود.",
+    viewerCanCreate: false,
+    viewerCanMutate: false,
+    viewerCanImport: false,
+    viewerCanArchive: false,
+    viewerId: viewer.id
+  };
+}
+
+export async function getAdminLeadDetailRouteData(viewer: Viewer, leadId: string): Promise<AdminLeadDetailData> {
+  const [detailResult, auditResult] = await Promise.all([
+    adminLeadService.getDetail(viewer, leadId),
+    adminReadModelService.getLeadAuditLog(viewer, leadId)
+  ]);
+  const auditItems = auditResult.ok ? auditResult.data.rows.map(mapAuditItem) : [];
+
+  if (detailResult.ok) {
+    return {
+      item: mapAdminLeadItem(detailResult.data, auditItems),
+      source: "backend_repository",
+      sourceNote: repositorySourceNote,
+      viewerCanCreate: viewer.role === "ADMIN" || viewer.role === "SUPPORT",
+      viewerCanMutate: viewer.role === "ADMIN" || viewer.role === "SUPPORT",
+      viewerCanImport: viewer.role === "ADMIN",
+      viewerCanArchive: viewer.role === "ADMIN",
+      viewerId: viewer.id
+    };
+  }
+
+  return {
+    item: null,
+    source: "placeholder",
+    sourceNote: "سرنخ پیدا نشد یا پایگاه داده در دسترس نیست؛ جزئیات ساختگی نمایش داده نمی‌شود.",
+    viewerCanCreate: false,
+    viewerCanMutate: false,
+    viewerCanImport: false,
+    viewerCanArchive: false,
+    viewerId: viewer.id
   };
 }
 
