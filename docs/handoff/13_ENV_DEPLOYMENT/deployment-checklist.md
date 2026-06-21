@@ -10,6 +10,7 @@ This checklist is for controlled staging and later production readiness. It does
 - Keep `APP_ENV=staging` and `USERAVAA_SITE_INDEXING=0`.
 - Keep `USERAVAA_DB_SMOKE_TEST=0` in shared CI; enable smoke tests only from a safe local/operator machine.
 - Keep `USERAVAA_ENABLE_DEV_AUTH=0` and `USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK=0` for deployment environments.
+- Keep `USERAVAA_ENABLE_STAGING_ACCESS=0` until a trusted upstream staging identity source is selected.
 - Keep staging bootstrap dry-run until a later checkpoint approves account writes.
 - Run `npm.cmd run lint`.
 - Run `npm.cmd run typecheck`.
@@ -68,6 +69,7 @@ This checklist is for controlled staging and later production readiness. It does
 - `JWT_SECRET`
 - `STAGING_PRIMARY_ADMIN_EMAIL`
 - `STAGING_SUPPORT_EMAIL`
+- `USERAVAA_ENABLE_STAGING_ACCESS`
 - `USERAVAA_STAGING_BOOTSTRAP_DRY_RUN`
 - `USERAVAA_ALLOW_STAGING_BOOTSTRAP`
 - `UPLOAD_STORAGE_PROVIDER`

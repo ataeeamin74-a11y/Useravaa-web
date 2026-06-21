@@ -109,6 +109,7 @@ describe("Checkpoint 3B-5 staging access runbook", () => {
     for (const example of envExamples) {
       expect(example).toContain("STAGING_PRIMARY_ADMIN_EMAIL=");
       expect(example).toContain("STAGING_SUPPORT_EMAIL=");
+      expect(example).toContain("USERAVAA_ENABLE_STAGING_ACCESS=0");
       expect(example).toContain("USERAVAA_STAGING_BOOTSTRAP_DRY_RUN=1");
       expect(example).toContain("USERAVAA_ALLOW_STAGING_BOOTSTRAP=0");
       expect(example).not.toMatch(emailLikePattern);

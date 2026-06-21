@@ -29,6 +29,28 @@ Database rows alone will not make staging login work because the production auth
 
 Do not add a public route that accepts `role`, `isAdmin`, `adminUserId`, `actorAdminUserId`, or similar fields from the browser to create or promote an account.
 
+## 3B-6 Access Decision
+
+Recommended path: keep production auth provider unimplemented for now, and prepare a staging-only access resolver that can later consume a trusted upstream operator identifier.
+
+Rejected for this checkpoint:
+
+- Public staging login without a real auth provider. This would need credentials or a public route and would be easy to misuse.
+- Real auth provider before staging. This is still the production path, but it requires a founder/provider decision and external setup.
+- No staging access preparation. This would leave the next deployment attempt guessing about ADMIN/SUPPORT mapping.
+
+Implemented preparation:
+
+- `src/lib/auth/staging-access.ts` can resolve a trusted operator identifier to `ADMIN` or `SUPPORT`.
+- It is disabled unless `USERAVAA_ENABLE_STAGING_ACCESS=1`.
+- It only enables when `APP_ENV=staging`.
+- It refuses `NODE_ENV=production`.
+- It requires `STAGING_PRIMARY_ADMIN_EMAIL` and `STAGING_SUPPORT_EMAIL` to be present and distinct.
+- It is not wired into `getCurrentSession` and does not read browser-controlled headers or cookies.
+- It does not create users, write database rows, create credentials, or add public routes.
+
+The future wiring point must supply the operator identifier from a trusted upstream identity source, such as a selected auth provider, platform-protected identity layer, or operator-only server context. Do not read the identifier directly from client-submitted form data, query strings, cookies, or request headers unless an upstream system strips and signs them.
+
 ## Bootstrap Model
 
 1. Select and configure the staging auth/access mechanism in a later checkpoint.
@@ -58,6 +80,7 @@ Expected safe staging flags:
 - `USERAVAA_ENABLE_HSTS=0`
 - `USERAVAA_ENABLE_DEV_AUTH=0`
 - `USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK=0`
+- `USERAVAA_ENABLE_STAGING_ACCESS=0` until trusted upstream identity is selected
 - `USERAVAA_STAGING_BOOTSTRAP_DRY_RUN=1`
 
 Required placeholder env variable names:
@@ -181,6 +204,7 @@ Rollback concept:
 |---|---:|---|---:|---|
 | `STAGING_PRIMARY_ADMIN_EMAIL` | Yes | Empty placeholder only | Yes in real env | Real value belongs only in deployment env or secret manager. |
 | `STAGING_SUPPORT_EMAIL` | Yes | Empty placeholder only | Yes in real env | Real value belongs only in deployment env or secret manager. |
+| `USERAVAA_ENABLE_STAGING_ACCESS` | Later | `0` | No | Set to `1` only after trusted upstream identity source is selected and tested. |
 | `USERAVAA_STAGING_BOOTSTRAP_DRY_RUN` | Yes | `1` | No | Keep dry-run until a later checkpoint approves writes. |
 | `USERAVAA_ALLOW_STAGING_BOOTSTRAP` | Yes | `0` | No | Keep disabled until a one-time bootstrap write is approved. |
 | `APP_ENV` | Yes | `staging` | No | Required for staging posture. |
@@ -213,11 +237,12 @@ Not yet:
 
 ## Recommended Next Checkpoint
 
-Checkpoint 3B-6 should be: Staging Auth Access Implementation Decision.
+Checkpoint 3B-7 should be: Trusted Staging Identity Source Wiring.
 
-It should choose one path:
+It should choose one identity source and wire it into `getCurrentSession` only if all are true:
 
-- Wire the selected real auth provider for staging and production.
-- Or build a tightly restricted staging-only access mechanism that cannot be enabled in production and cannot self-promote roles.
-
-That checkpoint must include admin/support role mapping, no client-controlled role assignment, deployment-env-only operator identifiers, and tests proving SUPPORT remains limited.
+- The source is not client-controlled.
+- The source is disabled in production unless it is the selected real auth provider.
+- `USERAVAA_ENABLE_STAGING_ACCESS=1` is required for staging-only behavior.
+- `STAGING_PRIMARY_ADMIN_EMAIL` and `STAGING_SUPPORT_EMAIL` live only in hosting env or secret manager.
+- SUPPORT remains blocked from ADMIN-only service actions.
