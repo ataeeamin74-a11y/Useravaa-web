@@ -1,7 +1,8 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { authAdapter } from "@/lib/adapters/auth";
 import { DEV_VIEWER_COOKIE, devFixtureAuthIsEnabled, resolveDevFixtureViewer } from "./dev-fixtures";
+import { getStagingHeaderAccessDecision, resolveStagingHeaderViewer } from "./staging-access";
 import type { AuthSession, Viewer } from "./types";
 
 export async function getCurrentSession(): Promise<AuthSession> {
@@ -12,6 +13,20 @@ export async function getCurrentSession(): Promise<AuthSession> {
       viewer: providerViewer,
       source: "provider"
     };
+  }
+
+  const stagingAccessDecision = getStagingHeaderAccessDecision();
+
+  if (stagingAccessDecision.enabled) {
+    const requestHeaders = await headers();
+    const stagingViewer = resolveStagingHeaderViewer(requestHeaders);
+
+    if (stagingViewer) {
+      return {
+        viewer: stagingViewer,
+        source: "staging_access"
+      };
+    }
   }
 
   // Local fixture auth is a development-only bridge until a production provider is wired.

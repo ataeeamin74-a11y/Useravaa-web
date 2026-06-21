@@ -9,5 +9,5 @@ export type Viewer = {
 
 export type AuthSession = {
   viewer: Viewer | null;
-  source: "dev_fixture" | "provider" | "none";
+  source: "dev_fixture" | "provider" | "staging_access" | "none";
 };

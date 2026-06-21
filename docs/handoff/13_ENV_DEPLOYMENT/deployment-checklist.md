@@ -10,7 +10,8 @@ This checklist is for controlled staging and later production readiness. It does
 - Keep `APP_ENV=staging` and `USERAVAA_SITE_INDEXING=0`.
 - Keep `USERAVAA_DB_SMOKE_TEST=0` in shared CI; enable smoke tests only from a safe local/operator machine.
 - Keep `USERAVAA_ENABLE_DEV_AUTH=0` and `USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK=0` for deployment environments.
-- Keep `USERAVAA_ENABLE_STAGING_ACCESS=0` until a trusted upstream staging identity source is selected.
+- Keep `USERAVAA_ENABLE_STAGING_ACCESS=0` until the protected staging route/header source is configured and reviewed.
+- If staging access is enabled, set `USERAVAA_STAGING_ACCESS_HEADER`, `USERAVAA_STAGING_ACCESS_IDENTITY_HEADER`, and `USERAVAA_STAGING_ACCESS_SECRET` only in the deployment env store.
 - Keep staging bootstrap dry-run until a later checkpoint approves account writes.
 - Run `npm.cmd run lint`.
 - Run `npm.cmd run typecheck`.
@@ -70,6 +71,9 @@ This checklist is for controlled staging and later production readiness. It does
 - `STAGING_PRIMARY_ADMIN_EMAIL`
 - `STAGING_SUPPORT_EMAIL`
 - `USERAVAA_ENABLE_STAGING_ACCESS`
+- `USERAVAA_STAGING_ACCESS_HEADER`
+- `USERAVAA_STAGING_ACCESS_IDENTITY_HEADER`
+- `USERAVAA_STAGING_ACCESS_SECRET`
 - `USERAVAA_STAGING_BOOTSTRAP_DRY_RUN`
 - `USERAVAA_ALLOW_STAGING_BOOTSTRAP`
 - `UPLOAD_STORAGE_PROVIDER`
@@ -96,6 +100,7 @@ This checklist is for controlled staging and later production readiness. It does
 - Select provider.
 - Define allowed login methods.
 - Define ADMIN/SUPPORT bootstrap process.
+- For internal staging only, configure the trusted secret-backed identity header source before setting `USERAVAA_ENABLE_STAGING_ACCESS=1`.
 - Define user role update process.
 - Confirm dev fixture auth is disabled in deployment environments.
 

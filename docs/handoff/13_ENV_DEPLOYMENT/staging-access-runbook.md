@@ -51,6 +51,49 @@ Implemented preparation:
 
 The future wiring point must supply the operator identifier from a trusted upstream identity source, such as a selected auth provider, platform-protected identity layer, or operator-only server context. Do not read the identifier directly from client-submitted form data, query strings, cookies, or request headers unless an upstream system strips and signs them.
 
+## 3B-7 Trusted Identity Source
+
+Recommended path: use a secret-backed staging header resolver for internal staging only.
+
+Identity-source options evaluated:
+
+| Option | Security level | Complexity | Spoofing risk | Staging fit | Production fit | External setup | ADMIN vs SUPPORT? |
+|---|---|---:|---|---|---|---:|---|
+| Hosting preview protection only | Medium for site entry | Low | Low for entry, none for role identity | Good for restricting URL access | Not enough for app auth | Yes | No |
+| Trusted reverse-proxy/header identity with shared secret | Medium-high if the proxy strips client headers and injects both values | Low-medium | Low when secret-backed | Good for internal staging | No, staging-only bridge | Yes | Yes |
+| Signed staging cookie/token | Medium-high if short-lived and secret-backed | Medium | Low if no public mint route exists | Good if an internal issuer exists | No, staging-only bridge | Maybe | Yes |
+| Basic auth at edge/platform | Medium | Low | Low for entry, none for app role identity | Good for site entry | Not app auth | Yes | No |
+| Real auth provider now | High | Medium-high | Low when configured correctly | Strong | Strong | Yes | Yes |
+| Keep decision-only and defer wiring | High safety, no access | Low | None | Blocks private/admin staging | Not a solution | No | No |
+
+Implemented 3B-7 behavior:
+
+- `getCurrentSession` still checks the production auth adapter first.
+- If no provider viewer exists, it checks a staging-only, secret-backed header resolver.
+- The staging resolver is disabled unless all of these are true:
+  - `USERAVAA_ENABLE_STAGING_ACCESS=1`
+  - `APP_ENV=staging`
+  - `NODE_ENV` is not `production`
+  - `STAGING_PRIMARY_ADMIN_EMAIL` and `STAGING_SUPPORT_EMAIL` are present and distinct
+  - `USERAVAA_STAGING_ACCESS_HEADER` is present and names the header carrying the shared secret
+  - `USERAVAA_STAGING_ACCESS_IDENTITY_HEADER` is present and names the trusted operator identifier header
+  - `USERAVAA_STAGING_ACCESS_SECRET` is present
+- The secret value is compared server-side and is not logged.
+- A raw identity header without the matching secret resolves to no viewer.
+- Unknown identifiers resolve to no viewer.
+- The resolver maps only:
+  - `STAGING_PRIMARY_ADMIN_EMAIL` -> `ADMIN`
+  - `STAGING_SUPPORT_EMAIL` -> `SUPPORT`
+- Local dev fixture auth remains a later fallback and remains disabled in production.
+- No public login route, signup route, staging bootstrap route, password flow, user creation, database write, migration, or provider integration was added.
+
+Operational requirement before enabling this in staging:
+
+- Configure the hosting platform, reverse proxy, or protected internal edge layer to strip any incoming client copies of the configured staging access headers.
+- Inject the secret header and trusted identity header only after the operator has passed platform-controlled access.
+- Store real header names, real operator identifiers, and the secret only in the deployment env store or secret manager.
+- Keep `USERAVAA_ENABLE_STAGING_ACCESS=0` until this upstream protection is configured and reviewed.
+
 ## Bootstrap Model
 
 1. Select and configure the staging auth/access mechanism in a later checkpoint.
@@ -80,13 +123,16 @@ Expected safe staging flags:
 - `USERAVAA_ENABLE_HSTS=0`
 - `USERAVAA_ENABLE_DEV_AUTH=0`
 - `USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK=0`
-- `USERAVAA_ENABLE_STAGING_ACCESS=0` until trusted upstream identity is selected
+- `USERAVAA_ENABLE_STAGING_ACCESS=0` until the trusted header source is configured and reviewed
 - `USERAVAA_STAGING_BOOTSTRAP_DRY_RUN=1`
 
 Required placeholder env variable names:
 
 - `STAGING_PRIMARY_ADMIN_EMAIL`
 - `STAGING_SUPPORT_EMAIL`
+- `USERAVAA_STAGING_ACCESS_HEADER`
+- `USERAVAA_STAGING_ACCESS_IDENTITY_HEADER`
+- `USERAVAA_STAGING_ACCESS_SECRET`
 
 If a future checkpoint enables a database-writing bootstrap, it must be idempotent, operator-only, disabled by default, refused in production unless explicitly approved, and audited.
 
@@ -204,7 +250,10 @@ Rollback concept:
 |---|---:|---|---:|---|
 | `STAGING_PRIMARY_ADMIN_EMAIL` | Yes | Empty placeholder only | Yes in real env | Real value belongs only in deployment env or secret manager. |
 | `STAGING_SUPPORT_EMAIL` | Yes | Empty placeholder only | Yes in real env | Real value belongs only in deployment env or secret manager. |
-| `USERAVAA_ENABLE_STAGING_ACCESS` | Later | `0` | No | Set to `1` only after trusted upstream identity source is selected and tested. |
+| `USERAVAA_ENABLE_STAGING_ACCESS` | Later | `0` | No | Set to `1` only after the trusted secret-backed header source is configured and tested. |
+| `USERAVAA_STAGING_ACCESS_HEADER` | Later | Empty placeholder only | No, but sensitive by association | Header name for the shared secret value. Real value belongs in deployment env. |
+| `USERAVAA_STAGING_ACCESS_IDENTITY_HEADER` | Later | Empty placeholder only | No, but sensitive by association | Header name for the trusted operator identifier. Real value belongs in deployment env. |
+| `USERAVAA_STAGING_ACCESS_SECRET` | Later | Empty placeholder only | Yes | Shared secret for the staging header resolver. Real value belongs only in deployment env or secret manager. |
 | `USERAVAA_STAGING_BOOTSTRAP_DRY_RUN` | Yes | `1` | No | Keep dry-run until a later checkpoint approves writes. |
 | `USERAVAA_ALLOW_STAGING_BOOTSTRAP` | Yes | `0` | No | Keep disabled until a one-time bootstrap write is approved. |
 | `APP_ENV` | Yes | `staging` | No | Required for staging posture. |
@@ -225,6 +274,7 @@ Later:
 
 - Create the two operator accounts in the selected auth provider.
 - Add real operator identifiers to the hosting platform env store.
+- Configure the protected platform/proxy layer that injects the staging identity and secret headers for internal operators only.
 - Approve a one-time role bootstrap implementation or provider mapping.
 - Run staging smoke tests with the checklist above.
 
@@ -237,12 +287,12 @@ Not yet:
 
 ## Recommended Next Checkpoint
 
-Checkpoint 3B-7 should be: Trusted Staging Identity Source Wiring.
+Checkpoint 3B-8 should be: Internal Staging Deployment Dry Run And Protected Access Setup.
 
-It should choose one identity source and wire it into `getCurrentSession` only if all are true:
+It should verify the protected staging URL and environment setup without connecting production domain, payment, email, SMS, storage, analytics, or monitoring providers:
 
-- The source is not client-controlled.
-- The source is disabled in production unless it is the selected real auth provider.
-- `USERAVAA_ENABLE_STAGING_ACCESS=1` is required for staging-only behavior.
-- `STAGING_PRIMARY_ADMIN_EMAIL` and `STAGING_SUPPORT_EMAIL` live only in hosting env or secret manager.
-- SUPPORT remains blocked from ADMIN-only service actions.
+- Confirm the hosting/proxy layer strips client-supplied staging headers before injecting trusted values.
+- Add real staging-only operator identifiers and the staging access secret only to the deployment env store.
+- Keep the first deployment internal-only and noindex.
+- Run the smoke checklist with fake data only.
+- Do not run `prisma migrate deploy` until the migration review checkpoint approves it.

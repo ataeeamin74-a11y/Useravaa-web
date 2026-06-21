@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { devFixtureAuthIsEnabled } from "@/lib/auth/dev-fixtures";
 import {
   getStagingAccessDecision,
+  getStagingHeaderAccessDecision,
+  resolveStagingHeaderViewer,
   resolveStagingOperatorViewer,
   STAGING_PRIMARY_ADMIN_ID,
   STAGING_SUPPORT_ID
@@ -48,6 +50,17 @@ const stagingAccessEnv = {
   STAGING_PRIMARY_ADMIN_EMAIL: "placeholder-primary-operator",
   STAGING_SUPPORT_EMAIL: "placeholder-support-operator"
 };
+
+const stagingHeaderEnv = {
+  ...stagingAccessEnv,
+  USERAVAA_STAGING_ACCESS_HEADER: "x-useravaa-staging-access",
+  USERAVAA_STAGING_ACCESS_IDENTITY_HEADER: "x-useravaa-staging-operator",
+  USERAVAA_STAGING_ACCESS_SECRET: "placeholder-shared-secret"
+};
+
+function headerSource(values: Record<string, string>) {
+  return new Headers(values);
+}
 
 const privateRouteFiles = [
   "src/app/profile/page.tsx",
@@ -98,13 +111,26 @@ const supportViewer: Viewer = {
   role: "SUPPORT"
 };
 
-describe("Checkpoint 3B-6 staging auth access decision", () => {
+describe("Checkpoint 3B-7 staging auth access decision and trusted identity source", () => {
   it("keeps staging access disabled by default", () => {
     expect(getStagingAccessDecision({ APP_ENV: "staging", NODE_ENV: "test" })).toMatchObject({
       enabled: false,
       reason: "flag_disabled"
     });
+    expect(getStagingHeaderAccessDecision({ APP_ENV: "staging", NODE_ENV: "test" })).toMatchObject({
+      enabled: false,
+      reason: "flag_disabled"
+    });
     expect(resolveStagingOperatorViewer("placeholder-primary-operator", { APP_ENV: "staging", NODE_ENV: "test" })).toBeNull();
+    expect(
+      resolveStagingHeaderViewer(
+        headerSource({
+          "x-useravaa-staging-access": "placeholder-shared-secret",
+          "x-useravaa-staging-operator": "placeholder-primary-operator"
+        }),
+        { APP_ENV: "staging", NODE_ENV: "test" }
+      )
+    ).toBeNull();
   });
 
   it("refuses staging access in production runtime or production app env", () => {
@@ -117,6 +143,14 @@ describe("Checkpoint 3B-6 staging auth access decision", () => {
       reason: "not_staging"
     });
     expect(resolveStagingOperatorViewer("placeholder-primary-operator", { ...stagingAccessEnv, NODE_ENV: "production" })).toBeNull();
+    expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, NODE_ENV: "production" })).toMatchObject({
+      enabled: false,
+      reason: "production_runtime"
+    });
+    expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, APP_ENV: "development" })).toMatchObject({
+      enabled: false,
+      reason: "not_staging"
+    });
   });
 
   it("requires two distinct placeholder operator identifiers from env", () => {
@@ -134,6 +168,34 @@ describe("Checkpoint 3B-6 staging auth access decision", () => {
     });
   });
 
+  it("requires explicit staging header names and a secret before trusting request headers", () => {
+    expect(getStagingHeaderAccessDecision(stagingAccessEnv)).toMatchObject({
+      enabled: false,
+      reason: "missing_access_header"
+    });
+    expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, USERAVAA_STAGING_ACCESS_IDENTITY_HEADER: "" })).toMatchObject({
+      enabled: false,
+      reason: "missing_identity_header"
+    });
+    expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, USERAVAA_STAGING_ACCESS_SECRET: "" })).toMatchObject({
+      enabled: false,
+      reason: "missing_access_secret"
+    });
+    expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, USERAVAA_STAGING_ACCESS_HEADER: "bad header" })).toMatchObject({
+      enabled: false,
+      reason: "invalid_access_header"
+    });
+    expect(
+      getStagingHeaderAccessDecision({
+        ...stagingHeaderEnv,
+        USERAVAA_STAGING_ACCESS_HEADER: "x-useravaa-staging-operator"
+      })
+    ).toMatchObject({
+      enabled: false,
+      reason: "duplicate_staging_header"
+    });
+  });
+
   it("maps only trusted placeholder identifiers to ADMIN and SUPPORT", () => {
     expect(resolveStagingOperatorViewer(" PLACEHOLDER-PRIMARY-OPERATOR ", stagingAccessEnv)).toMatchObject({
       id: STAGING_PRIMARY_ADMIN_ID,
@@ -147,14 +209,72 @@ describe("Checkpoint 3B-6 staging auth access decision", () => {
     expect(resolveStagingOperatorViewer(null, stagingAccessEnv)).toBeNull();
   });
 
+  it("rejects raw client-supplied identity headers without the matching staging secret", () => {
+    expect(
+      resolveStagingHeaderViewer(
+        headerSource({
+          "x-useravaa-staging-operator": "placeholder-primary-operator"
+        }),
+        stagingHeaderEnv
+      )
+    ).toBeNull();
+    expect(
+      resolveStagingHeaderViewer(
+        headerSource({
+          "x-useravaa-staging-access": "wrong-placeholder-secret",
+          "x-useravaa-staging-operator": "placeholder-primary-operator"
+        }),
+        stagingHeaderEnv
+      )
+    ).toBeNull();
+  });
+
+  it("maps ADMIN and SUPPORT only when the secret-backed staging headers are fully gated", () => {
+    expect(
+      resolveStagingHeaderViewer(
+        headerSource({
+          "x-useravaa-staging-access": "placeholder-shared-secret",
+          "x-useravaa-staging-operator": " PLACEHOLDER-PRIMARY-OPERATOR "
+        }),
+        stagingHeaderEnv
+      )
+    ).toMatchObject({
+      id: STAGING_PRIMARY_ADMIN_ID,
+      role: "ADMIN"
+    });
+    expect(
+      resolveStagingHeaderViewer(
+        headerSource({
+          "x-useravaa-staging-access": "placeholder-shared-secret",
+          "x-useravaa-staging-operator": "placeholder-support-operator"
+        }),
+        stagingHeaderEnv
+      )
+    ).toMatchObject({
+      id: STAGING_SUPPORT_ID,
+      role: "SUPPORT"
+    });
+    expect(
+      resolveStagingHeaderViewer(
+        headerSource({
+          "x-useravaa-staging-access": "placeholder-shared-secret",
+          "x-useravaa-staging-operator": "unknown-operator"
+        }),
+        stagingHeaderEnv
+      )
+    ).toBeNull();
+  });
+
   it("documents and examples staging access without real identifiers", () => {
     const emailLikePattern = /\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/iu;
     const tokenLikePattern = /\b(sk-|gh[pousr]_|xox[baprs]-|whsec_)[A-Za-z0-9_-]{8,}\b/iu;
     const sources = [
       projectFile("src/lib/auth/staging-access.ts"),
+      projectFile("src/lib/auth/session.ts"),
       projectFile(".env.example"),
       projectFile("docs/handoff/13_ENV_DEPLOYMENT/env.example"),
-      projectFile("docs/handoff/13_ENV_DEPLOYMENT/staging-access-runbook.md")
+      projectFile("docs/handoff/13_ENV_DEPLOYMENT/staging-access-runbook.md"),
+      projectFile("tests/staging-auth-session-wiring.test.ts")
     ].join("\n");
 
     expect(sources).toContain("STAGING_PRIMARY_ADMIN_EMAIL");
@@ -164,10 +284,12 @@ describe("Checkpoint 3B-6 staging auth access decision", () => {
     expect(sources).not.toMatch(tokenLikePattern);
   });
 
-  it("does not wire staging access into runtime sessions or add public bootstrap routes", () => {
+  it("wires only the trusted staging header source into runtime sessions and adds no public bootstrap routes", () => {
     const sessionSource = projectFile("src/lib/auth/session.ts");
     const apiRoutePaths = projectFilesUnder("src/app/api").filter((filePath) => filePath.endsWith("/route.ts"));
 
+    expect(sessionSource).toContain("getStagingHeaderAccessDecision");
+    expect(sessionSource).toContain("resolveStagingHeaderViewer");
     expect(sessionSource).not.toContain("resolveStagingOperatorViewer");
     expect(apiRoutePaths).not.toEqual(expect.arrayContaining([expect.stringMatching(/bootstrap|staging-access|role|promote/iu)]));
   });
