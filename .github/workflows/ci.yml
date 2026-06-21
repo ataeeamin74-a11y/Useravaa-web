@@ -13,14 +13,29 @@ env:
   USERAVAA_ENABLE_HSTS: "0"
   USERAVAA_ENABLE_DEV_AUTH: "0"
   USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK: "0"
+  USERAVAA_ENABLE_STAGING_ACCESS: "0"
   USERAVAA_DB_SMOKE_TEST: "0"
-  DATABASE_URL: postgresql://user:password@localhost:5432/useravaa_ci
+  DATABASE_URL: postgresql://useravaa_ci:useravaa_ci_password@localhost:5432/useravaa_ci?schema=public
   LOG_LEVEL: error
 
 jobs:
   quality-gate:
     name: Quality gate
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: useravaa_ci
+          POSTGRES_PASSWORD: useravaa_ci_password
+          POSTGRES_DB: useravaa_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U useravaa_ci -d useravaa_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout
