@@ -8,6 +8,8 @@ type SavedRouteProps = Readonly<{
   }>;
 }>;
 
+export const dynamic = "force-dynamic";
+
 export default async function SavedRoute({ searchParams }: SavedRouteProps) {
   await requireCurrentViewer();
   const params = await searchParams;

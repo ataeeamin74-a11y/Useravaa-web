@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   title: "اقدام‌ها"
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function ActionsRoute() {
   const viewer = await requireCurrentViewer();
 

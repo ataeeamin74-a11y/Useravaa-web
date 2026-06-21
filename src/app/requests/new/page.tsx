@@ -14,6 +14,8 @@ function parseDuration(duration?: string): ConversationDuration {
   return duration === "60" ? 60 : 30;
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function NewRequestRoute({ searchParams }: NewRequestRouteProps) {
   await requireCurrentViewer();
   const params = await searchParams;

@@ -5,6 +5,8 @@ import { getConversationById } from "@/features/v51/data/conversations";
 import { alignConversationForViewer, canAccessCheckout } from "@/features/v51/permissions";
 import { requireCurrentViewer } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export default async function CheckoutIndexRoute() {
   const viewer = await requireCurrentViewer();
   const conversation = getConversationById("conv-awaiting-payment");

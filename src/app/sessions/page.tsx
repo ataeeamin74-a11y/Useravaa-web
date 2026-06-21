@@ -3,6 +3,8 @@ import { ConversationsPage } from "@/features/v51/conversations/pages/Conversati
 import { getVisibleConversationsForViewer } from "@/features/v51/permissions";
 import { requireCurrentViewer } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export default async function SessionsRoute() {
   const viewer = await requireCurrentViewer();
 

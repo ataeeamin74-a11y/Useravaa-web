@@ -11,6 +11,8 @@ type ProposeTimesRouteProps = Readonly<{
   }>;
 }>;
 
+export const dynamic = "force-dynamic";
+
 export default async function ProposeTimesRoute({ params }: ProposeTimesRouteProps) {
   const viewer = await requireCurrentViewer();
   const { conversationId } = await params;

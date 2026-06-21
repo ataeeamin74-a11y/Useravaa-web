@@ -212,8 +212,8 @@ const demoFallbackSourceNote = "پایگاه داده در دسترس نبود؛
 const placeholderSourceNote = "این بخش هنوز منبع عملیاتی پایدار ندارد و داده ساختگی نمایش نمی‌دهد.";
 const notRecorded = "ثبت نشده";
 
-export function isAdminLocalDemoFallbackEnabled() {
-  return process.env.NODE_ENV !== "production" || process.env.USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK === "1";
+export function isAdminLocalDemoFallbackEnabled(source: NodeJS.ProcessEnv = process.env) {
+  return source.NODE_ENV !== "production" && source.USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK !== "0";
 }
 
 function placeholderAdminList<T>(): AdminListRouteData<T> {

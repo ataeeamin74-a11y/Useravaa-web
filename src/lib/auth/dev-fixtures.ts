@@ -34,8 +34,8 @@ export const DEV_FIXTURE_VIEWERS = {
 
 export type DevFixtureViewerKey = keyof typeof DEV_FIXTURE_VIEWERS;
 
-export function devFixtureAuthIsEnabled() {
-  return process.env.NODE_ENV !== "production" || process.env.USERAVAA_ENABLE_DEV_AUTH === "true";
+export function devFixtureAuthIsEnabled(source: NodeJS.ProcessEnv = process.env) {
+  return source.NODE_ENV !== "production" && source.USERAVAA_ENABLE_DEV_AUTH !== "0";
 }
 
 export function resolveDevFixtureViewer(value?: string | null): Viewer | null {

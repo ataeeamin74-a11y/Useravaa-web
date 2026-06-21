@@ -4,6 +4,8 @@ import { ProfileFeedbackPage as ProfileFeedbackSurface } from "@/features/v51/my
 import { canEditProfile, V51_PROFILE_FIXTURE_OWNER_ID } from "@/features/v51/permissions";
 import { requireCurrentViewer } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProfileFeedbackRoute() {
   const viewer = await requireCurrentViewer();
 

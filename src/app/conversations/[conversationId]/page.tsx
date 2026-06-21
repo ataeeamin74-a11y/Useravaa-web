@@ -10,6 +10,8 @@ type ConversationDetailRouteProps = Readonly<{
   }>;
 }>;
 
+export const dynamic = "force-dynamic";
+
 export default async function ConversationDetailRoute({ params }: ConversationDetailRouteProps) {
   const viewer = await requireCurrentViewer();
   const { conversationId } = await params;

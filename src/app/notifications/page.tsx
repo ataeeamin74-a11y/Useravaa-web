@@ -4,6 +4,8 @@ import { NotificationsPage as V51NotificationsPage } from "@/features/v51/notifi
 import { getNotificationsForViewer, V51_PROFILE_FIXTURE_OWNER_ID } from "@/features/v51/permissions";
 import { requireCurrentViewer } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export default async function NotificationsPage() {
   const viewer = await requireCurrentViewer();
 

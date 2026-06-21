@@ -5,6 +5,8 @@ import { ProfileBuilderPage } from "@/features/v51/my-profile/pages/ProfileBuild
 import { canEditProfile, V51_PROFILE_FIXTURE_OWNER_ID } from "@/features/v51/permissions";
 import { requireCurrentViewer } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export default async function ProfileBuildRoute() {
   const viewer = await requireCurrentViewer();
 

@@ -11,6 +11,8 @@ type CheckoutRouteProps = Readonly<{
   }>;
 }>;
 
+export const dynamic = "force-dynamic";
+
 export default async function CheckoutRoute({ params }: CheckoutRouteProps) {
   const viewer = await requireCurrentViewer();
   const { conversationId } = await params;

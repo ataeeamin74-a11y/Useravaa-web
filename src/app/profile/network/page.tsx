@@ -11,6 +11,8 @@ type ProfileNetworkRouteProps = Readonly<{
   }>;
 }>;
 
+export const dynamic = "force-dynamic";
+
 export default async function ProfileNetworkRoute({ searchParams }: ProfileNetworkRouteProps) {
   const viewer = await requireCurrentViewer();
   const params = await searchParams;

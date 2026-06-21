@@ -178,8 +178,8 @@ describe("Checkpoint 3A-1 admin P0 foundation", () => {
 
     expect(source).toContain("function placeholderAdminList");
     expect(source).toContain("function placeholderAdminHome");
-    expect(source).toContain('process.env.NODE_ENV !== "production"');
-    expect(source).toContain('process.env.USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK === "1"');
+    expect(source).toContain('source.NODE_ENV !== "production"');
+    expect(source).toContain('source.USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK !== "0"');
     expect(source).toContain("if (!isAdminLocalDemoFallbackEnabled())");
     expect(source).toContain('source: "placeholder"');
   });

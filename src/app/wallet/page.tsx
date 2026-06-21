@@ -5,6 +5,8 @@ import { canViewWallet } from "@/features/v51/permissions";
 import { WalletPage as V51WalletPage } from "@/features/v51/wallet/WalletPage";
 import { requireCurrentViewer } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export default async function WalletPage() {
   const viewer = await requireCurrentViewer();
 

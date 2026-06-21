@@ -11,6 +11,8 @@ type SelectTimeRouteProps = Readonly<{
   }>;
 }>;
 
+export const dynamic = "force-dynamic";
+
 export default async function SelectTimeRoute({ params }: SelectTimeRouteProps) {
   const viewer = await requireCurrentViewer();
   const { conversationId } = await params;
