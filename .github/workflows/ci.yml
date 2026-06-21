@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+env:
+  NODE_ENV: test
+  APP_ENV: staging
+  USERAVAA_SITE_INDEXING: "0"
+  USERAVAA_ENABLE_HSTS: "0"
+  USERAVAA_ENABLE_DEV_AUTH: "0"
+  USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK: "0"
+  USERAVAA_DB_SMOKE_TEST: "0"
+  DATABASE_URL: postgresql://user:password@localhost:5432/useravaa_ci
+  LOG_LEVEL: error
+
+jobs:
+  quality-gate:
+    name: Quality gate
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test
+        run: npm run test -- --pool=threads --maxWorkers=1
+
+      - name: Build
+        run: npm run build
+
+      - name: Prisma validate
+        run: npx prisma validate
+
+      - name: Prisma generate
+        run: npx prisma generate
