@@ -11,6 +11,7 @@
     "test": "vitest run",
     "visual:audit": "node tools/visual-audit/capture-screenshots.mjs",
     "staging:bootstrap:preflight": "node tools/staging/bootstrap-access-preflight.mjs",
+    "staging:deploy:preflight": "node tools/staging/staging-deploy-preflight.mjs",
     "prisma:generate": "prisma generate",
     "taxonomy:seed": "node tools/taxonomy/seed-mvp-job-categories.mjs"
   },

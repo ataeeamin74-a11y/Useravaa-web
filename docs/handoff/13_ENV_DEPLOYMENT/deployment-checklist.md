@@ -5,6 +5,7 @@ This checklist is for controlled staging and later production readiness. It does
 ## Before Internal Staging
 
 - Confirm staging is internal-only.
+- Complete `docs/handoff/13_ENV_DEPLOYMENT/internal-staging-dry-run.md` before the first deploy attempt.
 - Follow `docs/handoff/13_ENV_DEPLOYMENT/staging-access-runbook.md` for staging access, admin bootstrap, seed data, migrations and smoke testing.
 - Use a non-production PostgreSQL database.
 - Keep `APP_ENV=staging` and `USERAVAA_SITE_INDEXING=0`.
@@ -17,6 +18,7 @@ This checklist is for controlled staging and later production readiness. It does
 - Run `npm.cmd run typecheck`.
 - Run `npm.cmd run test -- --pool=threads --maxWorkers=1`.
 - Run `npm.cmd run build`.
+- Run `npm.cmd run staging:deploy:preflight` only with staging env values loaded locally or in a controlled shell.
 - Run `npx.cmd prisma validate`.
 - Run `npx.cmd prisma generate`.
 - Run `npx.cmd prisma migrate status` against the staging database.
