@@ -88,10 +88,6 @@ if (value("USERAVAA_ENABLE_STAGING_ACCESS") === "1") {
     }
   }
 
-  if (process.env.NODE_ENV === "production") {
-    errors.push("NODE_ENV must not be production when using the current staging access bridge.");
-  }
-
   const accessHeader = value("USERAVAA_STAGING_ACCESS_HEADER").toLowerCase();
   const identityHeader = value("USERAVAA_STAGING_ACCESS_IDENTITY_HEADER").toLowerCase();
 
@@ -105,6 +101,10 @@ if (value("USERAVAA_ENABLE_STAGING_ACCESS") === "1") {
 
   if (accessHeader && identityHeader && accessHeader === identityHeader) {
     errors.push("Staging access and identity header names must be distinct.");
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    warnings.push("NODE_ENV=production is acceptable for deployed staging only when APP_ENV=staging and trusted headers are configured.");
   }
 } else {
   warnings.push("App-level ADMIN/SUPPORT staging access remains disabled until trusted headers are configured.");

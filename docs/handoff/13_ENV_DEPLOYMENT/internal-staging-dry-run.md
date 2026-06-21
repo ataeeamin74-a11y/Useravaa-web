@@ -40,8 +40,9 @@ The current code supports a secret-backed staging identity header source. It is 
 6. `USERAVAA_STAGING_ACCESS_SECRET`, `STAGING_PRIMARY_ADMIN_EMAIL`, and `STAGING_SUPPORT_EMAIL` must live only in the hosting env store or secret manager.
 7. Set `USERAVAA_ENABLE_STAGING_ACCESS=1` only in staging after the upstream header source is reviewed.
 8. Keep `APP_ENV=staging` only for staging.
-9. Keep `NODE_ENV` out of `production` if using the current staging access bridge, because the bridge intentionally refuses production runtime.
-10. Production must use a real auth provider later, not this staging bridge.
+9. Vercel Preview may run with `NODE_ENV=production`; do not use `NODE_ENV` alone as the staging boundary.
+10. Real production must set `APP_ENV=production` and keep `USERAVAA_ENABLE_STAGING_ACCESS=0`.
+11. Production must use a real auth provider later, not this staging bridge.
 
 Vercel limitation note:
 

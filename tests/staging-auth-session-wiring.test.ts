@@ -147,9 +147,27 @@ describe("Checkpoint 3B-7 getCurrentSession staging header wiring", () => {
     });
   });
 
-  it("refuses the staging header bridge in production runtime", async () => {
+  it("allows the staging header bridge in APP_ENV=staging even when NODE_ENV=production", async () => {
     setEnv({ NODE_ENV: "production" });
-    vi.mocked(headers).mockRejectedValue(new Error("headers should not be read in production"));
+    vi.mocked(headers).mockResolvedValue(
+      headerStore({
+        "x-useravaa-staging-access": "placeholder-shared-secret",
+        "x-useravaa-staging-operator": "placeholder-primary-operator"
+      }) as Awaited<ReturnType<typeof headers>>
+    );
+
+    await expect(getCurrentSession()).resolves.toMatchObject({
+      viewer: {
+        id: STAGING_PRIMARY_ADMIN_ID,
+        role: "ADMIN"
+      },
+      source: "staging_access"
+    });
+  });
+
+  it("refuses the staging header bridge when APP_ENV=production", async () => {
+    setEnv({ APP_ENV: "production", NODE_ENV: "production" });
+    vi.mocked(headers).mockRejectedValue(new Error("headers should not be read when APP_ENV is production"));
 
     await expect(getCurrentSession()).resolves.toEqual({
       viewer: null,

@@ -103,7 +103,8 @@ describe("Checkpoint 3B-8 internal staging deployment dry run", () => {
     expect(doc).toContain("strip any incoming client copies");
     expect(doc).toContain("inject trusted headers");
     expect(doc).toContain("USERAVAA_STAGING_ACCESS_SECRET");
-    expect(doc).toContain("NODE_ENV` out of `production`");
+    expect(doc).toContain("Vercel Preview may run with `NODE_ENV=production`");
+    expect(doc).toContain("do not use `NODE_ENV` alone as the staging boundary");
   });
 
   it("documents non-destructive migration rules and keeps migration apply out of package scripts", () => {
@@ -138,7 +139,7 @@ describe("Checkpoint 3B-8 internal staging deployment dry run", () => {
     expect(output).not.toContain("placeholder-support-operator");
   });
 
-  it("preflight refuses production runtime for the current staging access bridge", () => {
+  it("preflight allows Vercel-style production NODE_ENV when APP_ENV is staging", () => {
     const result = spawnSync(process.execPath, [preflightScriptPath], {
       cwd: process.cwd(),
       env: {
@@ -149,9 +150,9 @@ describe("Checkpoint 3B-8 internal staging deployment dry run", () => {
     });
     const combinedOutput = `${result.stdout}\n${result.stderr}`;
 
-    expect(result.status).toBe(1);
-    expect(combinedOutput).toContain("STAGING_DEPLOY_PREFLIGHT=FAIL");
-    expect(combinedOutput).toContain("NODE_ENV must not be production");
+    expect(result.status).toBe(0);
+    expect(combinedOutput).toContain("STAGING_DEPLOY_PREFLIGHT=PASS");
+    expect(combinedOutput).toContain("NODE_ENV=production is acceptable for deployed staging only when APP_ENV=staging");
     expect(combinedOutput).not.toContain("placeholder-shared-secret");
   });
 

@@ -29,7 +29,6 @@ export type StagingAccessDecision =
       reason:
         | "flag_disabled"
         | "not_staging"
-        | "production_runtime"
         | "missing_primary_admin"
         | "missing_support"
         | "duplicate_operator_identifier";
@@ -89,13 +88,6 @@ export function getStagingAccessDecision(source: StagingAccessEnvironment = proc
     return {
       enabled: false,
       reason: "not_staging"
-    };
-  }
-
-  if (source.NODE_ENV === "production") {
-    return {
-      enabled: false,
-      reason: "production_runtime"
     };
   }
 

@@ -44,7 +44,7 @@ Implemented preparation:
 - `src/lib/auth/staging-access.ts` can resolve a trusted operator identifier to `ADMIN` or `SUPPORT`.
 - It is disabled unless `USERAVAA_ENABLE_STAGING_ACCESS=1`.
 - It only enables when `APP_ENV=staging`.
-- It refuses `NODE_ENV=production`.
+- It uses `APP_ENV`, not `NODE_ENV` alone, as the staging boundary because deployed Vercel previews may run with `NODE_ENV=production`.
 - It requires `STAGING_PRIMARY_ADMIN_EMAIL` and `STAGING_SUPPORT_EMAIL` to be present and distinct.
 - It is not wired into `getCurrentSession` and does not read browser-controlled headers or cookies.
 - It does not create users, write database rows, create credentials, or add public routes.
@@ -73,7 +73,6 @@ Implemented 3B-7 behavior:
 - The staging resolver is disabled unless all of these are true:
   - `USERAVAA_ENABLE_STAGING_ACCESS=1`
   - `APP_ENV=staging`
-  - `NODE_ENV` is not `production`
   - `STAGING_PRIMARY_ADMIN_EMAIL` and `STAGING_SUPPORT_EMAIL` are present and distinct
   - `USERAVAA_STAGING_ACCESS_HEADER` is present and names the header carrying the shared secret
   - `USERAVAA_STAGING_ACCESS_IDENTITY_HEADER` is present and names the trusted operator identifier header
@@ -84,6 +83,8 @@ Implemented 3B-7 behavior:
 - The resolver maps only:
   - `STAGING_PRIMARY_ADMIN_EMAIL` -> `ADMIN`
   - `STAGING_SUPPORT_EMAIL` -> `SUPPORT`
+- `NODE_ENV=production` is allowed for deployed staging only when `APP_ENV=staging` and every staging access gate above passes.
+- Real production must set `APP_ENV=production` and keep `USERAVAA_ENABLE_STAGING_ACCESS=0`; `APP_ENV=production` disables this staging resolver.
 - Local dev fixture auth remains a later fallback and remains disabled in production.
 - No public login route, signup route, staging bootstrap route, password flow, user creation, database write, migration, or provider integration was added.
 

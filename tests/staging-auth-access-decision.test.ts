@@ -133,19 +133,39 @@ describe("Checkpoint 3B-7 staging auth access decision and trusted identity sour
     ).toBeNull();
   });
 
-  it("refuses staging access in production runtime or production app env", () => {
+  it("uses APP_ENV as the staging boundary and allows production-built staging previews", () => {
     expect(getStagingAccessDecision({ ...stagingAccessEnv, NODE_ENV: "production" })).toMatchObject({
-      enabled: false,
-      reason: "production_runtime"
+      enabled: true,
+      reason: "enabled"
+    });
+    expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, NODE_ENV: "production" })).toMatchObject({
+      enabled: true,
+      reason: "enabled"
+    });
+    expect(resolveStagingOperatorViewer("placeholder-primary-operator", { ...stagingAccessEnv, NODE_ENV: "production" })).toMatchObject({
+      id: STAGING_PRIMARY_ADMIN_ID,
+      role: "ADMIN"
     });
     expect(getStagingAccessDecision({ ...stagingAccessEnv, APP_ENV: "production" })).toMatchObject({
       enabled: false,
       reason: "not_staging"
     });
-    expect(resolveStagingOperatorViewer("placeholder-primary-operator", { ...stagingAccessEnv, NODE_ENV: "production" })).toBeNull();
-    expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, NODE_ENV: "production" })).toMatchObject({
+    expect(getStagingAccessDecision({ ...stagingAccessEnv, APP_ENV: undefined })).toMatchObject({
       enabled: false,
-      reason: "production_runtime"
+      reason: "not_staging"
+    });
+    expect(
+      resolveStagingHeaderViewer(
+        headerSource({
+          "x-useravaa-staging-access": "placeholder-shared-secret",
+          "x-useravaa-staging-operator": "placeholder-primary-operator"
+        }),
+        { ...stagingHeaderEnv, APP_ENV: "production", NODE_ENV: "production" }
+      )
+    ).toBeNull();
+    expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, APP_ENV: "production", NODE_ENV: "production" })).toMatchObject({
+      enabled: false,
+      reason: "not_staging"
     });
     expect(getStagingHeaderAccessDecision({ ...stagingHeaderEnv, APP_ENV: "development" })).toMatchObject({
       enabled: false,

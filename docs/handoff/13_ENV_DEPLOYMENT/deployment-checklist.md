@@ -9,6 +9,7 @@ This checklist is for controlled staging and later production readiness. It does
 - Follow `docs/handoff/13_ENV_DEPLOYMENT/staging-access-runbook.md` for staging access, admin bootstrap, seed data, migrations and smoke testing.
 - Use a non-production PostgreSQL database.
 - Keep `APP_ENV=staging` and `USERAVAA_SITE_INDEXING=0`.
+- Vercel Preview may run with `NODE_ENV=production`; staging access is controlled by `APP_ENV=staging`, `USERAVAA_ENABLE_STAGING_ACCESS=1`, and the trusted secret-backed header source.
 - Keep `USERAVAA_DB_SMOKE_TEST=0` in shared CI; enable smoke tests only from a safe local/operator machine.
 - Keep `USERAVAA_ENABLE_DEV_AUTH=0` and `USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK=0` for deployment environments.
 - Keep `USERAVAA_ENABLE_STAGING_ACCESS=0` until the protected staging route/header source is configured and reviewed.
@@ -37,6 +38,7 @@ This checklist is for controlled staging and later production readiness. It does
 ## Before Production Launch
 
 - Set `APP_ENV=production`.
+- Keep `USERAVAA_ENABLE_STAGING_ACCESS=0`; the staging access bridge must not be enabled in production.
 - Set `USERAVAA_SITE_INDEXING=1` only after SEO/legal/product approval.
 - Set `USERAVAA_ENABLE_HSTS=1` only after HTTPS/domain setup is verified.
 - Provision the production PostgreSQL database.
