@@ -73,3 +73,6 @@ jobs:
 
       - name: Prisma migrate status
         run: npx prisma migrate status
+
+      - name: Docker build
+        run: docker build -t useravaa-web:ci-arvan-staging-check .
