@@ -6,6 +6,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   NODE_ENV: test
   APP_ENV: staging
@@ -76,3 +80,14 @@ jobs:
 
       - name: Docker build
         run: docker build -t useravaa-web:ci-arvan-staging-check .
+
+      - name: Publish staging image to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          IMAGE_NAME: ghcr.io/ataeeamin74-a11y/useravaa-web
+          GHCR_TOKEN: ${{ github.token }}
+        run: |
+          echo "$GHCR_TOKEN" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker build -t "$IMAGE_NAME:staging" -t "$IMAGE_NAME:${{ github.sha }}" .
+          docker push "$IMAGE_NAME:staging"
+          docker push "$IMAGE_NAME:${{ github.sha }}"
