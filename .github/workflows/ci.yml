@@ -81,6 +81,47 @@ jobs:
       - name: Docker build
         run: docker build -t useravaa-web:ci-arvan-staging-check .
 
+      - name: Docker runtime smoke
+        env:
+          SMOKE_CONTAINER: useravaa-web-ci-smoke
+        run: |
+          set -euo pipefail
+
+          cleanup() {
+            docker rm -f "$SMOKE_CONTAINER" >/dev/null 2>&1 || true
+          }
+
+          cleanup
+          trap cleanup EXIT
+
+          docker run -d \
+            --name "$SMOKE_CONTAINER" \
+            -p 3000:3000 \
+            -e NODE_ENV=production \
+            -e APP_ENV=staging \
+            -e USERAVAA_SITE_INDEXING=0 \
+            -e USERAVAA_ENABLE_HSTS=0 \
+            -e USERAVAA_ENABLE_DEV_AUTH=0 \
+            -e USERAVAA_ENABLE_ADMIN_DEMO_FALLBACK=0 \
+            -e USERAVAA_ENABLE_STAGING_ACCESS=0 \
+            -e USERAVAA_DB_SMOKE_TEST=0 \
+            -e LOG_LEVEL=error \
+            -e DATABASE_URL="postgresql://useravaa_smoke:useravaa_smoke@127.0.0.1:5432/useravaa_smoke?schema=public" \
+            useravaa-web:ci-arvan-staging-check
+
+          sleep 8
+
+          if [ "$(docker inspect -f '{{.State.Running}}' "$SMOKE_CONTAINER")" != "true" ]; then
+            docker logs "$SMOKE_CONTAINER"
+            exit 1
+          fi
+
+          docker logs "$SMOKE_CONTAINER" > /tmp/useravaa-web-ci-smoke.log 2>&1
+          if grep -E "Failed to load next\.config|MODULE_NOT_FOUND" /tmp/useravaa-web-ci-smoke.log; then
+            cat /tmp/useravaa-web-ci-smoke.log
+            exit 1
+          fi
+
       - name: Publish staging image to GHCR
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
