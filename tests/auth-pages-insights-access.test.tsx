@@ -61,20 +61,22 @@ describe("Auth pages copy, password layout, and Insights public access", () => {
     pathname = "/discover";
   });
 
-  it("register page uses the approved focused copy and no in-card guide or role explanation", () => {
+  it("register page is honest that public signup is unavailable until real auth is wired", () => {
     const html = renderToStaticMarkup(<RegisterPage />);
+    const source = projectFile("src/app/register/page.tsx");
 
-    expect(html).toContain("<h1>ساخت حساب در یوزراوا</h1>");
-    expect(html).toContain("یک حساب بسازید تا بتوانید تجربه‌های مرتبط را ببینید، گفت‌وگو درخواست کنید و بعداً پروفایل خود را کامل کنید.");
-    expect(html).toContain("نام");
-    expect(html).toContain("ایمیل");
-    expect(html).toContain("رمز عبور");
-    expect(html).toContain("ساخت حساب");
-    expect(html).toContain("ورود به حساب موجود");
+    expect(html).toContain("<h1>ثبت‌نام عمومی فعلاً فعال نیست</h1>");
+    expect(html).toContain("ساخت حساب کاربری در محیط staging هنوز به ارائه‌دهنده احراز هویت واقعی وصل نشده است.");
+    expect(html).toContain("برای تست داخلی، دسترسی فقط از مسیر امن staging انجام می‌شود.");
+    expect(html).toContain("ثبت‌نام فعلاً غیرفعال است");
+    expect(html).toContain("disabled=\"\"");
+    expect(html).toContain('href="/discover"');
+    expect(html).not.toContain("<input");
+    expect(source).not.toContain("<form");
+    expect(source).not.toContain("PasswordField");
     expect(html).not.toContain("قبل از شروع");
     expect(html).not.toContain("یوزراوا چطور کار می‌کند؟");
-    expect(html).not.toContain("در ثبت‌نام نیازی به انتخاب نقش جداگانه نیست");
-    expect(projectFile("src/app/register/page.tsx")).not.toContain("Useravaa");
+    expect(source).not.toContain("Useravaa");
   });
 
   it("login page uses the approved Persian copy and removes distracting in-card links", async () => {

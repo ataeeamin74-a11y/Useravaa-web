@@ -36,6 +36,25 @@
   margin-top: 14px;
 }
 
+.authNotice {
+  display: grid;
+  gap: 6px;
+  margin-top: 14px;
+  border: 1px solid rgb(36 87 255 / 16%);
+  border-radius: 16px;
+  background: rgb(36 87 255 / 6%);
+  color: var(--navy);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-body-sm);
+  padding: 12px;
+}
+
+.authNotice strong {
+  color: var(--navy);
+  font-weight: var(--weight-bold);
+}
+
 .authForm label {
   display: grid;
   gap: 7px;
@@ -123,9 +142,20 @@
   color: #fff;
 }
 
+.primaryButton:disabled {
+  cursor: not-allowed;
+  background: var(--line-2);
+  color: var(--muted);
+}
+
 .primaryButton:hover,
 .primaryButton:focus-visible {
   background: #1E4CE0;
+}
+
+.primaryButton:disabled:hover,
+.primaryButton:disabled:focus-visible {
+  background: var(--line-2);
 }
 
 .secondaryLink {
