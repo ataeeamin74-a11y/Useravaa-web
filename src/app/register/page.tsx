@@ -16,11 +16,11 @@ export default function RegisterPage() {
           <span>بعد از انتخاب و اتصال احراز هویت واقعی، ثبت‌نام عمومی در یک checkpoint جداگانه فعال می‌شود.</span>
         </div>
         <div className={styles.authForm}>
-          <button className={styles.primaryButton} type="button" disabled>
-            <span className="button-label">ثبت‌نام فعلاً غیرفعال است</span>
-          </button>
-          <Link className={styles.secondaryLink} href="/discover">
-            <span className="button-label">بازگشت به کشف تجربه‌ها</span>
+          <Link className={styles.primaryButton} href="/discover">
+            <span className="button-label">مشاهده مسیرها</span>
+          </Link>
+          <Link className={styles.secondaryLink} href="/login">
+            <span className="button-label">ورود به حساب</span>
           </Link>
         </div>
       </section>

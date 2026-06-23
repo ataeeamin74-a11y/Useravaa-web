@@ -68,12 +68,16 @@ describe("Auth pages copy, password layout, and Insights public access", () => {
     expect(html).toContain("<h1>ثبت‌نام عمومی فعلاً فعال نیست</h1>");
     expect(html).toContain("ساخت حساب کاربری در محیط staging هنوز به ارائه‌دهنده احراز هویت واقعی وصل نشده است.");
     expect(html).toContain("برای تست داخلی، دسترسی فقط از مسیر امن staging انجام می‌شود.");
-    expect(html).toContain("ثبت‌نام فعلاً غیرفعال است");
-    expect(html).toContain("disabled=\"\"");
+    expect(html).toContain("مشاهده مسیرها");
+    expect(html).toContain("ورود به حساب");
     expect(html).toContain('href="/discover"');
+    expect(html).toContain('href="/login"');
     expect(html).not.toContain("<input");
+    expect(html).not.toContain("<button");
+    expect(html).not.toContain("disabled=\"\"");
     expect(source).not.toContain("<form");
     expect(source).not.toContain("PasswordField");
+    expect(source).not.toContain('type="button"');
     expect(html).not.toContain("قبل از شروع");
     expect(html).not.toContain("یوزراوا چطور کار می‌کند؟");
     expect(source).not.toContain("Useravaa");
