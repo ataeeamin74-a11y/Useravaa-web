@@ -4,9 +4,13 @@ import { describe, expect, it } from "vitest";
 import { devFixtureAuthIsEnabled } from "@/lib/auth/dev-fixtures";
 import {
   getStagingAccessDecision,
+  getStagingCookieAccessDecision,
   getStagingHeaderAccessDecision,
+  resolveStagingOperatorCookieViewer,
   resolveStagingHeaderViewer,
   resolveStagingOperatorViewer,
+  validateStagingOperatorLogin,
+  STAGING_OPERATOR_COOKIE_NAME,
   STAGING_PRIMARY_ADMIN_ID,
   STAGING_SUPPORT_ID
 } from "@/lib/auth/staging-access";
@@ -53,6 +57,7 @@ const stagingAccessEnv = {
 
 const stagingHeaderEnv = {
   ...stagingAccessEnv,
+  AUTH_SECRET: "placeholder-auth-signing-secret",
   USERAVAA_STAGING_ACCESS_HEADER: "x-useravaa-staging-access",
   USERAVAA_STAGING_ACCESS_IDENTITY_HEADER: "x-useravaa-staging-operator",
   USERAVAA_STAGING_ACCESS_SECRET: "placeholder-shared-secret"
@@ -304,14 +309,112 @@ describe("Checkpoint 3B-7 staging auth access decision and trusted identity sour
     expect(sources).not.toMatch(tokenLikePattern);
   });
 
-  it("wires only the trusted staging header source into runtime sessions and adds no public bootstrap routes", () => {
+  it("wires the signed staging operator cookie into runtime sessions and adds no public bootstrap routes", () => {
     const sessionSource = projectFile("src/lib/auth/session.ts");
+    const stagingAccessPage = projectFile("src/app/staging-access/page.tsx");
     const apiRoutePaths = projectFilesUnder("src/app/api").filter((filePath) => filePath.endsWith("/route.ts"));
 
-    expect(sessionSource).toContain("getStagingHeaderAccessDecision");
-    expect(sessionSource).toContain("resolveStagingHeaderViewer");
+    expect(sessionSource).toContain("getStagingCookieAccessDecision");
+    expect(sessionSource).toContain("resolveStagingOperatorCookieViewer");
+    expect(sessionSource).toContain("STAGING_OPERATOR_COOKIE_NAME");
+    expect(sessionSource).not.toContain("resolveStagingHeaderViewer");
     expect(sessionSource).not.toContain("resolveStagingOperatorViewer");
+    expect(stagingAccessPage).toContain("validateStagingOperatorLogin");
+    expect(stagingAccessPage).toContain("httpOnly: true");
+    expect(stagingAccessPage).toContain('sameSite: "lax"');
+    expect(stagingAccessPage).toContain("STAGING_OPERATOR_COOKIE_MAX_AGE_SECONDS");
+    expect(stagingAccessPage).toContain("maxAge: 0");
     expect(apiRoutePaths).not.toEqual(expect.arrayContaining([expect.stringMatching(/bootstrap|staging-access|role|promote/iu)]));
+  });
+
+  it("validates staging operator login with a signed cookie and no raw secret in the cookie", () => {
+    expect(getStagingCookieAccessDecision(stagingHeaderEnv)).toMatchObject({
+      enabled: true,
+      reason: "enabled"
+    });
+
+    const result = validateStagingOperatorLogin(
+      {
+        operatorEmail: "PLACEHOLDER-PRIMARY-OPERATOR",
+        accessSecret: "placeholder-shared-secret"
+      },
+      stagingHeaderEnv,
+      1_800_000_000_000
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      viewer: {
+        id: STAGING_PRIMARY_ADMIN_ID,
+        role: "ADMIN"
+      }
+    });
+    expect(result.ok ? result.cookieValue : "").not.toContain("placeholder-shared-secret");
+    expect(result.ok ? resolveStagingOperatorCookieViewer(result.cookieValue, stagingHeaderEnv, 1_800_000_000_000) : null).toMatchObject({
+      id: STAGING_PRIMARY_ADMIN_ID,
+      role: "ADMIN"
+    });
+  });
+
+  it("rejects disabled, production, missing secret, wrong secret, unknown, tampered, and expired staging cookie states", () => {
+    expect(getStagingCookieAccessDecision({ ...stagingHeaderEnv, USERAVAA_ENABLE_STAGING_ACCESS: "0" })).toMatchObject({
+      enabled: false,
+      reason: "flag_disabled"
+    });
+    expect(getStagingCookieAccessDecision({ ...stagingHeaderEnv, APP_ENV: "production" })).toMatchObject({
+      enabled: false,
+      reason: "not_staging"
+    });
+    expect(getStagingCookieAccessDecision({ ...stagingHeaderEnv, USERAVAA_STAGING_ACCESS_SECRET: "" })).toMatchObject({
+      enabled: false,
+      reason: "missing_access_secret"
+    });
+    expect(getStagingCookieAccessDecision({ ...stagingHeaderEnv, AUTH_SECRET: "", JWT_SECRET: "" })).toMatchObject({
+      enabled: false,
+      reason: "missing_signing_secret"
+    });
+    expect(
+      validateStagingOperatorLogin(
+        {
+          operatorEmail: "placeholder-primary-operator",
+          accessSecret: "wrong-placeholder-secret"
+        },
+        stagingHeaderEnv
+      )
+    ).toMatchObject({
+      ok: false,
+      reason: "invalid_secret"
+    });
+    expect(
+      validateStagingOperatorLogin(
+        {
+          operatorEmail: "unknown-operator",
+          accessSecret: "placeholder-shared-secret"
+        },
+        stagingHeaderEnv
+      )
+    ).toMatchObject({
+      ok: false,
+      reason: "unknown_operator"
+    });
+
+    const result = validateStagingOperatorLogin(
+      {
+        operatorEmail: "placeholder-support-operator",
+        accessSecret: "placeholder-shared-secret"
+      },
+      stagingHeaderEnv,
+      1_800_000_000_000
+    );
+
+    expect(result.ok).toBe(true);
+
+    const cookieValue = result.ok ? result.cookieValue : "";
+
+    expect(resolveStagingOperatorCookieViewer(`${cookieValue.slice(0, -1)}x`, stagingHeaderEnv, 1_800_000_000_000)).toBeNull();
+    expect(resolveStagingOperatorCookieViewer(cookieValue, stagingHeaderEnv, 1_800_030_000_000)).toBeNull();
+    expect(resolveStagingOperatorCookieViewer(cookieValue, { ...stagingHeaderEnv, APP_ENV: "production" }, 1_800_000_000_000)).toBeNull();
+    expect(STAGING_OPERATOR_COOKIE_NAME).toBe("useravaa-staging-operator");
   });
 
   it("rejects client-controlled role or actor fields in admin payload schemas", () => {

@@ -53,7 +53,9 @@ The future wiring point must supply the operator identifier from a trusted upstr
 
 ## 3B-7 Trusted Identity Source
 
-Recommended path: use a secret-backed staging header resolver for internal staging only.
+Historical path: use a secret-backed staging header resolver for internal staging only.
+
+This is no longer the Arvan staging access path because the current Arvan manifest/Ingress does not provide trusted header injection, custom request headers, auth proxy, or basic auth. Do not enable the header resolver for Arvan staging.
 
 Identity-source options evaluated:
 
@@ -88,12 +90,44 @@ Implemented 3B-7 behavior:
 - Local dev fixture auth remains a later fallback and remains disabled in production.
 - No public login route, signup route, staging bootstrap route, password flow, user creation, database write, migration, or provider integration was added.
 
+## 3B-22B Arvan Staging Operator Cookie Access
+
+Recommended path for the current Arvan staging app: use the staging-only operator form at `/staging-access`.
+
+Runtime behavior:
+
+- The operator submits an allowlisted operator email and `USERAVAA_STAGING_ACCESS_SECRET`.
+- The server validates the email against:
+  - `STAGING_PRIMARY_ADMIN_EMAIL` -> `ADMIN`
+  - `STAGING_SUPPORT_EMAIL` -> `SUPPORT`
+- The server sets a short-lived signed HttpOnly cookie.
+- The cookie is signed with `AUTH_SECRET` or `JWT_SECRET`.
+- The cookie contains no staging access secret.
+- `getCurrentSession` reads the signed staging cookie before falling back to local dev fixtures.
+- Missing, expired, or tampered cookies resolve to no viewer.
+- `/staging-access` logout clears the cookie.
+
+Required gates:
+
+- `APP_ENV=staging`
+- `USERAVAA_ENABLE_STAGING_ACCESS=1`
+- `USERAVAA_STAGING_ACCESS_SECRET` is set
+- `AUTH_SECRET` or `JWT_SECRET` is set
+- `STAGING_PRIMARY_ADMIN_EMAIL` and `STAGING_SUPPORT_EMAIL` are present and distinct
+
+Hard stops:
+
+- `APP_ENV=production` disables staging operator access.
+- `USERAVAA_ENABLE_STAGING_ACCESS=0` disables staging operator access.
+- Unknown operator emails fail.
+- Wrong staging access secrets fail.
+- No public signup, user creation, DB bootstrap, seed, migration, provider integration, email, SMS, payment, storage, or analytics provider is part of this access path.
+
 Operational requirement before enabling this in staging:
 
-- Configure the hosting platform, reverse proxy, or protected internal edge layer to strip any incoming client copies of the configured staging access headers.
-- Inject the secret header and trusted identity header only after the operator has passed platform-controlled access.
-- Store real header names, real operator identifiers, and the secret only in the deployment env store or secret manager.
-- Keep `USERAVAA_ENABLE_STAGING_ACCESS=0` until this upstream protection is configured and reviewed.
+- Store real operator identifiers, the staging access secret, and the signing secret only in the deployment env store or secret manager.
+- Keep `USERAVAA_ENABLE_STAGING_ACCESS=0` until `/staging-access` is ready to be tested by the founder/operator.
+- Use the staging access secret only in the form field. Do not paste it into logs, source control, screenshots, tickets, or chat.
 
 ## Bootstrap Model
 
@@ -251,10 +285,11 @@ Rollback concept:
 |---|---:|---|---:|---|
 | `STAGING_PRIMARY_ADMIN_EMAIL` | Yes | Empty placeholder only | Yes in real env | Real value belongs only in deployment env or secret manager. |
 | `STAGING_SUPPORT_EMAIL` | Yes | Empty placeholder only | Yes in real env | Real value belongs only in deployment env or secret manager. |
-| `USERAVAA_ENABLE_STAGING_ACCESS` | Later | `0` | No | Set to `1` only after the trusted secret-backed header source is configured and tested. |
-| `USERAVAA_STAGING_ACCESS_HEADER` | Later | Empty placeholder only | No, but sensitive by association | Header name for the shared secret value. Real value belongs in deployment env. |
-| `USERAVAA_STAGING_ACCESS_IDENTITY_HEADER` | Later | Empty placeholder only | No, but sensitive by association | Header name for the trusted operator identifier. Real value belongs in deployment env. |
-| `USERAVAA_STAGING_ACCESS_SECRET` | Later | Empty placeholder only | Yes | Shared secret for the staging header resolver. Real value belongs only in deployment env or secret manager. |
+| `USERAVAA_ENABLE_STAGING_ACCESS` | Yes for cookie access | `0` | No | Set to `1` only for reviewed Arvan staging operator access. Keep `0` elsewhere. |
+| `USERAVAA_STAGING_ACCESS_HEADER` | No for Arvan cookie access | Empty placeholder only | No, but sensitive by association | Historical header access variable. Do not use for current Arvan staging unless a trusted proxy/header injector is added later. |
+| `USERAVAA_STAGING_ACCESS_IDENTITY_HEADER` | No for Arvan cookie access | Empty placeholder only | No, but sensitive by association | Historical header access variable. Do not use for current Arvan staging unless a trusted proxy/header injector is added later. |
+| `USERAVAA_STAGING_ACCESS_SECRET` | Yes for cookie access | Empty placeholder only | Yes | Shared secret submitted to `/staging-access`. Real value belongs only in deployment env or secret manager. |
+| `AUTH_SECRET` or `JWT_SECRET` | Yes for cookie access | Empty placeholder only | Yes | Used to sign the staging operator cookie. Real value belongs only in deployment env or secret manager. |
 | `USERAVAA_STAGING_BOOTSTRAP_DRY_RUN` | Yes | `1` | No | Keep dry-run until a later checkpoint approves writes. |
 | `USERAVAA_ALLOW_STAGING_BOOTSTRAP` | Yes | `0` | No | Keep disabled until a one-time bootstrap write is approved. |
 | `APP_ENV` | Yes | `staging` | No | Required for staging posture. |
