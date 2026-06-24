@@ -1,0 +1,145 @@
+name: Arvan Staging DB Migration
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_migration:
+        description: Type RUN_ARVAN_STAGING_MIGRATION to apply migrations.
+        required: true
+        default: STATUS_ONLY
+
+permissions:
+  contents: read
+
+env:
+  APP_ENV: staging
+  NODE_ENV: production
+  DATABASE_URL: ${{ secrets.ARVAN_STAGING_DATABASE_URL }}
+
+jobs:
+  arvan-staging-migrate:
+    name: Arvan staging Prisma migration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Require Arvan staging database secret
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${DATABASE_URL:-}" ]; then
+            echo "::error::ARVAN_STAGING_DATABASE_URL repository secret is missing."
+            exit 1
+          fi
+
+          echo "Arvan staging database secret is configured."
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma validate
+        run: npx prisma validate
+
+      - name: Prisma generate
+        run: npx prisma generate
+
+      # Status-only mode is safe: it checks the Arvan staging migration state
+      # and does not apply migrations.
+      - name: Prisma migrate status before deploy
+        id: migrate-status-before
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          output_file="$RUNNER_TEMP/arvan-staging-migrate-status-before.log"
+          set +e
+          npx prisma migrate status >"$output_file" 2>&1
+          status_code=$?
+          set -e
+
+          node - "$output_file" <<'NODE'
+          const fs = require("fs");
+          const file = process.argv[2];
+          const text = fs.readFileSync(file, "utf8")
+            .replace(/postgres(?:ql)?:\/\/[^\s'"<>]+/gi, "[REDACTED_DATABASE_URL]")
+            .replace(/DATABASE_URL\s*=\s*[^\s'"<>]+/gi, "DATABASE_URL=[REDACTED]")
+            .replace(/Datasource "db":.*/gi, 'Datasource "db": [REDACTED_DATASOURCE]');
+          process.stdout.write(text);
+          NODE
+
+          if grep -Eiq "drift detected|failed migration|migrate reset|reset the database|schema engine error" "$output_file"; then
+            echo "::error::Prisma migrate status reported an unsafe or unreachable state."
+            exit 1
+          fi
+
+          if [ "$status_code" -ne 0 ]; then
+            if grep -Eiq "following migration.*not yet been applied|pending migration|database schema is not up to date" "$output_file"; then
+              echo "Migrate status found pending migrations."
+            else
+              echo "::error::Prisma migrate status failed before reporting a normal pending or up-to-date state."
+              exit "$status_code"
+            fi
+          fi
+
+      # Deploy mode is intentionally manual: it requires the exact confirmation
+      # phrase below and is for Arvan staging only.
+      - name: Prisma migrate deploy
+        if: ${{ github.event.inputs.confirm_migration == 'RUN_ARVAN_STAGING_MIGRATION' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          output_file="$RUNNER_TEMP/arvan-staging-migrate-deploy.log"
+          set +e
+          npx prisma migrate deploy >"$output_file" 2>&1
+          status_code=$?
+          set -e
+
+          node - "$output_file" <<'NODE'
+          const fs = require("fs");
+          const file = process.argv[2];
+          const text = fs.readFileSync(file, "utf8")
+            .replace(/postgres(?:ql)?:\/\/[^\s'"<>]+/gi, "[REDACTED_DATABASE_URL]")
+            .replace(/DATABASE_URL\s*=\s*[^\s'"<>]+/gi, "DATABASE_URL=[REDACTED]")
+            .replace(/Datasource "db":.*/gi, 'Datasource "db": [REDACTED_DATASOURCE]');
+          process.stdout.write(text);
+          NODE
+
+          exit "$status_code"
+
+      - name: Prisma migrate status after deploy
+        if: ${{ github.event.inputs.confirm_migration == 'RUN_ARVAN_STAGING_MIGRATION' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          output_file="$RUNNER_TEMP/arvan-staging-migrate-status-after.log"
+          set +e
+          npx prisma migrate status >"$output_file" 2>&1
+          status_code=$?
+          set -e
+
+          node - "$output_file" <<'NODE'
+          const fs = require("fs");
+          const file = process.argv[2];
+          const text = fs.readFileSync(file, "utf8")
+            .replace(/postgres(?:ql)?:\/\/[^\s'"<>]+/gi, "[REDACTED_DATABASE_URL]")
+            .replace(/DATABASE_URL\s*=\s*[^\s'"<>]+/gi, "DATABASE_URL=[REDACTED]")
+            .replace(/Datasource "db":.*/gi, 'Datasource "db": [REDACTED_DATASOURCE]');
+          process.stdout.write(text);
+          NODE
+
+          exit "$status_code"
+
+      - name: Status-only mode complete
+        if: ${{ github.event.inputs.confirm_migration != 'RUN_ARVAN_STAGING_MIGRATION' }}
+        run: echo "Status-only mode complete. No migrations were deployed."
