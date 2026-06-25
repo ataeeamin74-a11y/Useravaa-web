@@ -123,6 +123,14 @@ Hard stops:
 - Wrong staging access secrets fail.
 - No public signup, user creation, DB bootstrap, seed, migration, provider integration, email, SMS, payment, storage, or analytics provider is part of this access path.
 
+Write workflow requirement:
+
+- The staging cookie proves operator access, but admin write workflows also store `User.id` foreign keys for lead owners, support assignees, note creators, and admin audit actors.
+- The cookie-only staging identities use fixed IDs: `staging-primary-admin` and `staging-support`.
+- Before testing admin writes in staging, create DB-backed `User` rows for those two fixed IDs with a controlled operator-only bootstrap.
+- No Prisma migration is required; the existing `User` and `UserRole` schema is enough.
+- Never run the bootstrap automatically during app startup, image build, deploy, migration, or public request handling.
+
 Operational requirement before enabling this in staging:
 
 - Store real operator identifiers, the staging access secret, and the signing secret only in the deployment env store or secret manager.
@@ -150,6 +158,49 @@ npm.cmd run staging:bootstrap:preflight
 ```
 
 The helper checks only variable presence and safe flag posture. It does not connect to a database, create users, assign roles, print secrets, or write files.
+
+## Staging Operator DB Bootstrap
+
+Run this only after staging migrations are applied and only from an environment that can reach the Arvan staging PostgreSQL database. If a laptop or GitHub Actions runner cannot reach the Arvan database, run it from the Arvan app console or a one-off Arvan job with the same private staging env values.
+
+Required env vars:
+
+- `APP_ENV=staging`
+- `USERAVAA_ENABLE_STAGING_ACCESS=1`
+- `DATABASE_URL`
+- `STAGING_PRIMARY_ADMIN_EMAIL`
+- `STAGING_SUPPORT_EMAIL`
+- `USERAVAA_STAGING_BOOTSTRAP_CONFIRM` for apply mode only
+
+Dry-run first:
+
+```powershell
+npm.cmd run staging:operators:dry-run
+```
+
+Apply only with the exact confirmation phrase:
+
+```powershell
+$env:USERAVAA_STAGING_BOOTSTRAP_CONFIRM="BOOTSTRAP_STAGING_OPERATORS"
+npm.cmd run staging:operators:apply
+```
+
+Apply mode upserts only these rows:
+
+- `staging-primary-admin` with role `ADMIN` and email from `STAGING_PRIMARY_ADMIN_EMAIL`
+- `staging-support` with role `SUPPORT` and email from `STAGING_SUPPORT_EMAIL`
+
+Safety rules:
+
+- Refuses `APP_ENV=production` under every condition.
+- Refuses unless `APP_ENV=staging` and `USERAVAA_ENABLE_STAGING_ACCESS=1`.
+- Refuses missing `DATABASE_URL` or non-PostgreSQL `DATABASE_URL`.
+- Refuses localhost and production-like database URLs.
+- Refuses missing or identical staging operator emails.
+- Refuses apply mode unless `USERAVAA_STAGING_BOOTSTRAP_CONFIRM` is exactly `BOOTSTRAP_STAGING_OPERATORS`.
+- Prints only safe status, IDs, roles, redacted email labels, and created/updated/would-upsert actions.
+- Does not print `DATABASE_URL`, passwords, tokens, or secrets.
+- Does not create passwords, auth credentials, sessions, unrelated users, seed data, or migrations.
 
 Expected safe staging flags:
 
