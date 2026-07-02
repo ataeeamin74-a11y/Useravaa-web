@@ -17,6 +17,20 @@
 .listHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
 .listHeading h2 { margin: 0; font-size: 20px; font-weight: var(--weight-bold); }
 .listHeading span { color: var(--muted); font-size: 13px; }
+.cardList { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.careerCard { min-width: 0; content-visibility: auto; contain-intrinsic-size: auto 370px; border: 1px solid var(--line); border-radius: 22px; background: #fff; box-shadow: 0 8px 24px rgb(9 27 73 / 4%); padding: 18px; }
+.cardHeader { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; }
+.cardHeader > div { min-width: 0; }
+.cardHeader h3 { margin: 2px 0 4px; color: var(--ua-navy); font-size: 18px; line-height: 1.55; }
+.cardDomain { margin: 0; color: var(--ua-blue); font-size: 12px; font-weight: var(--weight-bold); line-height: 1.5; }
+.cardSubtitle { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
+.bookmark, .bookmarkActive { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border: 1px solid var(--line-2); border-radius: 13px; background: #fff; color: var(--muted); }
+.bookmarkActive { border-color: var(--ua-blue); background: var(--blue-soft); color: var(--ua-blue); }
+.bookmark:focus-visible, .bookmarkActive:focus-visible { outline: 2px solid var(--ua-blue); outline-offset: 2px; }
+.skillGroups { display: grid; gap: 14px; margin-top: 18px; }
+.skillGroup h4 { margin: 0 0 7px; color: var(--muted); font-size: 12px; font-weight: var(--weight-bold); }
+.skillList { display: flex; flex-wrap: wrap; gap: 6px; }
+.skillList span { max-width: 100%; overflow-wrap: anywhere; border-radius: 999px; background: #f3f6fa; color: var(--ua-navy); font-size: 12px; line-height: 1.55; padding: 5px 9px; }
 .emptyState { min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px dashed var(--line-2); border-radius: 22px; background: #fff; padding: 28px 22px; text-align: center; }
 .emptyMark { width: 64px; height: 64px; display: grid; align-content: center; gap: 7px; margin-bottom: 16px; border-radius: 20px; background: var(--teal-soft); padding: 16px; }
 .emptyMark span { height: 3px; display: block; border-radius: 999px; background: var(--ua-teal); }
