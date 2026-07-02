@@ -1,35 +1,21 @@
-export type CareerDomain = Readonly<{
-  id: string;
-  label: string;
-}>;
+import rawCareerCards from "./data/career-cards.json";
+import type { CareerDomain, GuideCategory, RawCareerCard } from "./career-types";
+import { normalizeCareerCard } from "./career-utils";
 
-export type CareerPath = Readonly<{
-  id: string;
-  slug: string;
-  title: string;
-  domainId: CareerDomain["id"];
-  summary: string;
-  isBookmarked: boolean;
-}>;
+export type { CareerCard, CareerDomain, GuideCategory, RawCareerCard } from "./career-types";
 
-export type GuideCategory = Readonly<{
-  id: "career-choice" | "resume" | "interview" | "specialized-learning";
-  title: string;
-  description: string;
-}>;
+export const careerCards = (rawCareerCards as RawCareerCard[]).map(normalizeCareerCard);
 
 export const careerDomains: readonly CareerDomain[] = [
   { id: "all", label: "همه" },
-  { id: "technology", label: "فناوری" },
-  { id: "product", label: "محصول" },
-  { id: "design", label: "طراحی" },
-  { id: "marketing", label: "بازاریابی" },
-  { id: "business", label: "کسب‌وکار" },
-  { id: "people", label: "منابع انسانی" }
-] as const;
+  ...Array.from(new Set(careerCards.map((card) => card.domain)), (domain) => ({
+    id: domain,
+    label: domain
+  }))
+];
 
-// Real career path records will be connected in a later phase.
-export const careerPaths: readonly CareerPath[] = [];
+// Kept as an alias for the existing MVP shell and future compare selector wiring.
+export const careerPaths = careerCards;
 
 export const comparisonSections = ["مشترک بین هر دو", "فقط مسیر اول", "فقط مسیر دوم"] as const;
 
