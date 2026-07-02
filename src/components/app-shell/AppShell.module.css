@@ -8,6 +8,19 @@
   padding-top: 26px;
 }
 
+.app:has([data-career-pwa]) {
+  max-width: none;
+  padding: 0;
+}
+
+.app:has([data-career-pwa]) > .main {
+  padding-top: 0;
+}
+
+.app:has([data-career-pwa]) > :is(.skip-link, header) {
+  display: none;
+}
+
 @media (max-width: 560px) {
   .app {
     padding-inline: 14px;
