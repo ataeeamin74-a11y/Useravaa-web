@@ -38,7 +38,7 @@
   inset-inline-start: 0;
   inset-block-start: 50%;
   border-radius: 999px;
-  background: #ffc801;
+  background: var(--ua-teal);
   content: "";
   transform: translateY(-50%);
 }

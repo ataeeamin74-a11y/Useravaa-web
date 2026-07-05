@@ -225,22 +225,48 @@ function HierarchyToolbar({
   );
 }
 
+type DomainAccent = "blue" | "teal" | "yellow" | "persimmon" | "connection";
+
+// Repeating a fixed sequence keeps the discovery palette balanced as taxonomy data changes.
+const domainAccentSequence: readonly DomainAccent[] = ["yellow", "persimmon", "blue", "teal", "connection"];
+
+export function getDomainAccent(domainName: string, index: number): DomainAccent {
+  // These two identities have explicit brand-approved colors; the remaining
+  // domains use the balanced discovery sequence.
+  if (domainName === "Data & AI") return "blue";
+  if (domainName === "Revenue & Customer Operations") return "teal";
+  return domainAccentSequence[index % domainAccentSequence.length] ?? "blue";
+}
+
 type DomainCardProps = Readonly<{
   domain: CareerDomainNode;
   onSelect: (domain: CareerDomainNode) => void;
+  accent?: DomainAccent;
 }>;
 
-function DomainCard({ domain, onSelect }: DomainCardProps) {
+export function DomainCard({ domain, onSelect, accent = "blue" }: DomainCardProps) {
   const Icon = domainIcons[domain.name] ?? Compass;
+  const accentClass = {
+    blue: styles.domainAccentBlue,
+    teal: styles.domainAccentTeal,
+    yellow: styles.domainAccentYellow,
+    persimmon: styles.domainAccentPersimmon,
+    connection: styles.domainAccentConnection
+  }[accent];
 
   return (
-    <button type="button" className={styles.domainCard} onClick={() => onSelect(domain)}>
-      <span className={styles.domainIcon} aria-hidden><Icon size={24} strokeWidth={2.7} /></span>
-      <span className={styles.discoveryCardCopy}>
+    <button
+      type="button"
+      className={styles.domainCard}
+      data-career-domain-card={domain.id}
+      onClick={() => onSelect(domain)}
+    >
+      <span className={`${styles.domainIcon} ${accentClass}`} data-career-domain-part="icon" data-domain-accent={accent} aria-hidden><Icon size={24} strokeWidth={2.7} /></span>
+      <span className={styles.discoveryCardCopy} data-career-domain-part="title">
         <strong>{getDisplayLabel(domain.name)}</strong>
-        <small>{domain.generalCategories.length.toLocaleString("fa-IR")} دسته · {domain.subfamilyCount.toLocaleString("fa-IR")} مسیر</small>
+        <small>{domain.subfamilyCount.toLocaleString("fa-IR")} مسیر شغلی</small>
       </span>
-      <span className={styles.forwardIcon} aria-hidden><SoftChevronIcon size={18} /></span>
+      <span className={styles.forwardIcon} data-career-domain-part="arrow" aria-hidden><SoftChevronIcon size={18} /></span>
     </button>
   );
 }
@@ -250,12 +276,12 @@ type CategoryCardProps = Readonly<{
   onSelect: (category: CareerGeneralCategoryNode) => void;
 }>;
 
-function CategoryCard({ category, onSelect }: CategoryCardProps) {
+export function CategoryCard({ category, onSelect }: CategoryCardProps) {
   return (
-    <button type="button" className={styles.categoryCard} onClick={() => onSelect(category)}>
+    <button type="button" className={styles.categoryCard} data-career-category-card={category.id} onClick={() => onSelect(category)}>
       <span className={styles.categoryCardTopline}>
         <span className={styles.categoryIcon} aria-hidden><Layers3 size={21} strokeWidth={2.7} /></span>
-        <span className={styles.itemCount}>{category.subfamilies.length.toLocaleString("fa-IR")} مسیر</span>
+        <span className={styles.itemCount}>{category.subfamilies.length.toLocaleString("fa-IR")} مسیر شغلی</span>
       </span>
       <strong>{getDisplayLabel(category.name)}</strong>
       <span className={styles.midPreview}>
@@ -273,7 +299,7 @@ type SubfamilyCardProps = Readonly<{
 
 export function SubfamilyCard({ subfamily, onSelect }: SubfamilyCardProps) {
   return (
-    <button type="button" className={styles.subfamilyCard} onClick={() => onSelect(subfamily)}>
+    <button type="button" className={styles.subfamilyCard} data-career-subfamily-card={subfamily.id} onClick={() => onSelect(subfamily)}>
       <span className={styles.subfamilyIcon} aria-hidden><Route size={19} strokeWidth={2.7} /></span>
       <span className={styles.subfamilyCopy}>
         <strong dir="auto">{getDisplayLabel(subfamily.name)}</strong>
@@ -405,7 +431,7 @@ export function SearchResults({ query, results, visibleCount, onSelect, onShowMo
         <div>
           <span>جست‌وجوی سراسری</span>
           <h2 id="career-search-results-title">نتایج برای «{query}»</h2>
-          <p>{results.length.toLocaleString("fa-IR")} مسیر مرتبط در ساختار شغلی پیدا شد.</p>
+          <p>{results.length.toLocaleString("fa-IR")} مسیر شغلی مرتبط در ساختار شغلی پیدا شد.</p>
         </div>
         <button type="button" className={styles.clearSearchButton} onClick={onClear}>پاک‌کردن جست‌وجو</button>
       </div>
@@ -787,16 +813,16 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
         <div className={styles.careerHero}>
           <div className={styles.heroCopy}>
             <div className={styles.heroCopyText}>
-              <h1 id="career-paths-title"><span className={styles.heroHighlight}>مسیر مناسب خودت</span> را قدم‌به‌قدم پیدا کن</h1>
+              <h1 id="career-paths-title"><span className={styles.heroHighlight}>مسیر مناسب خودت</span> را<br />قدم‌به‌قدم پیدا کن</h1>
               <p>ده‌ها هزار آگهی شغلی بررسی شده تا تو مسیرها را روشن‌تر ببینی و مسیر شغلی بهتری انتخاب کنی.</p>
             </div>
             <Image
               className={styles.heroMascot}
               src="/brand/Mascot/useravaa-mascot-magnifier-eye.webp"
               alt=""
-              width={180}
-              height={180}
-              sizes="(min-width: 620px) 112px, 84px"
+              width={240}
+              height={240}
+              sizes="(min-width: 620px) 168px, 78px"
               priority
               aria-hidden
             />
@@ -804,7 +830,7 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
           <label className={styles.heroSearch}>
             <SoftSearchIcon size={22} />
             <span className={styles.srOnly}>جست‌وجوی سراسری مسیر شغلی</span>
-            <input type="search" value={query} onChange={(event) => updateQuery(event.target.value)} placeholder="عنوان، مهارت یا ابزار را جست‌وجو کن" />
+            <input data-career-search type="search" value={query} onChange={(event) => updateQuery(event.target.value)} placeholder="عنوان، مهارت یا ابزار را جست‌وجو کن" />
             {query ? <button type="button" aria-label="پاک‌کردن جست‌وجو" onClick={() => updateQuery("")}><SoftCloseIcon size={18} /></button> : null}
           </label>
         </div>
@@ -843,10 +869,13 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
       {!searching && currentLevel === 1 ? (
         <section className={styles.levelSection} aria-labelledby="career-domain-title">
           <div className={styles.levelHeading}>
-            <div><span>مرحله اول</span><h2 id="career-domain-title">حوزه‌ای که کنجکاوت می‌کند</h2><p>یکی از {careerHierarchy.length.toLocaleString("fa-IR")} حوزه واقعی را انتخاب کن تا دسته‌های داخلش را ببینی.</p></div>
+            <div><span>مرحله اول</span><h2 id="career-domain-title">حوزه‌ای که کنجکاوت می‌کند</h2><p>یکی از ۱۰ حوزه واقعی را انتخاب کن تا دسته‌های داخلش را ببینی.</p></div>
             <Compass size={24} aria-hidden />
           </div>
-          <div className={styles.domainGrid}>{orderedTopLevelDomains.map((domain) => <DomainCard domain={domain} onSelect={selectDomain} key={domain.id} />)}</div>
+          <div className={styles.domainGrid}>{orderedTopLevelDomains.map((domain, index) => {
+            const accent = getDomainAccent(domain.name, index);
+            return <DomainCard domain={domain} onSelect={selectDomain} accent={accent} key={domain.id} />;
+          })}</div>
         </section>
       ) : null}
 

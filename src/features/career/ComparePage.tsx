@@ -237,7 +237,7 @@ export function SelectionTray({ selectedPaths, limitMessage, onRemove, onCompare
   return (
     <aside className={styles.selectionTray} aria-label="مسیرهای انتخاب‌شده">
       <div className={styles.traySummary}>
-        <strong>{selectedPaths.length.toLocaleString("fa-IR")} از {MAX_COMPARE_PATHS.toLocaleString("fa-IR")} مسیر</strong>
+        <strong>{selectedPaths.length.toLocaleString("fa-IR")} از {MAX_COMPARE_PATHS.toLocaleString("fa-IR")} مسیر شغلی</strong>
         <span>۲ تا ۵ مسیر را برای مقایسه انتخاب کن</span>
       </div>
       <div className={styles.selectionSlots}>
@@ -335,7 +335,7 @@ export function CareerComparisonTable({ paths, onEdit }: CareerComparisonTablePr
       <div className={styles.comparisonHeading}>
         <div>
           <h1 id="career-compare-title">مقایسه مسیرها</h1>
-          <p>{paths.length.toLocaleString("fa-IR")} مسیر انتخاب‌شده را معیاربه‌معیار بررسی کن.</p>
+          <p>{paths.length.toLocaleString("fa-IR")} مسیر شغلی انتخاب‌شده را معیاربه‌معیار بررسی کن.</p>
         </div>
         <button type="button" className={styles.editSelection} onClick={onEdit}>
           <Pencil size={17} strokeWidth={2.7} />

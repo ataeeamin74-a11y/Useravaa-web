@@ -1,5 +1,6 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   buildComparisonSections,
   CareerComparisonTable,
@@ -15,8 +16,11 @@ import { navigationItems } from "@/features/career/CareerBottomNav";
 import { CareerImageCarousel } from "@/features/career/CareerImageCarousel";
 import { CareerSaveButton } from "@/features/career/CareerSaveButton";
 import {
+  CategoryCard,
   EssentialChip,
+  DomainCard,
   groupRelatedCareerPaths,
+  getDomainAccent,
   getDisplayLabel,
   isInitialExplorerState,
   PathsPage,
@@ -216,13 +220,8 @@ describe("career paths MVP shell", () => {
   it("omits an empty carousel and enforces the career slide path convention", () => {
     expect(renderToStaticMarkup(<CareerImageCarousel slides={[]} />)).toBe("");
     expect(getCareerSlides("مسیر بدون تصویر")).toEqual([]);
-    expect(getCareerSlides("بازاریابی محتوا").map((slide) => slide.src)).toEqual([
-      "/career-slides/بازاریابی-محتوا/01.webp",
-      "/career-slides/بازاریابی-محتوا/02.webp",
-      "/career-slides/بازاریابی-محتوا/03.webp",
-      "/career-slides/بازاریابی-محتوا/04.webp",
-      "/career-slides/بازاریابی-محتوا/05.webp"
-    ]);
+    expect(getCareerSlides("بازاریابی محتوا")).toEqual([]);
+    expect(getCareerSlides("طراحی محصول و تجربه کاربری (UI/UX)")).toEqual([]);
     expect(getCareerSlideSlug("هوش تجاری، داشبورد و گزارش‌سازی")).toBe("هوش-تجاری-داشبورد-و-گزارش-سازی");
     expect(isCareerSlidePath("/career-slides/sample-path/01.webp", "sample-path")).toBe(true);
     expect(isCareerSlidePath("/career-slides/sample-path/15.webp", "sample-path")).toBe(true);
@@ -487,9 +486,16 @@ describe("career paths MVP shell", () => {
     const html = renderToStaticMarkup(<PathsPage />);
 
     expect(html).toContain("حوزه‌ای که کنجکاوت می‌کند");
+    expect(html).toContain("یکی از ۱۰ حوزه واقعی را انتخاب کن تا دسته‌های داخلش را ببینی.");
+    expect(html).not.toContain("بین حوزه‌های شغلی جست و جو کن");
     expect(html).toContain("useravaa-mascot-magnifier-eye.webp");
+    expect(html).toContain("مسیر مناسب خودت");
+    expect(html).toContain("قدم‌به‌قدم پیدا کن");
     expect(html).toContain("ده‌ها هزار آگهی شغلی بررسی شده تا تو مسیرها را روشن‌تر ببینی و مسیر شغلی بهتری انتخاب کنی.");
-    expect(html).not.toContain("هزاران آگهی شغلی بررسی شده تا مسیرها را روشن‌تر ببینی، مقایسه کنی و مسیر شغلی بهتری انتخاب کنی.");
+    expect(html).not.toContain("قبل از انتخاب مسیر، تصویر واقعی‌تری از کار، مهارت‌ها و تصمیم‌های پیش رو ببین.");
+    expect(html).toContain('data-domain-accent="yellow"');
+    expect(html).toContain('data-domain-accent="persimmon"');
+    expect(html).toContain('data-career-search="true"');
     expect(html).not.toContain("از حوزه شروع کن، دسته و مسیر را بشناس و بعد جزئیات هر سطح را ببین.");
     expect(html).toContain("انتخاب حوزه شغلی");
     expect(html).toContain("انتخاب دسته شغلی");
@@ -505,8 +511,10 @@ describe("career paths MVP shell", () => {
     expect(html).not.toContain("درآمد و عملیات مشتری");
     expect(html).not.toContain("فروش و ارتباط با مشتری");
     expect(html).toContain("داده و هوش مصنوعی");
-    expect(html).toContain("دسته");
-    expect(html).toContain("مسیر");
+    const domainCountLabels = [...html.matchAll(/<small>([^<]*مسیر شغلی)<\/small>/g)]
+      .map((match) => match[1]);
+    expect(domainCountLabels).toHaveLength(careerHierarchy.length);
+    expect(domainCountLabels.every((label) => !label.includes("دسته"))).toBe(true);
     expect(html).not.toContain(".NET / C# Backend");
     expect(html).not.toContain("مهارت‌های تخصصی");
     expect(html).not.toContain("شروع دوباره");
@@ -526,6 +534,71 @@ describe("career paths MVP shell", () => {
     expect(renderedPositions).toEqual([...renderedPositions].sort((left, right) => left - right));
   });
 
+  it("makes the full domain card a native clickable control", () => {
+    const domain = careerHierarchy[0];
+    const onSelect = vi.fn();
+    const card = DomainCard({ domain, onSelect });
+    const props = card.props as Readonly<{
+      type: string;
+      onClick: () => void;
+      "data-career-domain-card": string;
+    }>;
+
+    expect(card.type).toBe("button");
+    expect(props.type).toBe("button");
+    expect(props["data-career-domain-card"]).toBe(domain.id);
+    props.onClick();
+    expect(onSelect).toHaveBeenCalledOnce();
+    expect(onSelect).toHaveBeenCalledWith(domain);
+  });
+
+  it("keeps icon, title, white space, and arrow inside the clickable domain button", () => {
+    const domain = careerHierarchy[0];
+    const html = renderToStaticMarkup(<DomainCard domain={domain} accent="persimmon" onSelect={() => undefined} />);
+
+    expect(html.match(/<button/g)).toHaveLength(1);
+    expect(html).toContain('data-career-domain-part="icon"');
+    expect(html).toContain('data-career-domain-part="title"');
+    expect(html).toContain('data-career-domain-part="arrow"');
+    expect(html).toContain(`${domain.subfamilyCount.toLocaleString("fa-IR")} مسیر شغلی`);
+    expect(html).not.toContain(" دسته");
+  });
+
+  it("keeps Data and AI blue and replaces the rejected customer accent with teal", () => {
+    expect(getDomainAccent("Data & AI", 2)).toBe("blue");
+    expect(getDomainAccent("Revenue & Customer Operations", 4)).toBe("teal");
+  });
+
+  it("keeps category and path cards as native full-card controls", () => {
+    const category = careerHierarchy.find((domain) => domain.name === "Technology & Engineering")!.generalCategories[0];
+    const subfamily = category.subfamilies[0];
+    const onCategorySelect = vi.fn();
+    const onSubfamilySelect = vi.fn();
+    const categoryCard = CategoryCard({ category, onSelect: onCategorySelect });
+    const subfamilyCard = SubfamilyCard({ subfamily, onSelect: onSubfamilySelect });
+
+    expect(categoryCard.type).toBe("button");
+    expect(categoryCard.props.type).toBe("button");
+    categoryCard.props.onClick();
+    expect(onCategorySelect).toHaveBeenCalledWith(category);
+
+    expect(subfamilyCard.type).toBe("button");
+    expect(subfamilyCard.props.type).toBe("button");
+    subfamilyCard.props.onClick();
+    expect(onSubfamilySelect).toHaveBeenCalledWith(subfamily);
+  });
+
+  it("keeps the mascot visible at all breakpoints and decorative layers non-interactive", () => {
+    const css = readFileSync("src/features/career/CareerPages.module.css", "utf8");
+    const mascotRule = css.match(/\.heroMascot\s*\{([^}]*)\}/)?.[1] ?? "";
+    const persimmonRule = css.match(/\.domainAccentPersimmon\s*\{([^}]*)\}/)?.[1] ?? "";
+
+    expect(mascotRule).toContain("display: block");
+    expect(mascotRule).toContain("pointer-events: none");
+    expect(mascotRule).not.toContain("display: none");
+    expect(persimmonRule).toContain("color: #fff");
+  });
+
   it("hides explorer chrome and full stepper in path detail focus mode", () => {
     const html = renderToStaticMarkup(<PathsPage initialCardId="CARD_034" />);
 
@@ -541,6 +614,14 @@ describe("career paths MVP shell", () => {
     expect(html).not.toContain("یک مرحله قبل");
     expect(html).toContain("مسیرهای مشابه برای بررسی");
     expect(html.indexOf("مسیرهای مشابه برای بررسی")).toBeGreaterThan(html.lastIndexOf("مهارت‌های نرم"));
+  });
+
+  it("hides unapproved slides on a path that previously exposed them", () => {
+    const html = renderToStaticMarkup(<PathsPage initialCardId="CARD_045" />);
+
+    expect(html).toContain("طراحی محصول و تجربه کاربری (UI/UX)");
+    expect(html).not.toContain('data-career-image-carousel="true"');
+    expect(html).not.toContain("career-slides/");
   });
 
   it("keeps path details clean and hides management variants", () => {
