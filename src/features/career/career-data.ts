@@ -1,21 +1,24 @@
-import rawCareerCards from "./data/career-cards.json";
+import rawCareerCards from "./data/career-cards-v2-with-duties.json";
 import type { CareerDomain, GuideCategory, RawCareerCard } from "./career-types";
-import { normalizeCareerCard } from "./career-utils";
+import { buildCareerHierarchy, normalizeCareerCards, selectVisibleCareerRepresentatives } from "./career-utils";
 
 export type { CareerCard, CareerDomain, GuideCategory, RawCareerCard } from "./career-types";
 
-export const careerCards = (rawCareerCards as RawCareerCard[]).map(normalizeCareerCard);
+export const careerCards = normalizeCareerCards(rawCareerCards as RawCareerCard[]);
+export const careerHierarchy = buildCareerHierarchy(careerCards);
+export const visibleCareerCards = selectVisibleCareerRepresentatives(careerCards);
+export const visibleCareerHierarchy = buildCareerHierarchy(visibleCareerCards);
 
 export const careerDomains: readonly CareerDomain[] = [
   { id: "all", label: "همه" },
-  ...Array.from(new Set(careerCards.map((card) => card.domain)), (domain) => ({
+  ...Array.from(new Set(visibleCareerCards.map((card) => card.domain)), (domain) => ({
     id: domain,
     label: domain
   }))
 ];
 
 // Kept as an alias for the existing MVP shell and future compare selector wiring.
-export const careerPaths = careerCards;
+export const careerPaths = visibleCareerCards;
 
 export const comparisonSections = ["مشترک بین هر دو", "فقط مسیر اول", "فقط مسیر دوم"] as const;
 

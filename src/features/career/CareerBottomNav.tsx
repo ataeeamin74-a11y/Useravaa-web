@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Compass, Route, Scale } from "lucide-react";
+import { CompareTabIcon, PathsTabIcon, SavedTabIcon } from "./CareerSoftIcons";
 import styles from "./CareerShell.module.css";
 
-const navigationItems = [
-  { href: "/career", label: "مسیرها", icon: Route },
-  { href: "/career/compare", label: "مقایسه", icon: Scale },
-  { href: "/career/guide", label: "راهنما", icon: Compass }
+export const navigationItems = [
+  { href: "/", label: "مسیرها", icon: PathsTabIcon },
+  { href: "/career/compare", label: "مقایسه", icon: CompareTabIcon },
+  { href: "/career/saved", label: "ذخیره‌شده‌ها", icon: SavedTabIcon }
 ] as const;
 
 export function CareerBottomNav() {
@@ -27,7 +27,7 @@ export function CareerBottomNav() {
             className={isActive ? styles.navItemActive : styles.navItem}
             aria-current={isActive ? "page" : undefined}
           >
-            <Icon size={21} strokeWidth={isActive ? 2.4 : 1.9} aria-hidden />
+            <span className={styles.navIcon} aria-hidden><Icon size={22} /></span>
             <span>{item.label}</span>
           </Link>
         );

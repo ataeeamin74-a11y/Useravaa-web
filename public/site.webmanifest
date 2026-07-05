@@ -1,7 +1,7 @@
 {
-  "name": "Useravaa",
+  "name": "مسیرهای شغلی Useravaa",
   "short_name": "Useravaa",
-  "description": "Experience-based consultation platform.",
+  "description": "مسیرهای شغلی را ببین، ذخیره کن و مقایسه کن تا انتخابت روشن‌تر شود.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#FFFFFF",

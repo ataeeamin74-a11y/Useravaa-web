@@ -12,6 +12,8 @@ export type RawCareerCard = Readonly<{
   Key_Soft_Skills_FA: string;
   Supporting_Requirements_FA: string;
   Audience_Card_Text_FA: string;
+  Main_Duties_FA: string;
+  Main_Duties_List_FA: readonly string[];
 }>;
 
 export type CareerCard = Readonly<{
@@ -27,13 +29,54 @@ export type CareerCard = Readonly<{
   keyTools: readonly string[];
   keySoftSkills: readonly string[];
   supportingRequirements: readonly string[];
+  supportingTechnicalSkills: readonly string[];
+  supportingTools: readonly string[];
+  supportingSoftSkills: readonly string[];
   audienceText: string;
+  mainDuties: readonly string[];
   searchableText: string;
 }>;
 
 export type CareerDomain = Readonly<{
   id: string;
   label: string;
+}>;
+
+export type CareerSubfamilyNode = Readonly<{
+  id: string;
+  domain: string;
+  generalCategory: string;
+  midCategory: string;
+  name: string;
+  cards: readonly CareerCard[];
+}>;
+
+export type CareerGeneralCategoryNode = Readonly<{
+  id: string;
+  domain: string;
+  name: string;
+  midCategories: readonly string[];
+  subfamilies: readonly CareerSubfamilyNode[];
+}>;
+
+export type CareerDomainNode = Readonly<{
+  id: string;
+  name: string;
+  generalCategories: readonly CareerGeneralCategoryNode[];
+  subfamilyCount: number;
+  cardCount: number;
+}>;
+
+export type CareerSearchResult = Readonly<{
+  subfamily: CareerSubfamilyNode;
+  matchingCards: readonly CareerCard[];
+  matchReason: string;
+}>;
+
+export type CareerHierarchySelection = Readonly<{
+  domainId?: string;
+  categoryId?: string;
+  subfamilyId?: string;
 }>;
 
 export type GuideCategory = Readonly<{

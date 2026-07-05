@@ -8,6 +8,8 @@
   padding-top: 26px;
 }
 
+/* CareerShell owns the public launch surface. Its marker hides the legacy
+   marketplace header without removing or changing future business routes. */
 .app:has([data-career-pwa]) {
   max-width: none;
   padding: 0;

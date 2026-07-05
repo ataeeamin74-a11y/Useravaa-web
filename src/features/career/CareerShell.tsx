@@ -12,7 +12,7 @@ export function CareerShell({ children }: CareerShellProps) {
   return (
     <div className={styles.shell} data-career-pwa>
       <header className={styles.header}>
-        <Link href="/career" aria-label="Useravaa مسیرهای شغلی">
+        <Link href="/" aria-label="Useravaa مسیرهای شغلی">
           <UseravaaLogo variant="wordmark" className={styles.logo} priority />
         </Link>
         <span className={styles.productName}>مسیرهای شغلی</span>
