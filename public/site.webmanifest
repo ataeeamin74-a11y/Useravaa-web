@@ -1,9 +1,13 @@
 {
   "name": "مسیرهای شغلی Useravaa",
   "short_name": "Useravaa",
-  "description": "مسیرهای شغلی را ببین، ذخیره کن و مقایسه کن تا انتخابت روشن‌تر شود.",
+  "description": "مسیرهای شغلی را با تجربه‌های واقعی بررسی، ذخیره و مقایسه کن تا تصمیم شغلی روشن‌تری بگیری.",
+  "id": "/",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "lang": "fa",
+  "dir": "rtl",
   "background_color": "#FFFFFF",
   "theme_color": "#091B49",
   "icons": [

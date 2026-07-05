@@ -4,7 +4,7 @@ import { PathsPage } from "@/features/career/PathsPage";
 
 export const metadata: Metadata = {
   title: "مسیرهای شغلی | Useravaa",
-  description: "مسیرهای شغلی را ببین، ذخیره کن و مقایسه کن تا انتخابت روشن‌تر شود.",
+  description: "مسیرهای شغلی را با تجربه‌های واقعی بررسی، ذخیره و مقایسه کن تا تصمیم شغلی روشن‌تری بگیری.",
   alternates: {
     canonical: "https://useravaa.com"
   }
