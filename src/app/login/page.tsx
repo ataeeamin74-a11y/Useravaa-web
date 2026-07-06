@@ -4,6 +4,10 @@ import { PasswordField } from "@/features/v51/auth/PasswordField";
 import styles from "@/features/v51/auth/AuthPage.module.css";
 import { getPublishedContentValue } from "@/lib/backend/content-runtime";
 
+// This legacy route reads runtime CMS content. Keep that database lookup at
+// request time so the root Career PWA can build without a live database.
+export const dynamic = "force-dynamic";
+
 export default async function LoginPage() {
   const title = await getPublishedContentValue({
     namespace: "public.auth",

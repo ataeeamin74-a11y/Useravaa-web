@@ -4,6 +4,10 @@ import { getPublicJobFieldOptionsForUseCase } from "@/features/v51/data/public-c
 import type { DiscoveryState } from "@/features/v51/data/profiles";
 import { getPublishedContentMap } from "@/lib/backend/content-runtime";
 
+// This legacy route reads runtime CMS content. It must not query the database
+// while Next.js is building the database-free Career PWA launch surface.
+export const dynamic = "force-dynamic";
+
 type DiscoverRouteProps = Readonly<{
   searchParams: Promise<{
     state?: string;

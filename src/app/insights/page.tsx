@@ -4,6 +4,10 @@ import { InsightsPage } from "@/features/v51/insights/InsightsPage";
 import { getCurrentSession } from "@/lib/auth/session";
 import { getPublishedContentMap } from "@/lib/backend/content-runtime";
 
+// This legacy route reads runtime CMS content. Defer it to request time so a
+// live database is not a prerequisite for building the Career PWA.
+export const dynamic = "force-dynamic";
+
 type InsightsRouteProps = Readonly<{
   searchParams: Promise<{
     answer?: string;

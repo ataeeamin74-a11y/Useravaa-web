@@ -96,6 +96,12 @@ describe("Checkpoint 3B-3 deployment safety baseline", () => {
     expect(source).toContain("MetadataRoute.Robots");
   });
 
+  it("keeps database-backed legacy content routes out of static generation", () => {
+    ["src/app/login/page.tsx", "src/app/discover/page.tsx", "src/app/insights/page.tsx"].forEach((file) => {
+      expect(projectFile(file)).toContain('export const dynamic = "force-dynamic"');
+    });
+  });
+
   it("documents deployment safety environment flags with safe defaults", () => {
     const rootExample = projectFile(".env.example");
     const handoffExample = projectFile("docs/handoff/13_ENV_DEPLOYMENT/env.example");
