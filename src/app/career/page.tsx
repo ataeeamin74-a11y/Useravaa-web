@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { permanentRedirect } from "next/navigation";
 
 type CareerPathsRouteProps = Readonly<{
   searchParams: Promise<Readonly<Record<string, string | string[] | undefined>>>;
@@ -13,5 +13,5 @@ export default async function CareerPathsRoute({ searchParams }: CareerPathsRout
     ? `/?card=${encodeURIComponent(initialCardId)}`
     : "/";
 
-  redirect(rootDestination);
+  permanentRedirect(rootDestination);
 }

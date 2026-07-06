@@ -10,14 +10,10 @@ export default function robots(): MetadataRoute.Robots {
     };
   }
 
-  const sitemap = getSitemapUrl();
+  const sitemap = getSitemapUrl() ?? "https://useravaa.com/sitemap.xml";
 
-  return sitemap
-    ? {
-        rules: policy.rules,
-        sitemap
-      }
-    : {
-        rules: policy.rules
-      };
+  return {
+    rules: policy.rules,
+    sitemap
+  };
 }

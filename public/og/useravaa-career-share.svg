@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">مسیر شغلی را روشن‌تر انتخاب کن</title>
+  <desc id="description">بررسی، ذخیره و مقایسه مسیرها با تجربه‌های واقعی در یوزاوا</desc>
+  <rect width="1200" height="630" fill="#F8FAFC"/>
+  <rect x="36" y="36" width="1128" height="558" rx="38" fill="#FFFFFF" stroke="#E4E7EC" stroke-width="2"/>
+
+  <g transform="translate(74 92)">
+    <rect width="350" height="446" rx="32" fill="#F8FAFC"/>
+    <path d="M76 348 C76 270 154 286 154 214 C154 147 264 176 264 90" fill="none" stroke="#245FFD" stroke-width="22" stroke-linecap="round"/>
+    <circle cx="76" cy="348" r="27" fill="#01C3B9"/>
+    <circle cx="154" cy="214" r="27" fill="#FFFFFF" stroke="#245FFD" stroke-width="12"/>
+    <circle cx="264" cy="90" r="34" fill="#245FFD"/>
+    <path d="M250 89 L260 99 L280 77" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="42" y="391" width="266" height="8" rx="4" fill="#E4E7EC"/>
+    <rect x="42" y="391" width="196" height="8" rx="4" fill="#01C3B9"/>
+  </g>
+
+  <g font-family="Tahoma, Arial, sans-serif" text-anchor="end">
+    <rect x="829" y="112" width="273" height="50" rx="25" fill="#FFC801"/>
+    <text x="1071" y="146" fill="#091B49" font-size="24" font-weight="700">تجربه‌های واقعی، تصمیم روشن‌تر</text>
+    <text x="1102" y="254" fill="#091B49" font-size="61" font-weight="700">مسیر شغلی را روشن‌تر</text>
+    <text x="1102" y="330" fill="#091B49" font-size="61" font-weight="700">انتخاب کن</text>
+    <text x="1102" y="400" fill="#58657D" font-size="31" font-weight="400">بررسی، ذخیره و مقایسه مسیرها با تجربه‌های واقعی</text>
+  </g>
+
+  <g transform="translate(770 488)">
+    <circle cx="307" cy="15" r="7" fill="#01C3B9"/>
+    <text x="284" y="28" fill="#091B49" font-family="Arial, sans-serif" font-size="42" font-weight="700" text-anchor="end">Useravaa</text>
+  </g>
+</svg>

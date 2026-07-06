@@ -2,6 +2,36 @@ export type AppEnvironment = "local" | "development" | "staging" | "production";
 
 const appEnvironments = new Set<AppEnvironment>(["local", "development", "staging", "production"]);
 
+// The root Career PWA is the only public launch surface. These legacy,
+// private, transactional, and operational routes must stay out of search.
+export const productionSearchExcludedRoutes = [
+  "/actions",
+  "/admin",
+  "/api",
+  "/career/compare",
+  "/career/guide",
+  "/career/saved",
+  "/checkout",
+  "/conversations",
+  "/dev",
+  "/discover",
+  "/faq",
+  "/guide",
+  "/insights",
+  "/login",
+  "/notifications",
+  "/profile",
+  "/profiles",
+  "/register",
+  "/requests",
+  "/saved",
+  "/sessions",
+  "/settings",
+  "/staging-access",
+  "/support",
+  "/wallet"
+];
+
 function normalizeAppEnvironment(value?: string | null): AppEnvironment | null {
   const normalized = value?.trim().toLowerCase();
 
@@ -64,7 +94,8 @@ export function getRobotsPolicy(source: NodeJS.ProcessEnv = process.env) {
       indexingEnabled: true,
       rules: {
         userAgent: "*",
-        allow: "/"
+        allow: "/",
+        disallow: productionSearchExcludedRoutes
       }
     } as const;
   }

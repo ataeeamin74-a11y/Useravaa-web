@@ -1,12 +1,53 @@
 import type { Metadata } from "next";
 import { CareerShell } from "@/features/career/CareerShell";
 import { PathsPage } from "@/features/career/PathsPage";
+import { isSiteIndexingEnabled } from "@/lib/deployment/safety";
+
+const rootTitle = "مسیرهای شغلی | Useravaa";
+const rootDescription =
+  "مسیرهای شغلی را با تجربه‌های واقعی بررسی، ذخیره و مقایسه کن تا تصمیم شغلی روشن‌تری بگیری.";
+const rootUrl = "https://useravaa.com";
+const shareImagePath = "/og/useravaa-career-share.png";
+const shareImageAlt =
+  "تصویر اشتراک‌گذاری یوزاوا برای بررسی، ذخیره و مقایسه مسیرهای شغلی با تجربه‌های واقعی";
+const rootIndexingEnabled = isSiteIndexingEnabled();
 
 export const metadata: Metadata = {
-  title: "مسیرهای شغلی | Useravaa",
-  description: "مسیرهای شغلی را با تجربه‌های واقعی بررسی، ذخیره و مقایسه کن تا تصمیم شغلی روشن‌تری بگیری.",
+  title: rootTitle,
+  description: rootDescription,
   alternates: {
-    canonical: "https://useravaa.com"
+    canonical: rootUrl
+  },
+  robots: {
+    index: rootIndexingEnabled,
+    follow: rootIndexingEnabled
+  },
+  openGraph: {
+    title: rootTitle,
+    description: rootDescription,
+    url: rootUrl,
+    siteName: "Useravaa",
+    type: "website",
+    locale: "fa_IR",
+    images: [
+      {
+        url: shareImagePath,
+        width: 1200,
+        height: 630,
+        alt: shareImageAlt
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: rootTitle,
+    description: rootDescription,
+    images: [
+      {
+        url: shareImagePath,
+        alt: shareImageAlt
+      }
+    ]
   }
 };
 

@@ -3,9 +3,14 @@ import { AppShell } from "@/components/app-shell/AppShell";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://useravaa.com"),
   title: "Useravaa",
   description: "مسیرهای شغلی را با تجربه‌های واقعی بررسی، ذخیره و مقایسه کن تا تصمیم شغلی روشن‌تری بگیری.",
   manifest: "/site.webmanifest",
+  robots: {
+    index: false,
+    follow: false
+  },
   appleWebApp: {
     capable: true,
     title: "Useravaa",
