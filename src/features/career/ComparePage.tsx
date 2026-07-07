@@ -3,10 +3,15 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Check, Layers3, Pencil, Route } from "lucide-react";
-import { visibleCareerHierarchy as careerHierarchy } from "./career-data";
 import { CompareTabIcon, SoftCloseIcon } from "./CareerSoftIcons";
 import { EssentialChip, getDisplayLabel } from "./PathsPage";
 import { useSavedCareerPaths } from "./career-saved-paths";
+import { useSavedCareerComparisons } from "./career-saved-comparisons";
+import {
+  careerPaths,
+  getCareerPathByCardId,
+  getCareerPathById
+} from "./career-path-index";
 import {
   MAX_COMPARE_PATHS,
   MIN_COMPARE_PATHS,
@@ -49,15 +54,8 @@ export const compareSectionTabs = [
   { id: "tools", label: "ابزارها" }
 ] as const satisfies readonly Readonly<{ id: ComparisonSectionId; label: string }>[];
 
-const allCareerSubfamilies = careerHierarchy.flatMap((domain) => (
-  domain.generalCategories.flatMap((category) => category.subfamilies)
-));
+const allCareerSubfamilies = careerPaths;
 const subfamilyById = new Map(allCareerSubfamilies.map((subfamily) => [subfamily.id, subfamily]));
-const subfamilyByCardId = new Map(
-  allCareerSubfamilies.flatMap((subfamily) => (
-    subfamily.cards.map((card) => [card.id, subfamily] as const)
-  ))
-);
 
 function uniqueValues(values: readonly string[]): readonly string[] {
   const uniqueItems = new Map<string, string>();
@@ -125,8 +123,8 @@ export function getSavedComparisonPaths(savedCardIds: ReadonlySet<string>): read
   const seenPathIds = new Set<string>();
   const paths: CareerSubfamilyNode[] = [];
 
-  for (const cardId of savedCardIds) {
-    const path = subfamilyByCardId.get(cardId);
+  for (const savedId of savedCardIds) {
+    const path = getCareerPathById(savedId) ?? getCareerPathByCardId(savedId);
     if (!path || seenPathIds.has(path.id)) continue;
     paths.push(path);
     seenPathIds.add(path.id);
@@ -319,9 +317,11 @@ function ComparisonCell({ values }: Readonly<{ values: ComparisonValue }>) {
 type CareerComparisonTableProps = Readonly<{
   paths: readonly CareerSubfamilyNode[];
   onEdit: () => void;
+  onSave?: () => void;
+  saved?: boolean;
 }>;
 
-export function CareerComparisonTable({ paths, onEdit }: CareerComparisonTableProps) {
+export function CareerComparisonTable({ paths, onEdit, onSave, saved = false }: CareerComparisonTableProps) {
   const sections = useMemo(() => buildComparisonSections(paths), [paths]);
   const [activeSectionId, setActiveSectionId] = useState<ComparisonSectionId>("overview");
 
@@ -337,10 +337,18 @@ export function CareerComparisonTable({ paths, onEdit }: CareerComparisonTablePr
           <h1 id="career-compare-title">مقایسه مسیرها</h1>
           <p>{paths.length.toLocaleString("fa-IR")} مسیر شغلی انتخاب‌شده را معیاربه‌معیار بررسی کن.</p>
         </div>
-        <button type="button" className={styles.editSelection} onClick={onEdit}>
-          <Pencil size={17} strokeWidth={2.7} />
-          ویرایش انتخاب‌ها
-        </button>
+        <div className={styles.comparisonActions}>
+          {onSave ? (
+            <button type="button" className={saved ? styles.saveComparisonSaved : styles.saveComparison} onClick={onSave}>
+              <Check size={17} strokeWidth={2.8} />
+              {saved ? "مقایسه ذخیره شد" : "ذخیره این مقایسه"}
+            </button>
+          ) : null}
+          <button type="button" className={styles.editSelection} onClick={onEdit}>
+            <Pencil size={17} strokeWidth={2.7} />
+            ویرایش انتخاب‌ها
+          </button>
+        </div>
       </div>
 
       <nav className={styles.sectionTabs} aria-label="بخش‌های مقایسه">
@@ -395,14 +403,26 @@ export function CareerComparisonTable({ paths, onEdit }: CareerComparisonTablePr
   );
 }
 
-export function ComparePage() {
+export function normalizeInitialComparePathIds(pathIds: readonly string[]): readonly string[] {
+  return [...new Set(pathIds)].filter((pathId) => subfamilyById.has(pathId)).slice(0, MAX_COMPARE_PATHS);
+}
+
+type ComparePageProps = Readonly<{
+  initialPathIds?: readonly string[];
+}>;
+
+export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
+  const normalizedInitialPathIds = normalizeInitialComparePathIds(initialPathIds);
   const [activeSource, setActiveSource] = useState<CompareSource>("saved");
-  const [selectedPathIds, setSelectedPathIds] = useState<readonly string[]>([]);
+  const [selectedPathIds, setSelectedPathIds] = useState<readonly string[]>(() => normalizedInitialPathIds);
   const [limitMessage, setLimitMessage] = useState("");
-  const [view, setView] = useState<CompareView>("selection");
-  const { savedCardIds, hasLoadedSavedPaths } = useSavedCareerPaths();
+  const [view, setView] = useState<CompareView>(() => (
+    normalizedInitialPathIds.length >= MIN_COMPARE_PATHS ? "table" : "selection"
+  ));
+  const { savedPathIds, hasLoadedSavedPaths } = useSavedCareerPaths();
+  const { saveComparison, isComparisonSaved } = useSavedCareerComparisons();
   const { recentlyViewedPathIds, hasLoadedRecentlyViewedPaths } = useRecentlyViewedCareerPaths();
-  const savedPaths = useMemo(() => getSavedComparisonPaths(savedCardIds), [savedCardIds]);
+  const savedPaths = useMemo(() => getSavedComparisonPaths(savedPathIds), [savedPathIds]);
   const recentPaths = useMemo(
     () => getRecentlyViewedComparisonPaths(recentlyViewedPathIds),
     [recentlyViewedPathIds]
@@ -414,8 +434,12 @@ export function ComparePage() {
     }),
     [selectedPathIds]
   );
-  const candidatePaths = activeSource === "saved" ? savedPaths : recentPaths;
-  const candidatesLoaded = activeSource === "saved" ? hasLoadedSavedPaths : hasLoadedRecentlyViewedPaths;
+  const hasSinglePreselection = normalizedInitialPathIds.length === 1;
+  const candidatePaths = hasSinglePreselection
+    ? allCareerSubfamilies
+    : (activeSource === "saved" ? savedPaths : recentPaths);
+  const candidatesLoaded = hasSinglePreselection
+    || (activeSource === "saved" ? hasLoadedSavedPaths : hasLoadedRecentlyViewedPaths);
 
   function togglePath(pathId: string) {
     const update = updateCompareSelection(selectedPathIds, pathId);
@@ -432,7 +456,12 @@ export function ComparePage() {
   if (view === "table") {
     return (
       <section className={styles.comparePage} data-career-paths aria-labelledby="career-compare-title">
-        <CareerComparisonTable paths={selectedPaths} onEdit={() => setView("selection")} />
+        <CareerComparisonTable
+          paths={selectedPaths}
+          onEdit={() => setView("selection")}
+          onSave={() => saveComparison(selectedPathIds)}
+          saved={isComparisonSaved(selectedPathIds)}
+        />
       </section>
     );
   }
@@ -443,10 +472,13 @@ export function ComparePage() {
         <span className={styles.headingIcon} aria-hidden><Layers3 size={24} strokeWidth={2.7} /></span>
         <div>
           <h1 id="career-compare-title">مقایسه مسیرها</h1>
-          <p>۲ تا ۵ مسیر را برای مقایسه انتخاب کن</p>
+          <p>{hasSinglePreselection ? "مسیر دوم را برای مقایسه انتخاب کن" : "۲ تا ۵ مسیر را برای مقایسه انتخاب کن"}</p>
         </div>
       </div>
 
+      {hasSinglePreselection ? (
+        <p className={styles.preselectedHelper}>این مسیر برای مقایسه انتخاب شده است.</p>
+      ) : (
       <div className={styles.sourceTabs} role="tablist" aria-label="منبع مسیرها">
         <button
           type="button"
@@ -469,6 +501,7 @@ export function ComparePage() {
           <span>{recentPaths.length.toLocaleString("fa-IR")}</span>
         </button>
       </div>
+      )}
 
       <div className={styles.candidatePanel} role="tabpanel" aria-busy={!candidatesLoaded}>
         {!candidatesLoaded ? <div className={styles.loadingState}>در حال آماده‌سازی مسیرها...</div> : null}

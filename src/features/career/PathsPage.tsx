@@ -1,15 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { UIEvent } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   BriefcaseBusiness,
+  BookmarkPlus,
+  BookOpen,
   ChartNoAxesCombined,
   CircleDollarSign,
   Code2,
   Compass,
+  GitCompareArrows,
   Layers3,
   Megaphone,
   Palette,
@@ -21,7 +25,6 @@ import {
 } from "lucide-react";
 import { visibleCareerHierarchy as careerHierarchy } from "./career-data";
 import { CareerImageCarousel } from "./CareerImageCarousel";
-import { CareerSaveButton } from "./CareerSaveButton";
 import {
   SoftBackIcon,
   SoftChevronIcon,
@@ -313,8 +316,6 @@ export function SubfamilyCard({ subfamily, onSelect }: SubfamilyCardProps) {
 type PathDetailCardProps = Readonly<{
   card: CareerCard;
   highlighted: boolean;
-  saved: boolean;
-  onToggleSaved: (cardId: string) => void;
 }>;
 
 type PriorityGroupProps = Readonly<{
@@ -376,7 +377,7 @@ export function getDetailCardSubtitle(subtitle: string) {
   return getCareerDisplaySubtitle(subtitle);
 }
 
-function PathDetailCard({ card, highlighted, saved, onToggleSaved }: PathDetailCardProps) {
+function PathDetailCard({ card, highlighted }: PathDetailCardProps) {
   return (
     <article className={highlighted ? styles.seniorityCardHighlighted : styles.seniorityCard}>
       <div className={styles.seniorityCardHeader}>
@@ -384,7 +385,6 @@ function PathDetailCard({ card, highlighted, saved, onToggleSaved }: PathDetailC
           <h3 dir="auto">{getDetailCardTitle(card.title)}</h3>
           <p dir="auto">{getDetailCardSubtitle(card.subtitle)}</p>
         </div>
-        <CareerSaveButton saved={saved} onToggle={() => onToggleSaved(card.id)} />
       </div>
 
       <div className={styles.detailSections}>
@@ -410,6 +410,48 @@ function PathDetailCard({ card, highlighted, saved, onToggleSaved }: PathDetailC
         </section>
       </div>
     </article>
+  );
+}
+
+type PathEngagementActionsProps = Readonly<{
+  path: CareerSubfamilyNode;
+  saved: boolean;
+  onSave: (pathId: string) => void;
+}>;
+
+export function PathEngagementActions({ path, saved, onSave }: PathEngagementActionsProps) {
+  return (
+    <div className={styles.pathEngagementActions} aria-label="اقدام‌های مسیر شغلی">
+      <button
+        type="button"
+        className={saved ? styles.addPathActionSaved : styles.addPathAction}
+        aria-pressed={saved}
+        onClick={() => onSave(path.id)}
+      >
+        <BookmarkPlus size={19} aria-hidden />
+        {saved ? "به مسیرهای من اضافه شد" : "افزودن به مسیرهای من"}
+      </button>
+      <Link
+        href={`/career/compare?path=${encodeURIComponent(path.id)}`}
+        className={styles.comparePathAction}
+      >
+        <GitCompareArrows size={19} aria-hidden />
+        مقایسه با مسیرهای دیگر
+      </Link>
+    </div>
+  );
+}
+
+export function GuideEntryCard() {
+  return (
+    <aside className={styles.guideEntryCard} aria-labelledby="career-guide-entry-title">
+      <span className={styles.guideEntryIcon} aria-hidden><BookOpen size={22} /></span>
+      <div>
+        <h2 id="career-guide-entry-title">نمی‌دونی از کجا شروع کنی؟</h2>
+        <p>راهنمای انتخاب مسیر را ببین.</p>
+      </div>
+      <Link href="/career/guide">دیدن راهنما</Link>
+    </aside>
   );
 }
 
@@ -656,7 +698,7 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
   const [highlightedCardIds, setHighlightedCardIds] = useState<ReadonlySet<string>>(
     () => new Set(initialCardId ? [initialCardId] : [])
   );
-  const { savedCardIds, toggleSavedPath } = useSavedCareerPaths();
+  const { savedPathIds, savePath } = useSavedCareerPaths();
   const flowStartRef = useRef<HTMLDivElement>(null);
   const hasRenderedInitialLevel = useRef(false);
   const deferredQuery = useDeferredValue(query);
@@ -867,16 +909,19 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
       ) : null}
 
       {!searching && currentLevel === 1 ? (
-        <section className={styles.levelSection} aria-labelledby="career-domain-title">
-          <div className={styles.levelHeading}>
-            <div><span>مرحله اول</span><h2 id="career-domain-title">حوزه‌ای که کنجکاوت می‌کند</h2><p>یکی از ۱۰ حوزه واقعی را انتخاب کن تا دسته‌های داخلش را ببینی.</p></div>
-            <Compass size={24} aria-hidden />
-          </div>
-          <div className={styles.domainGrid}>{orderedTopLevelDomains.map((domain, index) => {
-            const accent = getDomainAccent(domain.name, index);
-            return <DomainCard domain={domain} onSelect={selectDomain} accent={accent} key={domain.id} />;
-          })}</div>
-        </section>
+        <>
+          <section className={styles.levelSection} aria-labelledby="career-domain-title">
+            <div className={styles.levelHeading}>
+              <div><span>مرحله اول</span><h2 id="career-domain-title">حوزه‌ای که کنجکاوت می‌کند</h2><p>یکی از ۱۰ حوزه واقعی را انتخاب کن تا دسته‌های داخلش را ببینی.</p></div>
+              <Compass size={24} aria-hidden />
+            </div>
+            <div className={styles.domainGrid}>{orderedTopLevelDomains.map((domain, index) => {
+              const accent = getDomainAccent(domain.name, index);
+              return <DomainCard domain={domain} onSelect={selectDomain} accent={accent} key={domain.id} />;
+            })}</div>
+          </section>
+          <GuideEntryCard />
+        </>
       ) : null}
 
       {!searching && currentLevel === 2 && selectedDomain ? (
@@ -906,9 +951,14 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
             <Sparkles size={24} aria-hidden />
           </div>
           <CareerImageCarousel slides={getCareerSlides(selectedSubfamily.name)} key={`slides-${selectedSubfamily.id}`} />
+          <PathEngagementActions
+            path={selectedSubfamily}
+            saved={savedPathIds.has(selectedSubfamily.id)}
+            onSave={savePath}
+          />
           <div className={styles.seniorityGrid}>
             {selectedSubfamily.cards.map((card) => (
-              <PathDetailCard card={card} highlighted={highlightedCardIds.has(card.id)} saved={savedCardIds.has(card.id)} onToggleSaved={toggleSavedPath} key={card.id} />
+              <PathDetailCard card={card} highlighted={highlightedCardIds.has(card.id)} key={card.id} />
             ))}
           </div>
           <RelatedPathsSection

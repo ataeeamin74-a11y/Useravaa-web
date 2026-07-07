@@ -350,14 +350,15 @@ describe("career paths MVP shell", () => {
   it("keeps exactly three bottom tabs with their canonical destinations", () => {
     const labels: readonly string[] = navigationItems.map((item) => item.label);
 
-    expect(labels).toEqual(["مسیرها", "مقایسه", "راهنما"]);
-    expect(navigationItems.map((item) => item.href)).toEqual(["/", "/career/compare", "/career/guide"]);
+    expect(labels).toEqual(["مسیرها", "مقایسه", "مسیرهای من"]);
+    expect(navigationItems.map((item) => item.href)).toEqual(["/career", "/career/compare", "/career/my-paths"]);
   });
 
   it("resets the active tab and keeps cross-tab navigation normal", () => {
-    expect(getCareerTabClickAction("/", "/")).toBe("reset");
+    expect(getCareerTabClickAction("/", "/career")).toBe("reset");
+    expect(getCareerTabClickAction("/career", "/career")).toBe("reset");
     expect(getCareerTabClickAction("/career/compare", "/career/compare")).toBe("reset");
-    expect(getCareerTabClickAction("/career/guide", "/career/guide")).toBe("reset");
+    expect(getCareerTabClickAction("/career/my-paths", "/career/my-paths")).toBe("reset");
     expect(getCareerTabClickAction("/", "/career/compare")).toBe("navigate");
 
     const resetBoundary = readFileSync("src/features/career/CareerTabRoot.tsx", "utf8");

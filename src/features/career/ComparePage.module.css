@@ -440,6 +440,48 @@
   align-items: center;
 }
 
+.comparisonActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.saveComparison,
+.saveComparisonSaved {
+  min-height: 42px;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--ua-blue);
+  border-radius: 13px;
+  background: var(--ua-blue);
+  color: #fff;
+  font: inherit;
+  font-size: 11px;
+  font-weight: var(--weight-bold);
+  padding-inline: 14px;
+}
+
+.saveComparisonSaved {
+  border-color: var(--ua-teal);
+  background: var(--ua-teal);
+  color: var(--ua-navy);
+}
+
+.preselectedHelper {
+  margin: 0 0 12px;
+  border-inline-start: 3px solid var(--ua-teal);
+  border-radius: 12px;
+  background: rgb(1 195 185 / 10%);
+  color: var(--ua-navy);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  line-height: 1.75;
+  padding: 9px 11px;
+}
+
 .editSelection {
   min-height: 42px;
   display: inline-flex;
@@ -455,6 +497,12 @@
   font-size: 11px;
   font-weight: var(--weight-bold);
   padding-inline: 14px;
+}
+
+.saveComparison:focus-visible,
+.saveComparisonSaved:focus-visible {
+  outline: 2px solid var(--ua-blue);
+  outline-offset: 3px;
 }
 
 .sectionTabs {
