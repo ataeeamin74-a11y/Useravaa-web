@@ -12,7 +12,7 @@ import {
   SelectionTray
 } from "@/features/career/ComparePage";
 import { GuidePage } from "@/features/career/GuidePage";
-import { navigationItems } from "@/features/career/CareerBottomNav";
+import { getCareerTabClickAction, navigationItems } from "@/features/career/CareerBottomNav";
 import { CareerImageCarousel } from "@/features/career/CareerImageCarousel";
 import { CareerSaveButton } from "@/features/career/CareerSaveButton";
 import {
@@ -347,12 +347,25 @@ describe("career paths MVP shell", () => {
     expect(managementOnlyHtml).toContain("هنوز مسیری ذخیره نکرده‌ای");
   });
 
-  it("keeps exactly three bottom tabs and replaces guide with saved paths", () => {
+  it("keeps exactly three bottom tabs with their canonical destinations", () => {
     const labels: readonly string[] = navigationItems.map((item) => item.label);
 
-    expect(labels).toEqual(["مسیرها", "مقایسه", "ذخیره‌شده‌ها"]);
-    expect(navigationItems.map((item) => item.href)).toEqual(["/", "/career/compare", "/career/saved"]);
-    expect(labels).not.toContain("راهنما");
+    expect(labels).toEqual(["مسیرها", "مقایسه", "راهنما"]);
+    expect(navigationItems.map((item) => item.href)).toEqual(["/", "/career/compare", "/career/guide"]);
+  });
+
+  it("resets the active tab and keeps cross-tab navigation normal", () => {
+    expect(getCareerTabClickAction("/", "/")).toBe("reset");
+    expect(getCareerTabClickAction("/career/compare", "/career/compare")).toBe("reset");
+    expect(getCareerTabClickAction("/career/guide", "/career/guide")).toBe("reset");
+    expect(getCareerTabClickAction("/", "/career/compare")).toBe("navigate");
+
+    const resetBoundary = readFileSync("src/features/career/CareerTabRoot.tsx", "utf8");
+    const bottomNav = readFileSync("src/features/career/CareerBottomNav.tsx", "utf8");
+    expect(resetBoundary).toContain("setResetVersion((version) => version + 1)");
+    expect(resetBoundary).toContain("router.replace(href)");
+    expect(resetBoundary).toContain('key={`${pathname}:${resetVersion}`}');
+    expect(`${resetBoundary}\n${bottomNav}`).not.toMatch(/prisma|@\/lib\/backend|database_url/i);
   });
 
   it("compresses single-child levels without changing hierarchy identity", () => {

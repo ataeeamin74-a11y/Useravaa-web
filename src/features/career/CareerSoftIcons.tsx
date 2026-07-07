@@ -84,3 +84,13 @@ export function SavedTabIcon({ size = 22, className }: SoftIconProps) {
     </svg>
   );
 }
+
+export function GuideTabIcon({ size = 22, className }: SoftIconProps) {
+  return (
+    <svg {...iconProps(size, className)} fill="none">
+      <path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v17H8.5A3.5 3.5 0 0 0 5 22Z" fill="currentColor" opacity=".55" />
+      <path d="M19 5.5A3.5 3.5 0 0 0 15.5 2H12v17h3.5A3.5 3.5 0 0 1 19 22Z" fill="currentColor" />
+      <path d="M8 7h2M14 7h2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}

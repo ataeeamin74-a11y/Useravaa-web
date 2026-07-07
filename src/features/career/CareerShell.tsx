@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { UseravaaLogo } from "@/components/logo/UseravaaLogo";
 import { IosInstallGuide } from "@/features/pwa/IosInstallGuide";
-import { CareerBottomNav } from "./CareerBottomNav";
+import { CareerTabRoot } from "./CareerTabRoot";
 import styles from "./CareerShell.module.css";
 
 type CareerShellProps = Readonly<{
@@ -18,9 +18,7 @@ export function CareerShell({ children }: CareerShellProps) {
         </Link>
         <span className={styles.productName}>مسیرهای شغلی</span>
       </header>
-
-      <div className={styles.content}>{children}</div>
-      <CareerBottomNav />
+      <CareerTabRoot>{children}</CareerTabRoot>
       <IosInstallGuide />
     </div>
   );
