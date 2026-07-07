@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { UseravaaLogo } from "@/components/logo/UseravaaLogo";
+import { IosInstallGuide } from "@/features/pwa/IosInstallGuide";
 import { CareerBottomNav } from "./CareerBottomNav";
 import styles from "./CareerShell.module.css";
 
@@ -20,6 +21,7 @@ export function CareerShell({ children }: CareerShellProps) {
 
       <div className={styles.content}>{children}</div>
       <CareerBottomNav />
+      <IosInstallGuide />
     </div>
   );
 }
