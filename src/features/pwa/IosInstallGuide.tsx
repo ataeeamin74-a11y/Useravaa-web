@@ -52,7 +52,11 @@ export function IosInstallGuide() {
         return;
       }
 
-      const timer = window.setTimeout(() => setIsOpen(true), SHOW_DELAY_MS);
+      const timer = window.setTimeout(() => {
+        // A save-triggered lead sheet has priority because it follows direct
+        // user intent. The install guide can safely wait for a later visit.
+        if (!document.querySelector("[data-career-lead-capture-dialog]")) setIsOpen(true);
+      }, SHOW_DELAY_MS);
       return () => window.clearTimeout(timer);
     } catch {
       return;

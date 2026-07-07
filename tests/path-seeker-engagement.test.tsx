@@ -50,10 +50,10 @@ describe("Path Seeker engagement", () => {
 
   it("renders detail engagement actions before the long-form content contract", () => {
     const unsavedHtml = renderToStaticMarkup(
-      <PathEngagementActions path={firstPath} saved={false} onSave={() => undefined} />
+      <PathEngagementActions path={firstPath} saved={false} onSave={() => true} />
     );
     const savedHtml = renderToStaticMarkup(
-      <PathEngagementActions path={firstPath} saved onSave={() => undefined} />
+      <PathEngagementActions path={firstPath} saved onSave={() => true} />
     );
 
     expect(unsavedHtml).toContain("افزودن به مسیرهای من");

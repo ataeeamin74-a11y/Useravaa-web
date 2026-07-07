@@ -74,8 +74,10 @@ function persistSavedCareerPathIds(savedPathIds: ReadonlySet<string>) {
   try {
     window.localStorage.setItem(SAVED_PATHS_STORAGE_KEY, JSON.stringify([...savedPathIds]));
     window.dispatchEvent(new Event(SAVED_PATHS_CHANGE_EVENT));
+    return true;
   } catch {
     // Backend persistence is intentionally out of scope for this MVP.
+    return false;
   }
 }
 
@@ -108,7 +110,8 @@ export function useSavedCareerPaths() {
   }, [savedPathIds]);
 
   const savePath = useCallback((pathId: string) => {
-    persistSavedCareerPathIds(addSavedCareerPathId(savedPathIds, pathId));
+    const nextPathIds = addSavedCareerPathId(savedPathIds, pathId);
+    return nextPathIds !== savedPathIds && persistSavedCareerPathIds(nextPathIds);
   }, [savedPathIds]);
 
   return {

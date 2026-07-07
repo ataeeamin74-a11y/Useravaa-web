@@ -8,6 +8,10 @@ import { EssentialChip, getDisplayLabel } from "./PathsPage";
 import { useSavedCareerPaths } from "./career-saved-paths";
 import { useSavedCareerComparisons } from "./career-saved-comparisons";
 import {
+  requestCareerLeadCapture,
+  shouldRequestCareerLeadCapture
+} from "./career-lead-capture";
+import {
   careerPaths,
   getCareerPathByCardId,
   getCareerPathById
@@ -440,6 +444,7 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
     : (activeSource === "saved" ? savedPaths : recentPaths);
   const candidatesLoaded = hasSinglePreselection
     || (activeSource === "saved" ? hasLoadedSavedPaths : hasLoadedRecentlyViewedPaths);
+  const comparisonSaved = isComparisonSaved(selectedPathIds);
 
   function togglePath(pathId: string) {
     const update = updateCompareSelection(selectedPathIds, pathId);
@@ -453,14 +458,24 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+  function saveCurrentComparison() {
+    const saveSucceeded = saveComparison(selectedPathIds);
+    if (shouldRequestCareerLeadCapture(comparisonSaved, saveSucceeded)) {
+      requestCareerLeadCapture({
+        source: "comparison_save",
+        comparisonPathIds: selectedPathIds
+      });
+    }
+  }
+
   if (view === "table") {
     return (
       <section className={styles.comparePage} data-career-paths aria-labelledby="career-compare-title">
         <CareerComparisonTable
           paths={selectedPaths}
           onEdit={() => setView("selection")}
-          onSave={() => saveComparison(selectedPathIds)}
-          saved={isComparisonSaved(selectedPathIds)}
+          onSave={saveCurrentComparison}
+          saved={comparisonSaved}
         />
       </section>
     );

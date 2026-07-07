@@ -105,8 +105,10 @@ function persistSavedComparisons(comparisons: readonly SavedCareerComparison[]) 
   try {
     window.localStorage.setItem(SAVED_COMPARISONS_STORAGE_KEY, JSON.stringify(comparisons));
     window.dispatchEvent(new Event(SAVED_COMPARISONS_CHANGE_EVENT));
+    return true;
   } catch {
     // Saved comparisons intentionally remain local-only for the launch PWA.
+    return false;
   }
 }
 
@@ -126,7 +128,8 @@ export function useSavedCareerComparisons() {
     [serializedComparisons]
   );
   const saveComparison = useCallback((pathIds: readonly string[]) => {
-    persistSavedComparisons(addSavedCareerComparison(savedComparisons, pathIds));
+    const nextComparisons = addSavedCareerComparison(savedComparisons, pathIds);
+    return nextComparisons !== savedComparisons && persistSavedComparisons(nextComparisons);
   }, [savedComparisons]);
 
   return {

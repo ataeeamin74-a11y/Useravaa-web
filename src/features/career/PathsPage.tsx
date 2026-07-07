@@ -33,6 +33,10 @@ import {
   SoftSearchIcon
 } from "./CareerSoftIcons";
 import { useSavedCareerPaths } from "./career-saved-paths";
+import {
+  requestCareerLeadCapture,
+  shouldRequestCareerLeadCapture
+} from "./career-lead-capture";
 import { recordRecentlyViewedCareerPath } from "./career-compare-state";
 import { getCareerSlides } from "./data/career-slide-manifest";
 import type {
@@ -416,17 +420,24 @@ function PathDetailCard({ card, highlighted }: PathDetailCardProps) {
 type PathEngagementActionsProps = Readonly<{
   path: CareerSubfamilyNode;
   saved: boolean;
-  onSave: (pathId: string) => void;
+  onSave: (pathId: string) => boolean;
 }>;
 
 export function PathEngagementActions({ path, saved, onSave }: PathEngagementActionsProps) {
+  function saveCurrentPath() {
+    const saveSucceeded = onSave(path.id);
+    if (shouldRequestCareerLeadCapture(saved, saveSucceeded)) {
+      requestCareerLeadCapture({ source: "path_save", currentPathId: path.id });
+    }
+  }
+
   return (
     <div className={styles.pathEngagementActions} aria-label="اقدام‌های مسیر شغلی">
       <button
         type="button"
         className={saved ? styles.addPathActionSaved : styles.addPathAction}
         aria-pressed={saved}
-        onClick={() => onSave(path.id)}
+        onClick={saveCurrentPath}
       >
         <BookmarkPlus size={19} aria-hidden />
         {saved ? "به مسیرهای من اضافه شد" : "افزودن به مسیرهای من"}
