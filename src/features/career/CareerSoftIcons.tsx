@@ -17,7 +17,7 @@ function iconProps(size: number, className?: string) {
 export function SoftChevronIcon({ size = 18, className }: SoftIconProps) {
   return (
     <svg {...iconProps(size, className)} fill="none">
-      <path d="m14.5 6.5-5 5.5 5 5.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="m14.5 6.5-5 5.5 5 5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -25,7 +25,7 @@ export function SoftChevronIcon({ size = 18, className }: SoftIconProps) {
 export function SoftBackIcon({ size = 18, className }: SoftIconProps) {
   return (
     <svg {...iconProps(size, className)} fill="none">
-      <path d="M9.5 5.5 16 12l-6.5 6.5M16 12H6" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9.5 5.5 16 12l-6.5 6.5M16 12H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -33,8 +33,8 @@ export function SoftBackIcon({ size = 18, className }: SoftIconProps) {
 export function SoftSearchIcon({ size = 22, className }: SoftIconProps) {
   return (
     <svg {...iconProps(size, className)} fill="none">
-      <circle cx="10.5" cy="10.5" r="5.5" stroke="currentColor" strokeWidth="3" />
-      <path d="m15 15 4 4" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <circle cx="10.5" cy="10.5" r="5.5" stroke="currentColor" strokeWidth="2" />
+      <path d="m15 15 4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -42,7 +42,7 @@ export function SoftSearchIcon({ size = 22, className }: SoftIconProps) {
 export function SoftCloseIcon({ size = 20, className }: SoftIconProps) {
   return (
     <svg {...iconProps(size, className)} fill="none">
-      <path d="m7 7 10 10M17 7 7 17" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+      <path d="m7 7 10 10M17 7 7 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -59,7 +59,7 @@ export function SoftEssentialIcon({ size = 12, className }: SoftIconProps) {
 export function PathsTabIcon({ size = 22, className }: SoftIconProps) {
   return (
     <svg {...iconProps(size, className)} fill="none">
-      <path d="M6 6.5h5a3 3 0 0 1 3 3v5a3 3 0 0 0 3 3h1" stroke="currentColor" strokeWidth="2.7" strokeLinecap="round" />
+      <path d="M6 6.5h5a3 3 0 0 1 3 3v5a3 3 0 0 0 3 3h1" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
       <circle cx="5.5" cy="6.5" r="3" fill="currentColor" />
       <circle cx="18.5" cy="17.5" r="3" fill="currentColor" />
     </svg>

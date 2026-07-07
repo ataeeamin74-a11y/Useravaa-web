@@ -206,7 +206,7 @@ export function ComparePathCard({ path, selected, onToggle }: ComparePathCardPro
       aria-pressed={selected}
       onClick={() => onToggle(path.id)}
     >
-      <span className={styles.pathCardIcon} aria-hidden><Route size={20} strokeWidth={2.8} /></span>
+      <span className={styles.pathCardIcon} aria-hidden><Route size={20} strokeWidth={2} /></span>
       <span className={styles.pathCardCopy}>
         <span className={styles.pathHierarchy}>
           {getDisplayLabel(path.domain)} · {getDisplayLabel(path.generalCategory)}
@@ -219,7 +219,7 @@ export function ComparePathCard({ path, selected, onToggle }: ComparePathCardPro
         </strong>
       </span>
       <span className={styles.selectionMark} aria-hidden>
-        {selected ? <Check size={17} strokeWidth={3.2} /> : <span />}
+        {selected ? <Check size={17} strokeWidth={2} /> : <span />}
       </span>
     </button>
   );
@@ -344,12 +344,12 @@ export function CareerComparisonTable({ paths, onEdit, onSave, saved = false }: 
         <div className={styles.comparisonActions}>
           {onSave ? (
             <button type="button" className={saved ? styles.saveComparisonSaved : styles.saveComparison} onClick={onSave}>
-              <Check size={17} strokeWidth={2.8} />
+              <Check size={17} strokeWidth={2} />
               {saved ? "مقایسه ذخیره شد" : "ذخیره این مقایسه"}
             </button>
           ) : null}
           <button type="button" className={styles.editSelection} onClick={onEdit}>
-            <Pencil size={17} strokeWidth={2.7} />
+            <Pencil size={17} strokeWidth={1.9} />
             ویرایش انتخاب‌ها
           </button>
         </div>
@@ -484,15 +484,15 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
   return (
     <section className={`${styles.comparePage} ${styles.selectionPage}`} data-career-paths aria-labelledby="career-compare-title">
       <div className={styles.selectionHeading}>
-        <span className={styles.headingIcon} aria-hidden><Layers3 size={24} strokeWidth={2.7} /></span>
+        <span className={styles.headingIcon} aria-hidden><Layers3 size={24} strokeWidth={2} /></span>
         <div>
           <h1 id="career-compare-title">مقایسه مسیرها</h1>
-          <p>{hasSinglePreselection ? "مسیر دوم را برای مقایسه انتخاب کن" : "۲ تا ۵ مسیر را برای مقایسه انتخاب کن"}</p>
+          <p>{hasSinglePreselection ? "مسیر شغلی دوم را برای مقایسه انتخاب کن" : "۲ تا ۵ مسیر شغلی را برای مقایسه انتخاب کن"}</p>
         </div>
       </div>
 
       {hasSinglePreselection ? (
-        <p className={styles.preselectedHelper}>این مسیر برای مقایسه انتخاب شده است.</p>
+        <p className={styles.preselectedHelper}>این مسیر شغلی برای مقایسه انتخاب شده است.</p>
       ) : (
       <div className={styles.sourceTabs} role="tablist" aria-label="منبع مسیرها">
         <button
@@ -534,7 +534,7 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
         ) : null}
         {candidatesLoaded && !candidatePaths.length ? (
           <div className={styles.emptyState}>
-            <span aria-hidden><Route size={26} strokeWidth={2.7} /></span>
+            <span aria-hidden><Route size={26} strokeWidth={2} /></span>
             <h2>{activeSource === "saved" ? "هنوز مسیر ذخیره‌شده‌ای نداری" : "هنوز مسیری را ندیده‌ای"}</h2>
             <p>{activeSource === "saved" ? "مسیرهای موردنظرت را ذخیره کن و برای مقایسه به اینجا برگرد." : "یک مسیر شغلی را باز کن تا در این فهرست دیده شود."}</p>
             <Link href="/">مشاهده مسیرهای شغلی</Link>

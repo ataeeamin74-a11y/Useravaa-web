@@ -32,7 +32,7 @@ export function MyPathsContent({
   savedComparisons,
   hasLoaded
 }: MyPathsContentProps) {
-  if (!hasLoaded) return <div className={styles.loadingState}>در حال آماده‌سازی مسیرهای تو...</div>;
+  if (!hasLoaded) return <div className={styles.loadingState}>در حال آماده‌سازی مسیرهای شغلی تو...</div>;
 
   const savedPaths = [...savedPathIds].flatMap((pathId) => {
     const path = getCareerPathById(pathId);
@@ -49,10 +49,10 @@ export function MyPathsContent({
   if (!savedPaths.length && !comparisons.length) {
     return (
       <div className={styles.emptyState} aria-live="polite">
-        <span aria-hidden><Route size={27} /></span>
-        <h2>هنوز مسیری اضافه نکردی</h2>
-        <p>مسیرهایی که برای بررسی نگه می‌داری اینجا می‌آیند.</p>
-        <Link href="/career">دیدن مسیرها</Link>
+        <span aria-hidden><Route size={27} strokeWidth={1.9} /></span>
+        <h2>هنوز مسیر شغلی‌ای اضافه نکردی</h2>
+        <p>مسیرهای شغلی‌ای که برای بررسی نگه می‌داری اینجا می‌آیند.</p>
+        <Link href="/career">دیدن مسیرهای شغلی</Link>
       </div>
     );
   }
@@ -61,8 +61,8 @@ export function MyPathsContent({
     <div className={styles.sections}>
       <section aria-labelledby="saved-career-paths-title">
         <div className={styles.sectionHeading}>
-          <Bookmark size={19} aria-hidden />
-          <h2 id="saved-career-paths-title">مسیرهای ذخیره‌شده</h2>
+          <Bookmark size={19} strokeWidth={1.9} aria-hidden />
+          <h2 id="saved-career-paths-title">مسیرهای شغلی ذخیره‌شده</h2>
         </div>
         {savedPaths.length ? (
           <div className={styles.cardList}>
@@ -70,16 +70,16 @@ export function MyPathsContent({
               <Link className={styles.savedCard} href={getCareerPathDetailHref(path)} key={path.id}>
                 <span className={styles.cardMeta}>{getDisplayLabel(path.domain)}</span>
                 <strong dir="auto">{getDisplayLabel(path.name)}</strong>
-                <span className={styles.openLabel}>دیدن مسیر <SoftChevronIcon size={15} /></span>
+                <span className={styles.openLabel}>دیدن مسیر شغلی <SoftChevronIcon size={15} /></span>
               </Link>
             ))}
           </div>
-        ) : <p className={styles.sectionEmpty}>هنوز مسیری اضافه نکردی</p>}
+        ) : <p className={styles.sectionEmpty}>هنوز مسیر شغلی‌ای اضافه نکردی</p>}
       </section>
 
       <section aria-labelledby="saved-comparisons-title">
         <div className={styles.sectionHeading}>
-          <GitCompareArrows size={19} aria-hidden />
+          <GitCompareArrows size={19} strokeWidth={1.9} aria-hidden />
           <h2 id="saved-comparisons-title">مقایسه‌های ذخیره‌شده</h2>
         </div>
         {comparisons.length ? (
@@ -90,7 +90,7 @@ export function MyPathsContent({
                 href={getComparisonHref(pathIds)}
                 key={pathIds.join("::")}
               >
-                <span className={styles.cardMeta}>مقایسه {paths.length.toLocaleString("fa-IR")} مسیر</span>
+                <span className={styles.cardMeta}>مقایسه {paths.length.toLocaleString("fa-IR")} مسیر شغلی</span>
                 <strong>{paths.map((path) => getDisplayLabel(path.name)).join(" و ")}</strong>
                 <span className={styles.openLabel}>دیدن مقایسه <SoftChevronIcon size={15} /></span>
               </Link>
@@ -109,8 +109,8 @@ export function MyPathsPage() {
   return (
     <section className={styles.page} data-career-paths aria-labelledby="my-career-paths-title">
       <div className={styles.pageHeading}>
-        <h1 id="my-career-paths-title">مسیرهای من</h1>
-        <p>مسیرها و مقایسه‌هایی که برای بررسی بیشتر نگه داشته‌ای.</p>
+        <h1 id="my-career-paths-title">مسیرهای شغلی من</h1>
+        <p>مسیرهای شغلی و مقایسه‌هایی که برای بررسی بیشتر نگه داشته‌ای.</p>
       </div>
       <MyPathsContent
         savedPathIds={savedPathIds}

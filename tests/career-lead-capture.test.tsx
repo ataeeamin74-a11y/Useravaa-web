@@ -74,7 +74,10 @@ describe("career path-seeker lead capture", () => {
     );
     const sheetSource = readFileSync("src/features/career/CareerLeadCaptureSheet.tsx", "utf8");
 
-    expect(sheetSource).toContain("مسیرت را برای ادامه بررسی نگه داریم؟");
+    expect(sheetSource).toContain("مسیرهای شغلی‌ات را برای ادامه بررسی نگه داریم؟");
+    expect(sheetSource).toContain("یک راه ارتباطی بگذار تا بعداً بتوانی مسیرهای شغلی و مقایسه‌هایت را پیگیری کنی.");
+    expect(sheetSource).toContain("مثلاً نمی‌دانم این مسیر شغلی با من تناسب دارد یا نه");
+    expect(sheetSource).toContain("ذخیره شد. می‌توانی از «مسیرهای شغلی من» ادامه بدهی.");
     expect(html).toContain("موبایل یا ایمیل");
     expect(html).toContain("ذخیره و ادامه بررسی");
     expect(html).toContain("فعلاً نه");

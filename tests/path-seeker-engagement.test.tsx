@@ -56,8 +56,8 @@ describe("Path Seeker engagement", () => {
       <PathEngagementActions path={firstPath} saved onSave={() => true} />
     );
 
-    expect(unsavedHtml).toContain("افزودن به مسیرهای من");
-    expect(savedHtml).toContain("به مسیرهای من اضافه شد");
+    expect(unsavedHtml).toContain("افزودن به مسیرهای شغلی من");
+    expect(savedHtml).toContain("به مسیرهای شغلی من اضافه شد");
     expect(unsavedHtml).toContain("مقایسه با مسیرهای دیگر");
     expect(unsavedHtml).toContain(`/career/compare?path=${encodeURIComponent(firstPath.id)}`);
   });
@@ -65,8 +65,8 @@ describe("Path Seeker engagement", () => {
   it("keeps the guide available outside the three-item bottom navigation", () => {
     const html = renderToStaticMarkup(<GuideEntryCard />);
 
-    expect(html).toContain("نمی‌دونی از کجا شروع کنی؟");
-    expect(html).toContain("راهنمای انتخاب مسیر را ببین.");
+    expect(html).toContain("نمی‌دونی از کدام مسیر شغلی شروع کنی؟");
+    expect(html).toContain("راهنمای انتخاب مسیر شغلی را ببین.");
     expect(html).toContain('href="/career/guide"');
     expect(navigationItems.map((item) => item.label)).toEqual(["مسیرها", "مقایسه", "مسیرهای من"]);
   });
@@ -75,8 +75,8 @@ describe("Path Seeker engagement", () => {
     expect(normalizeInitialComparePathIds([firstPath.id, "unknown", firstPath.id])).toEqual([firstPath.id]);
     const html = renderToStaticMarkup(<ComparePage initialPathIds={[firstPath.id]} />);
 
-    expect(html).toContain("مسیر دوم را برای مقایسه انتخاب کن");
-    expect(html).toContain("این مسیر برای مقایسه انتخاب شده است.");
+    expect(html).toContain("مسیر شغلی دوم را برای مقایسه انتخاب کن");
+    expect(html).toContain("این مسیر شغلی برای مقایسه انتخاب شده است.");
     expect(html).toContain('aria-pressed="true"');
   });
 
@@ -105,12 +105,34 @@ describe("Path Seeker engagement", () => {
       />
     );
 
-    expect(emptyHtml).toContain("هنوز مسیری اضافه نکردی");
+    expect(emptyHtml).toContain("هنوز مسیر شغلی‌ای اضافه نکردی");
     expect(emptyHtml).toContain('href="/career"');
-    expect(populatedHtml).toContain("مسیرهای ذخیره‌شده");
+    expect(populatedHtml).toContain("مسیرهای شغلی ذخیره‌شده");
     expect(populatedHtml).toContain("مقایسه‌های ذخیره‌شده");
     expect(populatedHtml).toContain("/career?card=");
     expect(populatedHtml).toContain("/career/compare?path=");
+
+    const myPathsSource = readFileSync("src/features/career/MyPathsPage.tsx", "utf8");
+    expect(myPathsSource).toContain("مسیرهای شغلی من");
+    expect(myPathsSource).toContain("مسیرهای شغلی‌ای که برای بررسی نگه می‌داری اینجا می‌آیند.");
+  });
+
+  it("uses refined Career UI icon strokes while preserving filled tab states", () => {
+    const softIcons = readFileSync("src/features/career/CareerSoftIcons.tsx", "utf8");
+    const careerIcons = [
+      "src/features/career/PathsPage.tsx",
+      "src/features/career/ComparePage.tsx",
+      "src/features/career/MyPathsPage.tsx",
+      "src/features/career/CareerSaveButton.tsx",
+      "src/features/career/SavedPathsPage.tsx"
+    ].map((file) => readFileSync(file, "utf8")).join("\n");
+    const leadSheet = readFileSync("src/features/career/CareerLeadCaptureSheet.tsx", "utf8");
+
+    expect(softIcons).not.toMatch(/strokeWidth="(?:2\.[1-9]|[3-9](?:\.\d+)?)"/);
+    expect(careerIcons).not.toMatch(/strokeWidth=\{(?:2\.[1-9]|[3-9](?:\.\d+)?)\}/);
+    expect(softIcons).toContain('strokeWidth="2"');
+    expect(softIcons).toContain('fill="currentColor"');
+    expect(leadSheet).toContain("<SoftCloseIcon size={18} />");
   });
 
   it("does not couple engagement storage to database or the install guide", () => {

@@ -334,7 +334,7 @@ describe("career paths MVP shell", () => {
       <SavedPathsList savedCardIds={new Set(["CARD_024"])} hasLoaded onToggleSaved={() => undefined} />
     );
 
-    expect(emptyHtml).toContain("هنوز مسیری ذخیره نکرده‌ای");
+    expect(emptyHtml).toContain("هنوز مسیر شغلی‌ای ذخیره نکرده‌ای");
     expect(emptyHtml).toContain("مشاهده مسیرهای شغلی");
     expect(savedHtml).toContain(getCareerDisplayTitle(careerCards[0].title));
     expect(savedHtml).not.toContain("سطح کارشناسی");
@@ -344,7 +344,7 @@ describe("career paths MVP shell", () => {
     expect(twoVariantHtml).not.toContain("/?card=CARD_033");
     expect(twoVariantHtml).not.toContain("سطح کارشناسی");
     expect(twoVariantHtml).not.toContain("سطح مدیریت");
-    expect(managementOnlyHtml).toContain("هنوز مسیری ذخیره نکرده‌ای");
+    expect(managementOnlyHtml).toContain("هنوز مسیر شغلی‌ای ذخیره نکرده‌ای");
   });
 
   it("keeps exactly three bottom tabs with their canonical destinations", () => {

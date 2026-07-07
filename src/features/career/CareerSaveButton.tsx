@@ -24,7 +24,7 @@ export function CareerSaveButton({ saved, onToggle }: CareerSaveButtonProps) {
       aria-pressed={saved}
       onClick={handleClick}
     >
-      <Bookmark size={18} fill="currentColor" strokeWidth={2.2} aria-hidden />
+      <Bookmark size={18} fill="currentColor" strokeWidth={1.9} aria-hidden />
       <span>{saved ? "ذخیره‌شده" : "ذخیره برای بررسی"}</span>
     </button>
   );

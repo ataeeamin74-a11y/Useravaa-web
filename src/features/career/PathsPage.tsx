@@ -268,7 +268,7 @@ export function DomainCard({ domain, onSelect, accent = "blue" }: DomainCardProp
       data-career-domain-card={domain.id}
       onClick={() => onSelect(domain)}
     >
-      <span className={`${styles.domainIcon} ${accentClass}`} data-career-domain-part="icon" data-domain-accent={accent} aria-hidden><Icon size={24} strokeWidth={2.7} /></span>
+      <span className={`${styles.domainIcon} ${accentClass}`} data-career-domain-part="icon" data-domain-accent={accent} aria-hidden><Icon size={24} strokeWidth={2} /></span>
       <span className={styles.discoveryCardCopy} data-career-domain-part="title">
         <strong>{getDisplayLabel(domain.name)}</strong>
         <small>{domain.subfamilyCount.toLocaleString("fa-IR")} مسیر شغلی</small>
@@ -287,7 +287,7 @@ export function CategoryCard({ category, onSelect }: CategoryCardProps) {
   return (
     <button type="button" className={styles.categoryCard} data-career-category-card={category.id} onClick={() => onSelect(category)}>
       <span className={styles.categoryCardTopline}>
-        <span className={styles.categoryIcon} aria-hidden><Layers3 size={21} strokeWidth={2.7} /></span>
+        <span className={styles.categoryIcon} aria-hidden><Layers3 size={21} strokeWidth={2} /></span>
         <span className={styles.itemCount}>{category.subfamilies.length.toLocaleString("fa-IR")} مسیر شغلی</span>
       </span>
       <strong>{getDisplayLabel(category.name)}</strong>
@@ -307,7 +307,7 @@ type SubfamilyCardProps = Readonly<{
 export function SubfamilyCard({ subfamily, onSelect }: SubfamilyCardProps) {
   return (
     <button type="button" className={styles.subfamilyCard} data-career-subfamily-card={subfamily.id} onClick={() => onSelect(subfamily)}>
-      <span className={styles.subfamilyIcon} aria-hidden><Route size={19} strokeWidth={2.7} /></span>
+      <span className={styles.subfamilyIcon} aria-hidden><Route size={19} strokeWidth={2} /></span>
       <span className={styles.subfamilyCopy}>
         <strong dir="auto">{getDisplayLabel(subfamily.name)}</strong>
         <small dir="auto">{getDisplayLabel(subfamily.midCategory)}</small>
@@ -440,7 +440,7 @@ export function PathEngagementActions({ path, saved, onSave }: PathEngagementAct
         onClick={saveCurrentPath}
       >
         <BookmarkPlus size={19} aria-hidden />
-        {saved ? "به مسیرهای من اضافه شد" : "افزودن به مسیرهای من"}
+        {saved ? "به مسیرهای شغلی من اضافه شد" : "افزودن به مسیرهای شغلی من"}
       </button>
       <Link
         href={`/career/compare?path=${encodeURIComponent(path.id)}`}
@@ -458,8 +458,8 @@ export function GuideEntryCard() {
     <aside className={styles.guideEntryCard} aria-labelledby="career-guide-entry-title">
       <span className={styles.guideEntryIcon} aria-hidden><BookOpen size={22} /></span>
       <div>
-        <h2 id="career-guide-entry-title">نمی‌دونی از کجا شروع کنی؟</h2>
-        <p>راهنمای انتخاب مسیر را ببین.</p>
+        <h2 id="career-guide-entry-title">نمی‌دونی از کدام مسیر شغلی شروع کنی؟</h2>
+        <p>راهنمای انتخاب مسیر شغلی را ببین.</p>
       </div>
       <Link href="/career/guide">دیدن راهنما</Link>
     </aside>
@@ -623,7 +623,7 @@ export function RelatedPathsSection({ paths, onSelect }: RelatedPathsSectionProp
         data-related-featured="true"
         onClick={() => onSelect(featuredPath)}
       >
-        <span className={styles.relatedFeaturedIcon} aria-hidden><Route size={20} strokeWidth={2.7} /></span>
+        <span className={styles.relatedFeaturedIcon} aria-hidden><Route size={20} strokeWidth={2} /></span>
         <span className={styles.relatedFeaturedCopy}>
           <span className={styles.relatedFeaturedLabel}>پیشنهاد نزدیک</span>
           <RelatedPathCopy path={featuredPath} />

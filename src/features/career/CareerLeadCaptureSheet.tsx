@@ -20,6 +20,7 @@ import {
   parseSavedCareerPathIds,
   SAVED_PATHS_STORAGE_KEY
 } from "./career-saved-paths";
+import { SoftCloseIcon } from "./CareerSoftIcons";
 import styles from "./CareerLeadCaptureSheet.module.css";
 
 const OPEN_DELAY_MS = 450;
@@ -119,7 +120,7 @@ export function CareerLeadCaptureForm({
           maxLength={1000}
           rows={3}
           value={uncertainty}
-          placeholder="مثلاً نمی‌دانم این مسیر با من تناسب دارد یا نه"
+          placeholder="مثلاً نمی‌دانم این مسیر شغلی با من تناسب دارد یا نه"
           onChange={(event) => onUncertaintyChange(event.target.value)}
         />
       </div>
@@ -330,20 +331,20 @@ export function CareerLeadCaptureSheet() {
           aria-label="بستن"
           onClick={submitted ? close : dismiss}
         >
-          <span aria-hidden="true">×</span>
+          <SoftCloseIcon size={18} />
         </button>
 
         <header className={styles.header}>
-          <h2 id="career-lead-title">مسیرت را برای ادامه بررسی نگه داریم؟</h2>
+          <h2 id="career-lead-title">مسیرهای شغلی‌ات را برای ادامه بررسی نگه داریم؟</h2>
           <p id="career-lead-description">
-            یک راه ارتباطی بگذار تا بعداً بتوانی مسیرها و مقایسه‌هایت را پیگیری کنی.
+            یک راه ارتباطی بگذار تا بعداً بتوانی مسیرهای شغلی و مقایسه‌هایت را پیگیری کنی.
           </p>
         </header>
 
         {submitted ? (
           <div className={styles.successState} role="status" aria-live="polite">
             <span aria-hidden="true">✓</span>
-            <p>ذخیره شد. می‌توانی از «مسیرهای من» ادامه بدهی.</p>
+            <p>ذخیره شد. می‌توانی از «مسیرهای شغلی من» ادامه بدهی.</p>
             <button type="button" onClick={close}>ادامه بررسی</button>
           </div>
         ) : (

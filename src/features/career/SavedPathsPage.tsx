@@ -24,8 +24,8 @@ export function SavedPathsList({ savedCardIds, hasLoaded, onToggleSaved }: Saved
   if (!savedCards.length) {
     return (
       <div className={styles.savedEmpty} aria-live="polite">
-        <span className={styles.savedEmptyIcon} aria-hidden><Bookmark size={28} fill="currentColor" strokeWidth={2.4} /></span>
-        <h2>هنوز مسیری ذخیره نکرده‌ای</h2>
+        <span className={styles.savedEmptyIcon} aria-hidden><Bookmark size={28} fill="currentColor" strokeWidth={1.9} /></span>
+        <h2>هنوز مسیر شغلی‌ای ذخیره نکرده‌ای</h2>
         <p>مسیرهای شغلی موردنظرت را ذخیره کن تا بعداً راحت‌تر به آن‌ها برگردی و بیشتر بررسی‌شان کنی.</p>
         <Link href="/" className={styles.savedEmptyAction}>مشاهده مسیرهای شغلی</Link>
       </div>
@@ -44,7 +44,7 @@ export function SavedPathsList({ savedCardIds, hasLoaded, onToggleSaved }: Saved
             </span>
             <h2 dir="auto">{getCareerDisplayTitle(card.title)}</h2>
             <p dir="auto">{getCareerDisplaySubtitle(card.subtitle)}</p>
-            <span className={styles.savedPathOpen}>مشاهده مسیر <SoftChevronIcon size={15} /></span>
+            <span className={styles.savedPathOpen}>مشاهده مسیر شغلی <SoftChevronIcon size={15} /></span>
           </Link>
           <CareerSaveButton saved onToggle={() => onToggleSaved(card.id)} />
         </article>
@@ -59,8 +59,8 @@ export function SavedPathsPage() {
   return (
     <section className={styles.careerPathsPage} aria-labelledby="career-saved-title" aria-busy={!hasLoadedSavedPaths}>
       <div className={styles.pageHeading}>
-        <h1 id="career-saved-title">مسیرهای ذخیره‌شده</h1>
-        <p>مسیرهایی که برای بررسی بیشتر ذخیره کرده‌ای.</p>
+        <h1 id="career-saved-title">مسیرهای شغلی ذخیره‌شده</h1>
+        <p>مسیرهای شغلی‌ای که برای بررسی بیشتر ذخیره کرده‌ای.</p>
       </div>
       <SavedPathsList savedCardIds={savedCardIds} hasLoaded={hasLoadedSavedPaths} onToggleSaved={toggleSavedPath} />
     </section>
