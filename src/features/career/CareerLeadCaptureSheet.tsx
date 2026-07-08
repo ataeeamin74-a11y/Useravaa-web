@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   CAREER_LEAD_CAPTURE_EVENT,
   CAREER_STAGE_OPTIONS,
-  isValidCareerLeadContact,
+  validateCareerLeadFormInput,
   rememberCareerLeadCaptureDismissal,
   rememberCareerLeadCaptureSubmission,
   shouldShowCareerLeadCapture,
@@ -47,13 +47,17 @@ function getStoredLeadContext(storage?: CareerLeadStorage) {
 }
 
 type CareerLeadCaptureFormProps = Readonly<{
-  contact: string;
+  fullName: string;
+  phoneNumber: string;
   stage: CareerStage | "";
   uncertainty: string;
   companyWebsite: string;
-  errorMessage: string;
+  fullNameError: string;
+  phoneError: string;
+  formError: string;
   isSubmitting: boolean;
-  onContactChange: (value: string) => void;
+  onFullNameChange: (value: string) => void;
+  onPhoneNumberChange: (value: string) => void;
   onStageChange: (value: CareerStage | "") => void;
   onUncertaintyChange: (value: string) => void;
   onCompanyWebsiteChange: (value: string) => void;
@@ -62,13 +66,17 @@ type CareerLeadCaptureFormProps = Readonly<{
 }>;
 
 export function CareerLeadCaptureForm({
-  contact,
+  fullName,
+  phoneNumber,
   stage,
   uncertainty,
   companyWebsite,
-  errorMessage,
+  fullNameError,
+  phoneError,
+  formError,
   isSubmitting,
-  onContactChange,
+  onFullNameChange,
+  onPhoneNumberChange,
   onStageChange,
   onUncertaintyChange,
   onCompanyWebsiteChange,
@@ -83,20 +91,47 @@ export function CareerLeadCaptureForm({
       }}
     >
       <div className={styles.fieldGroup}>
-        <label htmlFor="career-lead-contact">موبایل یا ایمیل</label>
+        <label htmlFor="career-lead-full-name">نام و نام خانوادگی</label>
         <input
-          id="career-lead-contact"
-          name="contact"
+          id="career-lead-full-name"
+          name="fullName"
           type="text"
-          autoComplete="email tel"
-          maxLength={160}
-          value={contact}
-          placeholder="مثلاً 0912... یا name@email.com"
-          aria-invalid={errorMessage === "موبایل یا ایمیل را درست وارد کن."}
-          aria-describedby={errorMessage ? "career-lead-error" : undefined}
-          onChange={(event) => onContactChange(event.target.value)}
+          autoComplete="name"
+          maxLength={120}
+          value={fullName}
+          placeholder="مثلاً علی رضایی"
+          aria-invalid={Boolean(fullNameError)}
+          aria-describedby={fullNameError ? "career-lead-full-name-error" : undefined}
+          onChange={(event) => onFullNameChange(event.target.value)}
           required
         />
+        <p className={styles.fieldError} id="career-lead-full-name-error" role="alert" aria-live="polite">
+          {fullNameError}
+        </p>
+      </div>
+
+      <div className={styles.fieldGroup}>
+        <label htmlFor="career-lead-phone">شماره موبایل</label>
+        <div className={styles.phoneInputRow} dir="ltr">
+          <span className={styles.phonePrefix} aria-hidden="true">+98</span>
+          <input
+            id="career-lead-phone"
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel-national"
+            maxLength={20}
+            value={phoneNumber}
+            placeholder="شماره موبایل"
+            aria-invalid={Boolean(phoneError)}
+            aria-describedby={phoneError ? "career-lead-phone-error" : undefined}
+            onChange={(event) => onPhoneNumberChange(event.target.value)}
+            required
+          />
+        </div>
+        <p className={styles.fieldError} id="career-lead-phone-error" role="alert" aria-live="polite">
+          {phoneError}
+        </p>
       </div>
 
       <div className={styles.fieldGroup}>
@@ -139,7 +174,7 @@ export function CareerLeadCaptureForm({
       </div>
 
       <p className={styles.errorMessage} id="career-lead-error" role="alert" aria-live="polite">
-        {errorMessage}
+        {formError}
       </p>
 
       <div className={styles.actions}>
@@ -157,11 +192,14 @@ export function CareerLeadCaptureForm({
 export function CareerLeadCaptureSheet() {
   const [request, setRequest] = useState<CareerLeadCaptureRequest>();
   const [isOpen, setIsOpen] = useState(false);
-  const [contact, setContact] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [stage, setStage] = useState<CareerStage | "">("");
   const [uncertainty, setUncertainty] = useState("");
   const [companyWebsite, setCompanyWebsite] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [fullNameError, setFullNameError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const [formError, setFormError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -172,11 +210,14 @@ export function CareerLeadCaptureSheet() {
   const close = useCallback(() => {
     setIsOpen(false);
     setRequest(undefined);
-    setContact("");
+    setFullName("");
+    setPhoneNumber("");
     setStage("");
     setUncertainty("");
     setCompanyWebsite("");
-    setErrorMessage("");
+    setFullNameError("");
+    setPhoneError("");
+    setFormError("");
     setIsSubmitting(false);
     setSubmitted(false);
   }, []);
@@ -268,12 +309,17 @@ export function CareerLeadCaptureSheet() {
 
   async function submitLead() {
     if (!request || isSubmitting) return;
-    if (!isValidCareerLeadContact(contact)) {
-      setErrorMessage("موبایل یا ایمیل را درست وارد کن.");
+    const validation = validateCareerLeadFormInput(fullName, phoneNumber);
+    if (!validation.ok) {
+      setFullNameError(validation.fullNameError ?? "");
+      setPhoneError(validation.phoneError ?? "");
+      setFormError("");
       return;
     }
 
-    setErrorMessage("");
+    setFullNameError("");
+    setPhoneError("");
+    setFormError("");
     setIsSubmitting(true);
     const storage = getSafeStorage();
     const storedContext = getStoredLeadContext(storage);
@@ -283,7 +329,10 @@ export function CareerLeadCaptureSheet() {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          contact,
+          contact: validation.phone,
+          contactType: "phone",
+          phone: validation.phone,
+          fullName: validation.fullName,
           source: request.source,
           stage: stage || undefined,
           uncertainty: uncertainty || undefined,
@@ -299,7 +348,7 @@ export function CareerLeadCaptureSheet() {
       rememberCareerLeadCaptureSubmission(storage);
       setSubmitted(true);
     } catch {
-      setErrorMessage("الان ذخیره نشد. کمی بعد دوباره امتحان کن.");
+      setFormError("الان ذخیره نشد. کمی بعد دوباره امتحان کن.");
     } finally {
       setIsSubmitting(false);
     }
@@ -337,7 +386,7 @@ export function CareerLeadCaptureSheet() {
         <header className={styles.header}>
           <h2 id="career-lead-title">مسیرهای شغلی‌ات را برای ادامه بررسی نگه داریم؟</h2>
           <p id="career-lead-description">
-            یک راه ارتباطی بگذار تا بعداً بتوانی مسیرهای شغلی و مقایسه‌هایت را پیگیری کنی.
+            نام و شماره‌ات را بگذار تا بعداً بتوانی مسیرهای شغلی و مقایسه‌هایت را پیگیری کنی.
           </p>
         </header>
 
@@ -349,13 +398,17 @@ export function CareerLeadCaptureSheet() {
           </div>
         ) : (
           <CareerLeadCaptureForm
-            contact={contact}
+            fullName={fullName}
+            phoneNumber={phoneNumber}
             stage={stage}
             uncertainty={uncertainty}
             companyWebsite={companyWebsite}
-            errorMessage={errorMessage}
+            fullNameError={fullNameError}
+            phoneError={phoneError}
+            formError={formError}
             isSubmitting={isSubmitting}
-            onContactChange={setContact}
+            onFullNameChange={setFullName}
+            onPhoneNumberChange={setPhoneNumber}
             onStageChange={setStage}
             onUncertaintyChange={setUncertainty}
             onCompanyWebsiteChange={setCompanyWebsite}

@@ -5,12 +5,16 @@ import { CareerLeadCaptureForm } from "@/features/career/CareerLeadCaptureSheet"
 import {
   CAREER_LEAD_CAPTURE_DISMISSAL_MS,
   CAREER_LEAD_CAPTURE_DISMISSED_AT_KEY,
+  CAREER_LEAD_FULL_NAME_ERROR,
+  CAREER_LEAD_PHONE_ERROR,
   CAREER_LEAD_CAPTURE_SUBMITTED_KEY,
   isValidCareerLeadContact,
+  normalizeIranianMobile,
   rememberCareerLeadCaptureDismissal,
   rememberCareerLeadCaptureSubmission,
   shouldRequestCareerLeadCapture,
-  shouldShowCareerLeadCapture
+  shouldShowCareerLeadCapture,
+  validateCareerLeadFormInput
 } from "@/features/career/career-lead-capture";
 
 function createMemoryStorage() {
@@ -49,22 +53,56 @@ describe("career path-seeker lead capture", () => {
     expect(shouldShowCareerLeadCapture(storage, now + CAREER_LEAD_CAPTURE_DISMISSAL_MS)).toBe(false);
   });
 
-  it("accepts email and phone formats while rejecting invalid contact", () => {
-    expect(isValidCareerLeadContact("path@example.com")).toBe(true);
-    expect(isValidCareerLeadContact("09121234567")).toBe(true);
-    expect(isValidCareerLeadContact("not-contact")).toBe(false);
+  it("accepts only standard Iranian mobile numbers and normalizes them", () => {
+    expect(isValidCareerLeadContact("path@example.com")).toBe(false);
+    expect(isValidCareerLeadContact("09123456789")).toBe(true);
+    expect(normalizeIranianMobile("09123456789")).toBe("+989123456789");
+    expect(normalizeIranianMobile("9123456789")).toBe("+989123456789");
+    expect(normalizeIranianMobile("+989123456789")).toBe("+989123456789");
+    expect(normalizeIranianMobile("989123456789")).toBe("+989123456789");
+    expect(normalizeIranianMobile("۰۹۱۲۳۴۵۶۷۸۹")).toBe("+989123456789");
+    expect(normalizeIranianMobile("02112345678")).toBeUndefined();
+    expect(normalizeIranianMobile("55141488855")).toBeUndefined();
+    expect(normalizeIranianMobile("091234")).toBeUndefined();
+    expect(normalizeIranianMobile("091234567890")).toBeUndefined();
+    expect(normalizeIranianMobile("abcd")).toBeUndefined();
+    expect(normalizeIranianMobile("+971501234567")).toBeUndefined();
   });
 
-  it("renders the approved Persian form copy without parked-product language", () => {
+  it("validates full name before lead API submission can happen", () => {
+    expect(validateCareerLeadFormInput("علی", "09123456789")).toEqual({
+      ok: false,
+      fullNameError: CAREER_LEAD_FULL_NAME_ERROR
+    });
+    expect(validateCareerLeadFormInput("123 456", "09123456789")).toEqual({
+      ok: false,
+      fullNameError: CAREER_LEAD_FULL_NAME_ERROR
+    });
+    expect(validateCareerLeadFormInput("علی رضایی", "55141488855")).toEqual({
+      ok: false,
+      phoneError: CAREER_LEAD_PHONE_ERROR
+    });
+    expect(validateCareerLeadFormInput("علی رضایی", "09123456789")).toEqual({
+      ok: true,
+      fullName: "علی رضایی",
+      phone: "+989123456789"
+    });
+  });
+
+  it("renders the approved Persian mobile-only form copy without parked-product language", () => {
     const html = renderToStaticMarkup(
       <CareerLeadCaptureForm
-        contact=""
+        fullName=""
+        phoneNumber=""
         stage=""
         uncertainty=""
         companyWebsite=""
-        errorMessage=""
+        fullNameError=""
+        phoneError=""
+        formError=""
         isSubmitting={false}
-        onContactChange={() => undefined}
+        onFullNameChange={() => undefined}
+        onPhoneNumberChange={() => undefined}
         onStageChange={() => undefined}
         onUncertaintyChange={() => undefined}
         onCompanyWebsiteChange={() => undefined}
@@ -75,13 +113,16 @@ describe("career path-seeker lead capture", () => {
     const sheetSource = readFileSync("src/features/career/CareerLeadCaptureSheet.tsx", "utf8");
 
     expect(sheetSource).toContain("مسیرهای شغلی‌ات را برای ادامه بررسی نگه داریم؟");
-    expect(sheetSource).toContain("یک راه ارتباطی بگذار تا بعداً بتوانی مسیرهای شغلی و مقایسه‌هایت را پیگیری کنی.");
+    expect(sheetSource).toContain("نام و شماره‌ات را بگذار تا بعداً بتوانی مسیرهای شغلی و مقایسه‌هایت را پیگیری کنی.");
     expect(sheetSource).toContain("مثلاً نمی‌دانم این مسیر شغلی با من تناسب دارد یا نه");
     expect(sheetSource).toContain("ذخیره شد. می‌توانی از «مسیرهای شغلی من» ادامه بدهی.");
-    expect(html).toContain("موبایل یا ایمیل");
+    expect(html).toContain("نام و نام خانوادگی");
+    expect(html).toContain("مثلاً علی رضایی");
+    expect(html).toContain("شماره موبایل");
+    expect(html).toContain("+98");
     expect(html).toContain("ذخیره و ادامه بررسی");
     expect(html).toContain("فعلاً نه");
-    expect(`${html}\n${sheetSource}`).not.toMatch(/منتور|تجربه‌آفرین|مشاوره|جلسه|رزرو|پرداخت|درخواست تجربه|متخصص|صحبت با آدم باتجربه|ثبت‌نام برای جلسه/);
+    expect(`${html}\n${sheetSource}`).not.toMatch(/موبایل یا ایمیل|name@email|ایمیل|منتور|تجربه‌آفرین|مشاوره|جلسه|رزرو|پرداخت|درخواست تجربه|متخصص|صحبت با آدم باتجربه|ثبت‌نام|ورود یا ثبت نام/);
   });
 
   it("keeps lead failure isolated and coordinates with the iOS guide", () => {

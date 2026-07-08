@@ -19,18 +19,104 @@ export type CareerLeadCaptureRequest = Readonly<{
   comparisonPathIds?: readonly string[];
 }>;
 export type CareerLeadStorage = Pick<Storage, "getItem" | "setItem">;
+export type CareerLeadFormValidation = Readonly<
+  | {
+    ok: true;
+    fullName: string;
+    phone: string;
+  }
+  | {
+    ok: false;
+    fullNameError?: string;
+    phoneError?: string;
+  }
+>;
+
+const persianArabicDigitMap: Readonly<Record<string, string>> = {
+  "۰": "0",
+  "۱": "1",
+  "۲": "2",
+  "۳": "3",
+  "۴": "4",
+  "۵": "5",
+  "۶": "6",
+  "۷": "7",
+  "۸": "8",
+  "۹": "9",
+  "٠": "0",
+  "١": "1",
+  "٢": "2",
+  "٣": "3",
+  "٤": "4",
+  "٥": "5",
+  "٦": "6",
+  "٧": "7",
+  "٨": "8",
+  "٩": "9"
+};
+
+export const CAREER_LEAD_FULL_NAME_ERROR = "نام و نام خانوادگی را درست وارد کن.";
+export const CAREER_LEAD_PHONE_ERROR = "شماره موبایل را درست وارد کن.";
+
+export function normalizeCareerLeadDigits(value: string): string {
+  return value.replace(/[۰-۹٠-٩]/g, (digit) => persianArabicDigitMap[digit] ?? digit);
+}
+
+export function normalizeCareerLeadFullName(fullName: string): string | undefined {
+  const normalizedName = fullName.replace(/\s+/g, " ").trim();
+  const words = normalizedName.split(" ").filter(Boolean);
+  if (words.length < 2) return undefined;
+
+  for (const word of words) {
+    const letterCount = word.match(/\p{L}/gu)?.length ?? 0;
+    if (letterCount < 2 || /[^\p{L}\u200c'-]/u.test(word)) return undefined;
+  }
+
+  return normalizedName;
+}
+
+export function normalizeIranianMobile(contact: string): string | undefined {
+  const compactContact = normalizeCareerLeadDigits(contact)
+    .trim()
+    .replace(/[\s().-]/g, "");
+  if (!compactContact || !/^\+?\d+$/.test(compactContact)) return undefined;
+
+  let nationalNumber = compactContact;
+  if (compactContact.startsWith("+98")) {
+    nationalNumber = compactContact.slice(3);
+  } else if (compactContact.startsWith("98")) {
+    nationalNumber = compactContact.slice(2);
+  } else if (compactContact.startsWith("0")) {
+    nationalNumber = compactContact.slice(1);
+  }
+
+  return /^9\d{9}$/.test(nationalNumber) ? `+98${nationalNumber}` : undefined;
+}
+
+export function isValidCareerLeadFullName(fullName: string): boolean {
+  return Boolean(normalizeCareerLeadFullName(fullName));
+}
 
 export function isValidCareerLeadContact(contact: string): boolean {
-  const normalizedContact = contact.trim();
-  if (!normalizedContact || normalizedContact.length > 160) return false;
+  return Boolean(normalizeIranianMobile(contact));
+}
 
-  const looksLikeEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedContact);
-  const phoneDigits = normalizedContact.replace(/\D/g, "");
-  const looksLikePhone = /^[+\d][\d\s().-]+$/.test(normalizedContact)
-    && phoneDigits.length >= 7
-    && phoneDigits.length <= 15;
+export function validateCareerLeadFormInput(
+  fullName: string,
+  phone: string
+): CareerLeadFormValidation {
+  const normalizedFullName = normalizeCareerLeadFullName(fullName);
+  const normalizedPhone = normalizeIranianMobile(phone);
 
-  return looksLikeEmail || looksLikePhone;
+  if (normalizedFullName && normalizedPhone) {
+    return { ok: true, fullName: normalizedFullName, phone: normalizedPhone };
+  }
+
+  return {
+    ok: false,
+    ...(!normalizedFullName ? { fullNameError: CAREER_LEAD_FULL_NAME_ERROR } : {}),
+    ...(!normalizedPhone ? { phoneError: CAREER_LEAD_PHONE_ERROR } : {})
+  };
 }
 
 export function wasCareerLeadCaptureDismissedRecently(

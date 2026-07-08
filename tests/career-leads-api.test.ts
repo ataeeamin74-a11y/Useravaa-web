@@ -26,49 +26,87 @@ function leadRequest(body: unknown) {
 
 describe("POST /api/career/leads", () => {
   it("validates and sanitizes supported lead payloads", () => {
-    expect(parseCareerLeadPayload({ contact: " path@example.com ", source: "path_save" })).toMatchObject({
+    expect(parseCareerLeadPayload({
+      contact: " 09123456789 ",
+      contactType: "phone",
+      phone: "9123456789",
+      fullName: "  علی   رضایی ",
+      source: "path_save"
+    })).toMatchObject({
       honeypot: false,
-      lead: { contact: "path@example.com", source: "path_save" }
+      lead: {
+        contact: "+989123456789",
+        contactType: "phone",
+        phone: "+989123456789",
+        fullName: "علی رضایی",
+        source: "path_save"
+      }
     });
-    expect(parseCareerLeadPayload({ contact: "09121234567", source: "comparison_save" })).toBeDefined();
+    expect(parseCareerLeadPayload({ contact: "۹۱۲۳۴۵۶۷۸۹", source: "comparison_save" })).toBeDefined();
+    expect(parseCareerLeadPayload({ contact: "path@example.com", source: "path_save" })).toBeUndefined();
     expect(parseCareerLeadPayload({ contact: "invalid", source: "path_save" })).toBeUndefined();
-    expect(parseCareerLeadPayload({ contact: "path@example.com", source: "unknown" })).toBeUndefined();
+    expect(parseCareerLeadPayload({ contact: "09123456789", source: "unknown" })).toBeUndefined();
+    expect(parseCareerLeadPayload({
+      contact: "09123456789",
+      phone: "09111111111",
+      source: "path_save"
+    })).toBeUndefined();
+    expect(parseCareerLeadPayload({
+      contact: "09123456789",
+      fullName: "علی",
+      source: "path_save"
+    })).toBeUndefined();
   });
 
-  it("appends valid email and phone leads as one JSON object per line", async () => {
+  it("appends valid phone leads as one JSON object per line", async () => {
     const directory = await mkdtemp(path.join(tmpdir(), "useravaa-career-leads-"));
     temporaryDirectories.push(directory);
     const leadPath = path.join(directory, "nested", "career-leads.jsonl");
     process.env.USERAVAA_CAREER_LEADS_PATH = leadPath;
 
-    const emailResponse = await POST(leadRequest({
-      contact: "path@example.com",
+    const firstResponse = await POST(leadRequest({
+      contact: "09123456789",
+      contactType: "phone",
+      phone: "09123456789",
+      fullName: "علی رضایی",
       source: "path_save",
       currentPathId: "path-1",
       savedPathIds: ["path-1"],
-      pathname: "/"
+      pathname: "/career"
     }));
-    const phoneResponse = await POST(leadRequest({
-      contact: "09121234567",
+    const secondResponse = await POST(leadRequest({
+      contact: "۹۱۲۳۴۵۶۷۸۹",
+      fullName: "Sara Rezaei",
       source: "comparison_save",
       comparisonPathIds: ["path-1", "path-2"],
       savedComparisons: [["path-1", "path-2"]]
     }));
 
-    expect(emailResponse.status).toBe(200);
-    expect(phoneResponse.status).toBe(200);
+    expect(firstResponse.status).toBe(200);
+    expect(secondResponse.status).toBe(200);
     const lines = (await readFile(leadPath, "utf8")).trim().split("\n");
     expect(lines).toHaveLength(2);
     const leads = lines.map((line) => JSON.parse(line) as Record<string, unknown>);
-    expect(leads[0]).toMatchObject({ contact: "path@example.com", source: "path_save" });
-    expect(leads[1]).toMatchObject({ contact: "09121234567", source: "comparison_save" });
+    expect(leads[0]).toMatchObject({
+      contact: "+989123456789",
+      contactType: "phone",
+      phone: "+989123456789",
+      fullName: "علی رضایی",
+      source: "path_save"
+    });
+    expect(leads[1]).toMatchObject({
+      contact: "+989123456789",
+      fullName: "Sara Rezaei",
+      source: "comparison_save"
+    });
     expect(leads.every((lead) => typeof lead.id === "string" && typeof lead.createdAt === "string")).toBe(true);
     expect(leads.every((lead) => !("ip" in lead) && !("cookies" in lead) && !("fingerprint" in lead))).toBe(true);
   });
 
   it("rejects invalid contacts and sources with 400", async () => {
     expect((await POST(leadRequest({ contact: "invalid", source: "path_save" }))).status).toBe(400);
-    expect((await POST(leadRequest({ contact: "path@example.com", source: "invalid" }))).status).toBe(400);
+    expect((await POST(leadRequest({ contact: "path@example.com", source: "path_save" }))).status).toBe(400);
+    expect((await POST(leadRequest({ contact: "09123456789", source: "invalid" }))).status).toBe(400);
   });
 
   it("silently accepts honeypot submissions without writing", async () => {

@@ -102,6 +102,37 @@
   min-height: 46px;
 }
 
+.phoneInputRow {
+  min-height: 46px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: stretch;
+  overflow: hidden;
+  border: 1px solid #e4e7ec;
+  border-radius: 13px;
+  background: #f8fafc;
+}
+
+.phonePrefix {
+  min-width: 58px;
+  display: grid;
+  place-items: center;
+  border-inline-end: 1px solid #e4e7ec;
+  background: #fff;
+  color: var(--ua-blue);
+  font-size: 13px;
+  font-weight: var(--weight-bold);
+}
+
+.phoneInputRow input {
+  min-height: 44px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  direction: ltr;
+  text-align: left;
+}
+
 .fieldGroup textarea {
   resize: vertical;
 }
@@ -112,6 +143,32 @@
   border-color: var(--ua-blue);
   outline: 2px solid rgb(36 95 253 / 16%);
   outline-offset: 1px;
+}
+
+.phoneInputRow:focus-within {
+  border-color: var(--ua-blue);
+  outline: 2px solid rgb(36 95 253 / 16%);
+  outline-offset: 1px;
+}
+
+.phoneInputRow input:focus {
+  outline: 0;
+}
+
+.fieldGroup input[aria-invalid="true"],
+.fieldGroup select[aria-invalid="true"],
+.fieldGroup textarea[aria-invalid="true"],
+.fieldGroup:has(input[aria-invalid="true"]) .phoneInputRow {
+  border-color: #c2414b;
+}
+
+.fieldError {
+  min-height: 18px;
+  margin: -2px 0 0;
+  color: #a2343d;
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  line-height: 1.6;
 }
 
 .honeypot {

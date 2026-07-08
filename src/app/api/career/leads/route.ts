@@ -3,7 +3,10 @@ import { appendFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import {
   CAREER_STAGE_OPTIONS,
+  isValidCareerLeadFullName,
   isValidCareerLeadContact,
+  normalizeCareerLeadFullName,
+  normalizeIranianMobile,
   type CareerLeadSource,
   type CareerStage
 } from "@/features/career/career-lead-capture";
@@ -18,6 +21,9 @@ type StoredCareerLead = Readonly<{
   id: string;
   createdAt: string;
   contact: string;
+  contactType?: "phone";
+  phone?: string;
+  fullName?: string;
   source: CareerLeadSource;
   stage?: CareerStage;
   uncertainty?: string;
@@ -90,11 +96,15 @@ export function parseCareerLeadPayload(value: unknown): ParsedLeadPayload | unde
   if (companyWebsite) return { honeypot: true };
 
   if (typeof value.contact !== "string" || typeof value.source !== "string") return undefined;
-  const contact = sanitizeText(value.contact);
-  if (!isValidCareerLeadContact(contact) || !ALLOWED_SOURCES.has(value.source as CareerLeadSource)) {
+  const normalizedContact = normalizeIranianMobile(sanitizeText(value.contact));
+  if (!normalizedContact || !isValidCareerLeadContact(normalizedContact) || !ALLOWED_SOURCES.has(value.source as CareerLeadSource)) {
     return undefined;
   }
 
+  const phone = parseOptionalText(value.phone, 30);
+  const normalizedPhone = phone ? normalizeIranianMobile(phone) : undefined;
+  const contactType = parseOptionalText(value.contactType, 20);
+  const fullName = parseOptionalText(value.fullName, 120);
   const stage = parseOptionalText(value.stage, 100);
   const uncertainty = parseOptionalText(value.uncertainty, 1000);
   const currentPathId = parseOptionalText(value.currentPathId, 300);
@@ -104,22 +114,32 @@ export function parseCareerLeadPayload(value: unknown): ParsedLeadPayload | unde
   const savedComparisons = parseComparisonList(value.savedComparisons);
 
   if (
-    stage === null
+    phone === null
+    || contactType === null
+    || fullName === null
+    || stage === null
     || uncertainty === null
     || currentPathId === null
     || pathname === null
     || savedPathIds === null
     || comparisonPathIds === null
     || savedComparisons === null
+    || (phone !== undefined && normalizedPhone !== normalizedContact)
+    || (contactType !== undefined && contactType !== "phone")
+    || (fullName !== undefined && !isValidCareerLeadFullName(fullName))
     || (stage !== undefined && !ALLOWED_STAGES.has(stage))
   ) {
     return undefined;
   }
+  const normalizedFullName = fullName ? normalizeCareerLeadFullName(fullName) : undefined;
 
   return {
     honeypot: false,
     lead: {
-      contact,
+      contact: normalizedContact,
+      ...(contactType ? { contactType: "phone" as const } : {}),
+      ...(normalizedPhone ? { phone: normalizedPhone } : {}),
+      ...(normalizedFullName ? { fullName: normalizedFullName } : {}),
       source: value.source as CareerLeadSource,
       ...(stage ? { stage: stage as CareerStage } : {}),
       ...(uncertainty ? { uncertainty } : {}),
