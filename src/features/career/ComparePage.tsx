@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { Check, Layers3, Pencil, Route } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, Layers3, Pencil, RotateCcw, Route } from "lucide-react";
 import { CompareTabIcon, SoftCloseIcon } from "./CareerSoftIcons";
 import { EssentialChip, getDisplayLabel } from "./PathsPage";
 import { useSavedCareerPaths } from "./career-saved-paths";
@@ -17,9 +17,12 @@ import {
   getCareerPathById
 } from "./career-path-index";
 import {
+  clearCompareDraft,
   MAX_COMPARE_PATHS,
   MIN_COMPARE_PATHS,
+  saveCompareDraftPathIds,
   updateCompareSelection,
+  useCompareDraftPathIds,
   useRecentlyViewedCareerPaths
 } from "./career-compare-state";
 import type { CareerCard, CareerSubfamilyNode } from "./career-types";
@@ -321,11 +324,18 @@ function ComparisonCell({ values }: Readonly<{ values: ComparisonValue }>) {
 type CareerComparisonTableProps = Readonly<{
   paths: readonly CareerSubfamilyNode[];
   onEdit: () => void;
+  onReset?: () => void;
   onSave?: () => void;
   saved?: boolean;
 }>;
 
-export function CareerComparisonTable({ paths, onEdit, onSave, saved = false }: CareerComparisonTableProps) {
+export function CareerComparisonTable({
+  paths,
+  onEdit,
+  onReset,
+  onSave,
+  saved = false
+}: CareerComparisonTableProps) {
   const sections = useMemo(() => buildComparisonSections(paths), [paths]);
   const [activeSectionId, setActiveSectionId] = useState<ComparisonSectionId>("overview");
 
@@ -352,6 +362,12 @@ export function CareerComparisonTable({ paths, onEdit, onSave, saved = false }: 
             <Pencil size={17} strokeWidth={1.9} />
             ویرایش انتخاب‌ها
           </button>
+          {onReset ? (
+            <button type="button" className={styles.resetComparison} onClick={onReset}>
+              <RotateCcw size={17} strokeWidth={1.9} />
+              شروع مقایسه جدید
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -426,6 +442,8 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
   const { savedPathIds, hasLoadedSavedPaths } = useSavedCareerPaths();
   const { saveComparison, isComparisonSaved } = useSavedCareerComparisons();
   const { recentlyViewedPathIds, hasLoadedRecentlyViewedPaths } = useRecentlyViewedCareerPaths();
+  const { compareDraftPathIds, hasLoadedCompareDraft } = useCompareDraftPathIds();
+  const hasAppliedInitialDraftRef = useRef(false);
   const savedPaths = useMemo(() => getSavedComparisonPaths(savedPathIds), [savedPathIds]);
   const recentPaths = useMemo(
     () => getRecentlyViewedComparisonPaths(recentlyViewedPathIds),
@@ -438,23 +456,55 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
     }),
     [selectedPathIds]
   );
-  const hasSinglePreselection = normalizedInitialPathIds.length === 1;
-  const candidatePaths = hasSinglePreselection
+  const hasInitialComparison = normalizedInitialPathIds.length >= MIN_COMPARE_PATHS;
+  const hasSingleSelection = selectedPathIds.length === 1;
+  const candidatePaths = hasSingleSelection
     ? allCareerSubfamilies
     : (activeSource === "saved" ? savedPaths : recentPaths);
-  const candidatesLoaded = hasSinglePreselection
+  const candidatesLoaded = hasSingleSelection
     || (activeSource === "saved" ? hasLoadedSavedPaths : hasLoadedRecentlyViewedPaths);
   const comparisonSaved = isComparisonSaved(selectedPathIds);
+
+  useEffect(() => {
+    if (
+      hasAppliedInitialDraftRef.current
+      || !hasLoadedCompareDraft
+      || hasInitialComparison
+      || !compareDraftPathIds.length
+    ) {
+      return;
+    }
+
+    hasAppliedInitialDraftRef.current = true;
+    const frame = window.requestAnimationFrame(() => {
+      setSelectedPathIds(compareDraftPathIds);
+      setView(compareDraftPathIds.length >= MIN_COMPARE_PATHS ? "table" : "selection");
+      setLimitMessage("");
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [compareDraftPathIds, hasInitialComparison, hasLoadedCompareDraft]);
 
   function togglePath(pathId: string) {
     const update = updateCompareSelection(selectedPathIds, pathId);
     setSelectedPathIds(update.selectedPathIds);
+    saveCompareDraftPathIds(update.selectedPathIds);
     setLimitMessage(update.limitReached ? "حداکثر ۵ مسیر را می‌توانی مقایسه کنی." : "");
   }
 
   function startComparison() {
     if (selectedPaths.length < MIN_COMPARE_PATHS) return;
     setView("table");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function resetComparison() {
+    clearCompareDraft();
+    setSelectedPathIds([]);
+    setLimitMessage("");
+    setView("selection");
+    setActiveSource("saved");
+    window.history.replaceState(window.history.state, "", "/career/compare");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -474,6 +524,7 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
         <CareerComparisonTable
           paths={selectedPaths}
           onEdit={() => setView("selection")}
+          onReset={resetComparison}
           onSave={saveCurrentComparison}
           saved={comparisonSaved}
         />
@@ -487,11 +538,17 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
         <span className={styles.headingIcon} aria-hidden><Layers3 size={24} strokeWidth={2} /></span>
         <div>
           <h1 id="career-compare-title">مقایسه مسیرها</h1>
-          <p>{hasSinglePreselection ? "مسیر شغلی دوم را برای مقایسه انتخاب کن" : "۲ تا ۵ مسیر شغلی را برای مقایسه انتخاب کن"}</p>
+          <p>{hasSingleSelection ? "مسیر شغلی دوم را برای مقایسه انتخاب کن" : "۲ تا ۵ مسیر شغلی را برای مقایسه انتخاب کن"}</p>
         </div>
+        {selectedPathIds.length ? (
+          <button type="button" className={styles.resetComparison} onClick={resetComparison}>
+            <RotateCcw size={17} strokeWidth={1.9} />
+            شروع مقایسه جدید
+          </button>
+        ) : null}
       </div>
 
-      {hasSinglePreselection ? (
+      {hasSingleSelection ? (
         <p className={styles.preselectedHelper}>این مسیر شغلی برای مقایسه انتخاب شده است.</p>
       ) : (
       <div className={styles.sourceTabs} role="tablist" aria-label="منبع مسیرها">
@@ -537,7 +594,7 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
             <span aria-hidden><Route size={26} strokeWidth={2} /></span>
             <h2>{activeSource === "saved" ? "هنوز مسیر ذخیره‌شده‌ای نداری" : "هنوز مسیری را ندیده‌ای"}</h2>
             <p>{activeSource === "saved" ? "مسیرهای موردنظرت را ذخیره کن و برای مقایسه به اینجا برگرد." : "یک مسیر شغلی را باز کن تا در این فهرست دیده شود."}</p>
-            <Link href="/">مشاهده مسیرهای شغلی</Link>
+            <Link href="/career">مشاهده مسیرهای شغلی</Link>
           </div>
         ) : null}
       </div>

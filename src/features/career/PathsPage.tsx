@@ -37,7 +37,10 @@ import {
   requestCareerLeadCapture,
   shouldRequestCareerLeadCapture
 } from "./career-lead-capture";
-import { recordRecentlyViewedCareerPath } from "./career-compare-state";
+import {
+  recordRecentlyViewedCareerPath,
+  startCompareDraftFromPath
+} from "./career-compare-state";
 import { getCareerSlides } from "./data/career-slide-manifest";
 import type {
   CareerCard,
@@ -421,14 +424,19 @@ type PathEngagementActionsProps = Readonly<{
   path: CareerSubfamilyNode;
   saved: boolean;
   onSave: (pathId: string) => boolean;
+  onRemove: (pathId: string) => boolean;
 }>;
 
-export function PathEngagementActions({ path, saved, onSave }: PathEngagementActionsProps) {
+export function PathEngagementActions({ path, saved, onSave, onRemove }: PathEngagementActionsProps) {
   function saveCurrentPath() {
     const saveSucceeded = onSave(path.id);
     if (shouldRequestCareerLeadCapture(saved, saveSucceeded)) {
       requestCareerLeadCapture({ source: "path_save", currentPathId: path.id });
     }
+  }
+
+  function removeCurrentPath() {
+    onRemove(path.id);
   }
 
   return (
@@ -442,9 +450,19 @@ export function PathEngagementActions({ path, saved, onSave }: PathEngagementAct
         <BookmarkPlus size={19} aria-hidden />
         {saved ? "به مسیرهای شغلی من اضافه شد" : "افزودن به مسیرهای شغلی من"}
       </button>
+      {saved ? (
+        <button
+          type="button"
+          className={styles.removePathAction}
+          onClick={removeCurrentPath}
+        >
+          حذف از مسیرهای شغلی من
+        </button>
+      ) : null}
       <Link
         href={`/career/compare?path=${encodeURIComponent(path.id)}`}
         className={styles.comparePathAction}
+        onClick={() => startCompareDraftFromPath(path.id)}
       >
         <GitCompareArrows size={19} aria-hidden />
         مقایسه با مسیرهای دیگر
@@ -709,7 +727,7 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
   const [highlightedCardIds, setHighlightedCardIds] = useState<ReadonlySet<string>>(
     () => new Set(initialCardId ? [initialCardId] : [])
   );
-  const { savedPathIds, savePath } = useSavedCareerPaths();
+  const { savedPathIds, savePath, removePath } = useSavedCareerPaths();
   const flowStartRef = useRef<HTMLDivElement>(null);
   const hasRenderedInitialLevel = useRef(false);
   const deferredQuery = useDeferredValue(query);
@@ -966,6 +984,7 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
             path={selectedSubfamily}
             saved={savedPathIds.has(selectedSubfamily.id)}
             onSave={savePath}
+            onRemove={removePath}
           />
           <div className={styles.seniorityGrid}>
             {selectedSubfamily.cards.map((card) => (

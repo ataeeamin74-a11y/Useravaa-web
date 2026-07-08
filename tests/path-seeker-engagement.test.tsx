@@ -12,13 +12,20 @@ import {
   addSavedCareerComparison,
   includesSavedCareerComparison,
   parseSavedCareerComparisons,
+  removeSavedCareerComparison,
   SAVED_COMPARISONS_STORAGE_KEY
 } from "@/features/career/career-saved-comparisons";
 import {
   addSavedCareerPathId,
   parseSavedCareerPathIds,
+  removeSavedCareerPathId,
   SAVED_PATHS_STORAGE_KEY
 } from "@/features/career/career-saved-paths";
+import {
+  COMPARE_DRAFT_STORAGE_KEY,
+  parseCompareDraftPathIds,
+  updateCompareDraftSelection
+} from "@/features/career/career-compare-state";
 import { careerPaths, getCareerPathByCardId } from "@/features/career/career-path-index";
 import { navigationItems } from "@/features/career/CareerBottomNav";
 
@@ -31,9 +38,11 @@ describe("Path Seeker engagement", () => {
     const migrated = parseSavedCareerPathIds('["CARD_001","CARD_001"]');
     const legacyManagementVariant = parseSavedCareerPathIds('["CARD_033"]');
     const savedAgain = addSavedCareerPathId(migrated, legacyPath.id);
+    const removed = removeSavedCareerPathId(savedAgain, legacyPath.id);
 
     expect([...migrated]).toEqual([legacyPath.id]);
     expect([...savedAgain]).toEqual([legacyPath.id]);
+    expect([...removed]).toEqual([]);
     expect([...legacyManagementVariant]).toEqual([getCareerPathByCardId("CARD_033")!.id]);
     expect(SAVED_PATHS_STORAGE_KEY).toBe("useravaa:career:saved-paths");
   });
@@ -41,25 +50,48 @@ describe("Path Seeker engagement", () => {
   it("deduplicates saved comparisons regardless of selection order", () => {
     const saved = addSavedCareerComparison([], [firstPath.id, secondPath.id]);
     const duplicate = addSavedCareerComparison(saved, [secondPath.id, firstPath.id]);
+    const removed = removeSavedCareerComparison(duplicate, [secondPath.id, firstPath.id]);
 
     expect(duplicate).toHaveLength(1);
     expect(includesSavedCareerComparison(duplicate, [secondPath.id, firstPath.id])).toBe(true);
     expect(parseSavedCareerComparisons(JSON.stringify(duplicate))).toEqual(duplicate);
+    expect(removed).toEqual([]);
     expect(SAVED_COMPARISONS_STORAGE_KEY).toBe("useravaa:career:saved-comparisons");
+  });
+
+  it("keeps an in-progress compare draft in session storage shape", () => {
+    const firstDraft = updateCompareDraftSelection([], firstPath.id);
+    const sameDraft = updateCompareDraftSelection(firstDraft, firstPath.id);
+    const twoPathDraft = updateCompareDraftSelection(firstDraft, secondPath.id);
+    const restartedDraft = updateCompareDraftSelection(twoPathDraft, secondPath.id);
+    const storedDraft = JSON.stringify({ pathIds: twoPathDraft, updatedAt: 1_800_000_000_000 });
+
+    expect(firstDraft).toEqual([firstPath.id]);
+    expect(sameDraft).toEqual([firstPath.id]);
+    expect(twoPathDraft).toEqual([firstPath.id, secondPath.id]);
+    expect(restartedDraft).toEqual([secondPath.id]);
+    expect(parseCompareDraftPathIds(storedDraft, 1_800_000_000_001)).toEqual(twoPathDraft);
+    expect(parseCompareDraftPathIds(storedDraft, 1_800_000_000_000 + (25 * 60 * 60 * 1000))).toEqual([]);
+    expect(COMPARE_DRAFT_STORAGE_KEY).toBe("useravaa:career:compare-draft");
   });
 
   it("renders detail engagement actions before the long-form content contract", () => {
     const unsavedHtml = renderToStaticMarkup(
-      <PathEngagementActions path={firstPath} saved={false} onSave={() => true} />
+      <PathEngagementActions path={firstPath} saved={false} onSave={() => true} onRemove={() => true} />
     );
     const savedHtml = renderToStaticMarkup(
-      <PathEngagementActions path={firstPath} saved onSave={() => true} />
+      <PathEngagementActions path={firstPath} saved onSave={() => true} onRemove={() => true} />
     );
 
     expect(unsavedHtml).toContain("افزودن به مسیرهای شغلی من");
+    expect(unsavedHtml).not.toContain("حذف از مسیرهای شغلی من");
     expect(savedHtml).toContain("به مسیرهای شغلی من اضافه شد");
+    expect(savedHtml).toContain("حذف از مسیرهای شغلی من");
     expect(unsavedHtml).toContain("مقایسه با مسیرهای دیگر");
     expect(unsavedHtml).toContain(`/career/compare?path=${encodeURIComponent(firstPath.id)}`);
+
+    const pathSource = readFileSync("src/features/career/PathsPage.tsx", "utf8");
+    expect(pathSource).toContain("startCompareDraftFromPath(path.id)");
   });
 
   it("keeps the guide available outside the three-item bottom navigation", () => {
@@ -77,6 +109,7 @@ describe("Path Seeker engagement", () => {
 
     expect(html).toContain("مسیر شغلی دوم را برای مقایسه انتخاب کن");
     expect(html).toContain("این مسیر شغلی برای مقایسه انتخاب شده است.");
+    expect(html).toContain("شروع مقایسه جدید");
     expect(html).toContain('aria-pressed="true"');
   });
 
@@ -93,7 +126,7 @@ describe("Path Seeker engagement", () => {
     expect(html).toContain("مقایسه ذخیره شد");
   });
 
-  it("renders My Paths empty, saved path, and saved comparison states", () => {
+  it("renders My Paths accordion controls, CTAs, and remove actions", () => {
     const emptyHtml = renderToStaticMarkup(
       <MyPathsContent savedPathIds={new Set()} savedComparisons={[]} hasLoaded />
     );
@@ -106,15 +139,25 @@ describe("Path Seeker engagement", () => {
     );
 
     expect(emptyHtml).toContain("هنوز مسیر شغلی‌ای اضافه نکردی");
+    expect(emptyHtml).toContain("هنوز مقایسه‌ای ذخیره نکردی");
+    expect(emptyHtml).toContain("افزودن مسیر شغلی");
+    expect(emptyHtml).toContain("ساخت مقایسه جدید");
     expect(emptyHtml).toContain('href="/career"');
+    expect(emptyHtml).toContain('href="/career/compare"');
+    expect(populatedHtml).toContain('aria-expanded="false"');
+    expect(populatedHtml).toContain('hidden=""');
     expect(populatedHtml).toContain("مسیرهای شغلی ذخیره‌شده");
     expect(populatedHtml).toContain("مقایسه‌های ذخیره‌شده");
+    expect(populatedHtml).toContain("حذف");
     expect(populatedHtml).toContain("/career?card=");
     expect(populatedHtml).toContain("/career/compare?path=");
 
     const myPathsSource = readFileSync("src/features/career/MyPathsPage.tsx", "utf8");
     expect(myPathsSource).toContain("مسیرهای شغلی من");
     expect(myPathsSource).toContain("مسیرهای شغلی‌ای که برای بررسی نگه می‌داری اینجا می‌آیند.");
+    expect(myPathsSource).toContain("aria-expanded");
+    expect(myPathsSource).toContain("onRemovePath(path.id)");
+    expect(myPathsSource).toContain("onRemoveComparison(pathIds)");
   });
 
   it("uses refined Career UI icon strokes while preserving filled tab states", () => {
@@ -140,7 +183,8 @@ describe("Path Seeker engagement", () => {
       "src/features/career/career-saved-paths.ts",
       "src/features/career/career-saved-comparisons.ts",
       "src/features/career/MyPathsPage.tsx",
-      "src/features/career/ComparePage.tsx"
+      "src/features/career/ComparePage.tsx",
+      "src/features/career/career-compare-state.ts"
     ].map((file) => readFileSync(file, "utf8")).join("\n");
     const shell = readFileSync("src/features/career/CareerShell.tsx", "utf8");
 

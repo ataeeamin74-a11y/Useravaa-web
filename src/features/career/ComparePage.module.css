@@ -447,7 +447,8 @@
 }
 
 .saveComparison,
-.saveComparisonSaved {
+.saveComparisonSaved,
+.resetComparison {
   min-height: 42px;
   display: inline-flex;
   flex: none;
@@ -468,6 +469,12 @@
   border-color: var(--ua-teal);
   background: var(--ua-teal);
   color: var(--ua-navy);
+}
+
+.resetComparison {
+  border-color: rgb(36 95 253 / 24%);
+  background: #fff;
+  color: var(--ua-blue);
 }
 
 .preselectedHelper {
@@ -500,7 +507,8 @@
 }
 
 .saveComparison:focus-visible,
-.saveComparisonSaved:focus-visible {
+.saveComparisonSaved:focus-visible,
+.resetComparison:focus-visible {
   outline: 2px solid var(--ua-blue);
   outline-offset: 3px;
 }

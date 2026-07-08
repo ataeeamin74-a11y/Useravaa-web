@@ -163,11 +163,12 @@
 .seniorityCardHeader h3 { margin: 0 0 2px; color: var(--ua-navy); font-size: 19px; line-height: 1.5; overflow-wrap: anywhere; }
 .seniorityCardHeader p { margin: 0; color: var(--career-muted); font-size: 11px; line-height: 1.7; }
 .pathEngagementActions { min-width: 0; display: grid; gap: 8px; margin-bottom: 12px; border: 1px solid var(--career-border); border-radius: 18px; background: #fff; box-shadow: 0 8px 22px rgb(9 27 73 / 5%); padding: 11px; }
-.addPathAction, .addPathActionSaved, .comparePathAction { min-width: 0; min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 13px; font: inherit; font-size: 11px; font-weight: var(--weight-bold); text-align: center; }
+.addPathAction, .addPathActionSaved, .comparePathAction, .removePathAction { min-width: 0; min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 13px; font: inherit; font-size: 11px; font-weight: var(--weight-bold); text-align: center; }
 .addPathAction, .addPathActionSaved { border: 1px solid var(--ua-blue); background: var(--ua-blue); color: #fff; }
 .addPathActionSaved { border-color: var(--ua-teal); background: var(--ua-teal); color: var(--ua-navy); }
+.removePathAction { min-height: 38px; border: 1px solid rgb(36 95 253 / 24%); background: #fff; color: var(--ua-blue); }
 .comparePathAction { border: 1px solid rgb(36 95 253 / 30%); background: rgb(36 95 253 / 8%); color: var(--ua-navy); }
-.addPathAction:focus-visible, .addPathActionSaved:focus-visible, .comparePathAction:focus-visible { outline: 2px solid var(--ua-blue); outline-offset: 3px; }
+.addPathAction:focus-visible, .addPathActionSaved:focus-visible, .removePathAction:focus-visible, .comparePathAction:focus-visible { outline: 2px solid var(--ua-blue); outline-offset: 3px; }
 .saveControl, .saveControlActive { min-height: 38px; display: inline-flex; flex: none; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--career-border); border-radius: 12px; background: #fff; color: var(--career-muted); font: inherit; font-size: 9px; font-weight: var(--weight-bold); line-height: 1.4; padding-inline: 9px; }
 .saveControlActive { border-color: var(--ua-blue); background: var(--ua-blue); color: #fff; }
 .saveControl svg, .saveControlActive svg { flex: none; }

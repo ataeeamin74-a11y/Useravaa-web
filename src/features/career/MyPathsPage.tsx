@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { Bookmark, GitCompareArrows, Route } from "lucide-react";
 import { SoftChevronIcon } from "./CareerSoftIcons";
 import { getDisplayLabel } from "./PathsPage";
@@ -19,6 +20,8 @@ type MyPathsContentProps = Readonly<{
   savedPathIds: ReadonlySet<string>;
   savedComparisons: readonly SavedCareerComparison[];
   hasLoaded: boolean;
+  onRemovePath?: (pathId: string) => boolean;
+  onRemoveComparison?: (pathIds: readonly string[]) => boolean;
 }>;
 
 function getComparisonHref(pathIds: readonly string[]): string {
@@ -30,8 +33,21 @@ function getComparisonHref(pathIds: readonly string[]): string {
 export function MyPathsContent({
   savedPathIds,
   savedComparisons,
-  hasLoaded
+  hasLoaded,
+  onRemovePath = () => false,
+  onRemoveComparison = () => false
 }: MyPathsContentProps) {
+  const [expandedSectionIds, setExpandedSectionIds] = useState<ReadonlySet<string>>(() => new Set());
+
+  function toggleSection(sectionId: string) {
+    setExpandedSectionIds((currentSectionIds) => {
+      const nextSectionIds = new Set(currentSectionIds);
+      if (nextSectionIds.has(sectionId)) nextSectionIds.delete(sectionId);
+      else nextSectionIds.add(sectionId);
+      return nextSectionIds;
+    });
+  }
+
   if (!hasLoaded) return <div className={styles.loadingState}>در حال آماده‌سازی مسیرهای شغلی تو...</div>;
 
   const savedPaths = [...savedPathIds].flatMap((pathId) => {
@@ -45,66 +61,119 @@ export function MyPathsContent({
     });
     return paths.length >= 2 ? [{ pathIds, paths }] : [];
   });
-
-  if (!savedPaths.length && !comparisons.length) {
-    return (
-      <div className={styles.emptyState} aria-live="polite">
-        <span aria-hidden><Route size={27} strokeWidth={1.9} /></span>
-        <h2>هنوز مسیر شغلی‌ای اضافه نکردی</h2>
-        <p>مسیرهای شغلی‌ای که برای بررسی نگه می‌داری اینجا می‌آیند.</p>
-        <Link href="/career">دیدن مسیرهای شغلی</Link>
-      </div>
-    );
-  }
+  const savedPathsExpanded = expandedSectionIds.has("saved-paths");
+  const savedComparisonsExpanded = expandedSectionIds.has("saved-comparisons");
 
   return (
     <div className={styles.sections}>
-      <section aria-labelledby="saved-career-paths-title">
-        <div className={styles.sectionHeading}>
-          <Bookmark size={19} strokeWidth={1.9} aria-hidden />
-          <h2 id="saved-career-paths-title">مسیرهای شغلی ذخیره‌شده</h2>
-        </div>
-        {savedPaths.length ? (
-          <div className={styles.cardList}>
-            {savedPaths.map((path) => (
-              <Link className={styles.savedCard} href={getCareerPathDetailHref(path)} key={path.id}>
-                <span className={styles.cardMeta}>{getDisplayLabel(path.domain)}</span>
-                <strong dir="auto">{getDisplayLabel(path.name)}</strong>
-                <span className={styles.openLabel}>دیدن مسیر شغلی <SoftChevronIcon size={15} /></span>
-              </Link>
-            ))}
+      <section className={styles.accordionSection} aria-labelledby="saved-career-paths-title">
+        <button
+          type="button"
+          className={styles.accordionTrigger}
+          aria-expanded={savedPathsExpanded}
+          aria-controls="saved-career-paths-panel"
+          onClick={() => toggleSection("saved-paths")}
+        >
+          <span className={styles.sectionHeading}>
+            <Bookmark size={19} strokeWidth={1.9} aria-hidden />
+            <span id="saved-career-paths-title">مسیرهای شغلی ذخیره‌شده</span>
+          </span>
+          <span className={styles.sectionCount}>{savedPaths.length.toLocaleString("fa-IR")}</span>
+          <SoftChevronIcon className={savedPathsExpanded ? styles.accordionIconExpanded : styles.accordionIcon} size={17} />
+        </button>
+        <div
+          id="saved-career-paths-panel"
+          className={styles.sectionPanel}
+          hidden={!savedPathsExpanded}
+        >
+          <div className={styles.sectionTools}>
+            <Link href="/career">افزودن مسیر شغلی</Link>
           </div>
-        ) : <p className={styles.sectionEmpty}>هنوز مسیر شغلی‌ای اضافه نکردی</p>}
+          {savedPaths.length ? (
+            <div className={styles.cardList}>
+              {savedPaths.map((path) => (
+                <article className={styles.savedCard} key={path.id}>
+                  <span className={styles.cardMeta}>{getDisplayLabel(path.domain)}</span>
+                  <strong dir="auto">{getDisplayLabel(path.name)}</strong>
+                  <div className={styles.cardActions}>
+                    <Link className={styles.primaryAction} href={getCareerPathDetailHref(path)}>
+                      دیدن مسیر شغلی <SoftChevronIcon size={15} />
+                    </Link>
+                    <button type="button" className={styles.deleteAction} onClick={() => onRemovePath(path.id)}>
+                      حذف
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.sectionEmptyState} aria-live="polite">
+              <span aria-hidden><Route size={26} strokeWidth={1.9} /></span>
+              <h3>هنوز مسیر شغلی‌ای اضافه نکردی</h3>
+              <p>مسیرهای شغلی‌ای که برای بررسی نگه می‌داری اینجا می‌آیند.</p>
+              <Link href="/career">افزودن مسیر شغلی</Link>
+            </div>
+          )}
+        </div>
       </section>
 
-      <section aria-labelledby="saved-comparisons-title">
-        <div className={styles.sectionHeading}>
-          <GitCompareArrows size={19} strokeWidth={1.9} aria-hidden />
-          <h2 id="saved-comparisons-title">مقایسه‌های ذخیره‌شده</h2>
-        </div>
-        {comparisons.length ? (
-          <div className={styles.cardList}>
-            {comparisons.map(({ pathIds, paths }) => (
-              <Link
-                className={styles.comparisonCard}
-                href={getComparisonHref(pathIds)}
-                key={pathIds.join("::")}
-              >
-                <span className={styles.cardMeta}>مقایسه {paths.length.toLocaleString("fa-IR")} مسیر شغلی</span>
-                <strong>{paths.map((path) => getDisplayLabel(path.name)).join(" و ")}</strong>
-                <span className={styles.openLabel}>دیدن مقایسه <SoftChevronIcon size={15} /></span>
-              </Link>
-            ))}
+      <section className={styles.accordionSection} aria-labelledby="saved-comparisons-title">
+        <button
+          type="button"
+          className={styles.accordionTrigger}
+          aria-expanded={savedComparisonsExpanded}
+          aria-controls="saved-comparisons-panel"
+          onClick={() => toggleSection("saved-comparisons")}
+        >
+          <span className={styles.sectionHeading}>
+            <GitCompareArrows size={19} strokeWidth={1.9} aria-hidden />
+            <span id="saved-comparisons-title">مقایسه‌های ذخیره‌شده</span>
+          </span>
+          <span className={styles.sectionCount}>{comparisons.length.toLocaleString("fa-IR")}</span>
+          <SoftChevronIcon className={savedComparisonsExpanded ? styles.accordionIconExpanded : styles.accordionIcon} size={17} />
+        </button>
+        <div
+          id="saved-comparisons-panel"
+          className={styles.sectionPanel}
+          hidden={!savedComparisonsExpanded}
+        >
+          <div className={styles.sectionTools}>
+            <Link href="/career/compare">ساخت مقایسه جدید</Link>
           </div>
-        ) : <p className={styles.sectionEmpty}>هنوز مقایسه‌ای ذخیره نکردی</p>}
+          {comparisons.length ? (
+            <div className={styles.cardList}>
+              {comparisons.map(({ pathIds, paths }) => (
+                <article className={styles.comparisonCard} key={pathIds.join("::")}>
+                  <span className={styles.cardMeta}>مقایسه {paths.length.toLocaleString("fa-IR")} مسیر شغلی</span>
+                  <strong>{paths.map((path) => getDisplayLabel(path.name)).join(" و ")}</strong>
+                  <div className={styles.cardActions}>
+                    <Link className={styles.primaryAction} href={getComparisonHref(pathIds)}>
+                      دیدن مقایسه <SoftChevronIcon size={15} />
+                    </Link>
+                    <button type="button" className={styles.deleteAction} onClick={() => onRemoveComparison(pathIds)}>
+                      حذف
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.sectionEmptyState} aria-live="polite">
+              <span aria-hidden><GitCompareArrows size={26} strokeWidth={1.9} /></span>
+              <h3>هنوز مقایسه‌ای ذخیره نکردی</h3>
+              <p>مقایسه‌های شغلی‌ای که ذخیره می‌کنی اینجا می‌آیند.</p>
+              <Link href="/career/compare">ساخت مقایسه جدید</Link>
+            </div>
+          )}
+        </div>
       </section>
     </div>
   );
 }
 
 export function MyPathsPage() {
-  const { savedPathIds, hasLoadedSavedPaths } = useSavedCareerPaths();
-  const { savedComparisons, hasLoadedSavedComparisons } = useSavedCareerComparisons();
+  const { savedPathIds, hasLoadedSavedPaths, removePath } = useSavedCareerPaths();
+  const { savedComparisons, hasLoadedSavedComparisons, removeComparison } = useSavedCareerComparisons();
 
   return (
     <section className={styles.page} data-career-paths aria-labelledby="my-career-paths-title">
@@ -116,6 +185,8 @@ export function MyPathsPage() {
         savedPathIds={savedPathIds}
         savedComparisons={savedComparisons}
         hasLoaded={hasLoadedSavedPaths && hasLoadedSavedComparisons}
+        onRemovePath={removePath}
+        onRemoveComparison={removeComparison}
       />
     </section>
   );

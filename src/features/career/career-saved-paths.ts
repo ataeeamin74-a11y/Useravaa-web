@@ -44,6 +44,18 @@ export function addSavedCareerPathId(
   return new Set([...currentIds, resolvedPathId]);
 }
 
+export function removeSavedCareerPathId(
+  currentIds: ReadonlySet<string>,
+  pathId: string
+): ReadonlySet<string> {
+  const resolvedPathId = resolveCareerPathId(pathId);
+  if (!resolvedPathId || !currentIds.has(resolvedPathId)) return currentIds;
+
+  const nextIds = new Set(currentIds);
+  nextIds.delete(resolvedPathId);
+  return nextIds;
+}
+
 function getSavedCareerPathSnapshot(): string {
   try {
     return window.localStorage.getItem(SAVED_PATHS_STORAGE_KEY) ?? EMPTY_SAVED_PATHS;
@@ -114,11 +126,17 @@ export function useSavedCareerPaths() {
     return nextPathIds !== savedPathIds && persistSavedCareerPathIds(nextPathIds);
   }, [savedPathIds]);
 
+  const removePath = useCallback((pathId: string) => {
+    const nextPathIds = removeSavedCareerPathId(savedPathIds, pathId);
+    return nextPathIds !== savedPathIds && persistSavedCareerPathIds(nextPathIds);
+  }, [savedPathIds]);
+
   return {
     savedPathIds,
     savedCardIds,
     hasLoadedSavedPaths,
     savePath,
+    removePath,
     toggleSavedPath
   } as const;
 }

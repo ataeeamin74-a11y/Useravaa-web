@@ -65,6 +65,18 @@ export function addSavedCareerComparison(
   return [...currentComparisons, comparison];
 }
 
+export function removeSavedCareerComparison(
+  currentComparisons: readonly SavedCareerComparison[],
+  pathIds: readonly string[]
+): readonly SavedCareerComparison[] {
+  const comparison = normalizeCareerComparison(pathIds);
+  if (!comparison) return currentComparisons;
+
+  const removedKey = comparisonKey(comparison);
+  const nextComparisons = currentComparisons.filter((item) => comparisonKey(item) !== removedKey);
+  return nextComparisons.length === currentComparisons.length ? currentComparisons : nextComparisons;
+}
+
 export function includesSavedCareerComparison(
   comparisons: readonly SavedCareerComparison[],
   pathIds: readonly string[]
@@ -131,11 +143,16 @@ export function useSavedCareerComparisons() {
     const nextComparisons = addSavedCareerComparison(savedComparisons, pathIds);
     return nextComparisons !== savedComparisons && persistSavedComparisons(nextComparisons);
   }, [savedComparisons]);
+  const removeComparison = useCallback((pathIds: readonly string[]) => {
+    const nextComparisons = removeSavedCareerComparison(savedComparisons, pathIds);
+    return nextComparisons !== savedComparisons && persistSavedComparisons(nextComparisons);
+  }, [savedComparisons]);
 
   return {
     savedComparisons,
     hasLoadedSavedComparisons,
     saveComparison,
+    removeComparison,
     isComparisonSaved: (pathIds: readonly string[]) => (
       includesSavedCareerComparison(savedComparisons, pathIds)
     )
