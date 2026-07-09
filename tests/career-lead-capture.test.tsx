@@ -117,8 +117,14 @@ describe("career path-seeker lead capture", () => {
     expect(sheetSource).toContain("مثلاً نمی‌دانم این مسیر شغلی با من تناسب دارد یا نه");
     expect(sheetSource).toContain("ذخیره شد. می‌توانی از «مسیرهای شغلی من» ادامه بدهی.");
     expect(html).toContain("نام و نام خانوادگی");
+    expect(html).toContain('for="career-lead-full-name"');
+    expect(html).toContain('id="career-lead-full-name"');
+    expect(html).toContain('aria-required="true"');
     expect(html).toContain("مثلاً علی رضایی");
-    expect(html).toContain("شماره موبایل");
+    expect(html).toContain("شماره موبایل ایران");
+    expect(html).toContain('for="career-lead-phone"');
+    expect(html).toContain('id="career-lead-phone"');
+    expect(html).toContain('inputMode="tel"');
     expect(html).toContain("+98");
     expect(html).toContain("ذخیره و ادامه بررسی");
     expect(html).toContain("فعلاً نه");

@@ -446,6 +446,10 @@ export function PathEngagementActions({ path, saved, onSave, onRemove }: PathEng
 
   return (
     <div className={styles.pathEngagementActions} aria-label="اقدام‌های مسیر شغلی">
+      <div className={styles.pathEngagementIntro}>
+        <span>قدم تصمیم‌گیری</span>
+        <p>{saved ? "این مسیر برای ادامه بررسی در مسیرهای شغلی من آماده است." : "اگر این مسیر به تصمیمت نزدیک است، آن را برای ادامه بررسی نگه دار."}</p>
+      </div>
       <button
         type="button"
         className={saved ? styles.addPathActionSaved : styles.addPathAction}
@@ -464,23 +468,25 @@ export function PathEngagementActions({ path, saved, onSave, onRemove }: PathEng
           حذف از مسیرهای شغلی من
         </button>
       ) : null}
-      <Link
-        href={`/career/compare?path=${encodeURIComponent(path.id)}`}
-        className={styles.comparePathAction}
-        onClick={() => {
-          startCompareDraftFromPath(path.id);
-          trackCareerEvent("career_compare_started", { fromPathId: path.id });
-        }}
-      >
-        <GitCompareArrows size={19} aria-hidden />
-        مقایسه با مسیرهای دیگر
-      </Link>
-      {seoEntry ? (
-        <Link href={seoEntry.pageHref} className={styles.comparePathAction}>
-          <Route size={19} aria-hidden />
-          مشاهده صفحه مسیر
+      <div className={styles.pathSecondaryActions}>
+        <Link
+          href={`/career/compare?path=${encodeURIComponent(path.id)}`}
+          className={styles.comparePathAction}
+          onClick={() => {
+            startCompareDraftFromPath(path.id);
+            trackCareerEvent("career_compare_started", { fromPathId: path.id });
+          }}
+        >
+          <GitCompareArrows size={19} aria-hidden />
+          مقایسه با مسیرهای دیگر
         </Link>
-      ) : null}
+        {seoEntry ? (
+          <Link href={seoEntry.pageHref} className={`${styles.comparePathAction} ${styles.pathSeoAction}`}>
+            <Route size={19} aria-hidden />
+            مشاهده صفحه مسیر
+          </Link>
+        ) : null}
+      </div>
     </div>
   );
 }

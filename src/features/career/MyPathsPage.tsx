@@ -79,7 +79,12 @@ export function MyPathsContent({
             <Bookmark size={19} strokeWidth={1.9} aria-hidden />
             <span id="saved-career-paths-title">مسیرهای شغلی ذخیره‌شده</span>
           </span>
-          <span className={styles.sectionCount}>{savedPaths.length.toLocaleString("fa-IR")}</span>
+          <span
+            className={styles.sectionCount}
+            aria-label={`${savedPaths.length.toLocaleString("fa-IR")} مسیر ذخیره‌شده`}
+          >
+            {savedPaths.length.toLocaleString("fa-IR")}
+          </span>
           <SoftChevronIcon className={savedPathsExpanded ? styles.accordionIconExpanded : styles.accordionIcon} size={17} />
         </button>
         <div
@@ -111,7 +116,7 @@ export function MyPathsContent({
             <div className={styles.sectionEmptyState} aria-live="polite">
               <span aria-hidden><Route size={26} strokeWidth={1.9} /></span>
               <h3>هنوز مسیر شغلی‌ای اضافه نکردی</h3>
-              <p>مسیرهای شغلی‌ای که برای بررسی نگه می‌داری اینجا می‌آیند.</p>
+              <p>از صفحه مسیرها شروع کن؛ هر مسیری را که برای ادامه بررسی مهم است اینجا نگه می‌داری.</p>
               <Link href="/career">افزودن مسیر شغلی</Link>
             </div>
           )}
@@ -130,7 +135,12 @@ export function MyPathsContent({
             <GitCompareArrows size={19} strokeWidth={1.9} aria-hidden />
             <span id="saved-comparisons-title">مقایسه‌های ذخیره‌شده</span>
           </span>
-          <span className={styles.sectionCount}>{comparisons.length.toLocaleString("fa-IR")}</span>
+          <span
+            className={styles.sectionCount}
+            aria-label={`${comparisons.length.toLocaleString("fa-IR")} مقایسه ذخیره‌شده`}
+          >
+            {comparisons.length.toLocaleString("fa-IR")}
+          </span>
           <SoftChevronIcon className={savedComparisonsExpanded ? styles.accordionIconExpanded : styles.accordionIcon} size={17} />
         </button>
         <div
@@ -162,7 +172,7 @@ export function MyPathsContent({
             <div className={styles.sectionEmptyState} aria-live="polite">
               <span aria-hidden><GitCompareArrows size={26} strokeWidth={1.9} /></span>
               <h3>هنوز مقایسه‌ای ذخیره نکردی</h3>
-              <p>مقایسه‌های شغلی‌ای که ذخیره می‌کنی اینجا می‌آیند.</p>
+              <p>وقتی دو مسیر یا بیشتر را کنار هم می‌گذاری، مقایسه ذخیره‌شده اینجا می‌ماند.</p>
               <Link href="/career/compare">ساخت مقایسه جدید</Link>
             </div>
           )}

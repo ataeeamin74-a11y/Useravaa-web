@@ -239,12 +239,17 @@ type SelectionTrayProps = Readonly<{
 export function SelectionTray({ selectedPaths, limitMessage, onRemove, onCompare }: SelectionTrayProps) {
   const slots = Array.from({ length: MAX_COMPARE_PATHS }, (_, index) => selectedPaths[index]);
   const canCompare = selectedPaths.length >= MIN_COMPARE_PATHS;
+  const nextStepMessage = canCompare
+    ? "آماده‌ای مسیرهای انتخاب‌شده را کنار هم ببینی."
+    : selectedPaths.length === 1
+      ? "یک مسیر دیگر انتخاب کن تا مقایسه فعال شود."
+      : "۲ تا ۵ مسیر را برای مقایسه انتخاب کن.";
 
   return (
     <aside className={styles.selectionTray} aria-label="مسیرهای انتخاب‌شده">
-      <div className={styles.traySummary}>
+      <div className={styles.traySummary} aria-live="polite">
         <strong>{selectedPaths.length.toLocaleString("fa-IR")} از {MAX_COMPARE_PATHS.toLocaleString("fa-IR")} مسیر شغلی</strong>
-        <span>۲ تا ۵ مسیر را برای مقایسه انتخاب کن</span>
+        <span>{nextStepMessage}</span>
       </div>
       <div className={styles.selectionSlots}>
         {slots.map((path, index) => path ? (
@@ -266,7 +271,7 @@ export function SelectionTray({ selectedPaths, limitMessage, onRemove, onCompare
           </span>
         ))}
       </div>
-      <p className={styles.selectionAlert} aria-live="polite">{limitMessage}</p>
+      <p className={styles.selectionAlert} aria-live="polite">{limitMessage || nextStepMessage}</p>
       <button type="button" className={styles.compareCta} disabled={!canCompare} onClick={onCompare}>
         <CompareTabIcon size={20} />
         مقایسه مسیرها
@@ -567,7 +572,7 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
       </div>
 
       {hasSingleSelection ? (
-        <p className={styles.preselectedHelper}>این مسیر شغلی برای مقایسه انتخاب شده است.</p>
+        <p className={styles.preselectedHelper}>این مسیر شغلی برای مقایسه انتخاب شده است. مسیر دوم را از فهرست زیر انتخاب کن.</p>
       ) : (
       <div className={styles.sourceTabs} role="tablist" aria-label="منبع مسیرها">
         <button

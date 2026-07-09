@@ -70,10 +70,14 @@
   line-height: 1.85;
 }
 
+.form {
+  display: grid;
+}
+
 .fieldGroup {
   display: grid;
-  gap: 6px;
-  margin-bottom: 13px;
+  gap: 7px;
+  margin-bottom: 14px;
 }
 
 .fieldGroup label {
@@ -88,28 +92,28 @@
   width: 100%;
   min-width: 0;
   border: 1px solid #e4e7ec;
-  border-radius: 13px;
+  border-radius: 14px;
   background: #f8fafc;
   color: var(--ua-navy);
   font: inherit;
   font-size: 13px;
   line-height: 1.7;
-  padding: 10px 11px;
+  padding: 11px 12px;
 }
 
 .fieldGroup input,
 .fieldGroup select {
-  min-height: 46px;
+  min-height: 50px;
 }
 
 .phoneInputRow {
-  min-height: 46px;
+  min-height: 50px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: stretch;
   overflow: hidden;
   border: 1px solid #e4e7ec;
-  border-radius: 13px;
+  border-radius: 14px;
   background: #f8fafc;
 }
 
@@ -125,7 +129,7 @@
 }
 
 .phoneInputRow input {
-  min-height: 44px;
+  min-height: 48px;
   border: 0;
   border-radius: 0;
   background: transparent;
@@ -191,14 +195,21 @@
 }
 
 .actions {
+  position: sticky;
+  inset-block-end: 0;
   display: grid;
-  gap: 7px;
+  gap: 8px;
+  margin-top: 2px;
+  border-top: 1px solid #e4e7ec;
+  background: #fff;
+  box-shadow: 0 -10px 26px rgb(9 27 73 / 7%);
+  padding-top: 10px;
 }
 
 .primaryButton,
 .laterButton,
 .successState button {
-  min-height: 48px;
+  min-height: 50px;
   border-radius: 15px;
   font: inherit;
   font-size: 13px;
@@ -219,7 +230,7 @@
 }
 
 .laterButton {
-  min-height: 40px;
+  min-height: 42px;
   border: 0;
   background: transparent;
   color: #58657d;

@@ -85,9 +85,15 @@ describe("Path Seeker engagement", () => {
 
     expect(unsavedHtml).toContain("افزودن به مسیرهای شغلی من");
     expect(unsavedHtml).not.toContain("حذف از مسیرهای شغلی من");
+    expect(unsavedHtml).toContain('aria-pressed="false"');
+    expect(unsavedHtml).toContain("قدم تصمیم‌گیری");
+    expect(unsavedHtml).toContain("اگر این مسیر به تصمیمت نزدیک است، آن را برای ادامه بررسی نگه دار.");
     expect(savedHtml).toContain("به مسیرهای شغلی من اضافه شد");
     expect(savedHtml).toContain("حذف از مسیرهای شغلی من");
+    expect(savedHtml).toContain('aria-pressed="true"');
+    expect(savedHtml).toContain("این مسیر برای ادامه بررسی در مسیرهای شغلی من آماده است.");
     expect(unsavedHtml).toContain("مقایسه با مسیرهای دیگر");
+    expect(unsavedHtml).toContain("مشاهده صفحه مسیر");
     expect(unsavedHtml).toContain(`/career/compare?path=${encodeURIComponent(firstPath.id)}`);
 
     const pathSource = readFileSync("src/features/career/PathsPage.tsx", "utf8");
@@ -100,11 +106,13 @@ describe("Path Seeker engagement", () => {
 
   it("keeps the guide available outside the three-item bottom navigation", () => {
     const html = renderToStaticMarkup(<GuideEntryCard />);
+    const bottomNavSource = readFileSync("src/features/career/CareerBottomNav.tsx", "utf8");
 
     expect(html).toContain("نمی‌دونی از کدام مسیر شغلی شروع کنی؟");
     expect(html).toContain("راهنمای انتخاب مسیر شغلی را ببین.");
     expect(html).toContain('href="/career/guide"');
     expect(navigationItems.map((item) => item.label)).toEqual(["مسیرها", "مقایسه", "مسیرهای من"]);
+    expect(bottomNavSource).toContain('aria-label="ناوبری مسیرهای شغلی"');
   });
 
   it("preselects valid compare paths and asks for a second path", () => {
@@ -112,9 +120,11 @@ describe("Path Seeker engagement", () => {
     const html = renderToStaticMarkup(<ComparePage initialPathIds={[firstPath.id]} />);
 
     expect(html).toContain("مسیر شغلی دوم را برای مقایسه انتخاب کن");
-    expect(html).toContain("این مسیر شغلی برای مقایسه انتخاب شده است.");
+    expect(html).toContain("این مسیر شغلی برای مقایسه انتخاب شده است. مسیر دوم را از فهرست زیر انتخاب کن.");
+    expect(html).toContain("یک مسیر دیگر انتخاب کن تا مقایسه فعال شود.");
     expect(html).toContain("شروع مقایسه جدید");
     expect(html).toContain('aria-pressed="true"');
+    expect(html).toContain('aria-live="polite"');
   });
 
   it("renders the save-comparison state in a valid comparison table", () => {
@@ -148,11 +158,15 @@ describe("Path Seeker engagement", () => {
 
     expect(emptyHtml).toContain("هنوز مسیر شغلی‌ای اضافه نکردی");
     expect(emptyHtml).toContain("هنوز مقایسه‌ای ذخیره نکردی");
+    expect(emptyHtml).toContain("از صفحه مسیرها شروع کن؛ هر مسیری را که برای ادامه بررسی مهم است اینجا نگه می‌داری.");
+    expect(emptyHtml).toContain("وقتی دو مسیر یا بیشتر را کنار هم می‌گذاری، مقایسه ذخیره‌شده اینجا می‌ماند.");
     expect(emptyHtml).toContain("افزودن مسیر شغلی");
     expect(emptyHtml).toContain("ساخت مقایسه جدید");
     expect(emptyHtml).toContain('href="/career"');
     expect(emptyHtml).toContain('href="/career/compare"');
     expect(populatedHtml).toContain('aria-expanded="false"');
+    expect(populatedHtml).toContain('aria-label="۱ مسیر ذخیره‌شده"');
+    expect(populatedHtml).toContain('aria-label="۱ مقایسه ذخیره‌شده"');
     expect(populatedHtml).toContain('hidden=""');
     expect(populatedHtml).toContain("مسیرهای شغلی ذخیره‌شده");
     expect(populatedHtml).toContain("مقایسه‌های ذخیره‌شده");
@@ -162,11 +176,24 @@ describe("Path Seeker engagement", () => {
 
     const myPathsSource = readFileSync("src/features/career/MyPathsPage.tsx", "utf8");
     expect(myPathsSource).toContain("مسیرهای شغلی من");
-    expect(myPathsSource).toContain("مسیرهای شغلی‌ای که برای بررسی نگه می‌داری اینجا می‌آیند.");
+    expect(myPathsSource).toContain("از صفحه مسیرها شروع کن؛ هر مسیری را که برای ادامه بررسی مهم است اینجا نگه می‌داری.");
     expect(myPathsSource).toContain("aria-expanded");
+    expect(myPathsSource).toContain("aria-label={`${savedPaths.length.toLocaleString");
     expect(myPathsSource).toContain("onRemovePath(path.id)");
     expect(myPathsSource).toContain("onRemoveComparison(pathIds)");
     expect(myPathsSource).toContain('trackCareerEvent("career_my_paths_viewed"');
+  });
+
+  it("keeps Career mobile conversion copy out of forbidden product frames", () => {
+    const careerUiSources = [
+      "src/features/career/PathsPage.tsx",
+      "src/features/career/ComparePage.tsx",
+      "src/features/career/MyPathsPage.tsx",
+      "src/features/career/CareerLeadCaptureSheet.tsx",
+      "src/features/career/CareerBottomNav.tsx"
+    ].map((file) => readFileSync(file, "utf8")).join("\n");
+
+    expect(careerUiSources).not.toMatch(/منتور|تجربه‌آفرین|مشاوره|جلسه|رزرو|پرداخت|استخدام تضمینی|تضمین موفقیت|موفقیت قطعی|دوره آموزشی|کلاس|job board|course|mentor|advisor|session|booking|payment/i);
   });
 
   it("uses refined Career UI icon strokes while preserving filled tab states", () => {

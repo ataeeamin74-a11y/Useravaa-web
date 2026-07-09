@@ -86,6 +86,7 @@ export function CareerLeadCaptureForm({
 }: CareerLeadCaptureFormProps) {
   return (
     <form
+      className={styles.form}
       onSubmit={(event) => {
         event.preventDefault();
         onSubmit();
@@ -101,10 +102,10 @@ export function CareerLeadCaptureForm({
           maxLength={120}
           value={fullName}
           placeholder="مثلاً علی رضایی"
+          aria-required="true"
           aria-invalid={Boolean(fullNameError)}
           aria-describedby={fullNameError ? "career-lead-full-name-error" : undefined}
           onChange={(event) => onFullNameChange(event.target.value)}
-          required
         />
         <p className={styles.fieldError} id="career-lead-full-name-error" role="alert" aria-live="polite">
           {fullNameError}
@@ -112,7 +113,7 @@ export function CareerLeadCaptureForm({
       </div>
 
       <div className={styles.fieldGroup}>
-        <label htmlFor="career-lead-phone">شماره موبایل</label>
+        <label htmlFor="career-lead-phone">شماره موبایل ایران</label>
         <div className={styles.phoneInputRow} dir="ltr">
           <span className={styles.phonePrefix} aria-hidden="true">+98</span>
           <input
@@ -124,10 +125,10 @@ export function CareerLeadCaptureForm({
             maxLength={20}
             value={phoneNumber}
             placeholder="شماره موبایل"
+            aria-required="true"
             aria-invalid={Boolean(phoneError)}
             aria-describedby={phoneError ? "career-lead-phone-error" : undefined}
             onChange={(event) => onPhoneNumberChange(event.target.value)}
-            required
           />
         </div>
         <p className={styles.fieldError} id="career-lead-phone-error" role="alert" aria-live="polite">
