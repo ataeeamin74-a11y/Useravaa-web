@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bookmark, GitCompareArrows, Route } from "lucide-react";
 import { SoftChevronIcon } from "./CareerSoftIcons";
 import { getDisplayLabel } from "./PathsPage";
+import { trackCareerEvent } from "./career-events";
 import {
   getCareerPathById,
   getCareerPathDetailHref
@@ -174,6 +175,15 @@ export function MyPathsContent({
 export function MyPathsPage() {
   const { savedPathIds, hasLoadedSavedPaths, removePath } = useSavedCareerPaths();
   const { savedComparisons, hasLoadedSavedComparisons, removeComparison } = useSavedCareerComparisons();
+  const hasLoaded = hasLoadedSavedPaths && hasLoadedSavedComparisons;
+
+  useEffect(() => {
+    if (!hasLoaded) return;
+    trackCareerEvent("career_my_paths_viewed", {
+      savedPathCount: savedPathIds.size,
+      savedComparisonCount: savedComparisons.length
+    });
+  }, [hasLoaded, savedComparisons.length, savedPathIds.size]);
 
   return (
     <section className={styles.page} data-career-paths aria-labelledby="my-career-paths-title">
@@ -184,7 +194,7 @@ export function MyPathsPage() {
       <MyPathsContent
         savedPathIds={savedPathIds}
         savedComparisons={savedComparisons}
-        hasLoaded={hasLoadedSavedPaths && hasLoadedSavedComparisons}
+        hasLoaded={hasLoaded}
         onRemovePath={removePath}
         onRemoveComparison={removeComparison}
       />

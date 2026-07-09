@@ -41,6 +41,7 @@ import {
   recordRecentlyViewedCareerPath,
   startCompareDraftFromPath
 } from "./career-compare-state";
+import { trackCareerEvent } from "./career-events";
 import { getCareerSlides } from "./data/career-slide-manifest";
 import type {
   CareerCard,
@@ -430,13 +431,14 @@ type PathEngagementActionsProps = Readonly<{
 export function PathEngagementActions({ path, saved, onSave, onRemove }: PathEngagementActionsProps) {
   function saveCurrentPath() {
     const saveSucceeded = onSave(path.id);
+    if (saveSucceeded) trackCareerEvent("career_path_saved", { pathId: path.id });
     if (shouldRequestCareerLeadCapture(saved, saveSucceeded)) {
       requestCareerLeadCapture({ source: "path_save", currentPathId: path.id });
     }
   }
 
   function removeCurrentPath() {
-    onRemove(path.id);
+    if (onRemove(path.id)) trackCareerEvent("career_path_removed", { pathId: path.id });
   }
 
   return (
@@ -462,7 +464,10 @@ export function PathEngagementActions({ path, saved, onSave, onRemove }: PathEng
       <Link
         href={`/career/compare?path=${encodeURIComponent(path.id)}`}
         className={styles.comparePathAction}
-        onClick={() => startCompareDraftFromPath(path.id)}
+        onClick={() => {
+          startCompareDraftFromPath(path.id);
+          trackCareerEvent("career_compare_started", { fromPathId: path.id });
+        }}
       >
         <GitCompareArrows size={19} aria-hidden />
         مقایسه با مسیرهای دیگر
@@ -787,8 +792,14 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
   }, [currentLevel, searching, selectedSubfamilyId]);
 
   useEffect(() => {
-    if (selectedSubfamilyId) recordRecentlyViewedCareerPath(selectedSubfamilyId);
-  }, [selectedSubfamilyId]);
+    if (!selectedSubfamily) return;
+
+    recordRecentlyViewedCareerPath(selectedSubfamily.id);
+    trackCareerEvent("career_path_viewed", {
+      pathId: selectedSubfamily.id,
+      pathTitle: getDisplayLabel(selectedSubfamily.name)
+    });
+  }, [selectedSubfamily]);
 
   function applyHierarchySelection(selection: CareerHierarchySelection) {
     if (window.location.search) window.history.replaceState(window.history.state, "", window.location.pathname);

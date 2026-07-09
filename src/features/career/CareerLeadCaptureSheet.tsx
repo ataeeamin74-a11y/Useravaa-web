@@ -20,6 +20,7 @@ import {
   parseSavedCareerPathIds,
   SAVED_PATHS_STORAGE_KEY
 } from "./career-saved-paths";
+import { trackCareerEvent } from "./career-events";
 import { SoftCloseIcon } from "./CareerSoftIcons";
 import styles from "./CareerLeadCaptureSheet.module.css";
 
@@ -223,9 +224,12 @@ export function CareerLeadCaptureSheet() {
   }, []);
 
   const dismiss = useCallback(() => {
+    if (request?.source) {
+      trackCareerEvent("career_lead_sheet_dismissed", { trigger: request.source });
+    }
     rememberCareerLeadCaptureDismissal(getSafeStorage());
     close();
-  }, [close]);
+  }, [close, request]);
 
   useEffect(() => {
     function openWhenAvailable(detail: CareerLeadCaptureRequest) {
@@ -244,6 +248,7 @@ export function CareerLeadCaptureSheet() {
           return;
         }
 
+        trackCareerEvent("career_lead_sheet_shown", { trigger: detail.source });
         setRequest(detail);
         setIsOpen(true);
       };
@@ -311,6 +316,7 @@ export function CareerLeadCaptureSheet() {
     if (!request || isSubmitting) return;
     const validation = validateCareerLeadFormInput(fullName, phoneNumber);
     if (!validation.ok) {
+      trackCareerEvent("career_lead_submit_failed", { reason: "validation" });
       setFullNameError(validation.fullNameError ?? "");
       setPhoneError(validation.phoneError ?? "");
       setFormError("");
@@ -323,6 +329,7 @@ export function CareerLeadCaptureSheet() {
     setIsSubmitting(true);
     const storage = getSafeStorage();
     const storedContext = getStoredLeadContext(storage);
+    let failureReason: "api" | "rate_limited" = "api";
 
     try {
       const response = await fetch("/api/career/leads", {
@@ -344,10 +351,18 @@ export function CareerLeadCaptureSheet() {
         })
       });
 
-      if (!response.ok) throw new Error("lead request failed");
+      if (!response.ok) {
+        failureReason = response.status === 429 ? "rate_limited" : "api";
+        throw new Error("lead request failed");
+      }
       rememberCareerLeadCaptureSubmission(storage);
+      trackCareerEvent("career_lead_submit_succeeded", {
+        trigger: request.source,
+        stage: stage || undefined
+      });
       setSubmitted(true);
     } catch {
+      trackCareerEvent("career_lead_submit_failed", { reason: failureReason });
       setFormError("الان ذخیره نشد. کمی بعد دوباره امتحان کن.");
     } finally {
       setIsSubmitting(false);

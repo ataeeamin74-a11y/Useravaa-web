@@ -25,6 +25,7 @@ import {
   useCompareDraftPathIds,
   useRecentlyViewedCareerPaths
 } from "./career-compare-state";
+import { trackCareerEvent } from "./career-events";
 import type { CareerCard, CareerSubfamilyNode } from "./career-types";
 import { normalizeSearchText } from "./career-utils";
 import styles from "./ComparePage.module.css";
@@ -444,6 +445,7 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
   const { recentlyViewedPathIds, hasLoadedRecentlyViewedPaths } = useRecentlyViewedCareerPaths();
   const { compareDraftPathIds, hasLoadedCompareDraft } = useCompareDraftPathIds();
   const hasAppliedInitialDraftRef = useRef(false);
+  const hasTrackedCompareEntryRef = useRef(false);
   const savedPaths = useMemo(() => getSavedComparisonPaths(savedPathIds), [savedPathIds]);
   const recentPaths = useMemo(
     () => getRecentlyViewedComparisonPaths(recentlyViewedPathIds),
@@ -464,6 +466,14 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
   const candidatesLoaded = hasSingleSelection
     || (activeSource === "saved" ? hasLoadedSavedPaths : hasLoadedRecentlyViewedPaths);
   const comparisonSaved = isComparisonSaved(selectedPathIds);
+
+  useEffect(() => {
+    if (hasTrackedCompareEntryRef.current) return;
+    hasTrackedCompareEntryRef.current = true;
+    trackCareerEvent("career_compare_started", normalizedInitialPathIds[0] ? {
+      fromPathId: normalizedInitialPathIds[0]
+    } : {});
+  }, [normalizedInitialPathIds]);
 
   useEffect(() => {
     if (
@@ -489,6 +499,9 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
     const update = updateCompareSelection(selectedPathIds, pathId);
     setSelectedPathIds(update.selectedPathIds);
     saveCompareDraftPathIds(update.selectedPathIds);
+    trackCareerEvent("career_compare_selection_changed", {
+      selectedCount: update.selectedPathIds.length
+    });
     setLimitMessage(update.limitReached ? "حداکثر ۵ مسیر را می‌توانی مقایسه کنی." : "");
   }
 
@@ -510,6 +523,11 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
 
   function saveCurrentComparison() {
     const saveSucceeded = saveComparison(selectedPathIds);
+    if (saveSucceeded) {
+      trackCareerEvent("career_comparison_saved", {
+        selectedCount: selectedPathIds.length
+      });
+    }
     if (shouldRequestCareerLeadCapture(comparisonSaved, saveSucceeded)) {
       requestCareerLeadCapture({
         source: "comparison_save",

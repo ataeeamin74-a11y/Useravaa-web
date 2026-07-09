@@ -92,6 +92,10 @@ describe("Path Seeker engagement", () => {
 
     const pathSource = readFileSync("src/features/career/PathsPage.tsx", "utf8");
     expect(pathSource).toContain("startCompareDraftFromPath(path.id)");
+    expect(pathSource).toContain('trackCareerEvent("career_path_saved"');
+    expect(pathSource).toContain('trackCareerEvent("career_path_removed"');
+    expect(pathSource).toContain('trackCareerEvent("career_compare_started"');
+    expect(pathSource).toContain('trackCareerEvent("career_path_viewed"');
   });
 
   it("keeps the guide available outside the three-item bottom navigation", () => {
@@ -124,6 +128,10 @@ describe("Path Seeker engagement", () => {
     );
 
     expect(html).toContain("مقایسه ذخیره شد");
+    const compareSource = readFileSync("src/features/career/ComparePage.tsx", "utf8");
+    expect(compareSource).toContain('trackCareerEvent("career_compare_started"');
+    expect(compareSource).toContain('trackCareerEvent("career_compare_selection_changed"');
+    expect(compareSource).toContain('trackCareerEvent("career_comparison_saved"');
   });
 
   it("renders My Paths accordion controls, CTAs, and remove actions", () => {
@@ -158,6 +166,7 @@ describe("Path Seeker engagement", () => {
     expect(myPathsSource).toContain("aria-expanded");
     expect(myPathsSource).toContain("onRemovePath(path.id)");
     expect(myPathsSource).toContain("onRemoveComparison(pathIds)");
+    expect(myPathsSource).toContain('trackCareerEvent("career_my_paths_viewed"');
   });
 
   it("uses refined Career UI icon strokes while preserving filled tab states", () => {
@@ -190,5 +199,7 @@ describe("Path Seeker engagement", () => {
 
     expect(sources).not.toMatch(/prisma|database_url|@\/lib\/backend/i);
     expect(shell).toContain("<IosInstallGuide />");
+    expect(shell).toContain("<CareerEventBootstrap />");
+    expect(shell).toContain("<CareerAnalyticsScript />");
   });
 });

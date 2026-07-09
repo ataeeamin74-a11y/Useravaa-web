@@ -135,6 +135,10 @@ describe("career path-seeker lead capture", () => {
     expect(compareSource.indexOf("saveComparison(selectedPathIds)")).toBeLessThan(compareSource.lastIndexOf("requestCareerLeadCapture"));
     expect(sheetSource).toContain("الان ذخیره نشد. کمی بعد دوباره امتحان کن.");
     expect(sheetSource).toContain("[data-ios-install-guide-dialog]");
+    expect(sheetSource).toContain('trackCareerEvent("career_lead_sheet_shown"');
+    expect(sheetSource).toContain('trackCareerEvent("career_lead_submit_succeeded"');
+    expect(sheetSource).toContain('trackCareerEvent("career_lead_submit_failed"');
+    expect(sheetSource).toContain('trackCareerEvent("career_lead_sheet_dismissed"');
     expect(iosSource).toContain("[data-career-lead-capture-dialog]");
   });
 });

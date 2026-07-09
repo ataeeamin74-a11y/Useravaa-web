@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { UseravaaLogo } from "@/components/logo/UseravaaLogo";
 import { IosInstallGuide } from "@/features/pwa/IosInstallGuide";
+import { CareerAnalyticsScript } from "./CareerAnalyticsScript";
+import { CareerEventBootstrap } from "./CareerEventBootstrap";
 import { CareerLeadCaptureSheet } from "./CareerLeadCaptureSheet";
 import { CareerTabRoot } from "./CareerTabRoot";
 import styles from "./CareerShell.module.css";
@@ -20,6 +22,8 @@ export function CareerShell({ children }: CareerShellProps) {
         <span className={styles.productName}>مسیرهای شغلی</span>
       </header>
       <CareerTabRoot>{children}</CareerTabRoot>
+      <CareerEventBootstrap />
+      <CareerAnalyticsScript />
       <CareerLeadCaptureSheet />
       <IosInstallGuide />
     </div>
