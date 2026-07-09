@@ -13,11 +13,9 @@ import {
   getCareerPathSeoEntryByPathId,
   getCareerPathSeoEntryBySlug,
   getCareerPathSlugs,
-  getCareerPathSoftSkills,
-  getCareerPathTechnicalSkills,
-  getCareerPathTools,
   getRelatedCareerPathSeoEntries
 } from "@/features/career/career-path-seo";
+import { CAREER_PATH_MASCOT_IMAGE_SRC } from "@/features/career/career-path-visuals";
 
 const forbiddenSeoLanguage = [
   "تضمین",
@@ -58,6 +56,45 @@ const representativeSharePreviewSlugs = [
   "dotnet-c-sharp-backend"
 ] as const;
 
+const requiredProductScreenLabels = [
+  "کار اصلی",
+  "مناسب‌تر برای",
+  "سختی اصلی",
+  "در یک نگاه",
+  "احتمالاً به تو می‌خورد اگر",
+  "احتمالاً اذیتت می‌کند اگر",
+  "روز کاری واقعی",
+  "شروع کم‌ریسک",
+  "قبل از تصمیم"
+] as const;
+
+const rejectedProductScreenLabels = [
+  "Reality Snapshot",
+  "Stats Dashboard",
+  "Day Reality Cards",
+  "Match Check",
+  "Reality Toggle",
+  "Honest Friction",
+  "Mini Start Map",
+  "Skill Switcher",
+  "Opportunity vs Threat",
+  "Experience Bridge",
+  "Interview Trainer",
+  "Final Checkpoint"
+] as const;
+
+const forbiddenProductCopy = [
+  "منتور",
+  "مشاوره",
+  "جلسه",
+  "رزرو",
+  "پرداخت",
+  "استخدام تضمینی",
+  "تضمین موفقیت",
+  "دوره آموزشی",
+  "کلاس"
+] as const;
+
 const approvedShareImageUrl = new URL(CAREER_PATH_SHARE_IMAGE, CAREER_PATH_SEO_BASE_URL).toString();
 
 function getRequiredCareerPathEntry(slug: string) {
@@ -95,6 +132,15 @@ function collectSchemaTypes(value: unknown): string[] {
   return [...ownType, ...nestedTypes];
 }
 
+function collectImageSources(html: string) {
+  const imageTags = [...html.matchAll(/<img\b[^>]*>/giu)].map((match) => match[0]);
+  return imageTags.flatMap((tag) => {
+    const src = tag.match(/\ssrc="([^"]+)"/iu)?.[1];
+    const srcSet = tag.match(/\ssrcSet="([^"]+)"/iu)?.[1] ?? tag.match(/\ssrcset="([^"]+)"/iu)?.[1];
+    return [src, srcSet].filter((value): value is string => Boolean(value));
+  });
+}
+
 describe("Career path SEO pages", () => {
   it("creates one unique deterministic slug for every career path group", () => {
     const entries = getCareerPathSeoEntries();
@@ -114,29 +160,38 @@ describe("Career path SEO pages", () => {
     expect(getCareerPathSeoEntryBySlug("not-a-real-career-path")).toBeUndefined();
   });
 
-  it("renders a useful path page with levels, skills, related paths, and product CTAs", async () => {
+  it("renders a mobile-first product screen with required decision labels and CTAs", async () => {
     const entry = getCareerPathSeoEntries()[0];
     const html = renderToStaticMarkup(
       await CareerPathSeoPage({ params: Promise.resolve({ slug: entry.slug }) })
     );
 
     expect(html).toContain(`مسیر شغلی ${entry.path.name}`);
-    expect(html).toContain("این مسیر شغلی درباره چیست؟");
-    expect(html).toContain("این مسیر برای چه کسی مناسب‌تر است؟");
-    expect(html).toContain("سطح‌های شغلی این مسیر");
-    expect(html).toContain(entry.path.cards[0].seniority);
-    expect(html).toContain(entry.path.cards[0].title);
-    expect(html).toContain("مهارت‌های مهم این مسیر");
-    expect(html).toContain(getCareerPathTechnicalSkills(entry.path)[0]);
-    expect(html).toContain("ابزارها و تکنولوژی‌های رایج");
-    expect(html).toContain(getCareerPathTools(entry.path)[0]);
-    expect(html).toContain("مهارت‌های نرم مهم");
-    expect(html).toContain(getCareerPathSoftSkills(entry.path)[0]);
-    expect(html).toContain("مسیرهای مرتبط");
-    expect(html).toContain(getRelatedCareerPathSeoEntries(entry.path)[0].pageHref);
-    expect(html).toContain("بررسی این مسیر در Useravaa");
-    expect(html).toContain("ذخیره برای بررسی بیشتر");
+    requiredProductScreenLabels.forEach((label) => expect(html).toContain(label));
+    rejectedProductScreenLabels.forEach((label) => expect(html).not.toContain(label));
+    expect(html).toContain("صفحه تصمیم مسیر شغلی");
+    expect(html).toContain("ذخیره برای بررسی");
     expect(html).toContain("مقایسه با مسیرهای دیگر");
+    expect(html).toContain("بازگشت به مسیرها");
+    expect(html).toContain(getRelatedCareerPathSeoEntries(entry.path)[0].path.name);
+    expect(html).toContain(`/career/compare?path=${encodeURIComponent(entry.path.id)}&amp;path=`);
+  });
+
+  it("renders a safe mascot scene without external or broken image sources", async () => {
+    const entry = getRequiredCareerPathEntry("seo");
+    const html = renderToStaticMarkup(
+      await CareerPathSeoPage({ params: Promise.resolve({ slug: entry.slug }) })
+    );
+    const imageSources = collectImageSources(html);
+
+    expect(html).toContain("data-career-mascot-scene");
+    expect(html).toContain("راهنمای تصویری Useravaa");
+    expect(html).toContain(encodeURIComponent(CAREER_PATH_MASCOT_IMAGE_SRC));
+    expect(imageSources.length).toBeGreaterThan(0);
+    imageSources.forEach((source) => {
+      expect(source).not.toMatch(/^https?:\/\//iu);
+      expect(source).not.toContain("src=\"\"");
+    });
   });
 
   it("generates safe metadata and canonical URLs for path pages", async () => {
@@ -244,6 +299,7 @@ describe("Career path SEO pages", () => {
     expect(html).not.toContain("JobPosting");
     expect(html).not.toContain("Course");
     forbiddenSeoLanguage.forEach((claim) => expect(html.toLowerCase()).not.toContain(claim.toLowerCase()));
+    forbiddenProductCopy.forEach((claim) => expect(html.toLowerCase()).not.toContain(claim.toLowerCase()));
   });
 
   it("renders only WebPage schema for representative share preview pages", async () => {
