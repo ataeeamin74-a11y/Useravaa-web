@@ -14,7 +14,6 @@ import {
   getCareerPathTools,
   getRelatedCareerPathSeoEntries
 } from "@/features/career/career-path-seo";
-import { isSiteIndexingEnabled } from "@/lib/deployment/safety";
 import styles from "./CareerPathSeoPage.module.css";
 
 type CareerPathSeoPageProps = Readonly<{
@@ -29,13 +28,12 @@ export async function generateMetadata({ params }: CareerPathSeoPageProps): Prom
   const { slug } = await params;
   const entry = getCareerPathSeoEntryBySlug(slug);
   if (!entry) return { title: "مسیر شغلی پیدا نشد | Useravaa" };
-  const indexingEnabled = isSiteIndexingEnabled();
 
   return {
     ...buildCareerPathMetadata(entry),
     robots: {
-      index: indexingEnabled,
-      follow: indexingEnabled
+      index: true,
+      follow: true
     }
   };
 }

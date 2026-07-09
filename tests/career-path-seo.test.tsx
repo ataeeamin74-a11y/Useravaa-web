@@ -80,6 +80,7 @@ describe("Career path SEO pages", () => {
     expect(metadata.title).toBe(`${entry.path.name} | مسیر شغلی در Useravaa`);
     expect(metadata.description).toBe(helperMetadata.description);
     expect(metadata.alternates).toEqual({ canonical: entry.canonicalUrl });
+    expect(metadata.robots).toEqual({ index: true, follow: true });
     expect(metadata.openGraph).toMatchObject({
       title: metadata.title,
       description: metadata.description,
@@ -92,6 +93,8 @@ describe("Career path SEO pages", () => {
       description: metadata.description
     });
     forbiddenSeoLanguage.forEach((claim) => expect(serializedMetadata).not.toContain(claim.toLowerCase()));
+    expect(serializedMetadata).not.toContain("noindex");
+    expect(serializedMetadata).not.toContain("nofollow");
   });
 
   it("includes every career path page in sitemap without duplicates or invalid paths", () => {
