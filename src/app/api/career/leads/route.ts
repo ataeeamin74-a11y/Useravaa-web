@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
 import {
@@ -14,8 +14,24 @@ import {
 export const runtime = "nodejs";
 
 const DEFAULT_LEADS_PATH = "/var/log/useravaa/career-leads.jsonl";
+const MAX_LEAD_REQUEST_BYTES = 12 * 1024;
+const TEN_MINUTES_MS = 10 * 60 * 1000;
+const ONE_HOUR_MS = 60 * 60 * 1000;
+const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+const MAX_LEAD_ATTEMPTS_PER_TEN_MINUTES = 5;
+const MAX_LEAD_ATTEMPTS_PER_HOUR = 20;
 const ALLOWED_SOURCES = new Set<CareerLeadSource>(["path_save", "comparison_save"]);
 const ALLOWED_STAGES = new Set<string>(CAREER_STAGE_OPTIONS);
+
+type RateLimitBucket = {
+  tenMinuteAttempts: number[];
+  hourlyAttempts: number[];
+};
+
+const rateLimitBuckets = new Map<string, RateLimitBucket>();
+const dedupeTimestamps = new Map<string, number>();
+let lastRateLimitCleanup = 0;
+let lastDedupeCleanup = 0;
 
 type StoredCareerLead = Readonly<{
   id: string;
@@ -38,6 +54,102 @@ type ParsedLeadPayload = Readonly<{
   honeypot: boolean;
   lead?: Omit<StoredCareerLead, "id" | "createdAt">;
 }>;
+
+function jsonError(error: string, status: number) {
+  return Response.json({ ok: false, error }, { status });
+}
+
+export function resetCareerLeadApiGuards() {
+  rateLimitBuckets.clear();
+  dedupeTimestamps.clear();
+  lastRateLimitCleanup = 0;
+  lastDedupeCleanup = 0;
+}
+
+export function getCareerLeadsFilePath(source: NodeJS.ProcessEnv = process.env) {
+  return source.USERAVAA_CAREER_LEADS_PATH || DEFAULT_LEADS_PATH;
+}
+
+export function isCareerLeadRequestTooLarge(request: Request) {
+  const contentLength = request.headers.get("content-length");
+  if (!contentLength) return false;
+
+  const parsedLength = Number(contentLength);
+  return Number.isFinite(parsedLength) && parsedLength > MAX_LEAD_REQUEST_BYTES;
+}
+
+function firstHeaderValue(value: string | null) {
+  return value?.split(",")[0]?.trim() || undefined;
+}
+
+export function getCareerLeadClientKey(request: Request) {
+  return firstHeaderValue(request.headers.get("x-forwarded-for"))
+    ?? firstHeaderValue(request.headers.get("x-real-ip"))
+    ?? "unknown-client";
+}
+
+function pruneRecentAttempts(attempts: readonly number[], now: number, windowMs: number) {
+  return attempts.filter((attemptedAt) => now - attemptedAt < windowMs);
+}
+
+function cleanupRateLimitBuckets(now: number) {
+  if (now - lastRateLimitCleanup < TEN_MINUTES_MS) return;
+
+  for (const [key, bucket] of rateLimitBuckets) {
+    bucket.tenMinuteAttempts = pruneRecentAttempts(bucket.tenMinuteAttempts, now, TEN_MINUTES_MS);
+    bucket.hourlyAttempts = pruneRecentAttempts(bucket.hourlyAttempts, now, ONE_HOUR_MS);
+    if (!bucket.tenMinuteAttempts.length && !bucket.hourlyAttempts.length) {
+      rateLimitBuckets.delete(key);
+    }
+  }
+  lastRateLimitCleanup = now;
+}
+
+export function allowCareerLeadAttempt(request: Request, now = Date.now()) {
+  cleanupRateLimitBuckets(now);
+
+  const key = getCareerLeadClientKey(request);
+  const bucket = rateLimitBuckets.get(key) ?? { tenMinuteAttempts: [], hourlyAttempts: [] };
+  bucket.tenMinuteAttempts = pruneRecentAttempts(bucket.tenMinuteAttempts, now, TEN_MINUTES_MS);
+  bucket.hourlyAttempts = pruneRecentAttempts(bucket.hourlyAttempts, now, ONE_HOUR_MS);
+
+  if (
+    bucket.tenMinuteAttempts.length >= MAX_LEAD_ATTEMPTS_PER_TEN_MINUTES
+    || bucket.hourlyAttempts.length >= MAX_LEAD_ATTEMPTS_PER_HOUR
+  ) {
+    rateLimitBuckets.set(key, bucket);
+    return false;
+  }
+
+  bucket.tenMinuteAttempts.push(now);
+  bucket.hourlyAttempts.push(now);
+  rateLimitBuckets.set(key, bucket);
+  return true;
+}
+
+function cleanupDedupeTimestamps(now: number) {
+  if (now - lastDedupeCleanup < ONE_HOUR_MS) return;
+
+  for (const [key, receivedAt] of dedupeTimestamps) {
+    if (now - receivedAt >= ONE_DAY_MS) dedupeTimestamps.delete(key);
+  }
+  lastDedupeCleanup = now;
+}
+
+export function getCareerLeadDedupeKey(contact: string) {
+  return createHash("sha256").update(contact).digest("hex");
+}
+
+export function isDuplicateCareerLead(contact: string, now = Date.now()) {
+  cleanupDedupeTimestamps(now);
+  const receivedAt = dedupeTimestamps.get(getCareerLeadDedupeKey(contact));
+  return receivedAt !== undefined && now - receivedAt < ONE_DAY_MS;
+}
+
+export function rememberCareerLeadDedupe(contact: string, now = Date.now()) {
+  cleanupDedupeTimestamps(now);
+  dedupeTimestamps.set(getCareerLeadDedupeKey(contact), now);
+}
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -154,13 +266,22 @@ export function parseCareerLeadPayload(value: unknown): ParsedLeadPayload | unde
 
 export async function appendCareerLead(
   lead: StoredCareerLead,
-  filePath = process.env.USERAVAA_CAREER_LEADS_PATH || DEFAULT_LEADS_PATH
+  filePath = getCareerLeadsFilePath()
 ) {
   await mkdir(dirname(filePath), { recursive: true });
   await appendFile(filePath, `${JSON.stringify(lead)}\n`, "utf8");
 }
 
 export async function POST(request: Request) {
+  if (isCareerLeadRequestTooLarge(request)) {
+    return jsonError("payload_too_large", 413);
+  }
+
+  const now = Date.now();
+  if (!allowCareerLeadAttempt(request, now)) {
+    return jsonError("rate_limited", 429);
+  }
+
   if (!request.headers.get("content-type")?.toLowerCase().includes("application/json")) {
     return Response.json({ ok: false }, { status: 400 });
   }
@@ -169,23 +290,29 @@ export async function POST(request: Request) {
   try {
     value = await request.json();
   } catch {
-    return Response.json({ ok: false }, { status: 400 });
+    return jsonError("invalid_json", 400);
   }
 
   const payload = parseCareerLeadPayload(value);
   if (!payload) return Response.json({ ok: false }, { status: 400 });
   if (payload.honeypot) return Response.json({ ok: true });
 
+  if (isDuplicateCareerLead(payload.lead!.contact, now)) {
+    return Response.json({ ok: true, deduped: true });
+  }
+
   const lead: StoredCareerLead = {
     id: randomUUID(),
-    createdAt: new Date().toISOString(),
+    createdAt: new Date(now).toISOString(),
     ...payload.lead!
   };
 
   try {
     await appendCareerLead(lead);
+    rememberCareerLeadDedupe(lead.contact, now);
     return Response.json({ ok: true });
-  } catch {
-    return Response.json({ ok: false }, { status: 500 });
+  } catch (error) {
+    console.error("career lead write failed", error instanceof Error ? error.message : "unknown error");
+    return jsonError("lead_write_failed", 500);
   }
 }
