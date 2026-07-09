@@ -51,14 +51,23 @@ function sanitizeText(value: unknown, maximumLength: number) {
   return sanitized;
 }
 
+function containsIranianMobile(value: string) {
+  const compactValue = value.replace(/[\s().-]/g, "");
+  return /(?:\+?98|0)?9\d{9}/.test(compactValue);
+}
+
 function sanitizeIdentifier(value: unknown) {
   const sanitized = sanitizeText(value, 160);
-  return sanitized && /^[\p{L}\p{N}._:-]+$/u.test(sanitized) ? sanitized : undefined;
+  return sanitized
+    && !containsIranianMobile(sanitized)
+    && /^[\p{L}\p{N}\s._:%/#&+,-]+$/u.test(sanitized)
+    ? sanitized
+    : undefined;
 }
 
 function sanitizePublicTitle(value: unknown) {
   const sanitized = sanitizeText(value, 160);
-  if (!sanitized || /(?:\+?98|0)?9\d{9}/.test(sanitized.replace(/[\s().-]/g, ""))) {
+  if (!sanitized || containsIranianMobile(sanitized)) {
     return undefined;
   }
   return sanitized;
