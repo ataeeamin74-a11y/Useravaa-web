@@ -42,6 +42,7 @@ import {
   startCompareDraftFromPath
 } from "./career-compare-state";
 import { trackCareerEvent } from "./career-events";
+import { getCareerPathSeoEntryByPathId } from "./career-path-seo";
 import { getCareerSlides } from "./data/career-slide-manifest";
 import type {
   CareerCard,
@@ -429,6 +430,8 @@ type PathEngagementActionsProps = Readonly<{
 }>;
 
 export function PathEngagementActions({ path, saved, onSave, onRemove }: PathEngagementActionsProps) {
+  const seoEntry = getCareerPathSeoEntryByPathId(path.id);
+
   function saveCurrentPath() {
     const saveSucceeded = onSave(path.id);
     if (saveSucceeded) trackCareerEvent("career_path_saved", { pathId: path.id });
@@ -472,6 +475,12 @@ export function PathEngagementActions({ path, saved, onSave, onRemove }: PathEng
         <GitCompareArrows size={19} aria-hidden />
         مقایسه با مسیرهای دیگر
       </Link>
+      {seoEntry ? (
+        <Link href={seoEntry.pageHref} className={styles.comparePathAction}>
+          <Route size={19} aria-hidden />
+          مشاهده صفحه مسیر
+        </Link>
+      ) : null}
     </div>
   );
 }

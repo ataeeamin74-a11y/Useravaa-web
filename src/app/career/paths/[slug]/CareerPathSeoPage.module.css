@@ -1,0 +1,154 @@
+.page {
+  width: min(100%, 960px);
+  margin: 0 auto;
+  padding: 28px 16px 96px;
+  color: #172033;
+}
+
+.hero {
+  display: grid;
+  gap: 18px;
+  padding: 26px 0 20px;
+  border-bottom: 1px solid #e4e8f0;
+}
+
+.eyebrow {
+  margin: 0;
+  color: #4a5b75;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 2.6rem;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.intro {
+  max-width: 720px;
+  margin: 0;
+  color: #334155;
+  font-size: 1.05rem;
+  line-height: 2;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.primaryAction {
+  background: #091b49;
+  color: #fff;
+}
+
+.secondaryAction {
+  border: 1px solid #cfd8e7;
+  color: #10244f;
+  background: #fff;
+}
+
+.section {
+  padding: 28px 0;
+  border-bottom: 1px solid #edf1f7;
+}
+
+.section h2 {
+  margin: 0 0 14px;
+  font-size: 1.45rem;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.section p,
+.section li {
+  color: #334155;
+  line-height: 2;
+}
+
+.cardGrid,
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.levelCard,
+.relatedCard {
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  padding: 14px;
+  background: #fff;
+}
+
+.levelCard strong,
+.relatedCard strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #0f1f3d;
+}
+
+.levelCard span,
+.relatedCard span {
+  display: block;
+  color: #64748b;
+  line-height: 1.8;
+}
+
+.chipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chipList li {
+  padding: 7px 10px;
+  border-radius: 8px;
+  background: #f4f7fb;
+  color: #1f2a44;
+  line-height: 1.6;
+}
+
+.relatedCard {
+  text-decoration: none;
+}
+
+.relatedCard:hover,
+.relatedCard:focus-visible {
+  border-color: #8aa0c4;
+}
+
+@media (max-width: 640px) {
+  .page {
+    padding-inline: 14px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+}

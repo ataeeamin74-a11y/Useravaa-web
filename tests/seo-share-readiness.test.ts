@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import sitemap from "@/app/sitemap";
+import { getCareerPathSeoEntries } from "@/features/career/career-path-seo";
 import { getRobotsPolicy, productionSearchExcludedRoutes } from "@/lib/deployment/safety";
 
 const APPROVED_DESCRIPTION =
@@ -43,14 +44,18 @@ describe("Phase 17 SEO and share readiness", () => {
     );
   });
 
-  it("publishes only the approved root URL in the sitemap", () => {
-    expect(sitemap()).toEqual([
-      {
-        url: "https://useravaa.com",
-        changeFrequency: "weekly",
-        priority: 1
-      }
-    ]);
+  it("publishes the approved root URL and indexable career path URLs in the sitemap", () => {
+    const entries = sitemap();
+    const urls = entries.map((entry) => entry.url);
+    const careerPathUrls = getCareerPathSeoEntries().map((entry) => entry.canonicalUrl);
+
+    expect(entries[0]).toEqual({
+      url: "https://useravaa.com",
+      changeFrequency: "weekly",
+      priority: 1
+    });
+    expect(new Set(urls).size).toBe(urls.length);
+    expect(careerPathUrls.every((url) => urls.includes(url))).toBe(true);
   });
 
   it("keeps non-production closed and excludes non-launch production routes", () => {
@@ -78,8 +83,10 @@ describe("Phase 17 SEO and share readiness", () => {
     const source = projectFile("src/app/career/page.tsx");
 
     expect(source).toContain('import { permanentRedirect } from "next/navigation"');
+    expect(source).toContain("getCareerPathSeoEntryBySlug");
     expect(source).toContain("permanentRedirect(rootDestination)");
-    expect(source).toContain('`/?card=${encodeURIComponent(initialCardId)}`');
+    expect(source).toContain("initialPathSlug");
+    expect(source).toContain('`/?card=${encodeURIComponent(resolvedCardId)}`');
   });
 
   it("keeps public metadata free of internal, forbidden, and offline claims", () => {
@@ -87,6 +94,7 @@ describe("Phase 17 SEO and share readiness", () => {
       projectFile("src/app/layout.tsx"),
       projectFile("src/app/page.tsx"),
       projectFile("src/app/sitemap.ts"),
+      projectFile("src/features/career/career-path-seo.ts"),
       projectFile("public/site.webmanifest")
     ].join("\n");
     const forbidden = [
