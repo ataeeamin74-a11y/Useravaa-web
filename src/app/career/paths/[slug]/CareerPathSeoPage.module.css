@@ -63,7 +63,7 @@
   display: grid;
   gap: 15px;
   border-radius: 30px;
-  background: var(--career-app-surface);
+  background: #f4f8fc;
   box-shadow: var(--career-shadow);
   padding: 14px;
 }
@@ -266,10 +266,10 @@
 }
 
 .heroImageSlot[data-has-image="true"] {
-  overflow: visible;
+  overflow: hidden;
   border: 0;
   border-radius: 0;
-  background: var(--career-app-surface);
+  background: #f4f8fc;
   box-shadow: none;
   padding: 0;
 }
@@ -283,6 +283,7 @@
   border: 0;
   background: transparent;
   box-shadow: none;
+  object-position: center;
   padding: 0;
 }
 
@@ -698,6 +699,12 @@
 .secondaryAction:focus-visible {
   outline: 2px solid var(--career-blue);
   outline-offset: 3px;
+}
+
+@media (max-width: 679px) {
+  .heroVisual {
+    width: min(100%, 426px);
+  }
 }
 
 @media (min-width: 680px) {
