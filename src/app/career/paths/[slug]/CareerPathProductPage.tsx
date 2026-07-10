@@ -146,7 +146,7 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <header className={styles.hero}>
+      <header className={styles.hero} data-career-product-hero>
         <p className={styles.eyebrow}>
           <UiIcon icon={Sparkles} tone="teal" compact />
           <span>صفحه تصمیم مسیر شغلی</span>
@@ -157,7 +157,7 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <p className={styles.heroDescriptor}>{content.heroDescriptor}</p>
           <p className={styles.intro}>{content.intro}</p>
           <div className={styles.actions} aria-label="اقدام‌های مسیر شغلی">
-            <Link className={styles.primaryAction} href={entry.pwaHref}>
+            <Link className={styles.primaryAction} href={entry.pwaHref} data-career-hero-primary-action>
               <ActionIcon icon={BookmarkPlus} />
               <span>{content.finalCtaText}</span>
             </Link>

@@ -223,6 +223,8 @@ describe("Career path SEO pages", () => {
     expect(h2Texts).not.toContain("تناسب سریع");
     expect(h2Texts).not.toContain("روز کاری واقعی");
     expect(html).toContain("صفحه تصمیم مسیر شغلی");
+    expect(html).toContain("data-career-product-hero");
+    expect(html).toContain("data-career-hero-primary-action");
     expect(html).toContain("این مسیر را برای بررسی نگه دار");
     expect(html).toContain("مقایسه با مسیرهای دیگر");
     expect(html).not.toContain(removedCtaCopy);
