@@ -274,6 +274,13 @@
   padding: 0;
 }
 
+.sectionImageSlot[data-has-image="true"] {
+  border: 0;
+  background: #fff;
+  box-shadow: none;
+  padding: 0;
+}
+
 .imageSlotMedia {
   object-fit: contain;
   padding: 10px;
@@ -284,6 +291,17 @@
   background: transparent;
   box-shadow: none;
   object-position: center;
+  padding: 0;
+}
+
+.sectionImageSlot[data-has-image="true"] .imageSlotMedia {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+  border: 0;
+  background: #fff;
+  box-shadow: none;
+  object-fit: contain;
   padding: 0;
 }
 
