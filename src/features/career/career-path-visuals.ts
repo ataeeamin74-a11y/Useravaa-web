@@ -1,7 +1,5 @@
 import type { CareerSubfamilyNode } from "./career-types";
 
-export const CAREER_PATH_MASCOT_IMAGE_SRC = "/brand/Mascot/useravaa-mascot-magnifier-eye.webp";
-
 export type CareerPathSceneType =
   | "build"
   | "campaign"
@@ -241,7 +239,7 @@ export function getCareerPathVisualProfile(path: CareerSubfamilyNode): CareerPat
       ambiguityLevel: "زیاد",
       portfolioNeed: "نیازمند تمرین",
       startWithoutExperience: "نیازمند تمرین",
-      insightLabel: "بینش قبل از تصمیم",
+      insightLabel: "بینش مسیر",
       sceneCaption: "داده وقتی ارزش دارد که به سؤال درست وصل شود.",
       propLabels: ["داده", "الگو", "بینش"]
     });

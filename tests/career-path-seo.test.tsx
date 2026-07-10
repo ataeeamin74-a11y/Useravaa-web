@@ -14,7 +14,7 @@ import {
   getCareerPathSeoEntryBySlug,
   getCareerPathSlugs
 } from "@/features/career/career-path-seo";
-import { CAREER_PATH_MASCOT_IMAGE_SRC } from "@/features/career/career-path-visuals";
+import { getCareerPathVisualAssetPaths } from "@/features/career/career-path-visual-assets";
 
 const forbiddenSeoLanguage = [
   "تضمین",
@@ -102,6 +102,9 @@ const rejectedProductScreenLabels = [
   "Interview Trainer",
   "Final Checkpoint"
 ] as const;
+
+const removedCtaCopy = ["بررسی این", "مسیر در", "Useravaa"].join(" ");
+const removedHardshipCopy = ["از بیرون", "ساده‌تر دیده می‌شود"].join(" ");
 
 const forbiddenProductCopy = [
   "منتور",
@@ -218,7 +221,7 @@ describe("Career path SEO pages", () => {
     expect(html).toContain("صفحه تصمیم مسیر شغلی");
     expect(html).toContain("این مسیر را برای بررسی نگه دار");
     expect(html).toContain("مقایسه با مسیرهای دیگر");
-    expect(html).toContain("بررسی این مسیر در Useravaa");
+    expect(html).not.toContain(removedCtaCopy);
   });
 
   it("keeps the fit section to the four allowed qualitative dimensions", async () => {
@@ -247,14 +250,16 @@ describe("Career path SEO pages", () => {
     ].forEach((copy) => expect(fitSection).not.toContain(copy));
   });
 
-  it("merges workday details into job realities and renders exactly five interview questions", async () => {
+  it("merges workday details into job realities and renders exactly five interview questions without answers", async () => {
     const entry = getRequiredCareerPathEntry("performance-marketing");
     const html = renderToStaticMarkup(
       await CareerPathSeoPage({ params: Promise.resolve({ slug: entry.slug }) })
     );
     const realitiesSection = sectionByDataAttribute(html, "data-career-realities-section");
+    const interviewSection = sectionByDataAttribute(html, "data-career-interview-section");
     const h2Texts = collectHeadingTexts(html, 2);
     const h3Texts = collectHeadingTexts(realitiesSection, 3);
+    const interviewQuestionTexts = collectHeadingTexts(interviewSection, 3);
 
     expect(h2Texts).toContain("واقعیت‌های شغلی");
     expect(h2Texts).not.toContain("روز کاری واقعی");
@@ -264,22 +269,37 @@ describe("Career path SEO pages", () => {
       "مهم‌ترین مهارت‌های تخصصی",
       "مهم‌ترین ابزارها"
     ]));
-    expect((html.match(/data-interview-question/g) ?? [])).toHaveLength(5);
+    expect((interviewSection.match(/data-interview-question/g) ?? [])).toHaveLength(5);
+    expect(interviewQuestionTexts).toHaveLength(5);
+    expect(interviewSection).not.toContain("<details");
+    expect(interviewSection).not.toContain("<summary");
+    expect(interviewSection).not.toContain("<p>به علاقه واقعی");
   });
 
-  it("renders a safe mascot scene without external or broken image sources", async () => {
+  it("maps hero and section image slots to slug-based public asset paths without broken external sources", async () => {
     const entry = getRequiredCareerPathEntry("seo");
     const html = renderToStaticMarkup(
       await CareerPathSeoPage({ params: Promise.resolve({ slug: entry.slug }) })
     );
+    const expectedPaths = getCareerPathVisualAssetPaths(entry.slug);
     const imageSources = collectImageSources(html);
 
     expect(html).toContain("data-career-mascot-scene");
-    expect(html).toContain("راهنمای تصویری Useravaa");
-    expect(html).toContain(encodeURIComponent(CAREER_PATH_MASCOT_IMAGE_SRC));
     expect((html.match(/data-career-mascot-scene/g) ?? [])).toHaveLength(1);
     expect((html.match(/data-section-visual/g) ?? []).length).toBeGreaterThanOrEqual(5);
-    expect(imageSources.length).toBeGreaterThan(0);
+    expect(html).toContain(`data-expected-src="${expectedPaths.heroMascot}"`);
+    expect(html).toContain(`data-expected-src="${expectedPaths.fit}"`);
+    expect(html).toContain(`data-expected-src="${expectedPaths.jobReality}"`);
+    expect(html).toContain(`data-expected-src="${expectedPaths.difficulties}"`);
+    expect(html).toContain(`data-expected-src="${expectedPaths.aiImpact}"`);
+    expect(html).toContain(`data-expected-src="${expectedPaths.interviewQuestions}"`);
+    expect(html).toContain('data-career-image-slot="heroMascot"');
+    expect(html).toContain('data-career-image-slot="fit"');
+    expect(html).toContain('data-career-image-slot="jobReality"');
+    expect(html).toContain('data-career-image-slot="difficulties"');
+    expect(html).toContain('data-career-image-slot="aiImpact"');
+    expect(html).toContain('data-career-image-slot="interviewQuestions"');
+    expect(html).toContain('data-has-image="false"');
     imageSources.forEach((source) => {
       expect(source).not.toMatch(/^https?:\/\//iu);
       expect(source).not.toContain("src=\"\"");
@@ -390,6 +410,9 @@ describe("Career path SEO pages", () => {
     expect(schema.url).toBe(entry.canonicalUrl);
     expect(html).not.toContain("JobPosting");
     expect(html).not.toContain("Course");
+    expect(html).not.toContain("Article");
+    expect(html).not.toContain(removedCtaCopy);
+    expect(html).not.toContain(removedHardshipCopy);
     forbiddenSeoLanguage.forEach((claim) => expect(html.toLowerCase()).not.toContain(claim.toLowerCase()));
     forbiddenProductCopy.forEach((claim) => expect(html.toLowerCase()).not.toContain(claim.toLowerCase()));
   });

@@ -29,7 +29,7 @@ export type CareerPathProductContent = Readonly<{
     harder: readonly string[];
     judgment: string;
   }>;
-  interviewQuestions: readonly Readonly<{ question: string; hint: string }>[];
+  interviewQuestions: readonly string[];
   finalCtaText: string;
 }>;
 
@@ -85,8 +85,8 @@ function buildHardships(profile: CareerPathVisualProfile, duties: readonly strin
       tone: "persimmon" as const
     },
     {
-      title: "از بیرون ساده‌تر دیده می‌شود",
-      body: `بخش‌هایی مثل ${firstOrFallback(duties, profile.focusLabel)} معمولاً ساده‌تر از چیزی که در اجرا تجربه می‌شود به نظر می‌رسند.`,
+      title: "نیاز به صبر و تمرین تکراری",
+      body: `بخش‌هایی مثل ${firstOrFallback(duties, profile.focusLabel)} با یک بار دیدن یا خواندن جا نمی‌افتند و به تمرین واقعی نیاز دارند.`,
       tone: "yellow" as const
     },
     {
@@ -125,26 +125,11 @@ function buildInterviewQuestions(
   const duty = firstOrFallback(duties, "یک مسئله واقعی و مبهم");
 
   return [
-    {
-      question: "چرا می‌خواهی وارد این مسیر شغلی شوی؟",
-      hint: "به علاقه واقعی، تجربه کوچک و چیزی که از کار روزمره فهمیده‌ای اشاره کن."
-    },
-    {
-      question: `چه تجربه یا تمرینی مرتبط با مسیر شغلی ${title} انجام داده‌ای؟`,
-      hint: `یک نمونه کوچک از ${duty} بهتر از توضیح کلی است.`
-    },
-    {
-      question: "وقتی با یک مسئله مبهم روبه‌رو می‌شوی، چطور شروع می‌کنی؟",
-      hint: "از روشن کردن مسئله، پرسیدن سؤال و ساختن قدم بعدی حرف بزن."
-    },
-    {
-      question: `با چه ابزارها یا مهارت‌هایی مثل ${tool} و ${skill} آشنا هستی؟`,
-      hint: "سطح آشنایی را واقعی بگو و درباره تمرین یا خروجی خودت توضیح بده."
-    },
-    {
-      question: "اگر بخواهی در این مسیر رشد کنی، فکر می‌کنی روی چه چیزی باید بیشتر کار کنی؟",
-      hint: "یک نقطه رشد مشخص بگو؛ نه پاسخ کلی و بی‌خطر."
-    }
+    "چرا می‌خواهی وارد این مسیر شغلی شوی؟",
+    `چه تجربه یا تمرینی مرتبط با مسیر شغلی ${title} انجام داده‌ای؟`,
+    "وقتی با یک مسئله مبهم روبه‌رو می‌شوی، چطور شروع می‌کنی؟",
+    `با چه ابزارها یا مهارت‌هایی مثل ${tool} و ${skill} آشنا هستی؟`,
+    `اگر با کاری مثل ${duty} روبه‌رو شوی، فکر می‌کنی کدام بخش برای رشدت مهم‌تر است؟`
   ];
 }
 

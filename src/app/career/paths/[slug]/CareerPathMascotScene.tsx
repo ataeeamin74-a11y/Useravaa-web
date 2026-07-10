@@ -1,39 +1,114 @@
 import Image from "next/image";
-import { CAREER_PATH_MASCOT_IMAGE_SRC, type CareerPathVisualProfile } from "@/features/career/career-path-visuals";
+import {
+  careerPathVisualAssetExists,
+  getCareerPathVisualAssetPath,
+  type CareerPathVisualSlot
+} from "@/features/career/career-path-visual-assets";
+import type { CareerPathVisualProfile } from "@/features/career/career-path-visuals";
 import styles from "./CareerPathSeoPage.module.css";
 
-type CareerPathMascotSceneProps = Readonly<{
+type CareerPathImageSlotProps = Readonly<{
+  slug: string;
   pathTitle: string;
   profile: CareerPathVisualProfile;
-  compact?: boolean;
+  slot: CareerPathVisualSlot;
+  alt: string;
+  priority?: boolean;
+  hero?: boolean;
 }>;
 
-export function CareerPathMascotScene({ pathTitle, profile, compact = false }: CareerPathMascotSceneProps) {
+function CareerPathImageSlot({
+  slug,
+  pathTitle,
+  profile,
+  slot,
+  alt,
+  priority = false,
+  hero = false
+}: CareerPathImageSlotProps) {
+  const src = getCareerPathVisualAssetPath(slug, slot);
+  const hasImage = careerPathVisualAssetExists(slug, slot);
+
   return (
     <figure
-      className={compact ? styles.mascotSceneCompact : styles.mascotScene}
-      data-career-mascot-scene={profile.sceneType}
+      className={hero ? styles.heroImageSlot : styles.sectionImageSlot}
+      data-career-image-slot={slot}
+      data-section-visual={slot === "heroMascot" ? undefined : slot}
+      data-expected-src={src}
+      data-has-image={hasImage ? "true" : "false"}
       data-scene={profile.sceneType}
-      data-accent={profile.accent}
     >
-      <div className={styles.sceneProps} aria-hidden="true">
-        {profile.propLabels.map((label, index) => (
-          <span className={styles.sceneProp} data-prop-index={index + 1} key={label}>{label}</span>
-        ))}
-        <span className={styles.sceneConnector} />
-      </div>
-      <Image
-        className={styles.mascotImage}
-        src={CAREER_PATH_MASCOT_IMAGE_SRC}
-        alt={`راهنمای تصویری Useravaa برای مسیر شغلی ${pathTitle}`}
-        width={312}
-        height={312}
-        priority={!compact}
-      />
-      <figcaption className={styles.mascotCaption}>
-        <span>{profile.insightLabel}</span>
-        <strong>{profile.sceneCaption}</strong>
-      </figcaption>
+      {hasImage ? (
+        <Image
+          className={styles.imageSlotMedia}
+          src={src}
+          alt={alt}
+          fill
+          sizes={hero ? "(min-width: 980px) 380px, 100vw" : "(min-width: 980px) 1040px, 100vw"}
+          priority={priority}
+        />
+      ) : (
+        <div className={styles.imageSlotPlaceholder} aria-hidden="true">
+          <span className={styles.placeholderCard} data-card="1">{profile.propLabels[0]}</span>
+          <span className={styles.placeholderCard} data-card="2">{profile.propLabels[1]}</span>
+          <span className={styles.placeholderCard} data-card="3">{profile.propLabels[2]}</span>
+          <span className={styles.placeholderPath} />
+        </div>
+      )}
+      {hero ? (
+        <figcaption className={styles.mascotCaption}>
+          <span>{profile.insightLabel}</span>
+          <strong>{pathTitle}</strong>
+        </figcaption>
+      ) : null}
     </figure>
+  );
+}
+
+export function CareerPathHeroMascot({
+  slug,
+  pathTitle,
+  profile
+}: Readonly<{
+  slug: string;
+  pathTitle: string;
+  profile: CareerPathVisualProfile;
+}>) {
+  return (
+    <div data-career-mascot-scene={profile.sceneType}>
+      <CareerPathImageSlot
+        slug={slug}
+        pathTitle={pathTitle}
+        profile={profile}
+        slot="heroMascot"
+        alt={`تصویر ماسکات مسیر ${pathTitle}`}
+        priority
+        hero
+      />
+    </div>
+  );
+}
+
+export function CareerPathSectionImage({
+  slug,
+  pathTitle,
+  profile,
+  slot,
+  alt
+}: Readonly<{
+  slug: string;
+  pathTitle: string;
+  profile: CareerPathVisualProfile;
+  slot: Exclude<CareerPathVisualSlot, "heroMascot">;
+  alt: string;
+}>) {
+  return (
+    <CareerPathImageSlot
+      slug={slug}
+      pathTitle={pathTitle}
+      profile={profile}
+      slot={slot}
+      alt={alt}
+    />
   );
 }

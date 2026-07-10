@@ -2,15 +2,12 @@ import Link from "next/link";
 import type { CareerPathSeoEntry } from "@/features/career/career-path-seo";
 import { buildCareerPathTitle } from "@/features/career/career-path-seo";
 import { buildCareerPathProductContent, type Tone } from "@/features/career/career-path-page-content";
-import type { CareerPathVisualProfile } from "@/features/career/career-path-visuals";
-import { CareerPathMascotScene } from "./CareerPathMascotScene";
+import { CareerPathHeroMascot, CareerPathSectionImage } from "./CareerPathMascotScene";
 import styles from "./CareerPathSeoPage.module.css";
 
 type CareerPathProductPageProps = Readonly<{
   entry: CareerPathSeoEntry;
 }>;
-
-type SectionVisualVariant = "fit" | "reality" | "hardships" | "intelligence" | "interview";
 
 function compareHref(currentPathId: string) {
   return `/career/compare?path=${encodeURIComponent(currentPathId)}`;
@@ -23,29 +20,6 @@ function toneClass(tone: Tone) {
     yellow: styles.toneYellow,
     persimmon: styles.tonePersimmon
   }[tone];
-}
-
-function SectionVisual({
-  variant,
-  profile
-}: Readonly<{
-  variant: SectionVisualVariant;
-  profile: CareerPathVisualProfile;
-}>) {
-  return (
-    <div
-      className={`${styles.sectionVisual} ${styles[`visual${variant[0].toUpperCase()}${variant.slice(1)}`]}`}
-      data-section-visual={variant}
-      data-scene={profile.sceneType}
-      aria-hidden="true"
-    >
-      <span className={styles.visualSignal} />
-      <span className={styles.visualCard} data-card="1">{profile.propLabels[0]}</span>
-      <span className={styles.visualCard} data-card="2">{profile.propLabels[1]}</span>
-      <span className={styles.visualCard} data-card="3">{profile.propLabels[2]}</span>
-      <span className={styles.visualPath} />
-    </div>
-  );
 }
 
 export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
@@ -73,20 +47,20 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <h1 id="career-path-seo-title" dir="auto">مسیر شغلی {pathTitle}</h1>
           <p className={styles.heroDescriptor}>{content.heroDescriptor}</p>
           <p className={styles.intro}>{content.intro}</p>
-          <div className={styles.decisionCards} aria-label="سه نکته تصمیم مسیر شغلی">
-            {content.decisionCards.map((card) => (
-              <article className={`${styles.decisionCard} ${toneClass(card.tone)}`} key={card.label}>
-                <span>{card.label}</span>
-                <strong>{card.value}</strong>
-              </article>
-            ))}
-          </div>
           <div className={styles.actions} aria-label="اقدام‌های مسیر شغلی">
             <Link className={styles.primaryAction} href={entry.pwaHref}>{content.finalCtaText}</Link>
             <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>مقایسه با مسیرهای دیگر</Link>
           </div>
         </div>
-        <CareerPathMascotScene pathTitle={pathTitle} profile={content.visualProfile} />
+        <CareerPathHeroMascot slug={entry.slug} pathTitle={pathTitle} profile={content.visualProfile} />
+        <div className={styles.decisionCards} aria-label="سه نکته تصمیم مسیر شغلی">
+          {content.decisionCards.map((card) => (
+            <article className={`${styles.decisionCard} ${toneClass(card.tone)}`} key={card.label}>
+              <span>{card.label}</span>
+              <strong>{card.value}</strong>
+            </article>
+          ))}
+        </div>
       </header>
 
       <section className={styles.section} data-career-fit-section aria-labelledby="career-path-fit-title">
@@ -95,7 +69,13 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <h2 id="career-path-fit-title">این شغل مناسب منه؟</h2>
           <p>چهار بُعد ساده برای اینکه بدون تست شخصیت و عددسازی، حس اولیه‌ات را با واقعیت کار مقایسه کنی.</p>
         </div>
-        <SectionVisual variant="fit" profile={content.visualProfile} />
+        <CareerPathSectionImage
+          slug={entry.slug}
+          pathTitle={pathTitle}
+          profile={content.visualProfile}
+          slot="fit"
+          alt={`تصویر تناسب شغلی مسیر ${pathTitle}`}
+        />
         <dl className={styles.fitDimensions}>
           {content.fitDimensions.map((dimension) => (
             <div className={`${styles.fitDimension} ${toneClass(dimension.tone)}`} key={dimension.label}>
@@ -112,7 +92,13 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <h2 id="career-path-realities-title">واقعیت‌های شغلی</h2>
           <p>روزمره، مهارت‌ها و ابزارها در یک قاب کوتاه؛ نه یک مقاله طولانی.</p>
         </div>
-        <SectionVisual variant="reality" profile={content.visualProfile} />
+        <CareerPathSectionImage
+          slug={entry.slug}
+          pathTitle={pathTitle}
+          profile={content.visualProfile}
+          slot="jobReality"
+          alt={`تصویر واقعیت‌های شغلی مسیر ${pathTitle}`}
+        />
         <div className={styles.realityGrid}>
           <article className={styles.realityCard}>
             <h3>روز کاری واقعی</h3>
@@ -139,7 +125,13 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <h2 id="career-path-hardships-title">سختی‌ها</h2>
           <p>سختی‌ها برای ترساندن نیستند؛ برای این‌اند که قبل از انتخاب، تصویر کامل‌تری داشته باشی.</p>
         </div>
-        <SectionVisual variant="hardships" profile={content.visualProfile} />
+        <CareerPathSectionImage
+          slug={entry.slug}
+          pathTitle={pathTitle}
+          profile={content.visualProfile}
+          slot="difficulties"
+          alt={`تصویر سختی‌های مسیر ${pathTitle}`}
+        />
         <div className={styles.hardshipGrid}>
           {content.hardships.map((hardship) => (
             <article className={`${styles.hardshipCard} ${toneClass(hardship.tone)}`} key={hardship.title}>
@@ -156,7 +148,13 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <h2 id="career-path-intelligence-title">فرصت‌ها و تهدیدهای هوش مصنوعی</h2>
           <p>نگاه آرام و عملی به اینکه چه چیزهایی سریع‌تر می‌شود و کجا قضاوت انسانی هنوز تعیین‌کننده است.</p>
         </div>
-        <SectionVisual variant="intelligence" profile={content.visualProfile} />
+        <CareerPathSectionImage
+          slug={entry.slug}
+          pathTitle={pathTitle}
+          profile={content.visualProfile}
+          slot="aiImpact"
+          alt={`تصویر اثر هوش مصنوعی بر مسیر ${pathTitle}`}
+        />
         <div className={styles.intelligenceGrid}>
           <article className={styles.intelligenceCard}>
             <h3>هوش مصنوعی چه چیزهایی را آسان‌تر می‌کند؟</h3>
@@ -176,13 +174,19 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <h2 id="career-path-interview-title">سوالات متداول مصاحبه شغلی</h2>
           <p>پنج سؤال عملی که کمک می‌کند بفهمی در شروع این مسیر شغلی از تو چه انتظاری می‌رود.</p>
         </div>
-        <SectionVisual variant="interview" profile={content.visualProfile} />
+        <CareerPathSectionImage
+          slug={entry.slug}
+          pathTitle={pathTitle}
+          profile={content.visualProfile}
+          slot="interviewQuestions"
+          alt={`تصویر سوالات مصاحبه شغلی مسیر ${pathTitle}`}
+        />
         <div className={styles.interviewList}>
-          {content.interviewQuestions.map((item, index) => (
-            <details className={styles.interviewItem} data-interview-question open={index === 0} key={item.question}>
-              <summary>{item.question}</summary>
-              <p>{item.hint}</p>
-            </details>
+          {content.interviewQuestions.map((question, index) => (
+            <article className={styles.interviewItem} data-interview-question key={question}>
+              <span>{(index + 1).toLocaleString("fa-IR")}</span>
+              <h3>{question}</h3>
+            </article>
           ))}
         </div>
       </section>
@@ -196,7 +200,6 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
         <div className={styles.finalActions}>
           <Link className={styles.primaryAction} href={entry.pwaHref}>{content.finalCtaText}</Link>
           <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>مقایسه با مسیرهای دیگر</Link>
-          <Link className={styles.tertiaryAction} href={entry.pwaHref}>بررسی این مسیر در Useravaa</Link>
         </div>
       </section>
 
