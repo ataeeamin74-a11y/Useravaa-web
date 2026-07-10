@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { CareerPathSeoEntry } from "@/features/career/career-path-seo";
-import { buildCareerPathTitle, getRelatedCareerPathSeoEntries } from "@/features/career/career-path-seo";
-import { buildCareerPathProductContent } from "@/features/career/career-path-page-content";
-import { getCareerPathVisualProfile } from "@/features/career/career-path-visuals";
+import { buildCareerPathTitle } from "@/features/career/career-path-seo";
+import { buildCareerPathProductContent, type Tone } from "@/features/career/career-path-page-content";
+import type { CareerPathVisualProfile } from "@/features/career/career-path-visuals";
 import { CareerPathMascotScene } from "./CareerPathMascotScene";
 import styles from "./CareerPathSeoPage.module.css";
 
@@ -10,15 +10,13 @@ type CareerPathProductPageProps = Readonly<{
   entry: CareerPathSeoEntry;
 }>;
 
-function compareHref(currentPathId: string, relatedPathId?: string) {
-  const params = relatedPathId
-    ? `path=${encodeURIComponent(currentPathId)}&path=${encodeURIComponent(relatedPathId)}`
-    : `path=${encodeURIComponent(currentPathId)}`;
+type SectionVisualVariant = "fit" | "reality" | "hardships" | "intelligence" | "interview";
 
-  return `/career/compare?${params}`;
+function compareHref(currentPathId: string) {
+  return `/career/compare?path=${encodeURIComponent(currentPathId)}`;
 }
 
-function toneClass(tone: "blue" | "teal" | "yellow" | "persimmon") {
+function toneClass(tone: Tone) {
   return {
     blue: styles.toneBlue,
     teal: styles.toneTeal,
@@ -27,10 +25,31 @@ function toneClass(tone: "blue" | "teal" | "yellow" | "persimmon") {
   }[tone];
 }
 
+function SectionVisual({
+  variant,
+  profile
+}: Readonly<{
+  variant: SectionVisualVariant;
+  profile: CareerPathVisualProfile;
+}>) {
+  return (
+    <div
+      className={`${styles.sectionVisual} ${styles[`visual${variant[0].toUpperCase()}${variant.slice(1)}`]}`}
+      data-section-visual={variant}
+      data-scene={profile.sceneType}
+      aria-hidden="true"
+    >
+      <span className={styles.visualSignal} />
+      <span className={styles.visualCard} data-card="1">{profile.propLabels[0]}</span>
+      <span className={styles.visualCard} data-card="2">{profile.propLabels[1]}</span>
+      <span className={styles.visualCard} data-card="3">{profile.propLabels[2]}</span>
+      <span className={styles.visualPath} />
+    </div>
+  );
+}
+
 export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
-  const relatedEntries = getRelatedCareerPathSeoEntries(entry.path, 4);
-  const relatedTitles = relatedEntries.map((relatedEntry) => buildCareerPathTitle(relatedEntry.path));
-  const content = buildCareerPathProductContent(entry, relatedTitles);
+  const content = buildCareerPathProductContent(entry);
   const pathTitle = buildCareerPathTitle(entry.path);
   const structuredData = {
     "@context": "https://schema.org",
@@ -52,6 +71,7 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
         <div className={styles.heroCopy}>
           <p className={styles.eyebrow}>صفحه تصمیم مسیر شغلی</p>
           <h1 id="career-path-seo-title" dir="auto">مسیر شغلی {pathTitle}</h1>
+          <p className={styles.heroDescriptor}>{content.heroDescriptor}</p>
           <p className={styles.intro}>{content.intro}</p>
           <div className={styles.decisionCards} aria-label="سه نکته تصمیم مسیر شغلی">
             {content.decisionCards.map((card) => (
@@ -62,137 +82,126 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
             ))}
           </div>
           <div className={styles.actions} aria-label="اقدام‌های مسیر شغلی">
-            <Link className={styles.primaryAction} href={entry.pwaHref}>ذخیره برای بررسی</Link>
+            <Link className={styles.primaryAction} href={entry.pwaHref}>{content.finalCtaText}</Link>
             <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>مقایسه با مسیرهای دیگر</Link>
-            <Link className={styles.tertiaryAction} href="/career">بازگشت به مسیرها</Link>
           </div>
         </div>
         <CareerPathMascotScene pathTitle={pathTitle} profile={content.visualProfile} />
       </header>
 
-      <section className={styles.section} aria-labelledby="career-path-snapshot-title">
+      <section className={styles.section} data-career-fit-section aria-labelledby="career-path-fit-title">
         <div className={styles.sectionHeader}>
-          <span>در یک نگاه</span>
-          <h2 id="career-path-snapshot-title">در یک نگاه</h2>
-          <p>یک خلاصه کوتاه برای اینکه قبل از اسکرول طولانی، جنس این مسیر شغلی را بفهمی.</p>
+          <span>تناسب سریع</span>
+          <h2 id="career-path-fit-title">این شغل مناسب منه؟</h2>
+          <p>چهار بُعد ساده برای اینکه بدون تست شخصیت و عددسازی، حس اولیه‌ات را با واقعیت کار مقایسه کنی.</p>
         </div>
-        <dl className={styles.snapshotGrid}>
-          {content.snapshotRows.map((row) => (
-            <div className={`${styles.snapshotRow} ${toneClass(row.tone)}`} key={row.label}>
-              <dt>{row.label}</dt>
-              <dd>{row.value}</dd>
+        <SectionVisual variant="fit" profile={content.visualProfile} />
+        <dl className={styles.fitDimensions}>
+          {content.fitDimensions.map((dimension) => (
+            <div className={`${styles.fitDimension} ${toneClass(dimension.tone)}`} key={dimension.label}>
+              <dt>{dimension.label}</dt>
+              <dd>{dimension.value}</dd>
             </div>
           ))}
         </dl>
       </section>
 
-      <section className={styles.section} aria-labelledby="career-path-fit-title">
+      <section className={styles.section} data-career-realities-section aria-labelledby="career-path-realities-title">
         <div className={styles.sectionHeader}>
-          <span>تناسب سریع</span>
-          <h2 id="career-path-fit-title">آیا این مسیر شغلی به تو نزدیک است؟</h2>
-          <p>این بخش نتیجه قطعی نمی‌دهد؛ فقط چند نشانه عملی برای بررسی سریع است.</p>
+          <span>داخل کار</span>
+          <h2 id="career-path-realities-title">واقعیت‌های شغلی</h2>
+          <p>روزمره، مهارت‌ها و ابزارها در یک قاب کوتاه؛ نه یک مقاله طولانی.</p>
         </div>
-        <div className={styles.fitGrid}>
-          <article className={styles.fitCard}>
-            <h3>احتمالاً به تو می‌خورد اگر...</h3>
-            <ul>{content.fitBullets.map((item) => <li key={item}>{item}</li>)}</ul>
+        <SectionVisual variant="reality" profile={content.visualProfile} />
+        <div className={styles.realityGrid}>
+          <article className={styles.realityCard}>
+            <h3>روز کاری واقعی</h3>
+            <ul>{content.reality.workday.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
-          <article className={styles.frictionCard}>
-            <h3>احتمالاً اذیتت می‌کند اگر...</h3>
-            <ul>{content.frictionBullets.map((item) => <li key={item}>{item}</li>)}</ul>
+          <article className={styles.realityCard}>
+            <h3>مهم‌ترین مهارت‌های نرم</h3>
+            <div className={styles.tagGroup}>{content.reality.softSkills.map((item) => <span key={item}>{item}</span>)}</div>
+          </article>
+          <article className={styles.realityCard}>
+            <h3>مهم‌ترین مهارت‌های تخصصی</h3>
+            <div className={styles.tagGroup}>{content.reality.technicalSkills.map((item) => <span key={item}>{item}</span>)}</div>
+          </article>
+          <article className={styles.realityCard}>
+            <h3>مهم‌ترین ابزارها</h3>
+            <div className={styles.tagGroup}>{content.reality.tools.map((item) => <span key={item}>{item}</span>)}</div>
           </article>
         </div>
       </section>
 
-      <section className={styles.section} aria-labelledby="career-path-workday-title">
+      <section className={styles.section} data-career-hardships-section aria-labelledby="career-path-hardships-title">
         <div className={styles.sectionHeader}>
-          <span>روز کاری واقعی</span>
-          <h2 id="career-path-workday-title">روز کاری واقعی</h2>
-          <p>سه زاویه کوتاه برای اینکه کار را قابل تصور کنی، نه فقط قابل خواندن.</p>
+          <span>واقعیت سخت</span>
+          <h2 id="career-path-hardships-title">سختی‌ها</h2>
+          <p>سختی‌ها برای ترساندن نیستند؛ برای این‌اند که قبل از انتخاب، تصویر کامل‌تری داشته باشی.</p>
         </div>
-        <div className={styles.workdayGrid}>
-          {content.workdayCards.map((card) => (
-            <article className={`${styles.workdayCard} ${toneClass(card.tone)}`} key={card.title}>
-              <h3>{card.title}</h3>
-              <p>{card.body}</p>
+        <SectionVisual variant="hardships" profile={content.visualProfile} />
+        <div className={styles.hardshipGrid}>
+          {content.hardships.map((hardship) => (
+            <article className={`${styles.hardshipCard} ${toneClass(hardship.tone)}`} key={hardship.title}>
+              <h3>{hardship.title}</h3>
+              <p>{hardship.body}</p>
             </article>
           ))}
         </div>
       </section>
 
-      <section className={`${styles.section} ${styles.startSection}`} aria-labelledby="career-path-start-title">
+      <section className={styles.section} data-career-intelligence-section aria-labelledby="career-path-intelligence-title">
         <div className={styles.sectionHeader}>
-          <span>شروع کم‌ریسک</span>
-          <h2 id="career-path-start-title">شروع کم‌ریسک</h2>
-          <p>قبل از تصمیم بزرگ، این مسیر شغلی را با یک آزمایش کوچک و واقعی لمس کن.</p>
+          <span>آینده نزدیک</span>
+          <h2 id="career-path-intelligence-title">فرصت‌ها و تهدیدهای هوش مصنوعی</h2>
+          <p>نگاه آرام و عملی به اینکه چه چیزهایی سریع‌تر می‌شود و کجا قضاوت انسانی هنوز تعیین‌کننده است.</p>
         </div>
-        <ol className={styles.startSteps}>
-          {content.startSteps.map((step, index) => (
-            <li className={`${styles.startStep} ${toneClass(step.tone)}`} key={step.title}>
-              <span>{(index + 1).toLocaleString("fa-IR")}</span>
-              <strong>{step.title}</strong>
-              <p>{step.body}</p>
-            </li>
-          ))}
-        </ol>
+        <SectionVisual variant="intelligence" profile={content.visualProfile} />
+        <div className={styles.intelligenceGrid}>
+          <article className={styles.intelligenceCard}>
+            <h3>هوش مصنوعی چه چیزهایی را آسان‌تر می‌کند؟</h3>
+            <ul>{content.intelligence.easier.map((item) => <li key={item}>{item}</li>)}</ul>
+          </article>
+          <article className={styles.intelligenceCardHarder}>
+            <h3>هوش مصنوعی چه چیزهایی را سخت‌تر می‌کند؟</h3>
+            <ul>{content.intelligence.harder.map((item) => <li key={item}>{item}</li>)}</ul>
+          </article>
+        </div>
+        <p className={styles.judgmentNote}>{content.intelligence.judgment}</p>
       </section>
 
-      <section className={styles.section} aria-labelledby="career-path-compare-title">
+      <section className={styles.section} data-career-interview-section aria-labelledby="career-path-interview-title">
         <div className={styles.sectionHeader}>
-          <span>کاهش سردرگمی</span>
-          <h2 id="career-path-compare-title">مسیرهای شغلی نزدیک را اشتباه نگیر</h2>
-          <p>چند گزینه نزدیک را کنار این مسیر شغلی ببین تا تفاوت اصلی روشن‌تر شود.</p>
+          <span>مصاحبه شغلی</span>
+          <h2 id="career-path-interview-title">سوالات متداول مصاحبه شغلی</h2>
+          <p>پنج سؤال عملی که کمک می‌کند بفهمی در شروع این مسیر شغلی از تو چه انتظاری می‌رود.</p>
         </div>
-        <div className={styles.relatedGrid}>
-          {relatedEntries.map((relatedEntry) => {
-            const relatedProfile = getCareerPathVisualProfile(relatedEntry.path);
-            return (
-              <article className={styles.relatedCard} key={relatedEntry.slug}>
-                <strong dir="auto">{buildCareerPathTitle(relatedEntry.path)}</strong>
-                <p><span>فرق اصلی</span>{relatedProfile.focusLabel}</p>
-                <p><span>چرا ممکن است اشتباه شود</span>چون بخشی از فضای کاری یا ابزارها نزدیک است، اما فشار روزمره فرق دارد.</p>
-                <Link href={compareHref(entry.path.id, relatedEntry.path.id)}>مقایسه</Link>
-              </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className={`${styles.section} ${styles.experienceSection}`} aria-labelledby="career-path-experience-title">
-        <div className={styles.experienceHeader}>
-          <div className={styles.sectionHeader}>
-            <span>قبل از تصمیم</span>
-            <h2 id="career-path-experience-title">قبل از تصمیم، این‌ها را از کسی که این مسیر را رفته بپرس</h2>
-            <p>ارزش Useravaa اینجاست: سؤال خوب قبل از انتخاب، جلوی برداشت سطحی را می‌گیرد.</p>
-          </div>
-          <CareerPathMascotScene pathTitle={pathTitle} profile={content.visualProfile} compact />
-        </div>
-        <div className={styles.questionGrid}>
-          {content.experienceQuestions.map((question) => (
-            <article className={styles.questionCard} key={question}>{question}</article>
-          ))}
-        </div>
-        <Link className={styles.experienceCta} href={entry.pwaHref}>قبل از تصمیم، تجربه واقعی این مسیر را ببین</Link>
-      </section>
-
-      <section className={styles.section} aria-labelledby="career-path-faq-title">
-        <div className={styles.sectionHeader}>
-          <span>پرسش‌های مهم</span>
-          <h2 id="career-path-faq-title">سؤال‌های قبل از انتخاب این مسیر شغلی</h2>
-          <p>پاسخ‌ها کوتاه و قابل خواندن هستند تا هم برای آدم‌ها روشن باشند و هم برای موتور جست‌وجو.</p>
-        </div>
-        <div className={styles.faqList}>
-          {content.faqItems.map((item, index) => (
-            <details className={styles.faqItem} open={index === 0} key={item.question}>
+        <SectionVisual variant="interview" profile={content.visualProfile} />
+        <div className={styles.interviewList}>
+          {content.interviewQuestions.map((item, index) => (
+            <details className={styles.interviewItem} data-interview-question open={index === 0} key={item.question}>
               <summary>{item.question}</summary>
-              <p>{item.answer}</p>
+              <p>{item.hint}</p>
             </details>
           ))}
         </div>
       </section>
 
+      <section className={`${styles.section} ${styles.finalSection}`} aria-labelledby="career-path-final-title">
+        <div className={styles.sectionHeader}>
+          <span>قدم بعدی</span>
+          <h2 id="career-path-final-title">با این مسیر شغلی چه کار کنم؟</h2>
+          <p>اگر هنوز دو یا سه گزینه در ذهنت داری، این مسیر را نگه دار و بعد کنار گزینه‌های دیگر مقایسه کن.</p>
+        </div>
+        <div className={styles.finalActions}>
+          <Link className={styles.primaryAction} href={entry.pwaHref}>{content.finalCtaText}</Link>
+          <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>مقایسه با مسیرهای دیگر</Link>
+          <Link className={styles.tertiaryAction} href={entry.pwaHref}>بررسی این مسیر در Useravaa</Link>
+        </div>
+      </section>
+
       <aside className={styles.stickyBar} aria-label="اقدام سریع مسیر شغلی">
-        <Link className={styles.primaryAction} href={entry.pwaHref}>ذخیره برای بررسی</Link>
+        <Link className={styles.primaryAction} href={entry.pwaHref}>{content.finalCtaText}</Link>
         <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>مقایسه</Link>
       </aside>
     </main>

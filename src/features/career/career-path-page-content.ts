@@ -5,22 +5,32 @@ import {
   getCareerPathTechnicalSkills,
   getCareerPathTools
 } from "./career-path-seo";
-import { getCareerPathVisualProfile, type CareerPathVisualProfile } from "./career-path-visuals";
+import { getCareerPathVisualProfile, type CareerPathSceneType, type CareerPathVisualProfile } from "./career-path-visuals";
 
-type Tone = "blue" | "teal" | "yellow" | "persimmon";
+export type Tone = "blue" | "teal" | "yellow" | "persimmon";
+export type QualitativeLevel = "کم" | "متوسط" | "زیاد";
 
 export type CareerPathProductContent = Readonly<{
   title: string;
   intro: string;
   visualProfile: CareerPathVisualProfile;
+  heroDescriptor: string;
   decisionCards: readonly Readonly<{ label: string; value: string; tone: Tone }>[];
-  snapshotRows: readonly Readonly<{ label: string; value: string; tone: Tone }>[];
-  fitBullets: readonly string[];
-  frictionBullets: readonly string[];
-  workdayCards: readonly Readonly<{ title: string; body: string; tone: Tone }>[];
-  startSteps: readonly Readonly<{ title: string; body: string; tone: Tone }>[];
-  experienceQuestions: readonly string[];
-  faqItems: readonly Readonly<{ question: string; answer: string }>[];
+  fitDimensions: readonly Readonly<{ label: string; value: QualitativeLevel; tone: Tone }>[];
+  reality: Readonly<{
+    workday: readonly string[];
+    softSkills: readonly string[];
+    technicalSkills: readonly string[];
+    tools: readonly string[];
+  }>;
+  hardships: readonly Readonly<{ title: string; body: string; tone: Tone }>[];
+  intelligence: Readonly<{
+    easier: readonly string[];
+    harder: readonly string[];
+    judgment: string;
+  }>;
+  interviewQuestions: readonly Readonly<{ question: string; hint: string }>[];
+  finalCtaText: string;
 }>;
 
 function unique(values: readonly string[]) {
@@ -37,105 +47,108 @@ function unique(values: readonly string[]) {
   return items;
 }
 
-function listPhrase(items: readonly string[], fallback: string, limit = 3) {
-  const values = unique(items).slice(0, limit);
-  if (!values.length) return fallback;
-  return new Intl.ListFormat("fa-IR", { style: "long", type: "conjunction" }).format(values);
+function pick(values: readonly string[], fallback: readonly string[], limit: number) {
+  const items = unique(values).slice(0, limit);
+  return items.length ? items : fallback.slice(0, limit);
 }
 
 function firstOrFallback(items: readonly string[], fallback: string) {
   return unique(items)[0] ?? fallback;
 }
 
-function buildFitBullets(
-  profile: CareerPathVisualProfile,
-  duties: readonly string[],
-  technicalSkills: readonly string[],
-  softSkills: readonly string[]
-) {
+function getCreativityLevel(sceneType: CareerPathSceneType): QualitativeLevel {
+  if (["creative", "content", "interface", "campaign", "decision"].includes(sceneType)) return "زیاد";
+  if (["data", "finance", "server"].includes(sceneType)) return "متوسط";
+  return "متوسط";
+}
+
+function getStatisticalAnalysisLevel(sceneType: CareerPathSceneType): QualitativeLevel {
+  if (["data", "campaign", "search", "finance"].includes(sceneType)) return "زیاد";
+  if (["decision", "server", "support"].includes(sceneType)) return "متوسط";
+  return "کم";
+}
+
+function buildFitDimensions(profile: CareerPathVisualProfile) {
   return [
-    `اگر از ${profile.focusLabel} انرژی می‌گیری.`,
-    `اگر ${firstOrFallback(softSkills, "یادگیری‌پذیری و مسئولیت‌پذیری")} برایت فقط شعار نیست.`,
-    `اگر می‌توانی با ${firstOrFallback(duties, firstOrFallback(technicalSkills, "تمرین عملی"))} آرام و مرحله‌ای جلو بروی.`
+    { label: "نیاز به تعامل با آدم‌ها", value: profile.interactionLevel, tone: "teal" as const },
+    { label: "نیاز به استفاده از ابزارها", value: profile.toolDataLevel, tone: "blue" as const },
+    { label: "نیاز به خلاقیت", value: getCreativityLevel(profile.sceneType), tone: "yellow" as const },
+    { label: "نیاز به تحلیل آماری", value: getStatisticalAnalysisLevel(profile.sceneType), tone: "persimmon" as const }
   ];
 }
 
-function buildFrictionBullets(
-  profile: CareerPathVisualProfile,
-  duties: readonly string[],
-  tools: readonly string[]
-) {
-  return [
-    `اگر ${profile.frictionLabel} خیلی زود فرسوده‌ات می‌کند.`,
-    `اگر ترجیح می‌دهی کارها همیشه شفاف، ثابت و بدون بازخورد باشند.`,
-    `اگر از درگیر شدن با ${firstOrFallback(tools, firstOrFallback(duties, "جزئیات کار"))} فاصله می‌گیری.`
-  ];
-}
-
-function buildStartSteps(
-  profile: CareerPathVisualProfile,
-  duties: readonly string[],
-  technicalSkills: readonly string[],
-  tools: readonly string[]
-) {
-  const duty = firstOrFallback(duties, profile.focusLabel);
-  const skillPhrase = listPhrase(technicalSkills, "مهارت‌های پایه همین مسیر شغلی", 2);
-  const toolPhrase = listPhrase(tools, "ابزار ساده و در دسترس", 2);
-
+function buildHardships(profile: CareerPathVisualProfile, duties: readonly string[], tools: readonly string[]) {
   return [
     {
-      title: "تست ۷ روزه",
-      body: `هر روز یک نمونه واقعی از ${duty} را ببین و یادداشت کن کدام بخش برایت روشن یا مبهم بود.`,
+      title: "سختی‌های واقعی مسیر",
+      body: profile.frictionLabel,
+      tone: "persimmon" as const
+    },
+    {
+      title: "از بیرون ساده‌تر دیده می‌شود",
+      body: `بخش‌هایی مثل ${firstOrFallback(duties, profile.focusLabel)} معمولاً ساده‌تر از چیزی که در اجرا تجربه می‌شود به نظر می‌رسند.`,
       tone: "yellow" as const
     },
     {
-      title: "تست ۳۰ روزه",
-      body: `یک مسئله کوچک انتخاب کن و با ${skillPhrase} یک خروجی قابل توضیح بساز.`,
-      tone: "teal" as const
-    },
-    {
-      title: "اولین خروجی قابل ارائه",
-      body: `یک نمونه جمع‌وجور با ${toolPhrase} آماده کن و بنویس چه مسئله‌ای را حل کرده‌ای.`,
-      tone: "blue" as const
+      title: "ممکن است خسته‌ات کند",
+      body: `تکرار، بازخورد و درگیری با ${firstOrFallback(tools, "جزئیات کار")} اگر با روحیه‌ات هماهنگ نباشد فرسایشی می‌شود.`,
+      tone: "persimmon" as const
     }
   ];
 }
 
-function buildFaqItems(
+function buildIntelligence(profile: CareerPathVisualProfile, duties: readonly string[], tools: readonly string[]) {
+  const primaryDuty = firstOrFallback(duties, profile.focusLabel);
+  const primaryTool = firstOrFallback(tools, "ابزارهای روزمره این مسیر شغلی");
+
+  return {
+    easier: [
+      `جمع‌آوری ایده اولیه برای ${primaryDuty} سریع‌تر می‌شود.`,
+      `مرتب کردن پیش‌نویس‌ها، چک‌لیست‌ها و خروجی‌های تکراری با ${primaryTool} آسان‌تر می‌شود.`
+    ],
+    harder: [
+      "خروجی سطحی بیشتر می‌شود و تشخیص کیفیت مهم‌تر از قبل است.",
+      "رقابت برای کسی که فقط ابزار بلد است سخت‌تر می‌شود."
+    ],
+    judgment: "قضاوت انسانی، فهم مسئله، توضیح تصمیم و مسئولیت‌پذیری هنوز بخش اصلی تصمیم حرفه‌ای است."
+  };
+}
+
+function buildInterviewQuestions(
   title: string,
-  profile: CareerPathVisualProfile,
-  relatedTitles: readonly string[]
+  technicalSkills: readonly string[],
+  tools: readonly string[],
+  duties: readonly string[]
 ) {
-  const relatedPhrase = listPhrase(relatedTitles, "مسیرهای شغلی نزدیک همین خانواده", 3);
+  const skill = firstOrFallback(technicalSkills, `مهارت‌های پایه مسیر شغلی ${title}`);
+  const tool = firstOrFallback(tools, "ابزارهای اصلی این مسیر");
+  const duty = firstOrFallback(duties, "یک مسئله واقعی و مبهم");
 
   return [
     {
-      question: "این مسیر برای چه آدم‌هایی مناسب‌تر است؟",
-      answer: `برای کسی مناسب‌تر است که با ${profile.focusLabel} ارتباط می‌گیرد و از ${profile.workTypeLabel} فرار نمی‌کند.`
+      question: "چرا می‌خواهی وارد این مسیر شغلی شوی؟",
+      hint: "به علاقه واقعی، تجربه کوچک و چیزی که از کار روزمره فهمیده‌ای اشاره کن."
     },
     {
-      question: "شروع این مسیر بدون سابقه ممکن است؟",
-      answer: `شروع مسیر شغلی ${title} بدون سابقه برای بعضی افراد ${profile.startWithoutExperience} است؛ اما تصمیم بهتر وقتی شکل می‌گیرد که یک خروجی کوچک واقعی بسازی و بازخورد بگیری.`
+      question: `چه تجربه یا تمرینی مرتبط با مسیر شغلی ${title} انجام داده‌ای؟`,
+      hint: `یک نمونه کوچک از ${duty} بهتر از توضیح کلی است.`
     },
     {
-      question: "سخت‌ترین بخش این مسیر چیست؟",
-      answer: `در این مسیر شغلی، سختی اصلی معمولاً ${profile.frictionLabel} است، نه فقط یاد گرفتن ابزار.`
+      question: "وقتی با یک مسئله مبهم روبه‌رو می‌شوی، چطور شروع می‌کنی؟",
+      hint: "از روشن کردن مسئله، پرسیدن سؤال و ساختن قدم بعدی حرف بزن."
     },
     {
-      question: "این مسیر با کدام مسیرها اشتباه گرفته می‌شود؟",
-      answer: `معمولاً با ${relatedPhrase} اشتباه گرفته می‌شود؛ چون بخشی از ابزارها یا محیط کار مشترک است، اما فشار روزمره و خروجی مورد انتظار فرق دارد.`
+      question: `با چه ابزارها یا مهارت‌هایی مثل ${tool} و ${skill} آشنا هستی؟`,
+      hint: "سطح آشنایی را واقعی بگو و درباره تمرین یا خروجی خودت توضیح بده."
     },
     {
-      question: "قبل از انتخاب این مسیر چه چیزی را باید بپرسم؟",
-      answer: `قبل از انتخاب، بپرس اولین خروجی واقعی چه شکلی است، فشار اصلی از کجا می‌آید، و چه تمرینی زودتر نشان می‌دهد مسیر شغلی ${title} به تو نزدیک است یا نه.`
+      question: "اگر بخواهی در این مسیر رشد کنی، فکر می‌کنی روی چه چیزی باید بیشتر کار کنی؟",
+      hint: "یک نقطه رشد مشخص بگو؛ نه پاسخ کلی و بی‌خطر."
     }
   ];
 }
 
-export function buildCareerPathProductContent(
-  entry: CareerPathSeoEntry,
-  relatedTitles: readonly string[]
-): CareerPathProductContent {
+export function buildCareerPathProductContent(entry: CareerPathSeoEntry): CareerPathProductContent {
   const title = entry.path.name;
   const profile = getCareerPathVisualProfile(entry.path);
   const duties = getCareerPathMainDuties(entry.path);
@@ -143,52 +156,27 @@ export function buildCareerPathProductContent(
   const tools = getCareerPathTools(entry.path);
   const softSkills = getCareerPathSoftSkills(entry.path);
   const mainDuty = firstOrFallback(duties, profile.focusLabel);
-  const skillPhrase = listPhrase(technicalSkills, profile.focusLabel, 2);
 
   return {
     title,
     visualProfile: profile,
-    intro: `این صفحه کمک می‌کند مسیر شغلی ${title} را مثل یک تصمیم واقعی ببینی: کار اصلی، فشار روزمره، آدم‌های درگیر و یک شروع کم‌ریسک برای سنجیدن تناسب.`,
+    heroDescriptor: profile.workTypeLabel,
+    intro: `این صفحه کمک می‌کند مسیر شغلی ${title} را مثل یک تصمیم واقعی ببینی: تناسب با تو، واقعیت کار، سختی‌ها، اثر هوش مصنوعی و سؤال‌هایی که ممکن است در مصاحبه شغلی بشنوی.`,
     decisionCards: [
       { label: "کار اصلی", value: mainDuty, tone: "teal" },
       { label: "مناسب‌تر برای", value: profile.fitLabel, tone: "yellow" },
       { label: "سختی اصلی", value: profile.frictionLabel, tone: "persimmon" }
     ],
-    snapshotRows: [
-      { label: "نوع کار", value: profile.workTypeLabel, tone: "teal" },
-      { label: "میزان تعامل با آدم‌ها", value: profile.interactionLevel, tone: "yellow" },
-      { label: "میزان کار با ابزار/داده", value: profile.toolDataLevel, tone: "blue" },
-      { label: "میزان ابهام", value: profile.ambiguityLevel, tone: "persimmon" },
-      { label: "نیاز به نمونه‌کار", value: profile.portfolioNeed, tone: "yellow" },
-      { label: "شروع بدون سابقه", value: profile.startWithoutExperience, tone: "teal" }
-    ],
-    fitBullets: buildFitBullets(profile, duties, technicalSkills, softSkills),
-    frictionBullets: buildFrictionBullets(profile, duties, tools),
-    workdayCards: [
-      {
-        title: "بیشتر با چه کارهایی درگیری؟",
-        body: listPhrase(duties, profile.focusLabel, 3),
-        tone: "teal"
-      },
-      {
-        title: "با چه آدم‌هایی کار می‌کنی؟",
-        body: profile.collaborationLabel,
-        tone: "yellow"
-      },
-      {
-        title: "فشار اصلی از کجاست؟",
-        body: profile.pressureLabel,
-        tone: "persimmon"
-      }
-    ],
-    startSteps: buildStartSteps(profile, duties, technicalSkills, tools),
-    experienceQuestions: [
-      "اولین ماه کارت واقعاً چه شکلی بود؟",
-      "چه چیزی را قبل از ورود اشتباه فهمیده بودی؟",
-      "چه آدم‌هایی در این مسیر زود خسته می‌شوند؟",
-      "برای شروع، چه تمرینی واقعاً مفید بود؟",
-      "اگر امروز از صفر شروع می‌کردی، چه کار می‌کردی؟"
-    ],
-    faqItems: buildFaqItems(title, { ...profile, focusLabel: skillPhrase }, relatedTitles)
+    fitDimensions: buildFitDimensions(profile),
+    reality: {
+      workday: pick(duties, [profile.focusLabel, profile.pressureLabel, profile.collaborationLabel], 3),
+      softSkills: pick(softSkills, ["یادگیری‌پذیری", "ارتباط روشن", "مسئولیت‌پذیری"], 4),
+      technicalSkills: pick(technicalSkills, [profile.focusLabel], 4),
+      tools: pick(tools, ["ابزارهای اصلی همین مسیر شغلی"], 4)
+    },
+    hardships: buildHardships(profile, duties, tools),
+    intelligence: buildIntelligence(profile, duties, tools),
+    interviewQuestions: buildInterviewQuestions(title, technicalSkills, tools, duties),
+    finalCtaText: "این مسیر را برای بررسی نگه دار"
   };
 }
