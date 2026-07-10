@@ -10,12 +10,12 @@ export type CareerPathVisualSlot =
   | "interviewQuestions";
 
 export const careerPathVisualAssetFiles = {
-  heroMascot: "hero-mascot.png",
-  fit: "fit.png",
-  jobReality: "job-reality.png",
-  difficulties: "difficulties.png",
-  aiImpact: "ai-impact.png",
-  interviewQuestions: "interview-questions.png"
+  heroMascot: "hero-mascot.webp",
+  fit: "fit.webp",
+  jobReality: "job-reality.webp",
+  difficulties: "difficulties.webp",
+  aiImpact: "ai-impact.webp",
+  interviewQuestions: "interview-questions.webp"
 } as const satisfies Record<CareerPathVisualSlot, string>;
 
 export function getCareerPathVisualAssetPath(slug: string, slot: CareerPathVisualSlot) {

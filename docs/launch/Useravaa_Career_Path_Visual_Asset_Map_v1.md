@@ -10,16 +10,16 @@ For every career path slug, create:
 
 | Section | Filename | Public URL |
 | --- | --- | --- |
-| Hero / decision header | `hero-mascot.png` | `/career-paths/{slug}/hero-mascot.png` |
-| این شغل مناسب منه؟ | `fit.png` | `/career-paths/{slug}/fit.png` |
-| واقعیت‌های شغلی | `job-reality.png` | `/career-paths/{slug}/job-reality.png` |
-| سختی‌ها | `difficulties.png` | `/career-paths/{slug}/difficulties.png` |
-| فرصت‌ها و تهدیدهای هوش مصنوعی | `ai-impact.png` | `/career-paths/{slug}/ai-impact.png` |
-| سوالات متداول مصاحبه شغلی | `interview-questions.png` | `/career-paths/{slug}/interview-questions.png` |
+| Hero / decision header | `hero-mascot.webp` | `/career-paths/{slug}/hero-mascot.webp` |
+| این شغل مناسب منه؟ | `fit.webp` | `/career-paths/{slug}/fit.webp` |
+| واقعیت‌های شغلی | `job-reality.webp` | `/career-paths/{slug}/job-reality.webp` |
+| سختی‌ها | `difficulties.webp` | `/career-paths/{slug}/difficulties.webp` |
+| فرصت‌ها و تهدیدهای هوش مصنوعی | `ai-impact.webp` | `/career-paths/{slug}/ai-impact.webp` |
+| سوالات متداول مصاحبه شغلی | `interview-questions.webp` | `/career-paths/{slug}/interview-questions.webp` |
 
 Recommended image size: `1600x900`.
 Minimum acceptable size: `1200x675`.
-Preferred formats: PNG or WebP.
+Required format: WebP.
 Keep file size reasonable for web delivery.
 
 Naming rules:

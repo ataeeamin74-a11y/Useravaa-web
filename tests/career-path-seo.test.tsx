@@ -295,6 +295,10 @@ describe("Career path SEO pages", () => {
     const expectedPaths = getCareerPathVisualAssetPaths(entry.slug);
     const imageSources = collectImageSources(html);
 
+    Object.values(expectedPaths).forEach((path) => {
+      expect(path).toMatch(/\.webp$/u);
+      expect(path).not.toMatch(/\.png$/u);
+    });
     expect(html).toContain("data-career-mascot-scene");
     expect((html.match(/data-career-mascot-scene/g) ?? [])).toHaveLength(1);
     expect((html.match(/data-section-visual/g) ?? []).length).toBeGreaterThanOrEqual(5);
@@ -304,6 +308,7 @@ describe("Career path SEO pages", () => {
     expect(html).toContain(`data-expected-src="${expectedPaths.difficulties}"`);
     expect(html).toContain(`data-expected-src="${expectedPaths.aiImpact}"`);
     expect(html).toContain(`data-expected-src="${expectedPaths.interviewQuestions}"`);
+    expect(html).not.toMatch(/data-expected-src="\/career-paths\/[^"]+\.png"/u);
     expect(html).toContain('data-career-image-slot="heroMascot"');
     expect(html).toContain('data-career-image-slot="fit"');
     expect(html).toContain('data-career-image-slot="jobReality"');
