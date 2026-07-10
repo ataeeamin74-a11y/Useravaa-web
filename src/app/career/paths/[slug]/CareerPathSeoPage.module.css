@@ -63,10 +63,7 @@
   display: grid;
   gap: 15px;
   border-radius: 30px;
-  background:
-    radial-gradient(circle at 18% 10%, rgb(255 200 1 / 24%), transparent 30%),
-    radial-gradient(circle at 86% 28%, rgb(1 195 185 / 20%), transparent 31%),
-    linear-gradient(180deg, rgb(255 255 255 / 88%), rgb(244 248 252 / 86%));
+  background: var(--career-app-surface);
   box-shadow: var(--career-shadow);
   padding: 14px;
 }
@@ -268,9 +265,25 @@
   --slot-card: rgb(255 248 217 / 84%);
 }
 
+.heroImageSlot[data-has-image="true"] {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: var(--career-app-surface);
+  box-shadow: none;
+  padding: 0;
+}
+
 .imageSlotMedia {
   object-fit: contain;
   padding: 10px;
+}
+
+.heroImageSlot[data-has-image="true"] .imageSlotMedia {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
 }
 
 .imageSlotPlaceholder {
