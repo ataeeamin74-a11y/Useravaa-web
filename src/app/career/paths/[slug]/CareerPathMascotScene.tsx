@@ -9,7 +9,6 @@ import styles from "./CareerPathSeoPage.module.css";
 
 type CareerPathImageSlotProps = Readonly<{
   slug: string;
-  pathTitle: string;
   profile: CareerPathVisualProfile;
   slot: CareerPathVisualSlot;
   alt: string;
@@ -19,7 +18,6 @@ type CareerPathImageSlotProps = Readonly<{
 
 function CareerPathImageSlot({
   slug,
-  pathTitle,
   profile,
   slot,
   alt,
@@ -55,12 +53,6 @@ function CareerPathImageSlot({
           <span className={styles.placeholderPath} />
         </div>
       )}
-      {hero ? (
-        <figcaption className={styles.mascotCaption}>
-          <span>{profile.insightLabel}</span>
-          <strong>{pathTitle}</strong>
-        </figcaption>
-      ) : null}
     </figure>
   );
 }
@@ -78,7 +70,6 @@ export function CareerPathHeroMascot({
     <div className={styles.heroVisual} data-career-mascot-scene={profile.sceneType}>
       <CareerPathImageSlot
         slug={slug}
-        pathTitle={pathTitle}
         profile={profile}
         slot="heroMascot"
         alt={`تصویر ماسکات مسیر ${pathTitle}`}
@@ -91,7 +82,6 @@ export function CareerPathHeroMascot({
 
 export function CareerPathSectionImage({
   slug,
-  pathTitle,
   profile,
   slot,
   alt
@@ -105,7 +95,6 @@ export function CareerPathSectionImage({
   return (
     <CareerPathImageSlot
       slug={slug}
-      pathTitle={pathTitle}
       profile={profile}
       slot={slot}
       alt={alt}
