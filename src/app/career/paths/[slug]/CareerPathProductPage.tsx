@@ -1,4 +1,22 @@
 import Link from "next/link";
+import type { LucideIcon } from "lucide-react";
+import {
+  BarChart3,
+  BookmarkPlus,
+  Bot,
+  BriefcaseBusiness,
+  Code2,
+  GitCompareArrows,
+  HeartHandshake,
+  MessageCircleQuestion,
+  PenTool,
+  ShieldAlert,
+  Sparkles,
+  TimerReset,
+  TriangleAlert,
+  Users,
+  Wrench
+} from "lucide-react";
 import type { CareerPathSeoEntry } from "@/features/career/career-path-seo";
 import { buildCareerPathTitle } from "@/features/career/career-path-seo";
 import { buildCareerPathProductContent, type Tone } from "@/features/career/career-path-page-content";
@@ -22,9 +40,96 @@ function toneClass(tone: Tone) {
   }[tone];
 }
 
+function UiIcon({
+  icon: Icon,
+  tone,
+  compact = false
+}: Readonly<{
+  icon: LucideIcon;
+  tone: Tone;
+  compact?: boolean;
+}>) {
+  return (
+    <span
+      className={`${styles.iconBubble} ${compact ? styles.iconBubbleCompact : ""} ${toneClass(tone)}`}
+      data-career-ui-icon
+      aria-hidden="true"
+    >
+      <Icon size={compact ? 15 : 18} strokeWidth={2.4} />
+    </span>
+  );
+}
+
+function ActionIcon({ icon: Icon }: Readonly<{ icon: LucideIcon }>) {
+  return <Icon className={styles.actionIcon} size={18} strokeWidth={2.5} aria-hidden="true" />;
+}
+
+function SectionHeader({
+  id,
+  label,
+  title,
+  description,
+  icon,
+  tone
+}: Readonly<{
+  id: string;
+  label: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  tone: Tone;
+}>) {
+  return (
+    <div className={styles.sectionHeader}>
+      <p className={styles.sectionLabel}>
+        <UiIcon icon={icon} tone={tone} compact />
+        <span>{label}</span>
+      </p>
+      <h2 id={id}>{title}</h2>
+      <p>{description}</p>
+    </div>
+  );
+}
+
+function fitDimensionIcon(label: string): LucideIcon {
+  if (label.includes("آدم")) return Users;
+  if (label.includes("ابزار")) return Wrench;
+  if (label.includes("خلاقیت")) return PenTool;
+  return BarChart3;
+}
+
+const decisionIcons = [BriefcaseBusiness, HeartHandshake, TriangleAlert] as const;
+const hardshipIcons = [TriangleAlert, TimerReset, ShieldAlert] as const;
+
 export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
   const content = buildCareerPathProductContent(entry);
   const pathTitle = buildCareerPathTitle(entry.path);
+  const realityModules = [
+    {
+      title: "روز کاری واقعی",
+      icon: BriefcaseBusiness,
+      tone: "teal" as const,
+      content: <ul>{content.reality.workday.map((item) => <li key={item}>{item}</li>)}</ul>
+    },
+    {
+      title: "مهم‌ترین مهارت‌های نرم",
+      icon: HeartHandshake,
+      tone: "yellow" as const,
+      content: <div className={styles.tagGroup}>{content.reality.softSkills.map((item) => <span key={item}>{item}</span>)}</div>
+    },
+    {
+      title: "مهم‌ترین مهارت‌های تخصصی",
+      icon: Code2,
+      tone: "blue" as const,
+      content: <div className={styles.tagGroup}>{content.reality.technicalSkills.map((item) => <span key={item}>{item}</span>)}</div>
+    },
+    {
+      title: "مهم‌ترین ابزارها",
+      icon: Wrench,
+      tone: "teal" as const,
+      content: <div className={styles.tagGroup}>{content.reality.tools.map((item) => <span key={item}>{item}</span>)}</div>
+    }
+  ];
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -42,33 +147,48 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
       />
 
       <header className={styles.hero}>
+        <p className={styles.eyebrow}>
+          <UiIcon icon={Sparkles} tone="teal" compact />
+          <span>صفحه تصمیم مسیر شغلی</span>
+        </p>
+        <CareerPathHeroMascot slug={entry.slug} pathTitle={pathTitle} profile={content.visualProfile} />
         <div className={styles.heroCopy}>
-          <p className={styles.eyebrow}>صفحه تصمیم مسیر شغلی</p>
           <h1 id="career-path-seo-title" dir="auto">مسیر شغلی {pathTitle}</h1>
           <p className={styles.heroDescriptor}>{content.heroDescriptor}</p>
           <p className={styles.intro}>{content.intro}</p>
           <div className={styles.actions} aria-label="اقدام‌های مسیر شغلی">
-            <Link className={styles.primaryAction} href={entry.pwaHref}>{content.finalCtaText}</Link>
-            <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>مقایسه با مسیرهای دیگر</Link>
+            <Link className={styles.primaryAction} href={entry.pwaHref}>
+              <ActionIcon icon={BookmarkPlus} />
+              <span>{content.finalCtaText}</span>
+            </Link>
+            <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>
+              <ActionIcon icon={GitCompareArrows} />
+              <span>مقایسه با مسیرهای دیگر</span>
+            </Link>
           </div>
         </div>
-        <CareerPathHeroMascot slug={entry.slug} pathTitle={pathTitle} profile={content.visualProfile} />
         <div className={styles.decisionCards} aria-label="سه نکته تصمیم مسیر شغلی">
-          {content.decisionCards.map((card) => (
+          {content.decisionCards.map((card, index) => (
             <article className={`${styles.decisionCard} ${toneClass(card.tone)}`} key={card.label}>
-              <span>{card.label}</span>
-              <strong>{card.value}</strong>
+              <UiIcon icon={decisionIcons[index] ?? Sparkles} tone={card.tone} />
+              <div>
+                <span>{card.label}</span>
+                <strong>{card.value}</strong>
+              </div>
             </article>
           ))}
         </div>
       </header>
 
       <section className={styles.section} data-career-fit-section aria-labelledby="career-path-fit-title">
-        <div className={styles.sectionHeader}>
-          <span>تناسب سریع</span>
-          <h2 id="career-path-fit-title">این شغل مناسب منه؟</h2>
-          <p>چهار بُعد ساده برای اینکه بدون تست شخصیت و عددسازی، حس اولیه‌ات را با واقعیت کار مقایسه کنی.</p>
-        </div>
+        <SectionHeader
+          id="career-path-fit-title"
+          label="تناسب سریع"
+          title="این شغل مناسب منه؟"
+          description="چهار بُعد ساده برای اینکه بدون تست شخصیت و عددسازی، حس اولیه‌ات را با واقعیت کار مقایسه کنی."
+          icon={Users}
+          tone="teal"
+        />
         <CareerPathSectionImage
           slug={entry.slug}
           pathTitle={pathTitle}
@@ -79,7 +199,10 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
         <dl className={styles.fitDimensions}>
           {content.fitDimensions.map((dimension) => (
             <div className={`${styles.fitDimension} ${toneClass(dimension.tone)}`} key={dimension.label}>
-              <dt>{dimension.label}</dt>
+              <dt>
+                <UiIcon icon={fitDimensionIcon(dimension.label)} tone={dimension.tone} compact />
+                <span>{dimension.label}</span>
+              </dt>
               <dd>{dimension.value}</dd>
             </div>
           ))}
@@ -87,11 +210,14 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
       </section>
 
       <section className={styles.section} data-career-realities-section aria-labelledby="career-path-realities-title">
-        <div className={styles.sectionHeader}>
-          <span>داخل کار</span>
-          <h2 id="career-path-realities-title">واقعیت‌های شغلی</h2>
-          <p>روزمره، مهارت‌ها و ابزارها در یک قاب کوتاه؛ نه یک مقاله طولانی.</p>
-        </div>
+        <SectionHeader
+          id="career-path-realities-title"
+          label="داخل کار"
+          title="واقعیت‌های شغلی"
+          description="روزمره، مهارت‌ها و ابزارها در یک قاب کوتاه؛ نه یک مقاله طولانی."
+          icon={BriefcaseBusiness}
+          tone="yellow"
+        />
         <CareerPathSectionImage
           slug={entry.slug}
           pathTitle={pathTitle}
@@ -100,31 +226,27 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           alt={`تصویر واقعیت‌های شغلی مسیر ${pathTitle}`}
         />
         <div className={styles.realityGrid}>
-          <article className={styles.realityCard}>
-            <h3>روز کاری واقعی</h3>
-            <ul>{content.reality.workday.map((item) => <li key={item}>{item}</li>)}</ul>
-          </article>
-          <article className={styles.realityCard}>
-            <h3>مهم‌ترین مهارت‌های نرم</h3>
-            <div className={styles.tagGroup}>{content.reality.softSkills.map((item) => <span key={item}>{item}</span>)}</div>
-          </article>
-          <article className={styles.realityCard}>
-            <h3>مهم‌ترین مهارت‌های تخصصی</h3>
-            <div className={styles.tagGroup}>{content.reality.technicalSkills.map((item) => <span key={item}>{item}</span>)}</div>
-          </article>
-          <article className={styles.realityCard}>
-            <h3>مهم‌ترین ابزارها</h3>
-            <div className={styles.tagGroup}>{content.reality.tools.map((item) => <span key={item}>{item}</span>)}</div>
-          </article>
+          {realityModules.map((module) => (
+            <article className={`${styles.realityCard} ${toneClass(module.tone)}`} key={module.title}>
+              <h3>
+                <UiIcon icon={module.icon} tone={module.tone} compact />
+                <span>{module.title}</span>
+              </h3>
+              {module.content}
+            </article>
+          ))}
         </div>
       </section>
 
       <section className={styles.section} data-career-hardships-section aria-labelledby="career-path-hardships-title">
-        <div className={styles.sectionHeader}>
-          <span>واقعیت سخت</span>
-          <h2 id="career-path-hardships-title">سختی‌ها</h2>
-          <p>سختی‌ها برای ترساندن نیستند؛ برای این‌اند که قبل از انتخاب، تصویر کامل‌تری داشته باشی.</p>
-        </div>
+        <SectionHeader
+          id="career-path-hardships-title"
+          label="واقعیت سخت"
+          title="سختی‌ها"
+          description="سختی‌ها برای ترساندن نیستند؛ برای این‌اند که قبل از انتخاب، تصویر کامل‌تری داشته باشی."
+          icon={TriangleAlert}
+          tone="persimmon"
+        />
         <CareerPathSectionImage
           slug={entry.slug}
           pathTitle={pathTitle}
@@ -133,9 +255,12 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           alt={`تصویر سختی‌های مسیر ${pathTitle}`}
         />
         <div className={styles.hardshipGrid}>
-          {content.hardships.map((hardship) => (
+          {content.hardships.map((hardship, index) => (
             <article className={`${styles.hardshipCard} ${toneClass(hardship.tone)}`} key={hardship.title}>
-              <h3>{hardship.title}</h3>
+              <h3>
+                <UiIcon icon={hardshipIcons[index] ?? TriangleAlert} tone={hardship.tone} compact />
+                <span>{hardship.title}</span>
+              </h3>
               <p>{hardship.body}</p>
             </article>
           ))}
@@ -143,11 +268,14 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
       </section>
 
       <section className={styles.section} data-career-intelligence-section aria-labelledby="career-path-intelligence-title">
-        <div className={styles.sectionHeader}>
-          <span>آینده نزدیک</span>
-          <h2 id="career-path-intelligence-title">فرصت‌ها و تهدیدهای هوش مصنوعی</h2>
-          <p>نگاه آرام و عملی به اینکه چه چیزهایی سریع‌تر می‌شود و کجا قضاوت انسانی هنوز تعیین‌کننده است.</p>
-        </div>
+        <SectionHeader
+          id="career-path-intelligence-title"
+          label="آینده نزدیک"
+          title="فرصت‌ها و تهدیدهای هوش مصنوعی"
+          description="نگاه آرام و عملی به اینکه چه چیزهایی سریع‌تر می‌شود و کجا قضاوت انسانی هنوز تعیین‌کننده است."
+          icon={Bot}
+          tone="blue"
+        />
         <CareerPathSectionImage
           slug={entry.slug}
           pathTitle={pathTitle}
@@ -157,11 +285,17 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
         />
         <div className={styles.intelligenceGrid}>
           <article className={styles.intelligenceCard}>
-            <h3>هوش مصنوعی چه چیزهایی را آسان‌تر می‌کند؟</h3>
+            <h3>
+              <UiIcon icon={Sparkles} tone="teal" compact />
+              <span>هوش مصنوعی چه چیزهایی را آسان‌تر می‌کند؟</span>
+            </h3>
             <ul>{content.intelligence.easier.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
           <article className={styles.intelligenceCardHarder}>
-            <h3>هوش مصنوعی چه چیزهایی را سخت‌تر می‌کند؟</h3>
+            <h3>
+              <UiIcon icon={ShieldAlert} tone="persimmon" compact />
+              <span>هوش مصنوعی چه چیزهایی را سخت‌تر می‌کند؟</span>
+            </h3>
             <ul>{content.intelligence.harder.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
         </div>
@@ -169,11 +303,14 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
       </section>
 
       <section className={styles.section} data-career-interview-section aria-labelledby="career-path-interview-title">
-        <div className={styles.sectionHeader}>
-          <span>مصاحبه شغلی</span>
-          <h2 id="career-path-interview-title">سوالات متداول مصاحبه شغلی</h2>
-          <p>پنج سؤال عملی که کمک می‌کند بفهمی در شروع این مسیر شغلی از تو چه انتظاری می‌رود.</p>
-        </div>
+        <SectionHeader
+          id="career-path-interview-title"
+          label="مصاحبه شغلی"
+          title="سوالات متداول مصاحبه شغلی"
+          description="پنج سؤال عملی که کمک می‌کند بفهمی در شروع این مسیر شغلی از تو چه انتظاری می‌رود."
+          icon={MessageCircleQuestion}
+          tone="yellow"
+        />
         <CareerPathSectionImage
           slug={entry.slug}
           pathTitle={pathTitle}
@@ -192,20 +329,35 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
       </section>
 
       <section className={`${styles.section} ${styles.finalSection}`} aria-labelledby="career-path-final-title">
-        <div className={styles.sectionHeader}>
-          <span>قدم بعدی</span>
-          <h2 id="career-path-final-title">با این مسیر شغلی چه کار کنم؟</h2>
-          <p>اگر هنوز دو یا سه گزینه در ذهنت داری، این مسیر را نگه دار و بعد کنار گزینه‌های دیگر مقایسه کن.</p>
-        </div>
+        <SectionHeader
+          id="career-path-final-title"
+          label="قدم بعدی"
+          title="با این مسیر شغلی چه کار کنم؟"
+          description="اگر هنوز دو یا سه گزینه در ذهنت داری، این مسیر را نگه دار و بعد کنار گزینه‌های دیگر مقایسه کن."
+          icon={BookmarkPlus}
+          tone="blue"
+        />
         <div className={styles.finalActions}>
-          <Link className={styles.primaryAction} href={entry.pwaHref}>{content.finalCtaText}</Link>
-          <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>مقایسه با مسیرهای دیگر</Link>
+          <Link className={styles.primaryAction} href={entry.pwaHref}>
+            <ActionIcon icon={BookmarkPlus} />
+            <span>{content.finalCtaText}</span>
+          </Link>
+          <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>
+            <ActionIcon icon={GitCompareArrows} />
+            <span>مقایسه با مسیرهای دیگر</span>
+          </Link>
         </div>
       </section>
 
       <aside className={styles.stickyBar} aria-label="اقدام سریع مسیر شغلی">
-        <Link className={styles.primaryAction} href={entry.pwaHref}>{content.finalCtaText}</Link>
-        <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>مقایسه</Link>
+        <Link className={styles.primaryAction} href={entry.pwaHref}>
+          <ActionIcon icon={BookmarkPlus} />
+          <span>{content.finalCtaText}</span>
+        </Link>
+        <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>
+          <ActionIcon icon={GitCompareArrows} />
+          <span>مقایسه</span>
+        </Link>
       </aside>
     </main>
   );

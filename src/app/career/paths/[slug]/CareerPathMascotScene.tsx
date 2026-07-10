@@ -44,7 +44,7 @@ function CareerPathImageSlot({
           src={src}
           alt={alt}
           fill
-          sizes={hero ? "(min-width: 980px) 380px, 100vw" : "(min-width: 980px) 1040px, 100vw"}
+          sizes={hero ? "(min-width: 980px) 640px, 100vw" : "(min-width: 980px) 1040px, 100vw"}
           priority={priority}
         />
       ) : (
@@ -75,7 +75,7 @@ export function CareerPathHeroMascot({
   profile: CareerPathVisualProfile;
 }>) {
   return (
-    <div data-career-mascot-scene={profile.sceneType}>
+    <div className={styles.heroVisual} data-career-mascot-scene={profile.sceneType}>
       <CareerPathImageSlot
         slug={slug}
         pathTitle={pathTitle}

@@ -205,6 +205,10 @@ describe("Career path SEO pages", () => {
       await CareerPathSeoPage({ params: Promise.resolve({ slug: entry.slug }) })
     );
     const h2Texts = collectHeadingTexts(html, 2);
+    const eyebrowIndex = html.indexOf("صفحه تصمیم مسیر شغلی");
+    const heroVisualIndex = html.indexOf("data-career-mascot-scene");
+    const h1Index = html.indexOf('<h1 id="career-path-seo-title"');
+    const firstCtaIndex = html.indexOf("این مسیر را برای بررسی نگه دار");
 
     expect(html).toContain(`مسیر شغلی ${entry.path.name}`);
     requiredProductScreenLabels.forEach((label) => expect(html).toContain(label));
@@ -222,6 +226,11 @@ describe("Career path SEO pages", () => {
     expect(html).toContain("این مسیر را برای بررسی نگه دار");
     expect(html).toContain("مقایسه با مسیرهای دیگر");
     expect(html).not.toContain(removedCtaCopy);
+    expect(eyebrowIndex).toBeGreaterThanOrEqual(0);
+    expect(heroVisualIndex).toBeGreaterThan(eyebrowIndex);
+    expect(h1Index).toBeGreaterThan(heroVisualIndex);
+    expect(firstCtaIndex).toBeGreaterThan(h1Index);
+    expect((html.match(/data-career-ui-icon/g) ?? []).length).toBeGreaterThanOrEqual(18);
   });
 
   it("keeps the fit section to the four allowed qualitative dimensions", async () => {
