@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import sitemap from "@/app/sitemap";
@@ -294,6 +295,14 @@ describe("Career path SEO pages", () => {
       "فرصت‌ها و تهدیدهای هوش مصنوعی",
       "سوالات متداول مصاحبه شغلی"
     ]));
+    expect(h2Texts).toEqual([
+      "این شغل مناسب منه؟",
+      "واقعیت‌های شغلی",
+      "سختی‌ها",
+      "فرصت‌ها و تهدیدهای هوش مصنوعی",
+      "سوالات متداول مصاحبه شغلی",
+      "با این مسیر شغلی چه کار کنم؟"
+    ]);
     expect(h2Texts).not.toContain("تناسب سریع");
     expect(h2Texts).not.toContain("روز کاری واقعی");
     expect(html).toContain("صفحه تصمیم مسیر شغلی");
@@ -307,6 +316,13 @@ describe("Career path SEO pages", () => {
     expect(h1Index).toBeGreaterThan(heroVisualIndex);
     expect(firstCtaIndex).toBeGreaterThan(h1Index);
     expect((html.match(/data-career-ui-icon/g) ?? []).length).toBeGreaterThanOrEqual(18);
+    expect(html).toContain('aria-label="دسترسی سریع به بخش‌های مسیر شغلی"');
+    expect(html).toContain('href="#career-path-fit"');
+    expect(html).toContain('href="#career-path-realities"');
+    expect(html).toContain('href="#career-path-hardships"');
+    expect(html).toContain('href="#career-path-intelligence"');
+    expect(html).toContain('href="#career-path-interview"');
+    expect((html.match(/data-career-section="/g) ?? [])).toHaveLength(5);
   });
 
   it("keeps the fit section to the four allowed qualitative dimensions", async () => {
@@ -362,7 +378,7 @@ describe("Career path SEO pages", () => {
   });
 
   it("maps hero and section image slots to slug-based public asset paths without broken external sources", async () => {
-    const entry = getRequiredCareerPathEntry(SOCIAL_MEDIA_MARKETING_SLUG);
+    const entry = getRequiredCareerPathEntry("product-management-and-ownership");
     const html = renderToStaticMarkup(
       await CareerPathSeoPage({ params: Promise.resolve({ slug: entry.slug }) })
     );
@@ -394,6 +410,37 @@ describe("Career path SEO pages", () => {
       expect(source).not.toMatch(/^https?:\/\//iu);
       expect(source).not.toContain("src=\"\"");
     });
+  });
+
+  it("keeps every real career illustration on a pure-white unframed surface", () => {
+    const css = readFileSync(
+      "src/app/career/paths/[slug]/CareerPathSeoPage.module.css",
+      "utf8"
+    );
+    const imageComponent = readFileSync(
+      "src/app/career/paths/[slug]/CareerPathMascotScene.tsx",
+      "utf8"
+    );
+    const realSlotRule = css.match(
+      /\.heroImageSlot\[data-has-image="true"\],[\s\S]*?\.sectionImageSlot\[data-has-image="true"\]\s*\{([\s\S]*?)\}/u
+    )?.[1] ?? "";
+    const realMediaRule = css.match(
+      /\.imageSlotMedia,[\s\S]*?\.sectionImageSlot\[data-has-image="true"\] \.imageSlotMedia\s*\{([\s\S]*?)\}/u
+    )?.[1] ?? "";
+
+    expect(realSlotRule).toContain("background: #ffffff;");
+    expect(realSlotRule).toContain("border: 0;");
+    expect(realSlotRule).toContain("box-shadow: none;");
+    expect(realSlotRule).toContain("padding: 0;");
+    expect(realSlotRule).not.toContain("gradient");
+    expect(realSlotRule).not.toContain("--slot-soft");
+    expect(realMediaRule).toContain("display: block;");
+    expect(realMediaRule).toContain("width: 100%;");
+    expect(realMediaRule).toContain("height: auto;");
+    expect(realMediaRule).toContain("background: #ffffff;");
+    expect(realMediaRule).toContain("object-fit: contain;");
+    expect(imageComponent).not.toContain("figcaption");
+    expect(imageComponent).not.toContain("mascotCaption");
   });
 
   it("generates safe metadata and canonical URLs for path pages", async () => {

@@ -41,7 +41,8 @@ function CareerPathImageSlot({
           className={styles.imageSlotMedia}
           src={src}
           alt={alt}
-          fill
+          width={1600}
+          height={900}
           sizes={hero ? "(min-width: 980px) 640px, 100vw" : "(min-width: 980px) 1040px, 100vw"}
           priority={priority}
         />
