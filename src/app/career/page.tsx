@@ -1,5 +1,5 @@
 import { permanentRedirect } from "next/navigation";
-import { getCareerPathSeoEntryBySlug } from "@/features/career/career-path-seo";
+import { getCareerPathSeoEntryBySlugOrLegacy } from "@/features/career/career-path-seo";
 
 type CareerPathsRouteProps = Readonly<{
   searchParams: Promise<Readonly<Record<string, string | string[] | undefined>>>;
@@ -12,7 +12,7 @@ export default async function CareerPathsRoute({ searchParams }: CareerPathsRout
   const initialCardId = Array.isArray(cardParam) ? cardParam[0] : cardParam;
   const initialPathSlug = Array.isArray(pathParam) ? pathParam[0] : pathParam;
   const initialPathCardId = initialPathSlug
-    ? getCareerPathSeoEntryBySlug(initialPathSlug)?.representativeCard.id
+    ? getCareerPathSeoEntryBySlugOrLegacy(initialPathSlug)?.representativeCard.id
     : undefined;
   const resolvedCardId = initialCardId ?? initialPathCardId;
 

@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { careerHierarchy } from "./career-data";
+import {
+  LEGACY_SOCIAL_MEDIA_SLUGS,
+  SOCIAL_MEDIA_MARKETING_CARD_ID,
+  SOCIAL_MEDIA_MARKETING_SLUG
+} from "./career-path-migration";
 import type { CareerCard, CareerSubfamilyNode } from "./career-types";
 import { normalizeSearchText } from "./career-utils";
 
@@ -40,6 +45,10 @@ function latinSlugPart(value: string) {
 }
 
 function createCareerPathSlugBase(path: CareerSubfamilyNode) {
+  if (path.cards.some((card) => card.id === SOCIAL_MEDIA_MARKETING_CARD_ID)) {
+    return SOCIAL_MEDIA_MARKETING_SLUG;
+  }
+
   const candidates = [
     path.name,
     path.midCategory,
@@ -80,6 +89,9 @@ export const careerPathSeoEntries = buildCareerPathSeoEntries();
 
 const careerPathSeoEntryBySlug = new Map(careerPathSeoEntries.map((entry) => [entry.slug, entry]));
 const careerPathSeoEntryByPathId = new Map(careerPathSeoEntries.map((entry) => [entry.path.id, entry]));
+const legacyCareerPathSlugRedirects = new Map<string, string>(
+  LEGACY_SOCIAL_MEDIA_SLUGS.map((slug) => [slug, SOCIAL_MEDIA_MARKETING_SLUG])
+);
 
 export function getCareerPathSeoEntries() {
   return careerPathSeoEntries;
@@ -91,6 +103,15 @@ export function getCareerPathSlugs() {
 
 export function getCareerPathSeoEntryBySlug(slug: string) {
   return careerPathSeoEntryBySlug.get(slug);
+}
+
+export function getCareerPathRedirectSlug(slug: string) {
+  return legacyCareerPathSlugRedirects.get(slug);
+}
+
+export function getCareerPathSeoEntryBySlugOrLegacy(slug: string) {
+  const canonicalSlug = getCareerPathRedirectSlug(slug) ?? slug;
+  return getCareerPathSeoEntryBySlug(canonicalSlug);
 }
 
 export function getCareerPathSeoEntryByPathId(pathId: string) {
@@ -162,7 +183,9 @@ export function buildCareerPathDescription(path: CareerSubfamilyNode) {
 
 export function buildCareerPathMetadata(entry: CareerPathSeoEntry): Metadata {
   const pathTitle = buildCareerPathTitle(entry.path);
-  const title = `${pathTitle} | مسیر شغلی در Useravaa`;
+  const title = entry.slug === SOCIAL_MEDIA_MARKETING_SLUG
+    ? `${pathTitle} | واقعیت مسیر شغلی در Useravaa`
+    : `${pathTitle} | مسیر شغلی در Useravaa`;
   const description = buildCareerPathDescription(entry.path);
 
   return {

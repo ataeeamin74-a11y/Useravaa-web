@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import {
   buildCareerPathMetadata,
+  getCareerPathRedirectSlug,
   getCareerPathSeoEntries,
-  getCareerPathSeoEntryBySlug
+  getCareerPathSeoEntryBySlug,
+  getCareerPathSeoEntryBySlugOrLegacy
 } from "@/features/career/career-path-seo";
 import { CareerPathProductPage } from "./CareerPathProductPage";
 
@@ -17,7 +19,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: CareerPathSeoPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const entry = getCareerPathSeoEntryBySlug(slug);
+  const entry = getCareerPathSeoEntryBySlugOrLegacy(slug);
   if (!entry) return { title: "مسیر شغلی پیدا نشد | Useravaa" };
 
   return {
@@ -31,6 +33,9 @@ export async function generateMetadata({ params }: CareerPathSeoPageProps): Prom
 
 export default async function CareerPathSeoPage({ params }: CareerPathSeoPageProps) {
   const { slug } = await params;
+  const redirectSlug = getCareerPathRedirectSlug(slug);
+  if (redirectSlug) permanentRedirect(`/career/paths/${redirectSlug}`);
+
   const entry = getCareerPathSeoEntryBySlug(slug);
   if (!entry) notFound();
 

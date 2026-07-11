@@ -27,6 +27,11 @@ import {
   updateCompareDraftSelection
 } from "@/features/career/career-compare-state";
 import { careerPaths, getCareerPathByCardId } from "@/features/career/career-path-index";
+import {
+  LEGACY_SOCIAL_MEDIA_CARD_IDS,
+  LEGACY_SOCIAL_MEDIA_PATH_IDS,
+  SOCIAL_MEDIA_MARKETING_CARD_ID
+} from "@/features/career/career-path-migration";
 import { navigationItems } from "@/features/career/CareerBottomNav";
 
 describe("Path Seeker engagement", () => {
@@ -45,6 +50,35 @@ describe("Path Seeker engagement", () => {
     expect([...removed]).toEqual([]);
     expect([...legacyManagementVariant]).toEqual([getCareerPathByCardId("CARD_033")!.id]);
     expect(SAVED_PATHS_STORAGE_KEY).toBe("useravaa:career:saved-paths");
+  });
+
+  it("migrates both legacy social-media paths into one canonical saved path", () => {
+    const canonicalPath = getCareerPathByCardId(SOCIAL_MEDIA_MARKETING_CARD_ID)!;
+    const storedIdentifiers = [
+      SOCIAL_MEDIA_MARKETING_CARD_ID,
+      ...LEGACY_SOCIAL_MEDIA_CARD_IDS,
+      ...LEGACY_SOCIAL_MEDIA_PATH_IDS,
+      canonicalPath.id
+    ];
+    const migratedPaths = parseSavedCareerPathIds(JSON.stringify(storedIdentifiers));
+    const unrelatedPath = careerPaths.find((path) => path.id !== canonicalPath.id)!;
+    const migratedComparisons = parseSavedCareerComparisons(JSON.stringify([
+      [LEGACY_SOCIAL_MEDIA_PATH_IDS[0], LEGACY_SOCIAL_MEDIA_PATH_IDS[1], unrelatedPath.id],
+      [SOCIAL_MEDIA_MARKETING_CARD_ID, unrelatedPath.id]
+    ]));
+    const migratedDraft = parseCompareDraftPathIds(JSON.stringify({
+      pathIds: [
+        LEGACY_SOCIAL_MEDIA_PATH_IDS[0],
+        LEGACY_SOCIAL_MEDIA_CARD_IDS[0],
+        unrelatedPath.id
+      ],
+      updatedAt: 1_800_000_000_000
+    }), 1_800_000_000_001);
+
+    expect([...migratedPaths]).toEqual([canonicalPath.id]);
+    expect(migratedComparisons).toEqual([[canonicalPath.id, unrelatedPath.id].sort()]);
+    expect(migratedDraft).toEqual([canonicalPath.id, unrelatedPath.id]);
+    expect(getCareerPathByCardId(LEGACY_SOCIAL_MEDIA_CARD_IDS[0])?.id).toBe(canonicalPath.id);
   });
 
   it("deduplicates saved comparisons regardless of selection order", () => {

@@ -468,16 +468,16 @@
     "Card_ID": "CARD_032",
     "Job_Domain_Group": "Marketing & Growth",
     "General_Job_Category": "Marketing & Growth",
-    "Mid_Job_Category": "Social Media & Community",
-    "Final_Job_Subfamily": "تولید محتوا برای شبکه‌های اجتماعی",
+    "Mid_Job_Category": "Social Media Marketing",
+    "Final_Job_Subfamily": "بازاریابی شبکه‌های اجتماعی",
     "Seniority_Level": "سطح کارشناسی",
-    "Card_Title_FA": "تولید محتوا برای شبکه‌های اجتماعی - سطح کارشناسی",
-    "Card_Subtitle_FA": "Marketing & Growth | سطح کارشناسی",
-    "Key_Technical_Skills_FA": "تولید محتوای شبکه های اجتماعی",
-    "Key_Tools_Tech_FA": "Instagram",
-    "Key_Soft_Skills_FA": "خلاقیت و ایده‌پردازی",
-    "Supporting_Requirements_FA": "تدوین و ویرایش ویدیو، سناریونویسی محتوای ویدیویی، طراحی گرافیک و محتوای بصری، فیلم برداری و نورپردازی، Adobe Premiere Pro، Adobe Photoshop، Adobe After Effects، Adobe Illustrator، مسئولیت‌پذیری و تعهد، کار تیمی و همکاری، دقت و نظم کاری",
-    "Audience_Card_Text_FA": "عنوان: تولید محتوا برای شبکه‌های اجتماعی - سطح کارشناسی | مهارت‌های تخصصی کلیدی: تولید محتوای شبکه های اجتماعی | ابزارها و تکنولوژی‌های کلیدی: Instagram | مهارت‌های نرم کلیدی: خلاقیت و ایده‌پردازی | نیازمندی‌های همراه: تدوین و ویرایش ویدیو، سناریونویسی محتوای ویدیویی، طراحی گرافیک و محتوای بصری، فیلم برداری و نورپردازی، Adobe Premiere Pro، Adobe Photoshop، Adobe After Effects، Adobe Illustrator، مسئولیت‌پذیری و تعهد، کار تیمی و همکاری، دقت و نظم کاری"
+    "Card_Title_FA": "بازاریابی شبکه‌های اجتماعی - سطح کارشناسی",
+    "Card_Subtitle_FA": "Social Media Marketing | سطح کارشناسی",
+    "Key_Technical_Skills_FA": "استراتژی محتوا، مدیریت شبکه‌های اجتماعی، تولید محتوای شبکه‌های اجتماعی، تقویم محتوایی، Community Management، تحلیل عملکرد محتوا",
+    "Key_Tools_Tech_FA": "Instagram، LinkedIn، Canva، Adobe Photoshop، Adobe Premiere Pro",
+    "Key_Soft_Skills_FA": "خلاقیت و ایده‌پردازی، مسئولیت‌پذیری و تعهد، کار تیمی و همکاری، ارتباط موثر، یادگیری‌پذیری و رشد، دقت و نظم کاری",
+    "Supporting_Requirements_FA": "تدوین و ویرایش ویدیو، سناریونویسی محتوای ویدیویی، طراحی گرافیک و محتوای بصری، فیلم برداری و نورپردازی، الگوریتم‌ها و ترندهای شبکه‌های اجتماعی، Growth Marketing / Growth Hacking، Adobe After Effects، Adobe Illustrator",
+    "Audience_Card_Text_FA": "عنوان: بازاریابی شبکه‌های اجتماعی - سطح کارشناسی | مهارت‌های تخصصی کلیدی: استراتژی محتوا، مدیریت شبکه‌های اجتماعی، تولید محتوای شبکه‌های اجتماعی، تقویم محتوایی، Community Management، تحلیل عملکرد محتوا | ابزارها و تکنولوژی‌های کلیدی: Instagram، LinkedIn، Canva، Adobe Photoshop، Adobe Premiere Pro | مهارت‌های نرم کلیدی: خلاقیت و ایده‌پردازی، مسئولیت‌پذیری و تعهد، کار تیمی و همکاری، ارتباط موثر، یادگیری‌پذیری و رشد، دقت و نظم کاری | نیازمندی‌های همراه: تدوین و ویرایش ویدیو، سناریونویسی محتوای ویدیویی، طراحی گرافیک و محتوای بصری، فیلم برداری و نورپردازی، الگوریتم‌ها و ترندهای شبکه‌های اجتماعی، Growth Marketing / Growth Hacking، Adobe After Effects، Adobe Illustrator"
   },
   {
     "Card_ID": "CARD_033",
@@ -538,21 +538,6 @@
     "Key_Soft_Skills_FA": "مسئولیت‌پذیری و تعهد، یادگیری‌پذیری و رشد، کار تیمی و همکاری",
     "Supporting_Requirements_FA": "تولید و ویرایش محتوای وب، Growth Marketing / Growth Hacking، SEO داخلی / On-page، SEO خارجی / Off-page، WordPress، SEMrush، Google Tag Manager / GTM، Screaming Frog، حل مسئله و تفکر تحلیلی، دقت و نظم کاری، خلاقیت و ایده‌پردازی",
     "Audience_Card_Text_FA": "عنوان: سئو - سطح کارشناسی | مهارت‌های تخصصی کلیدی: تحقیق کلمات کلیدی، مدیریت وب‌سایت / CMS، تحلیل رقبا | ابزارها و تکنولوژی‌های کلیدی: Google Search Console، Google Analytics / GA4، Ahrefs | مهارت‌های نرم کلیدی: مسئولیت‌پذیری و تعهد، یادگیری‌پذیری و رشد، کار تیمی و همکاری | نیازمندی‌های همراه: تولید و ویرایش محتوای وب، Growth Marketing / Growth Hacking، SEO داخلی / On-page، SEO خارجی / Off-page، WordPress، SEMrush، Google Tag Manager / GTM، Screaming Frog، حل مسئله و تفکر تحلیلی، دقت و نظم کاری، خلاقیت و ایده‌پردازی"
-  },
-  {
-    "Card_ID": "CARD_037",
-    "Job_Domain_Group": "Marketing & Growth",
-    "General_Job_Category": "Marketing & Growth",
-    "Mid_Job_Category": "Social Media & Community",
-    "Final_Job_Subfamily": "مدیریت شبکه‌های اجتماعی",
-    "Seniority_Level": "سطح کارشناسی",
-    "Card_Title_FA": "مدیریت شبکه‌های اجتماعی - سطح کارشناسی",
-    "Card_Subtitle_FA": "Marketing & Growth | سطح کارشناسی",
-    "Key_Technical_Skills_FA": "مدیریت شبکه‌های اجتماعی، تولید محتوای شبکه های اجتماعی، تولید محتوای ویدیویی",
-    "Key_Tools_Tech_FA": "Instagram",
-    "Key_Soft_Skills_FA": "مسئولیت‌پذیری و تعهد، کار تیمی و همکاری",
-    "Supporting_Requirements_FA": "الگوریتم‌ها و ترندهای شبکه‌های اجتماعی، Growth Marketing / Growth Hacking، الگوریتم های شبکه های اجتماعی، Community Management، Adobe Photoshop، Adobe Premiere Pro، Canva، LinkedIn، خلاقیت و ایده‌پردازی، یادگیری‌پذیری و رشد، ارتباط موثر",
-    "Audience_Card_Text_FA": "عنوان: مدیریت شبکه‌های اجتماعی - سطح کارشناسی | مهارت‌های تخصصی کلیدی: مدیریت شبکه‌های اجتماعی، تولید محتوای شبکه های اجتماعی، تولید محتوای ویدیویی | ابزارها و تکنولوژی‌های کلیدی: Instagram | مهارت‌های نرم کلیدی: مسئولیت‌پذیری و تعهد، کار تیمی و همکاری | نیازمندی‌های همراه: الگوریتم‌ها و ترندهای شبکه‌های اجتماعی، Growth Marketing / Growth Hacking، الگوریتم های شبکه های اجتماعی، Community Management، Adobe Photoshop، Adobe Premiere Pro، Canva، LinkedIn، خلاقیت و ایده‌پردازی، یادگیری‌پذیری و رشد، ارتباط موثر"
   },
   {
     "Card_ID": "CARD_038",

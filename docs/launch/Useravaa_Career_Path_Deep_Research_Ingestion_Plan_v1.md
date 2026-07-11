@@ -21,7 +21,8 @@ These DOCX files are source material for future product-screen content generatio
 - Do not import DOCX files into the app now.
 - Do not change the build pipeline now.
 - Ingestion must not happen blindly.
-- There may be 59 research docs while the current sitemap has 58 career path URLs.
+- The current sitemap has 57 career path URLs after the social-media path merge.
+- Any future research under the legacy `social-media-and-community` or `social-media-and-community-13kpqt` folders must be reconciled into the canonical file; do not merge or overwrite DOCX files automatically.
 - Codex must first create a slug reconciliation report before ingestion.
 - Reconciliation must identify unmatched DOCX folders, missing DOCX files for existing slugs, and any duplicate or renamed paths.
 - Extracted research must be transformed into the product-screen sections, not copied as article text.
@@ -78,10 +79,9 @@ Each current sitemap career slug expects this private source path:
 - `content/career-research/growth-marketing/deep-research.docx`
 - `content/career-research/content-and-copywriting/deep-research.docx`
 - `content/career-research/market-research-and-insights/deep-research.docx`
-- `content/career-research/social-media-and-community/deep-research.docx`
+- `content/career-research/social-media-marketing/deep-research.docx`
 - `content/career-research/digital-marketing/deep-research.docx`
 - `content/career-research/seo/deep-research.docx`
-- `content/career-research/social-media-and-community-1puzks/deep-research.docx`
 - `content/career-research/brand-pr-and-communications/deep-research.docx`
 - `content/career-research/marketing-generalist-and-strategy/deep-research.docx`
 - `content/career-research/performance-marketing/deep-research.docx`

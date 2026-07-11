@@ -70,10 +70,9 @@ Each slug below expects all six files listed in the convention table.
 - `growth-marketing` — folder `public/career-paths/growth-marketing/`
 - `content-and-copywriting` — folder `public/career-paths/content-and-copywriting/`
 - `market-research-and-insights` — folder `public/career-paths/market-research-and-insights/`
-- `social-media-and-community` — folder `public/career-paths/social-media-and-community/`
+- `social-media-marketing` — folder `public/career-paths/social-media-marketing/`
 - `digital-marketing` — folder `public/career-paths/digital-marketing/`
 - `seo` — folder `public/career-paths/seo/`
-- `social-media-and-community-1puzks` — folder `public/career-paths/social-media-and-community-1puzks/`
 - `brand-pr-and-communications` — folder `public/career-paths/brand-pr-and-communications/`
 - `marketing-generalist-and-strategy` — folder `public/career-paths/marketing-generalist-and-strategy/`
 - `performance-marketing` — folder `public/career-paths/performance-marketing/`

@@ -1,6 +1,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import sitemap from "@/app/sitemap";
+import CareerPathsRoute from "@/app/career/page";
 import CareerPathSeoPage, {
   generateMetadata,
   generateStaticParams
@@ -9,11 +10,18 @@ import {
   CAREER_PATH_SEO_BASE_URL,
   CAREER_PATH_SHARE_IMAGE,
   buildCareerPathMetadata,
+  getCareerPathRedirectSlug,
   getCareerPathSeoEntries,
   getCareerPathSeoEntryByPathId,
   getCareerPathSeoEntryBySlug,
+  getCareerPathSeoEntryBySlugOrLegacy,
   getCareerPathSlugs
 } from "@/features/career/career-path-seo";
+import {
+  LEGACY_SOCIAL_MEDIA_SLUGS,
+  SOCIAL_MEDIA_MARKETING_CARD_ID,
+  SOCIAL_MEDIA_MARKETING_SLUG
+} from "@/features/career/career-path-migration";
 import { getCareerPathVisualAssetPaths } from "@/features/career/career-path-visual-assets";
 
 const forbiddenSeoLanguage = [
@@ -199,6 +207,72 @@ describe("Career path SEO pages", () => {
     expect(getCareerPathSeoEntryBySlug("not-a-real-career-path")).toBeUndefined();
   });
 
+  it("publishes one canonical social-media marketing path and redirects both legacy slugs", async () => {
+    const canonicalEntry = getRequiredCareerPathEntry(SOCIAL_MEDIA_MARKETING_SLUG);
+    const slugs = getCareerPathSlugs();
+    const canonicalHtml = renderToStaticMarkup(
+      await CareerPathSeoPage({ params: Promise.resolve({ slug: SOCIAL_MEDIA_MARKETING_SLUG }) })
+    );
+
+    expect(canonicalEntry.path.name).toBe("بازاریابی شبکه‌های اجتماعی");
+    expect(canonicalEntry.path.midCategory).toBe("Social Media Marketing");
+    expect(canonicalEntry.representativeCard.id).toBe(SOCIAL_MEDIA_MARKETING_CARD_ID);
+    expect(canonicalHtml).toContain("مسیر شغلی بازاریابی شبکه‌های اجتماعی");
+    expect(canonicalHtml).not.toContain("تولید محتوا برای شبکه‌های اجتماعی");
+    expect(canonicalHtml).not.toContain("مدیریت شبکه‌های اجتماعی - سطح کارشناسی");
+    expect(slugs).toContain(SOCIAL_MEDIA_MARKETING_SLUG);
+
+    for (const legacySlug of LEGACY_SOCIAL_MEDIA_SLUGS) {
+      expect(slugs).not.toContain(legacySlug);
+      expect(getCareerPathRedirectSlug(legacySlug)).toBe(SOCIAL_MEDIA_MARKETING_SLUG);
+      expect(getCareerPathSeoEntryBySlug(legacySlug)).toBeUndefined();
+      expect(getCareerPathSeoEntryBySlugOrLegacy(legacySlug)?.slug).toBe(SOCIAL_MEDIA_MARKETING_SLUG);
+      await expect(CareerPathSeoPage({ params: Promise.resolve({ slug: legacySlug }) }))
+        .rejects.toMatchObject({
+          digest: expect.stringContaining(
+            `NEXT_REDIRECT;replace;/career/paths/${SOCIAL_MEDIA_MARKETING_SLUG};308;`
+          )
+        });
+      await expect(CareerPathsRoute({ searchParams: Promise.resolve({ path: legacySlug }) }))
+        .rejects.toMatchObject({
+          digest: expect.stringContaining(
+            `NEXT_REDIRECT;replace;/?card=${SOCIAL_MEDIA_MARKETING_CARD_ID};308;`
+          )
+        });
+    }
+  });
+
+  it("keeps canonical social-media metadata, schema, and visual paths SEO-safe", async () => {
+    const entry = getRequiredCareerPathEntry(SOCIAL_MEDIA_MARKETING_SLUG);
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: SOCIAL_MEDIA_MARKETING_SLUG })
+    });
+    const html = renderToStaticMarkup(
+      await CareerPathSeoPage({ params: Promise.resolve({ slug: SOCIAL_MEDIA_MARKETING_SLUG }) })
+    );
+    const imagePaths = getCareerPathVisualAssetPaths(SOCIAL_MEDIA_MARKETING_SLUG);
+    const schemaMatch = html.match(/<script type="application\/ld\+json">(.+?)<\/script>/u);
+    const schema = JSON.parse(schemaMatch![1]) as Record<string, unknown>;
+
+    expect(metadata.title).toBe("بازاریابی شبکه‌های اجتماعی | واقعیت مسیر شغلی در Useravaa");
+    expect(metadata.alternates).toEqual({ canonical: entry.canonicalUrl });
+    expect(metadata.robots).toEqual({ index: true, follow: true });
+    expect(metadata.openGraph).toMatchObject({ url: entry.canonicalUrl });
+    expect(schema["@type"]).toBe("WebPage");
+    expect(collectSchemaTypes(schema)).toEqual(["WebPage"]);
+    expect(html).not.toContain("JobPosting");
+    expect(html).not.toContain("Course");
+    expect(html).not.toContain("Article");
+    expect(Object.values(imagePaths)).toEqual([
+      "/career-paths/social-media-marketing/hero-mascot.webp",
+      "/career-paths/social-media-marketing/fit.webp",
+      "/career-paths/social-media-marketing/job-reality.webp",
+      "/career-paths/social-media-marketing/difficulties.webp",
+      "/career-paths/social-media-marketing/ai-impact.webp",
+      "/career-paths/social-media-marketing/interview-questions.webp"
+    ]);
+  });
+
   it("renders the refined product-screen structure with required sections and CTAs", async () => {
     const entry = getCareerPathSeoEntries()[0];
     const html = renderToStaticMarkup(
@@ -288,7 +362,7 @@ describe("Career path SEO pages", () => {
   });
 
   it("maps hero and section image slots to slug-based public asset paths without broken external sources", async () => {
-    const entry = getRequiredCareerPathEntry("seo");
+    const entry = getRequiredCareerPathEntry(SOCIAL_MEDIA_MARKETING_SLUG);
     const html = renderToStaticMarkup(
       await CareerPathSeoPage({ params: Promise.resolve({ slug: entry.slug }) })
     );
@@ -400,10 +474,14 @@ describe("Career path SEO pages", () => {
     const pathUrls = getCareerPathSeoEntries().map((entry) => entry.canonicalUrl);
 
     expect(urls).toContain("https://useravaa.com");
-    expect(pathUrls).toHaveLength(58);
+    expect(pathUrls).toHaveLength(57);
     expect(new Set(urls).size).toBe(urls.length);
     expect(pathUrls.every((url) => urls.includes(url))).toBe(true);
     expect(urls).not.toContain("https://useravaa.com/career/paths/not-a-real-career-path");
+    expect(urls).toContain("https://useravaa.com/career/paths/social-media-marketing");
+    LEGACY_SOCIAL_MEDIA_SLUGS.forEach((slug) => {
+      expect(urls).not.toContain(`https://useravaa.com/career/paths/${slug}`);
+    });
     expect(sitemap()).toEqual(expect.arrayContaining(
       pathUrls.map((url) => expect.objectContaining({
         url,
