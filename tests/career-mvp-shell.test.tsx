@@ -622,6 +622,20 @@ describe("career paths MVP shell", () => {
     expect(onSubfamilySelect).toHaveBeenCalledWith(subfamily);
   });
 
+  it("opens the decision page immediately after every career-path selection entry point", () => {
+    const source = readFileSync("src/features/career/PathsPage.tsx", "utf8");
+    const directNavigation = source.match(
+      /function openCareerDecisionPage[\s\S]*?window\.location\.assign\(seoEntry\.pageHref\);[\s\S]*?return true;/u
+    )?.[0] ?? "";
+
+    expect(directNavigation).toContain("getCareerPathSeoEntryByPathId(subfamily.id)");
+    expect(directNavigation).toContain("recordRecentlyViewedCareerPath(subfamily.id)");
+    expect(directNavigation).toContain('trackCareerEvent("career_path_viewed"');
+    expect(source).toMatch(/function selectSubfamily[\s\S]*?openCareerDecisionPage\(subfamily\)/u);
+    expect(source).toMatch(/function selectRelatedSubfamily[\s\S]*?openCareerDecisionPage\(subfamily\)/u);
+    expect(source).toMatch(/function selectSearchResult[\s\S]*?openCareerDecisionPage\(result\.subfamily\)/u);
+  });
+
   it("keeps the mascot visible at all breakpoints and decorative layers non-interactive", () => {
     const css = readFileSync("src/features/career/CareerPages.module.css", "utf8");
     const mascotRule = css.match(/\.heroMascot\s*\{([^}]*)\}/)?.[1] ?? "";

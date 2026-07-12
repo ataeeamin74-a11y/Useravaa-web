@@ -834,12 +834,28 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
     setHighlightedCardIds(new Set());
   }
 
+  function openCareerDecisionPage(subfamily: CareerSubfamilyNode) {
+    const seoEntry = getCareerPathSeoEntryByPathId(subfamily.id);
+    if (!seoEntry) return false;
+
+    recordRecentlyViewedCareerPath(subfamily.id);
+    trackCareerEvent("career_path_viewed", {
+      pathId: subfamily.id,
+      pathTitle: getDisplayLabel(subfamily.name)
+    });
+    window.location.assign(seoEntry.pageHref);
+    return true;
+  }
+
   function selectSubfamily(subfamily: CareerSubfamilyNode) {
+    if (openCareerDecisionPage(subfamily)) return;
     setSelectedSubfamilyId(subfamily.id);
     setHighlightedCardIds(new Set());
   }
 
   function selectRelatedSubfamily(subfamily: CareerSubfamilyNode) {
+    if (openCareerDecisionPage(subfamily)) return;
+
     for (const domain of careerHierarchy) {
       for (const category of domain.generalCategories) {
         if (!category.subfamilies.some((item) => item.id === subfamily.id)) continue;
@@ -857,6 +873,8 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
   }
 
   function selectSearchResult(result: CareerSearchResult) {
+    if (openCareerDecisionPage(result.subfamily)) return;
+
     const domain = careerHierarchy.find((item) => item.name === result.subfamily.domain);
     const category = domain?.generalCategories.find((item) => item.name === result.subfamily.generalCategory);
 
