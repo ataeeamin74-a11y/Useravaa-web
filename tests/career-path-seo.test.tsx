@@ -16,7 +16,8 @@ import {
   getCareerPathSeoEntryByPathId,
   getCareerPathSeoEntryBySlug,
   getCareerPathSeoEntryBySlugOrLegacy,
-  getCareerPathSlugs
+  getCareerPathSlugs,
+  getRelatedCareerPathSeoEntries
 } from "@/features/career/career-path-seo";
 import {
   LEGACY_SOCIAL_MEDIA_SLUGS,
@@ -301,7 +302,8 @@ describe("Career path SEO pages", () => {
       "سختی‌ها",
       "فرصت‌ها و تهدیدهای هوش مصنوعی",
       "سوالات متداول مصاحبه شغلی",
-      "با این مسیر شغلی چه کار کنم؟"
+      "با این مسیر شغلی چه کار کنم؟",
+      "مسیرهای مشابه"
     ]);
     expect(h2Texts).not.toContain("تناسب سریع");
     expect(h2Texts).not.toContain("روز کاری واقعی");
@@ -323,6 +325,35 @@ describe("Career path SEO pages", () => {
     expect(html).toContain('href="#career-path-intelligence"');
     expect(html).toContain('href="#career-path-interview"');
     expect((html.match(/data-career-section="/g) ?? [])).toHaveLength(5);
+  });
+
+  it("adds only a compact related-path discovery list after the final decision area", async () => {
+    const entry = getRequiredCareerPathEntry("social-media-marketing");
+    const relatedEntries = getRelatedCareerPathSeoEntries(entry.path);
+    const html = renderToStaticMarkup(
+      await CareerPathSeoPage({ params: Promise.resolve({ slug: entry.slug }) })
+    );
+    const relatedSection = sectionByDataAttribute(html, "data-career-related-paths-section");
+    const relatedText = stripTags(relatedSection).replaceAll("&amp;", "&");
+
+    expect(html.indexOf("data-career-related-paths-section")).toBeGreaterThan(
+      html.indexOf("data-career-final-section")
+    );
+    expect(relatedText).toContain("مسیرهای مشابه");
+    expect(relatedSection.match(/data-career-related-path-row/g)).toHaveLength(relatedEntries.length);
+    expect(relatedSection).not.toMatch(/<p(?:\s|>)/u);
+    expect(relatedSection).not.toContain("مسیرهایی که از نظر دسته یا حوزه شغلی به این مسیر نزدیک‌اند");
+    relatedEntries.forEach((relatedEntry) => {
+      expect(relatedEntry.path.id).not.toBe(entry.path.id);
+      expect(relatedSection).toContain(`href="${relatedEntry.pageHref}"`);
+      expect(relatedText).toContain(relatedEntry.path.name);
+      if (
+        /[a-z]/iu.test(relatedEntry.path.midCategory)
+        && relatedEntry.path.midCategory.toLocaleLowerCase() !== relatedEntry.path.name.toLocaleLowerCase()
+      ) {
+        expect(relatedText).toContain(relatedEntry.path.midCategory);
+      }
+    });
   });
 
   it("keeps the fit section to the four allowed qualitative dimensions", async () => {

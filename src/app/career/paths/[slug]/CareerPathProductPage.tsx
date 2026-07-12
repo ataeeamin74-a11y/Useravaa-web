@@ -21,6 +21,7 @@ import type { CareerPathSeoEntry } from "@/features/career/career-path-seo";
 import { buildCareerPathTitle } from "@/features/career/career-path-seo";
 import { buildCareerPathProductContent, type Tone } from "@/features/career/career-path-page-content";
 import { CareerPathHeroMascot, CareerPathSectionImage } from "./CareerPathMascotScene";
+import { CareerPathRelatedPaths } from "./CareerPathRelatedPaths";
 import { CareerPathSectionNav } from "./CareerPathSectionNav";
 import { CareerPathStickyActions } from "./CareerPathStickyActions";
 import styles from "./CareerPathSeoPage.module.css";
@@ -364,6 +365,8 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           </Link>
         </div>
       </section>
+
+      <CareerPathRelatedPaths entry={entry} />
 
       <CareerPathStickyActions
         saveHref={entry.pwaHref}
