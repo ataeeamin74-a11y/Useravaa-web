@@ -421,6 +421,12 @@ describe("Career path SEO pages", () => {
       "src/app/career/paths/[slug]/CareerPathMascotScene.tsx",
       "utf8"
     );
+    const realHeroSurfaceRule = css.match(
+      /\.hero:has\(\.heroImageSlot\[data-has-image="true"\]\)\s*\{([\s\S]*?)\}/u
+    )?.[1] ?? "";
+    const realHeroWrapperRule = css.match(
+      /\.heroVisual:has\(\.heroImageSlot\[data-has-image="true"\]\)\s*\{([\s\S]*?)\}/u
+    )?.[1] ?? "";
     const realSlotRule = css.match(
       /\.heroImageSlot\[data-has-image="true"\],[\s\S]*?\.sectionImageSlot\[data-has-image="true"\]\s*\{([\s\S]*?)\}/u
     )?.[1] ?? "";
@@ -428,6 +434,11 @@ describe("Career path SEO pages", () => {
       /\.imageSlotMedia,[\s\S]*?\.sectionImageSlot\[data-has-image="true"\] \.imageSlotMedia\s*\{([\s\S]*?)\}/u
     )?.[1] ?? "";
 
+    expect(realHeroSurfaceRule).toContain("background: #ffffff;");
+    expect(realHeroWrapperRule).toContain("background: #ffffff;");
+    expect(realHeroWrapperRule).toContain("border: 0;");
+    expect(realHeroWrapperRule).toContain("box-shadow: none;");
+    expect(realHeroWrapperRule).toContain("padding: 0;");
     expect(realSlotRule).toContain("background: #ffffff;");
     expect(realSlotRule).toContain("border: 0;");
     expect(realSlotRule).toContain("box-shadow: none;");

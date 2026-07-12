@@ -183,6 +183,18 @@
   justify-self: center;
 }
 
+.hero:has(.heroImageSlot[data-has-image="true"]) {
+  background: #ffffff;
+}
+
+.heroVisual:has(.heroImageSlot[data-has-image="true"]) {
+  border: 0;
+  border-radius: 0;
+  background: #ffffff;
+  box-shadow: none;
+  padding: 0;
+}
+
 .heroImageSlot,
 .sectionImageSlot {
   --slot-accent: var(--career-teal);
