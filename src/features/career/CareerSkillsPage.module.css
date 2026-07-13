@@ -1,0 +1,899 @@
+.page {
+  --skills-border: #dfe5ee;
+  --skills-muted: #5f6c82;
+  width: min(100%, 860px);
+  margin-inline: auto;
+  color: #091b49;
+}
+
+.routeLoading {
+  width: min(100%, 860px);
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+  margin-inline: auto;
+  color: #5f6c82;
+  font-size: 14px;
+}
+
+.intro,
+.resultsHeader,
+.gapHeader {
+  display: grid;
+  gap: 12px;
+  padding: 10px 0 24px;
+  border-bottom: 1px solid var(--skills-border);
+}
+
+.eyebrow {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  background: #e9f8f7;
+  color: #076d69;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.intro h1,
+.resultsHeader h1,
+.gapHeader h1 {
+  max-width: 680px;
+  margin: 0;
+  color: #091b49;
+  font-size: clamp(27px, 4.5vw, 40px);
+  line-height: 1.42;
+}
+
+.intro > p,
+.resultsHeader > p,
+.gapHeader > p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--skills-muted);
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.selectionStats,
+.resultCounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.selectionStats span,
+.resultCounts span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  background: #fff;
+  color: #34435f;
+  box-shadow: inset 0 0 0 1px var(--skills-border);
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.selectionStats span:first-child,
+.resultCounts span:first-child {
+  background: #e9f8f7;
+  color: #076d69;
+  box-shadow: none;
+}
+
+.explorer,
+.resultsPage,
+.gapPage {
+  display: grid;
+  gap: 20px;
+  padding-block: 24px;
+}
+
+.sectionLead,
+.resultTitleLine,
+.gapGroupHeading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sectionLead > div {
+  display: grid;
+  gap: 4px;
+}
+
+.sectionLead span {
+  color: #245ffd;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.sectionLead h2,
+.resultTitleLine h2,
+.gapGroupHeading h2 {
+  margin: 0;
+  color: #091b49;
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+.resetButton,
+.backButton {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #526078;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.resetButton:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.searchField {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #cfd8e6;
+  border-radius: 8px;
+  background: #fff;
+  color: #64718a;
+  padding-inline: 14px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.searchField:focus-within {
+  border-color: #245ffd;
+  box-shadow: 0 0 0 3px rgb(36 95 253 / 12%);
+}
+
+.searchField input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #091b49;
+  font: inherit;
+  font-size: 15px;
+}
+
+.searchField input::placeholder {
+  color: #8590a3;
+}
+
+.searchField button {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #f1f4f8;
+  color: #536178;
+  cursor: pointer;
+}
+
+.filterBar {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 4px;
+  border: 1px solid var(--skills-border);
+  border-radius: 8px;
+  background: #fff;
+  padding: 4px;
+}
+
+.filterButton,
+.filterActive {
+  min-width: 0;
+  min-height: 42px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #5f6c82;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.filterActive {
+  background: #245ffd;
+  color: #fff;
+}
+
+.skillGroups,
+.skillGroup {
+  display: grid;
+  gap: 18px;
+}
+
+.skillGroup {
+  gap: 8px;
+}
+
+.groupHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 2px;
+}
+
+.groupHeading h3 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.groupHeading span {
+  min-width: 28px;
+  border-radius: 999px;
+  background: #e9edf4;
+  color: #526078;
+  padding: 3px 8px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.skillList {
+  overflow: hidden;
+  border: 1px solid var(--skills-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.skillRow {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  transition: background-color 160ms ease;
+}
+
+.skillRow + .skillRow {
+  border-top: 1px solid #edf0f5;
+}
+
+.skillRowSelected {
+  background: #f7fbff;
+}
+
+.skillTypeIcon {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 8px;
+}
+
+.typeSoft {
+  background: #e9f8f7;
+  color: #08716d;
+}
+
+.typeFoundational {
+  background: #fff7d7;
+  color: #7d6100;
+}
+
+.typeSpecialized {
+  background: #edf2ff;
+  color: #2452cb;
+}
+
+.typeTool {
+  background: #eef1f5;
+  color: #46536a;
+}
+
+.typeHave {
+  background: #e9f8f7;
+  color: #08716d;
+}
+
+.skillIdentity {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.skillTitleLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 5px 9px;
+}
+
+.skillTitleLine strong {
+  color: #091b49;
+  font-size: 14px;
+}
+
+.skillTitleLine small,
+.resultTitleLine span,
+.gapHeader > span:not(.eyebrow) {
+  color: #7a879b;
+  font-size: 11px;
+}
+
+.skillIdentity p {
+  margin: 0;
+  color: #68758a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.skillActions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.stateButton,
+.stateButtonHaveActive,
+.stateButtonInterestActive {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid #dbe1ea;
+  border-radius: 8px;
+  background: #fff;
+  color: #526078;
+  padding: 6px 9px;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.stateButtonHaveActive {
+  border-color: #01a99f;
+  background: #e9f8f7;
+  color: #076d69;
+}
+
+.stateButtonInterestActive {
+  border-color: #e2b000;
+  background: #fff7d7;
+  color: #755b00;
+}
+
+.removeSelection {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #f0f3f7;
+  color: #5f6c82;
+  cursor: pointer;
+}
+
+.showMoreButton {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #cfd8e6;
+  border-radius: 8px;
+  background: #fff;
+  color: #2452cb;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.emptySearch,
+.noResults {
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  border: 1px dashed #cbd4e2;
+  border-radius: 8px;
+  background: #fff;
+  color: #64718a;
+  padding: 34px 18px;
+  text-align: center;
+}
+
+.emptySearch strong,
+.noResults h1,
+.noResults h2 {
+  margin: 0;
+  color: #091b49;
+}
+
+.emptySearch span,
+.noResults p {
+  margin: 0;
+  color: #68758a;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.noResults button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 8px;
+  background: #245ffd;
+  color: #fff;
+  padding: 8px 15px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.resultRequest {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--skills-border);
+  background: #fff;
+  padding: 18px 0 8px;
+}
+
+.resultRequest > div {
+  display: grid;
+  gap: 4px;
+}
+
+.resultRequest strong {
+  font-size: 15px;
+}
+
+.resultRequest span {
+  color: #68758a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.resultRequest button,
+.primaryAction {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #245ffd;
+  color: #fff;
+  padding: 10px 16px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.resultRequest button:disabled {
+  background: #aab5c8;
+  cursor: default;
+}
+
+.backButton {
+  width: fit-content;
+  justify-content: flex-start;
+  color: #2452cb;
+  padding-inline: 0;
+}
+
+.preliminaryNote {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-inline-start: 3px solid #ffc801;
+  border-radius: 4px;
+  background: #fff8dc;
+  color: #675413;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.preliminaryNote strong {
+  margin-inline-end: 4px;
+}
+
+.resultList {
+  display: grid;
+  gap: 10px;
+}
+
+.resultCard {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid var(--skills-border);
+  border-radius: 8px;
+  background: #fff;
+  padding: 15px;
+}
+
+.resultRank {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  align-self: start;
+  border-radius: 8px;
+  background: #091b49;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.resultBody {
+  min-width: 0;
+  display: grid;
+  gap: 9px;
+}
+
+.resultTitleLine > div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.matchLabel {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #edf2ff;
+  color: #2452cb;
+  padding: 5px 9px;
+  font-size: 11px;
+}
+
+.matchLabelStrong {
+  background: #e9f8f7;
+  color: #076d69;
+}
+
+.matchExplanation {
+  margin: 0;
+  color: #5f6c82;
+  font-size: 13px;
+  line-height: 1.85;
+}
+
+.reasonList,
+.currentSkillList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.reasonList span,
+.currentSkillList span {
+  border-radius: 999px;
+  background: #f0f4ff;
+  color: #244ca8;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.detailButton {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: 1px solid #c9d5f7;
+  border-radius: 8px;
+  background: #f7f9ff;
+  color: #2452cb;
+  padding: 8px 11px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.gapHeader > span:not(.eyebrow) {
+  font-size: 13px;
+}
+
+.currentSkills,
+.gapGroup {
+  display: grid;
+  gap: 14px;
+  border-bottom: 1px solid var(--skills-border);
+  padding-block: 8px 22px;
+}
+
+.gapGroupHeading {
+  justify-content: flex-start;
+}
+
+.gapGroupHeading > div {
+  display: grid;
+  gap: 3px;
+}
+
+.gapGroupHeading p {
+  margin: 0;
+  color: #68758a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.gapList {
+  overflow: hidden;
+  border: 1px solid var(--skills-border);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.professionalGroups,
+.professionalGroup {
+  display: grid;
+  gap: 12px;
+}
+
+.professionalGroups {
+  gap: 18px;
+}
+
+.professionalGroup h3 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: #34435f;
+  font-size: 13px;
+}
+
+.gapRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 14px;
+}
+
+.gapRow + .gapRow {
+  border-top: 1px solid #edf0f5;
+}
+
+.gapRow > div:first-child {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.gapRow strong {
+  font-size: 13px;
+}
+
+.gapRow > div:first-child span {
+  color: #68758a;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.gapMeta {
+  flex: 0 0 auto;
+  display: grid;
+  justify-items: end;
+  gap: 5px;
+}
+
+.interestHint,
+.priorityStart,
+.priorityLater {
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.interestHint {
+  background: #fff7d7;
+  color: #755b00;
+}
+
+.priorityStart {
+  background: #fff0ec;
+  color: #a23b24;
+}
+
+.priorityLater {
+  background: #edf2ff;
+  color: #2452cb;
+}
+
+.gapEmpty {
+  margin: 0;
+  border-radius: 8px;
+  background: #f1f8f7;
+  color: #456963;
+  padding: 12px 14px;
+  font-size: 12px;
+}
+
+.gapActions {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.secondaryAction {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #cad3e1;
+  border-radius: 8px;
+  background: #fff;
+  color: #263d70;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.secondaryAction:disabled {
+  background: #edf7f6;
+  color: #08716d;
+  cursor: default;
+}
+
+.primaryAction,
+.secondaryAction {
+  text-decoration: none;
+}
+
+.resetButton:focus-visible,
+.backButton:focus-visible,
+.searchField button:focus-visible,
+.filterButton:focus-visible,
+.filterActive:focus-visible,
+.stateButton:focus-visible,
+.stateButtonHaveActive:focus-visible,
+.stateButtonInterestActive:focus-visible,
+.removeSelection:focus-visible,
+.showMoreButton:focus-visible,
+.resultRequest button:focus-visible,
+.detailButton:focus-visible,
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible {
+  outline: 2px solid #245ffd;
+  outline-offset: 2px;
+}
+
+@media (max-width: 680px) {
+  .intro,
+  .resultsHeader,
+  .gapHeader {
+    padding-top: 2px;
+  }
+
+  .intro h1,
+  .resultsHeader h1,
+  .gapHeader h1 {
+    font-size: 27px;
+  }
+
+  .sectionLead {
+    align-items: center;
+  }
+
+  .resetButton {
+    width: 42px;
+    padding: 0;
+  }
+
+  .resetButton svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .resetButton {
+    font-size: 0;
+  }
+
+  .filterBar {
+    grid-template-columns: repeat(5, minmax(56px, 1fr));
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .skillRow {
+    grid-template-columns: 38px minmax(0, 1fr);
+    align-items: start;
+    gap: 10px;
+    padding: 13px 12px;
+  }
+
+  .skillActions {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(68px, 0.7fr) minmax(142px, 1.3fr) 40px;
+  }
+
+  .stateButton,
+  .stateButtonHaveActive,
+  .stateButtonInterestActive {
+    width: 100%;
+    padding-inline: 6px;
+  }
+
+  .resultRequest {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .resultRequest button {
+    width: 100%;
+  }
+
+  .resultCard {
+    grid-template-columns: 32px minmax(0, 1fr);
+    align-items: start;
+    padding: 13px 11px;
+  }
+
+  .detailButton {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .resultTitleLine {
+    align-items: flex-start;
+  }
+
+  .resultTitleLine h2 {
+    font-size: 16px;
+  }
+
+  .gapRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .gapMeta {
+    display: flex;
+    justify-items: start;
+  }
+
+  .gapActions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .searchField,
+  .skillRow {
+    transition: none;
+  }
+}

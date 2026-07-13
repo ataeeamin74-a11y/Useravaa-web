@@ -1,0 +1,7104 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "curated-career-research-reconciliation",
+  "itemCount": 320,
+  "items": [
+    {
+      "id": "soft-effective-communication",
+      "type": "soft",
+      "titleFa": "ارتباط مؤثر",
+      "titleEn": "Effective Communication",
+      "descriptionFa": "توانایی توضیح روشن موضوع و فهم دقیق منظور دیگران.",
+      "aliasesFa": [
+        "ارتباطات مؤثر",
+        "مهارت ارتباطی"
+      ],
+      "aliasesEn": [
+        "communication skills"
+      ],
+      "searchTerms": [
+        "ارتباط مؤثر",
+        "Effective Communication",
+        "ارتباطات مؤثر",
+        "مهارت ارتباطی",
+        "communication skills",
+        "effective",
+        "communication"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-active-listening",
+      "type": "soft",
+      "titleFa": "گوش‌دادن فعال",
+      "titleEn": "Active Listening",
+      "descriptionFa": "شنیدن دقیق، پرسیدن سؤال مناسب و بازتاب درست نیاز طرف مقابل.",
+      "aliasesFa": [
+        "شنیدن فعال"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "گوش‌دادن فعال",
+        "Active Listening",
+        "شنیدن فعال",
+        "active",
+        "listening"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-teamwork",
+      "type": "soft",
+      "titleFa": "کار تیمی",
+      "titleEn": "Teamwork",
+      "descriptionFa": "همکاری مسئولانه با دیگران برای رسیدن به یک خروجی مشترک.",
+      "aliasesFa": [
+        "همکاری تیمی"
+      ],
+      "aliasesEn": [
+        "collaboration"
+      ],
+      "searchTerms": [
+        "کار تیمی",
+        "Teamwork",
+        "همکاری تیمی",
+        "collaboration",
+        "teamwork"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-feedback-reception",
+      "type": "soft",
+      "titleFa": "بازخوردپذیری",
+      "titleEn": "Feedback Reception",
+      "descriptionFa": "دریافت بازخورد بدون دفاعی‌شدن و تبدیل آن به اصلاح عملی.",
+      "aliasesFa": [
+        "پذیرش بازخورد"
+      ],
+      "aliasesEn": [
+        "receiving feedback"
+      ],
+      "searchTerms": [
+        "بازخوردپذیری",
+        "Feedback Reception",
+        "پذیرش بازخورد",
+        "receiving feedback",
+        "feedback",
+        "reception"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-time-management",
+      "type": "soft",
+      "titleFa": "مدیریت زمان",
+      "titleEn": "Time Management",
+      "descriptionFa": "اولویت‌بندی کار و تحویل قابل‌اعتماد در زمان توافق‌شده.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت زمان",
+        "Time Management",
+        "time",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-negotiation",
+      "type": "soft",
+      "titleFa": "مذاکره",
+      "titleEn": "Negotiation",
+      "descriptionFa": "توانایی به‌کارگیری «مذاکره» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مذاکره",
+        "Negotiation",
+        "negotiation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-stakeholder-management",
+      "type": "soft",
+      "titleFa": "مدیریت ذی‌نفعان",
+      "titleEn": "Stakeholder Management",
+      "descriptionFa": "توانایی به‌کارگیری «مدیریت ذی‌نفعان» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "تعامل با ذی‌نفعان"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت ذی‌نفعان",
+        "Stakeholder Management",
+        "تعامل با ذی‌نفعان",
+        "stakeholder",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-conflict-management",
+      "type": "soft",
+      "titleFa": "مدیریت تعارض",
+      "titleEn": "Conflict Management",
+      "descriptionFa": "توانایی به‌کارگیری «مدیریت تعارض» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "حل تعارض"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت تعارض",
+        "Conflict Management",
+        "حل تعارض",
+        "conflict",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-adaptability",
+      "type": "soft",
+      "titleFa": "سازگاری",
+      "titleEn": "Adaptability",
+      "descriptionFa": "توانایی به‌کارگیری «سازگاری» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "انعطاف‌پذیری"
+      ],
+      "aliasesEn": [
+        "flexibility"
+      ],
+      "searchTerms": [
+        "سازگاری",
+        "Adaptability",
+        "انعطاف‌پذیری",
+        "flexibility",
+        "adaptability"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-attention-to-detail",
+      "type": "soft",
+      "titleFa": "دقت",
+      "titleEn": "Attention to Detail",
+      "descriptionFa": "توانایی به‌کارگیری «دقت» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "دقت کاری",
+        "توجه به جزئیات"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "دقت",
+        "Attention to Detail",
+        "دقت کاری",
+        "توجه به جزئیات",
+        "attention",
+        "to",
+        "detail"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-empathy",
+      "type": "soft",
+      "titleFa": "همدلی",
+      "titleEn": "Empathy",
+      "descriptionFa": "توانایی به‌کارگیری «همدلی» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "همدلی",
+        "Empathy",
+        "empathy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-ethical-judgment",
+      "type": "soft",
+      "titleFa": "قضاوت اخلاقی",
+      "titleEn": "Ethical Judgment",
+      "descriptionFa": "توانایی به‌کارگیری «قضاوت اخلاقی» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "اخلاق حرفه‌ای"
+      ],
+      "aliasesEn": [
+        "professional ethics"
+      ],
+      "searchTerms": [
+        "قضاوت اخلاقی",
+        "Ethical Judgment",
+        "اخلاق حرفه‌ای",
+        "professional ethics",
+        "ethical",
+        "judgment"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-leadership",
+      "type": "soft",
+      "titleFa": "رهبری",
+      "titleEn": "Leadership",
+      "descriptionFa": "توانایی به‌کارگیری «رهبری» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "رهبری تیم"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "رهبری",
+        "Leadership",
+        "رهبری تیم",
+        "leadership"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-presentation",
+      "type": "soft",
+      "titleFa": "ارائه مؤثر",
+      "titleEn": "Effective Presentation",
+      "descriptionFa": "توانایی به‌کارگیری «ارائه مؤثر» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "ارائه مطلب"
+      ],
+      "aliasesEn": [
+        "presentation skills"
+      ],
+      "searchTerms": [
+        "ارائه مؤثر",
+        "Effective Presentation",
+        "ارائه مطلب",
+        "presentation skills",
+        "presentation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-resilience",
+      "type": "soft",
+      "titleFa": "تاب‌آوری",
+      "titleEn": "Resilience",
+      "descriptionFa": "توانایی به‌کارگیری «تاب‌آوری» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "کار زیر فشار"
+      ],
+      "aliasesEn": [
+        "working under pressure"
+      ],
+      "searchTerms": [
+        "تاب‌آوری",
+        "Resilience",
+        "کار زیر فشار",
+        "working under pressure",
+        "resilience"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-curiosity",
+      "type": "soft",
+      "titleFa": "کنجکاوی حرفه‌ای",
+      "titleEn": "Professional Curiosity",
+      "descriptionFa": "توانایی به‌کارگیری «کنجکاوی حرفه‌ای» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "پرسش‌گری"
+      ],
+      "aliasesEn": [
+        "curiosity"
+      ],
+      "searchTerms": [
+        "کنجکاوی حرفه‌ای",
+        "Professional Curiosity",
+        "پرسش‌گری",
+        "curiosity"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "soft-ownership",
+      "type": "soft",
+      "titleFa": "مسئولیت‌پذیری",
+      "titleEn": "Ownership",
+      "descriptionFa": "توانایی به‌کارگیری «مسئولیت‌پذیری» در همکاری و تصمیم‌گیری روزمره.",
+      "aliasesFa": [
+        "تعهد کاری"
+      ],
+      "aliasesEn": [
+        "accountability"
+      ],
+      "searchTerms": [
+        "مسئولیت‌پذیری",
+        "Ownership",
+        "تعهد کاری",
+        "accountability",
+        "ownership"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-problem-solving",
+      "type": "foundational",
+      "titleFa": "حل مسئله",
+      "titleEn": "Problem Solving",
+      "descriptionFa": "شکستن مسئله، بررسی گزینه‌ها و انتخاب راه‌حل قابل‌آزمایش.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "حل مسئله",
+        "Problem Solving",
+        "problem",
+        "solving"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-critical-thinking",
+      "type": "foundational",
+      "titleFa": "تفکر انتقادی",
+      "titleEn": "Critical Thinking",
+      "descriptionFa": "قابلیت انتقال‌پذیر «تفکر انتقادی» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "تفکر نقادانه"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تفکر انتقادی",
+        "Critical Thinking",
+        "تفکر نقادانه",
+        "critical",
+        "thinking"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-research",
+      "type": "foundational",
+      "titleFa": "تحقیق",
+      "titleEn": "Research",
+      "descriptionFa": "جمع‌آوری و ارزیابی منظم اطلاعات برای پاسخ به یک سؤال مشخص.",
+      "aliasesFa": [
+        "پژوهش"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحقیق",
+        "Research",
+        "پژوهش",
+        "research"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-documentation",
+      "type": "foundational",
+      "titleFa": "مستندسازی",
+      "titleEn": "Documentation",
+      "descriptionFa": "ثبت تصمیم‌ها، فرایندها و دانش به‌شکلی که دیگران بتوانند استفاده کنند.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مستندسازی",
+        "Documentation",
+        "documentation"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-report-writing",
+      "type": "foundational",
+      "titleFa": "گزارش‌نویسی",
+      "titleEn": "Report Writing",
+      "descriptionFa": "قابلیت انتقال‌پذیر «گزارش‌نویسی» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "تهیه گزارش"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "گزارش‌نویسی",
+        "Report Writing",
+        "تهیه گزارش",
+        "report",
+        "writing"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-data-analysis",
+      "type": "foundational",
+      "titleFa": "تحلیل داده",
+      "titleEn": "Data Analysis",
+      "descriptionFa": "خواندن داده، یافتن الگو و تبدیل آن به نتیجه‌ای قابل‌استفاده.",
+      "aliasesFa": [
+        "تحلیل داده‌ها"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل داده",
+        "Data Analysis",
+        "تحلیل داده‌ها",
+        "data",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-statistical-literacy",
+      "type": "foundational",
+      "titleFa": "سواد آماری",
+      "titleEn": "Statistical Literacy",
+      "descriptionFa": "قابلیت انتقال‌پذیر «سواد آماری» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "آمار پایه"
+      ],
+      "aliasesEn": [
+        "basic statistics"
+      ],
+      "searchTerms": [
+        "سواد آماری",
+        "Statistical Literacy",
+        "آمار پایه",
+        "basic statistics",
+        "statistical",
+        "literacy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-presentation-design",
+      "type": "foundational",
+      "titleFa": "طراحی ارائه",
+      "titleEn": "Presentation Design",
+      "descriptionFa": "قابلیت انتقال‌پذیر «طراحی ارائه» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "ساخت پرزنتیشن"
+      ],
+      "aliasesEn": [
+        "slide design"
+      ],
+      "searchTerms": [
+        "طراحی ارائه",
+        "Presentation Design",
+        "ساخت پرزنتیشن",
+        "slide design",
+        "presentation",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-project-planning",
+      "type": "foundational",
+      "titleFa": "برنامه‌ریزی پروژه",
+      "titleEn": "Project Planning",
+      "descriptionFa": "قابلیت انتقال‌پذیر «برنامه‌ریزی پروژه» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "برنامه‌ریزی کار"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "برنامه‌ریزی پروژه",
+        "Project Planning",
+        "برنامه‌ریزی کار",
+        "project",
+        "planning"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-requirements-analysis",
+      "type": "foundational",
+      "titleFa": "تحلیل نیازمندی",
+      "titleEn": "Requirements Analysis",
+      "descriptionFa": "قابلیت انتقال‌پذیر «تحلیل نیازمندی» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "نیازسنجی"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل نیازمندی",
+        "Requirements Analysis",
+        "نیازسنجی",
+        "requirements",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-process-analysis",
+      "type": "foundational",
+      "titleFa": "تحلیل فرایند",
+      "titleEn": "Process Analysis",
+      "descriptionFa": "قابلیت انتقال‌پذیر «تحلیل فرایند» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "بررسی فرایند"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل فرایند",
+        "Process Analysis",
+        "بررسی فرایند",
+        "process",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-root-cause-analysis",
+      "type": "foundational",
+      "titleFa": "تحلیل علت ریشه‌ای",
+      "titleEn": "Root Cause Analysis",
+      "descriptionFa": "قابلیت انتقال‌پذیر «تحلیل علت ریشه‌ای» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "ریشه‌یابی خطا"
+      ],
+      "aliasesEn": [
+        "RCA"
+      ],
+      "searchTerms": [
+        "تحلیل علت ریشه‌ای",
+        "Root Cause Analysis",
+        "ریشه‌یابی خطا",
+        "RCA",
+        "root",
+        "cause",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-experimentation",
+      "type": "foundational",
+      "titleFa": "آزمایش‌گری",
+      "titleEn": "Experimentation",
+      "descriptionFa": "قابلیت انتقال‌پذیر «آزمایش‌گری» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "طراحی آزمایش"
+      ],
+      "aliasesEn": [
+        "experiment design"
+      ],
+      "searchTerms": [
+        "آزمایش‌گری",
+        "Experimentation",
+        "طراحی آزمایش",
+        "experiment design",
+        "experimentation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-data-visualization",
+      "type": "foundational",
+      "titleFa": "نمایش بصری داده",
+      "titleEn": "Data Visualization",
+      "descriptionFa": "قابلیت انتقال‌پذیر «نمایش بصری داده» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "بصری‌سازی داده"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "نمایش بصری داده",
+        "Data Visualization",
+        "بصری‌سازی داده",
+        "data",
+        "visualization"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-spreadsheet-analysis",
+      "type": "foundational",
+      "titleFa": "تحلیل صفحه‌گسترده",
+      "titleEn": "Spreadsheet Analysis",
+      "descriptionFa": "قابلیت انتقال‌پذیر «تحلیل صفحه‌گسترده» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "تحلیل با اکسل"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل صفحه‌گسترده",
+        "Spreadsheet Analysis",
+        "تحلیل با اکسل",
+        "spreadsheet",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-business-literacy",
+      "type": "foundational",
+      "titleFa": "درک کسب‌وکار",
+      "titleEn": "Business Literacy",
+      "descriptionFa": "قابلیت انتقال‌پذیر «درک کسب‌وکار» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "شناخت کسب‌وکار"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "درک کسب‌وکار",
+        "Business Literacy",
+        "شناخت کسب‌وکار",
+        "business",
+        "literacy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-financial-literacy",
+      "type": "foundational",
+      "titleFa": "سواد مالی",
+      "titleEn": "Financial Literacy",
+      "descriptionFa": "قابلیت انتقال‌پذیر «سواد مالی» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "درک مالی"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "سواد مالی",
+        "Financial Literacy",
+        "درک مالی",
+        "financial",
+        "literacy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-risk-assessment",
+      "type": "foundational",
+      "titleFa": "ارزیابی ریسک",
+      "titleEn": "Risk Assessment",
+      "descriptionFa": "قابلیت انتقال‌پذیر «ارزیابی ریسک» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "تحلیل ریسک"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "ارزیابی ریسک",
+        "Risk Assessment",
+        "تحلیل ریسک",
+        "risk",
+        "assessment"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-quality-assurance",
+      "type": "foundational",
+      "titleFa": "تضمین کیفیت",
+      "titleEn": "Quality Assurance",
+      "descriptionFa": "قابلیت انتقال‌پذیر «تضمین کیفیت» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "کنترل کیفیت"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تضمین کیفیت",
+        "Quality Assurance",
+        "کنترل کیفیت",
+        "quality",
+        "assurance"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-workflow-design",
+      "type": "foundational",
+      "titleFa": "طراحی جریان کار",
+      "titleEn": "Workflow Design",
+      "descriptionFa": "قابلیت انتقال‌پذیر «طراحی جریان کار» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "طراحی گردش کار"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی جریان کار",
+        "Workflow Design",
+        "طراحی گردش کار",
+        "workflow",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-decision-making",
+      "type": "foundational",
+      "titleFa": "تصمیم‌گیری",
+      "titleEn": "Decision Making",
+      "descriptionFa": "قابلیت انتقال‌پذیر «تصمیم‌گیری» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تصمیم‌گیری",
+        "Decision Making",
+        "decision",
+        "making"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-professional-writing",
+      "type": "foundational",
+      "titleFa": "نوشتن حرفه‌ای",
+      "titleEn": "Professional Writing",
+      "descriptionFa": "قابلیت انتقال‌پذیر «نوشتن حرفه‌ای» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "نوشتار حرفه‌ای"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "نوشتن حرفه‌ای",
+        "Professional Writing",
+        "نوشتار حرفه‌ای",
+        "professional",
+        "writing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-professional-english",
+      "type": "foundational",
+      "titleFa": "انگلیسی حرفه‌ای",
+      "titleEn": "Professional English",
+      "descriptionFa": "قابلیت انتقال‌پذیر «انگلیسی حرفه‌ای» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "مکاتبه انگلیسی"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "انگلیسی حرفه‌ای",
+        "Professional English",
+        "مکاتبه انگلیسی",
+        "professional",
+        "english"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "foundational-security-literacy",
+      "type": "foundational",
+      "titleFa": "سواد امنیت اطلاعات",
+      "titleEn": "Information Security Literacy",
+      "descriptionFa": "قابلیت انتقال‌پذیر «سواد امنیت اطلاعات» برای انجام منظم و قابل‌اتکای کار.",
+      "aliasesFa": [
+        "آگاهی امنیتی"
+      ],
+      "aliasesEn": [
+        "security awareness"
+      ],
+      "searchTerms": [
+        "سواد امنیت اطلاعات",
+        "Information Security Literacy",
+        "آگاهی امنیتی",
+        "security awareness",
+        "security",
+        "literacy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-software-design",
+      "type": "specialized",
+      "titleFa": "طراحی نرم‌افزار",
+      "titleEn": "Software Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی نرم‌افزار» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی نرم‌افزار",
+        "Software Design",
+        "software",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-debugging",
+      "type": "specialized",
+      "titleFa": "اشکال‌زدایی",
+      "titleEn": "Debugging",
+      "descriptionFa": "مهارت حرفه‌ای «اشکال‌زدایی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "اشکال‌زدایی",
+        "Debugging",
+        "debugging"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-automated-testing",
+      "type": "specialized",
+      "titleFa": "تست خودکار",
+      "titleEn": "Automated Testing",
+      "descriptionFa": "مهارت حرفه‌ای «تست خودکار» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "اتوماسیون تست"
+      ],
+      "aliasesEn": [
+        "test automation"
+      ],
+      "searchTerms": [
+        "تست خودکار",
+        "Automated Testing",
+        "اتوماسیون تست",
+        "test automation",
+        "automated",
+        "testing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-application-security",
+      "type": "specialized",
+      "titleFa": "امنیت اپلیکیشن",
+      "titleEn": "Application Security",
+      "descriptionFa": "مهارت حرفه‌ای «امنیت اپلیکیشن» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "امنیت اپلیکیشن",
+        "Application Security",
+        "application",
+        "security"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-backend-development",
+      "type": "specialized",
+      "titleFa": "توسعه بک‌اند",
+      "titleEn": "Backend Development",
+      "descriptionFa": "مهارت حرفه‌ای «توسعه بک‌اند» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "توسعه بک‌اند",
+        "Backend Development",
+        "backend",
+        "development"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-api-design",
+      "type": "specialized",
+      "titleFa": "طراحی API",
+      "titleEn": "API Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی API» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی API",
+        "API Design",
+        "api",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-database-design",
+      "type": "specialized",
+      "titleFa": "طراحی پایگاه داده",
+      "titleEn": "Database Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی پایگاه داده» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی پایگاه داده",
+        "Database Design",
+        "database",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-performance-optimization",
+      "type": "specialized",
+      "titleFa": "بهینه‌سازی عملکرد",
+      "titleEn": "Performance Optimization",
+      "descriptionFa": "مهارت حرفه‌ای «بهینه‌سازی عملکرد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "بهینه‌سازی عملکرد",
+        "Performance Optimization",
+        "performance",
+        "optimization"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-object-oriented-programming",
+      "type": "specialized",
+      "titleFa": "برنامه‌نویسی شیءگرا",
+      "titleEn": "Object-Oriented Programming",
+      "descriptionFa": "مهارت حرفه‌ای «برنامه‌نویسی شیءگرا» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "شی‌گرایی"
+      ],
+      "aliasesEn": [
+        "OOP"
+      ],
+      "searchTerms": [
+        "برنامه‌نویسی شیءگرا",
+        "Object-Oriented Programming",
+        "شی‌گرایی",
+        "OOP",
+        "object",
+        "oriented",
+        "programming"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-concurrency",
+      "type": "specialized",
+      "titleFa": "برنامه‌نویسی هم‌زمان",
+      "titleEn": "Concurrent Programming",
+      "descriptionFa": "مهارت حرفه‌ای «برنامه‌نویسی هم‌زمان» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "برنامه‌نویسی هم‌زمان",
+        "Concurrent Programming",
+        "concurrency"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-event-driven-architecture",
+      "type": "specialized",
+      "titleFa": "معماری رویدادمحور",
+      "titleEn": "Event-Driven Architecture",
+      "descriptionFa": "مهارت حرفه‌ای «معماری رویدادمحور» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "معماری رویدادمحور",
+        "Event-Driven Architecture",
+        "event",
+        "driven",
+        "architecture"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-queue-processing",
+      "type": "specialized",
+      "titleFa": "پردازش صف",
+      "titleEn": "Queue Processing",
+      "descriptionFa": "مهارت حرفه‌ای «پردازش صف» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پردازش صف",
+        "Queue Processing",
+        "queue",
+        "processing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-caching",
+      "type": "specialized",
+      "titleFa": "طراحی کش",
+      "titleEn": "Caching Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی کش» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی کش",
+        "Caching Design",
+        "caching"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-frontend-development",
+      "type": "specialized",
+      "titleFa": "توسعه فرانت‌اند",
+      "titleEn": "Frontend Development",
+      "descriptionFa": "مهارت حرفه‌ای «توسعه فرانت‌اند» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "توسعه فرانت‌اند",
+        "Frontend Development",
+        "frontend",
+        "development"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-ui-implementation",
+      "type": "specialized",
+      "titleFa": "پیاده‌سازی رابط کاربری",
+      "titleEn": "UI Implementation",
+      "descriptionFa": "مهارت حرفه‌ای «پیاده‌سازی رابط کاربری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پیاده‌سازی رابط کاربری",
+        "UI Implementation",
+        "ui",
+        "implementation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-responsive-design",
+      "type": "specialized",
+      "titleFa": "طراحی واکنش‌گرا",
+      "titleEn": "Responsive Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی واکنش‌گرا» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی واکنش‌گرا",
+        "Responsive Design",
+        "responsive",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-accessibility",
+      "type": "specialized",
+      "titleFa": "دسترس‌پذیری دیجیتال",
+      "titleEn": "Digital Accessibility",
+      "descriptionFa": "مهارت حرفه‌ای «دسترس‌پذیری دیجیتال» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "دسترس پذیری"
+      ],
+      "aliasesEn": [
+        "accessibility",
+        "WCAG"
+      ],
+      "searchTerms": [
+        "دسترس‌پذیری دیجیتال",
+        "Digital Accessibility",
+        "دسترس پذیری",
+        "accessibility",
+        "WCAG"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-state-management",
+      "type": "specialized",
+      "titleFa": "مدیریت وضعیت",
+      "titleEn": "State Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت وضعیت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت وضعیت",
+        "State Management",
+        "state",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-form-design",
+      "type": "specialized",
+      "titleFa": "طراحی فرم",
+      "titleEn": "Form Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی فرم» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی فرم",
+        "Form Design",
+        "form",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-frontend-performance",
+      "type": "specialized",
+      "titleFa": "عملکرد فرانت‌اند",
+      "titleEn": "Frontend Performance",
+      "descriptionFa": "مهارت حرفه‌ای «عملکرد فرانت‌اند» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "عملکرد فرانت‌اند",
+        "Frontend Performance",
+        "frontend",
+        "performance"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-mobile-development",
+      "type": "specialized",
+      "titleFa": "توسعه اپلیکیشن موبایل",
+      "titleEn": "Mobile Application Development",
+      "descriptionFa": "مهارت حرفه‌ای «توسعه اپلیکیشن موبایل» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "توسعه اپلیکیشن موبایل",
+        "Mobile Application Development",
+        "mobile",
+        "development"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-mobile-architecture",
+      "type": "specialized",
+      "titleFa": "معماری اپلیکیشن موبایل",
+      "titleEn": "Mobile Application Architecture",
+      "descriptionFa": "مهارت حرفه‌ای «معماری اپلیکیشن موبایل» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "معماری اپلیکیشن موبایل",
+        "Mobile Application Architecture",
+        "mobile",
+        "architecture"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-offline-data",
+      "type": "specialized",
+      "titleFa": "مدیریت داده آفلاین",
+      "titleEn": "Offline Data Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت داده آفلاین» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت داده آفلاین",
+        "Offline Data Management",
+        "offline",
+        "data"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-container-orchestration",
+      "type": "specialized",
+      "titleFa": "هماهنگ‌سازی کانتینر",
+      "titleEn": "Container Orchestration",
+      "descriptionFa": "مهارت حرفه‌ای «هماهنگ‌سازی کانتینر» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "هماهنگ‌سازی کانتینر",
+        "Container Orchestration",
+        "container",
+        "orchestration"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-infrastructure-as-code",
+      "type": "specialized",
+      "titleFa": "زیرساخت به‌صورت کد",
+      "titleEn": "Infrastructure as Code",
+      "descriptionFa": "مهارت حرفه‌ای «زیرساخت به‌صورت کد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "زیرساخت کدنویسی‌شده"
+      ],
+      "aliasesEn": [
+        "IaC"
+      ],
+      "searchTerms": [
+        "زیرساخت به‌صورت کد",
+        "Infrastructure as Code",
+        "زیرساخت کدنویسی‌شده",
+        "IaC",
+        "infrastructure",
+        "as",
+        "code"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-release-automation",
+      "type": "specialized",
+      "titleFa": "خودکارسازی انتشار",
+      "titleEn": "Release Automation",
+      "descriptionFa": "مهارت حرفه‌ای «خودکارسازی انتشار» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "اتوماسیون انتشار"
+      ],
+      "aliasesEn": [
+        "CI/CD"
+      ],
+      "searchTerms": [
+        "خودکارسازی انتشار",
+        "Release Automation",
+        "اتوماسیون انتشار",
+        "CI/CD",
+        "release",
+        "automation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-observability",
+      "type": "specialized",
+      "titleFa": "مشاهده‌پذیری سیستم",
+      "titleEn": "System Observability",
+      "descriptionFa": "مهارت حرفه‌ای «مشاهده‌پذیری سیستم» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "پایش‌پذیری"
+      ],
+      "aliasesEn": [
+        "observability"
+      ],
+      "searchTerms": [
+        "مشاهده‌پذیری سیستم",
+        "System Observability",
+        "پایش‌پذیری",
+        "observability"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-incident-response",
+      "type": "specialized",
+      "titleFa": "پاسخ به رخداد",
+      "titleEn": "Incident Response",
+      "descriptionFa": "مهارت حرفه‌ای «پاسخ به رخداد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پاسخ به رخداد",
+        "Incident Response",
+        "incident",
+        "response"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-reliability-engineering",
+      "type": "specialized",
+      "titleFa": "مهندسی قابلیت اطمینان",
+      "titleEn": "Reliability Engineering",
+      "descriptionFa": "مهارت حرفه‌ای «مهندسی قابلیت اطمینان» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "مهندسی پایایی"
+      ],
+      "aliasesEn": [
+        "SRE"
+      ],
+      "searchTerms": [
+        "مهندسی قابلیت اطمینان",
+        "Reliability Engineering",
+        "مهندسی پایایی",
+        "SRE",
+        "reliability",
+        "engineering"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-service-level-objectives",
+      "type": "specialized",
+      "titleFa": "هدف‌گذاری سطح خدمت",
+      "titleEn": "Service Level Objectives",
+      "descriptionFa": "مهارت حرفه‌ای «هدف‌گذاری سطح خدمت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "SLO"
+      ],
+      "searchTerms": [
+        "هدف‌گذاری سطح خدمت",
+        "Service Level Objectives",
+        "SLO",
+        "service",
+        "level",
+        "objectives"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-networking",
+      "type": "specialized",
+      "titleFa": "مدیریت شبکه",
+      "titleEn": "Network Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت شبکه» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت شبکه",
+        "Network Management",
+        "networking"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-system-administration",
+      "type": "specialized",
+      "titleFa": "مدیریت سیستم",
+      "titleEn": "System Administration",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت سیستم» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت سیستم",
+        "System Administration",
+        "system",
+        "administration"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-identity-management",
+      "type": "specialized",
+      "titleFa": "مدیریت هویت",
+      "titleEn": "Identity Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت هویت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت هویت",
+        "Identity Management",
+        "identity",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-access-control",
+      "type": "specialized",
+      "titleFa": "کنترل دسترسی",
+      "titleEn": "Access Control",
+      "descriptionFa": "مهارت حرفه‌ای «کنترل دسترسی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "کنترل دسترسی",
+        "Access Control",
+        "access",
+        "control"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-penetration-testing",
+      "type": "specialized",
+      "titleFa": "آزمون نفوذ",
+      "titleEn": "Penetration Testing",
+      "descriptionFa": "مهارت حرفه‌ای «آزمون نفوذ» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "pentest"
+      ],
+      "searchTerms": [
+        "آزمون نفوذ",
+        "Penetration Testing",
+        "pentest",
+        "penetration",
+        "testing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-vulnerability-assessment",
+      "type": "specialized",
+      "titleFa": "ارزیابی آسیب‌پذیری",
+      "titleEn": "Vulnerability Assessment",
+      "descriptionFa": "مهارت حرفه‌ای «ارزیابی آسیب‌پذیری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "ارزیابی آسیب‌پذیری",
+        "Vulnerability Assessment",
+        "vulnerability",
+        "assessment"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-security-monitoring",
+      "type": "specialized",
+      "titleFa": "پایش امنیت",
+      "titleEn": "Security Monitoring",
+      "descriptionFa": "مهارت حرفه‌ای «پایش امنیت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پایش امنیت",
+        "Security Monitoring",
+        "security",
+        "monitoring"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-log-analysis",
+      "type": "specialized",
+      "titleFa": "تحلیل لاگ",
+      "titleEn": "Log Analysis",
+      "descriptionFa": "مهارت حرفه‌ای «تحلیل لاگ» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل لاگ",
+        "Log Analysis",
+        "log",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-threat-intelligence",
+      "type": "specialized",
+      "titleFa": "هوشمندی تهدید",
+      "titleEn": "Threat Intelligence",
+      "descriptionFa": "مهارت حرفه‌ای «هوشمندی تهدید» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "هوشمندی تهدید",
+        "Threat Intelligence",
+        "threat",
+        "intelligence"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-incident-triage",
+      "type": "specialized",
+      "titleFa": "تریاژ رخداد",
+      "titleEn": "Incident Triage",
+      "descriptionFa": "مهارت حرفه‌ای «تریاژ رخداد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تریاژ رخداد",
+        "Incident Triage",
+        "incident",
+        "triage"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-troubleshooting",
+      "type": "specialized",
+      "titleFa": "عیب‌یابی فنی",
+      "titleEn": "Technical Troubleshooting",
+      "descriptionFa": "مهارت حرفه‌ای «عیب‌یابی فنی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "عیب‌یابی فنی",
+        "Technical Troubleshooting",
+        "troubleshooting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-knowledge-management",
+      "type": "specialized",
+      "titleFa": "مدیریت دانش",
+      "titleEn": "Knowledge Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت دانش» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت دانش",
+        "Knowledge Management",
+        "knowledge",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-test-design",
+      "type": "specialized",
+      "titleFa": "طراحی آزمون نرم‌افزار",
+      "titleEn": "Software Test Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی آزمون نرم‌افزار» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی آزمون نرم‌افزار",
+        "Software Test Design",
+        "test",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-api-testing",
+      "type": "specialized",
+      "titleFa": "تست API",
+      "titleEn": "API Testing",
+      "descriptionFa": "مهارت حرفه‌ای «تست API» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تست API",
+        "API Testing",
+        "api",
+        "testing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-ui-testing",
+      "type": "specialized",
+      "titleFa": "تست رابط کاربری",
+      "titleEn": "UI Testing",
+      "descriptionFa": "مهارت حرفه‌ای «تست رابط کاربری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تست رابط کاربری",
+        "UI Testing",
+        "ui",
+        "testing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-performance-testing",
+      "type": "specialized",
+      "titleFa": "تست عملکرد",
+      "titleEn": "Performance Testing",
+      "descriptionFa": "مهارت حرفه‌ای «تست عملکرد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تست عملکرد",
+        "Performance Testing",
+        "performance",
+        "testing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-sql-querying",
+      "type": "specialized",
+      "titleFa": "پرس‌وجوی SQL",
+      "titleEn": "SQL Querying",
+      "descriptionFa": "مهارت حرفه‌ای «پرس‌وجوی SQL» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پرس‌وجوی SQL",
+        "SQL Querying",
+        "sql",
+        "querying"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-statistical-analysis",
+      "type": "specialized",
+      "titleFa": "تحلیل آماری",
+      "titleEn": "Statistical Analysis",
+      "descriptionFa": "مهارت حرفه‌ای «تحلیل آماری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل آماری",
+        "Statistical Analysis",
+        "statistical",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [
+        "foundational-statistical-literacy"
+      ],
+      "relatedSkillIds": [
+        "foundational-data-analysis"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-analytics-design",
+      "type": "specialized",
+      "titleFa": "طراحی تحلیل",
+      "titleEn": "Analytics Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی تحلیل» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی تحلیل",
+        "Analytics Design",
+        "analytics",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-data-storytelling",
+      "type": "specialized",
+      "titleFa": "روایت‌گری داده",
+      "titleEn": "Data Storytelling",
+      "descriptionFa": "مهارت حرفه‌ای «روایت‌گری داده» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "روایت‌گری داده",
+        "Data Storytelling",
+        "data",
+        "storytelling"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [
+        "foundational-data-visualization"
+      ],
+      "relatedSkillIds": [
+        "foundational-presentation-design"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-data-modeling",
+      "type": "specialized",
+      "titleFa": "مدل‌سازی داده",
+      "titleEn": "Data Modeling",
+      "descriptionFa": "مهارت حرفه‌ای «مدل‌سازی داده» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدل‌سازی داده",
+        "Data Modeling",
+        "data",
+        "modeling"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-data-pipelines",
+      "type": "specialized",
+      "titleFa": "ساخت خط لوله داده",
+      "titleEn": "Data Pipeline Engineering",
+      "descriptionFa": "مهارت حرفه‌ای «ساخت خط لوله داده» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "ساخت خط لوله داده",
+        "Data Pipeline Engineering",
+        "data",
+        "pipelines"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-data-quality",
+      "type": "specialized",
+      "titleFa": "کیفیت داده",
+      "titleEn": "Data Quality",
+      "descriptionFa": "مهارت حرفه‌ای «کیفیت داده» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "کیفیت داده",
+        "Data Quality",
+        "data",
+        "quality"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-distributed-systems",
+      "type": "specialized",
+      "titleFa": "سیستم‌های توزیع‌شده",
+      "titleEn": "Distributed Systems",
+      "descriptionFa": "مهارت حرفه‌ای «سیستم‌های توزیع‌شده» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "سیستم‌های توزیع‌شده",
+        "Distributed Systems",
+        "distributed",
+        "systems"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-data-governance",
+      "type": "specialized",
+      "titleFa": "حاکمیت داده",
+      "titleEn": "Data Governance",
+      "descriptionFa": "مهارت حرفه‌ای «حاکمیت داده» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "حاکمیت داده",
+        "Data Governance",
+        "data",
+        "governance"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-bi-dashboarding",
+      "type": "specialized",
+      "titleFa": "طراحی داشبورد هوش تجاری",
+      "titleEn": "BI Dashboard Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی داشبورد هوش تجاری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی داشبورد هوش تجاری",
+        "BI Dashboard Design",
+        "bi",
+        "dashboarding"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-machine-learning-engineering",
+      "type": "specialized",
+      "titleFa": "مهندسی یادگیری ماشین",
+      "titleEn": "Machine Learning Engineering",
+      "descriptionFa": "مهارت حرفه‌ای «مهندسی یادگیری ماشین» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "مهندسی ML"
+      ],
+      "aliasesEn": [
+        "ML engineering"
+      ],
+      "searchTerms": [
+        "مهندسی یادگیری ماشین",
+        "Machine Learning Engineering",
+        "مهندسی ML",
+        "ML engineering",
+        "machine",
+        "learning",
+        "engineering"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [
+        "foundational-statistical-literacy",
+        "foundational-data-analysis"
+      ],
+      "relatedSkillIds": [
+        "specialized-model-evaluation"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-natural-language-processing",
+      "type": "specialized",
+      "titleFa": "پردازش زبان طبیعی",
+      "titleEn": "Natural Language Processing",
+      "descriptionFa": "مهارت حرفه‌ای «پردازش زبان طبیعی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "NLP"
+      ],
+      "searchTerms": [
+        "پردازش زبان طبیعی",
+        "Natural Language Processing",
+        "NLP",
+        "natural",
+        "language",
+        "processing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-retrieval-augmented-generation",
+      "type": "specialized",
+      "titleFa": "تولید تقویت‌شده با بازیابی",
+      "titleEn": "Retrieval-Augmented Generation",
+      "descriptionFa": "مهارت حرفه‌ای «تولید تقویت‌شده با بازیابی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "RAG"
+      ],
+      "searchTerms": [
+        "تولید تقویت‌شده با بازیابی",
+        "Retrieval-Augmented Generation",
+        "RAG",
+        "retrieval",
+        "augmented",
+        "generation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [
+        "specialized-natural-language-processing"
+      ],
+      "relatedSkillIds": [
+        "specialized-model-evaluation"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-model-evaluation",
+      "type": "specialized",
+      "titleFa": "ارزیابی مدل",
+      "titleEn": "Model Evaluation",
+      "descriptionFa": "مهارت حرفه‌ای «ارزیابی مدل» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "ارزیابی مدل",
+        "Model Evaluation",
+        "model",
+        "evaluation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-mlops",
+      "type": "specialized",
+      "titleFa": "عملیات یادگیری ماشین",
+      "titleEn": "Machine Learning Operations",
+      "descriptionFa": "مهارت حرفه‌ای «عملیات یادگیری ماشین» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "MLOps"
+      ],
+      "searchTerms": [
+        "عملیات یادگیری ماشین",
+        "Machine Learning Operations",
+        "MLOps",
+        "mlops"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-marketing-strategy",
+      "type": "specialized",
+      "titleFa": "استراتژی بازاریابی",
+      "titleEn": "Marketing Strategy",
+      "descriptionFa": "مهارت حرفه‌ای «استراتژی بازاریابی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "استراتژی بازاریابی",
+        "Marketing Strategy",
+        "marketing",
+        "strategy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-audience-research",
+      "type": "specialized",
+      "titleFa": "تحقیق مخاطب",
+      "titleEn": "Audience Research",
+      "descriptionFa": "مهارت حرفه‌ای «تحقیق مخاطب» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحقیق مخاطب",
+        "Audience Research",
+        "audience",
+        "research"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-campaign-planning",
+      "type": "specialized",
+      "titleFa": "برنامه‌ریزی کمپین",
+      "titleEn": "Campaign Planning",
+      "descriptionFa": "مهارت حرفه‌ای «برنامه‌ریزی کمپین» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "برنامه‌ریزی کمپین",
+        "Campaign Planning",
+        "campaign",
+        "planning"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-marketing-measurement",
+      "type": "specialized",
+      "titleFa": "سنجش بازاریابی",
+      "titleEn": "Marketing Measurement",
+      "descriptionFa": "مهارت حرفه‌ای «سنجش بازاریابی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "سنجش بازاریابی",
+        "Marketing Measurement",
+        "marketing",
+        "measurement"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-growth-experimentation",
+      "type": "specialized",
+      "titleFa": "آزمایش رشد",
+      "titleEn": "Growth Experimentation",
+      "descriptionFa": "مهارت حرفه‌ای «آزمایش رشد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "آزمایش رشد",
+        "Growth Experimentation",
+        "growth",
+        "experimentation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-funnel-analysis",
+      "type": "specialized",
+      "titleFa": "تحلیل قیف",
+      "titleEn": "Funnel Analysis",
+      "descriptionFa": "مهارت حرفه‌ای «تحلیل قیف» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل قیف",
+        "Funnel Analysis",
+        "funnel",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-attribution",
+      "type": "specialized",
+      "titleFa": "تحلیل اتریبیوشن",
+      "titleEn": "Attribution Analysis",
+      "descriptionFa": "مهارت حرفه‌ای «تحلیل اتریبیوشن» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل اتریبیوشن",
+        "Attribution Analysis",
+        "attribution"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-lifecycle-marketing",
+      "type": "specialized",
+      "titleFa": "بازاریابی چرخه عمر",
+      "titleEn": "Lifecycle Marketing",
+      "descriptionFa": "مهارت حرفه‌ای «بازاریابی چرخه عمر» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "بازاریابی چرخه عمر",
+        "Lifecycle Marketing",
+        "lifecycle",
+        "marketing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-content-strategy",
+      "type": "specialized",
+      "titleFa": "استراتژی محتوا",
+      "titleEn": "Content Strategy",
+      "descriptionFa": "مهارت حرفه‌ای «استراتژی محتوا» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "استراتژی محتوا",
+        "Content Strategy",
+        "content",
+        "strategy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-copywriting",
+      "type": "specialized",
+      "titleFa": "کپی‌رایتینگ",
+      "titleEn": "Copywriting",
+      "descriptionFa": "مهارت حرفه‌ای «کپی‌رایتینگ» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "تبلیغ‌نویسی"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "کپی‌رایتینگ",
+        "Copywriting",
+        "تبلیغ‌نویسی",
+        "copywriting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-editorial-planning",
+      "type": "specialized",
+      "titleFa": "برنامه‌ریزی تحریریه",
+      "titleEn": "Editorial Planning",
+      "descriptionFa": "مهارت حرفه‌ای «برنامه‌ریزی تحریریه» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "برنامه‌ریزی تحریریه",
+        "Editorial Planning",
+        "editorial",
+        "planning"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-search-engine-optimization",
+      "type": "specialized",
+      "titleFa": "بهینه‌سازی موتور جست‌وجو",
+      "titleEn": "Search Engine Optimization",
+      "descriptionFa": "مهارت حرفه‌ای «بهینه‌سازی موتور جست‌وجو» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "سئو"
+      ],
+      "aliasesEn": [
+        "SEO"
+      ],
+      "searchTerms": [
+        "بهینه‌سازی موتور جست‌وجو",
+        "Search Engine Optimization",
+        "سئو",
+        "SEO",
+        "search",
+        "engine",
+        "optimization"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-keyword-research",
+      "type": "specialized",
+      "titleFa": "تحقیق کلمات کلیدی",
+      "titleEn": "Keyword Research",
+      "descriptionFa": "مهارت حرفه‌ای «تحقیق کلمات کلیدی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحقیق کلمات کلیدی",
+        "Keyword Research",
+        "keyword",
+        "research"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-technical-seo",
+      "type": "specialized",
+      "titleFa": "سئوی فنی",
+      "titleEn": "Technical SEO",
+      "descriptionFa": "مهارت حرفه‌ای «سئوی فنی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "سئوی فنی",
+        "Technical SEO",
+        "technical",
+        "seo"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [
+        "specialized-search-engine-optimization"
+      ],
+      "relatedSkillIds": [
+        "specialized-on-page-seo"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-on-page-seo",
+      "type": "specialized",
+      "titleFa": "سئوی داخلی",
+      "titleEn": "On-Page SEO",
+      "descriptionFa": "مهارت حرفه‌ای «سئوی داخلی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "سئوی داخلی",
+        "On-Page SEO",
+        "on",
+        "page",
+        "seo"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-paid-advertising",
+      "type": "specialized",
+      "titleFa": "تبلیغات پولی",
+      "titleEn": "Paid Advertising",
+      "descriptionFa": "مهارت حرفه‌ای «تبلیغات پولی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تبلیغات پولی",
+        "Paid Advertising",
+        "paid",
+        "advertising"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-conversion-optimization",
+      "type": "specialized",
+      "titleFa": "بهینه‌سازی تبدیل",
+      "titleEn": "Conversion Rate Optimization",
+      "descriptionFa": "مهارت حرفه‌ای «بهینه‌سازی تبدیل» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "CRO"
+      ],
+      "searchTerms": [
+        "بهینه‌سازی تبدیل",
+        "Conversion Rate Optimization",
+        "CRO",
+        "conversion",
+        "optimization"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [
+        "foundational-experimentation"
+      ],
+      "relatedSkillIds": [
+        "specialized-marketing-measurement"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-creative-testing",
+      "type": "specialized",
+      "titleFa": "آزمون خلاقه",
+      "titleEn": "Creative Testing",
+      "descriptionFa": "مهارت حرفه‌ای «آزمون خلاقه» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "آزمون خلاقه",
+        "Creative Testing",
+        "creative",
+        "testing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-market-research",
+      "type": "specialized",
+      "titleFa": "تحقیق بازار",
+      "titleEn": "Market Research",
+      "descriptionFa": "مهارت حرفه‌ای «تحقیق بازار» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحقیق بازار",
+        "Market Research",
+        "market",
+        "research"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-survey-design",
+      "type": "specialized",
+      "titleFa": "طراحی نظرسنجی",
+      "titleEn": "Survey Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی نظرسنجی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی نظرسنجی",
+        "Survey Design",
+        "survey",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-qualitative-research",
+      "type": "specialized",
+      "titleFa": "تحقیق کیفی",
+      "titleEn": "Qualitative Research",
+      "descriptionFa": "مهارت حرفه‌ای «تحقیق کیفی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحقیق کیفی",
+        "Qualitative Research",
+        "qualitative",
+        "research"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-brand-strategy",
+      "type": "specialized",
+      "titleFa": "استراتژی برند",
+      "titleEn": "Brand Strategy",
+      "descriptionFa": "مهارت حرفه‌ای «استراتژی برند» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "استراتژی برند",
+        "Brand Strategy",
+        "brand",
+        "strategy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-positioning",
+      "type": "specialized",
+      "titleFa": "جایگاه‌سازی برند",
+      "titleEn": "Brand Positioning",
+      "descriptionFa": "مهارت حرفه‌ای «جایگاه‌سازی برند» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "جایگاه‌سازی برند",
+        "Brand Positioning",
+        "positioning"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-creative-briefing",
+      "type": "specialized",
+      "titleFa": "تدوین بریف خلاقه",
+      "titleEn": "Creative Briefing",
+      "descriptionFa": "مهارت حرفه‌ای «تدوین بریف خلاقه» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تدوین بریف خلاقه",
+        "Creative Briefing",
+        "creative",
+        "briefing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-public-relations",
+      "type": "specialized",
+      "titleFa": "روابط عمومی",
+      "titleEn": "Public Relations",
+      "descriptionFa": "مهارت حرفه‌ای «روابط عمومی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "روابط عمومی",
+        "Public Relations",
+        "public",
+        "relations"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-social-media-strategy",
+      "type": "specialized",
+      "titleFa": "استراتژی شبکه‌های اجتماعی",
+      "titleEn": "Social Media Strategy",
+      "descriptionFa": "مهارت حرفه‌ای «استراتژی شبکه‌های اجتماعی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "استراتژی شبکه‌های اجتماعی",
+        "Social Media Strategy",
+        "social",
+        "media",
+        "strategy"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-social-content-production",
+      "type": "specialized",
+      "titleFa": "تولید محتوای شبکه‌های اجتماعی",
+      "titleEn": "Social Content Production",
+      "descriptionFa": "مهارت حرفه‌ای «تولید محتوای شبکه‌های اجتماعی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تولید محتوای شبکه‌های اجتماعی",
+        "Social Content Production",
+        "social",
+        "content",
+        "production"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-community-management",
+      "type": "specialized",
+      "titleFa": "مدیریت کامیونیتی",
+      "titleEn": "Community Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت کامیونیتی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "مدیریت جامعه"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت کامیونیتی",
+        "Community Management",
+        "مدیریت جامعه",
+        "community",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-social-listening",
+      "type": "specialized",
+      "titleFa": "پایش گفت‌وگوهای اجتماعی",
+      "titleEn": "Social Listening",
+      "descriptionFa": "مهارت حرفه‌ای «پایش گفت‌وگوهای اجتماعی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پایش گفت‌وگوهای اجتماعی",
+        "Social Listening",
+        "social",
+        "listening"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-crm-operations",
+      "type": "specialized",
+      "titleFa": "عملیات CRM",
+      "titleEn": "CRM Operations",
+      "descriptionFa": "مهارت حرفه‌ای «عملیات CRM» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "عملیات CRM",
+        "CRM Operations",
+        "crm",
+        "operations"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-crm-automation",
+      "type": "specialized",
+      "titleFa": "اتوماسیون CRM",
+      "titleEn": "CRM Automation",
+      "descriptionFa": "مهارت حرفه‌ای «اتوماسیون CRM» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "اتوماسیون CRM",
+        "CRM Automation",
+        "crm",
+        "automation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-cohort-analysis",
+      "type": "specialized",
+      "titleFa": "تحلیل کوهورت",
+      "titleEn": "Cohort Analysis",
+      "descriptionFa": "مهارت حرفه‌ای «تحلیل کوهورت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل کوهورت",
+        "Cohort Analysis",
+        "cohort",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-contact-center-operations",
+      "type": "specialized",
+      "titleFa": "عملیات مرکز تماس",
+      "titleEn": "Contact Center Operations",
+      "descriptionFa": "مهارت حرفه‌ای «عملیات مرکز تماس» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "عملیات مرکز تماس",
+        "Contact Center Operations",
+        "contact",
+        "center",
+        "operations"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-workforce-management",
+      "type": "specialized",
+      "titleFa": "مدیریت نیروی عملیاتی",
+      "titleEn": "Workforce Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت نیروی عملیاتی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "WFM"
+      ],
+      "searchTerms": [
+        "مدیریت نیروی عملیاتی",
+        "Workforce Management",
+        "WFM",
+        "workforce",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-service-quality-monitoring",
+      "type": "specialized",
+      "titleFa": "پایش کیفیت خدمت",
+      "titleEn": "Service Quality Monitoring",
+      "descriptionFa": "مهارت حرفه‌ای «پایش کیفیت خدمت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پایش کیفیت خدمت",
+        "Service Quality Monitoring",
+        "service",
+        "quality",
+        "monitoring"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-account-management",
+      "type": "specialized",
+      "titleFa": "مدیریت حساب مشتری",
+      "titleEn": "Account Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت حساب مشتری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت حساب مشتری",
+        "Account Management",
+        "account",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-account-health-analysis",
+      "type": "specialized",
+      "titleFa": "تحلیل سلامت حساب",
+      "titleEn": "Account Health Analysis",
+      "descriptionFa": "مهارت حرفه‌ای «تحلیل سلامت حساب» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل سلامت حساب",
+        "Account Health Analysis",
+        "account",
+        "health",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-sales-discovery",
+      "type": "specialized",
+      "titleFa": "کشف مسئله فروش",
+      "titleEn": "Sales Discovery",
+      "descriptionFa": "مهارت حرفه‌ای «کشف مسئله فروش» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "کشف مسئله فروش",
+        "Sales Discovery",
+        "sales",
+        "discovery"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-consultative-selling",
+      "type": "specialized",
+      "titleFa": "فروش مشاوره‌ای",
+      "titleEn": "Consultative Selling",
+      "descriptionFa": "مهارت حرفه‌ای «فروش مشاوره‌ای» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "فروش مشاوره‌ای",
+        "Consultative Selling",
+        "consultative",
+        "selling"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-proposal-writing",
+      "type": "specialized",
+      "titleFa": "پیشنهادنویسی تجاری",
+      "titleEn": "Business Proposal Writing",
+      "descriptionFa": "مهارت حرفه‌ای «پیشنهادنویسی تجاری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پیشنهادنویسی تجاری",
+        "Business Proposal Writing",
+        "proposal",
+        "writing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-contract-management",
+      "type": "specialized",
+      "titleFa": "مدیریت قرارداد",
+      "titleEn": "Contract Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت قرارداد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت قرارداد",
+        "Contract Management",
+        "contract",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-partnership-development",
+      "type": "specialized",
+      "titleFa": "توسعه مشارکت",
+      "titleEn": "Partnership Development",
+      "descriptionFa": "مهارت حرفه‌ای «توسعه مشارکت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "توسعه مشارکت",
+        "Partnership Development",
+        "partnership",
+        "development"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-field-sales",
+      "type": "specialized",
+      "titleFa": "فروش میدانی",
+      "titleEn": "Field Sales",
+      "descriptionFa": "مهارت حرفه‌ای «فروش میدانی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "فروش میدانی",
+        "Field Sales",
+        "field",
+        "sales"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-territory-analysis",
+      "type": "specialized",
+      "titleFa": "تحلیل منطقه فروش",
+      "titleEn": "Sales Territory Analysis",
+      "descriptionFa": "مهارت حرفه‌ای «تحلیل منطقه فروش» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل منطقه فروش",
+        "Sales Territory Analysis",
+        "territory",
+        "analysis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-customer-verification",
+      "type": "specialized",
+      "titleFa": "احراز مشتری",
+      "titleEn": "Customer Verification",
+      "descriptionFa": "مهارت حرفه‌ای «احراز مشتری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "KYC"
+      ],
+      "searchTerms": [
+        "احراز مشتری",
+        "Customer Verification",
+        "KYC",
+        "customer",
+        "verification"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-trade-documentation",
+      "type": "specialized",
+      "titleFa": "اسناد بازرگانی",
+      "titleEn": "Trade Documentation",
+      "descriptionFa": "مهارت حرفه‌ای «اسناد بازرگانی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "اسناد بازرگانی",
+        "Trade Documentation",
+        "trade",
+        "documentation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-incoterms",
+      "type": "specialized",
+      "titleFa": "اینکوترمز",
+      "titleEn": "Incoterms",
+      "descriptionFa": "مهارت حرفه‌ای «اینکوترمز» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "اینکوترمز",
+        "Incoterms",
+        "incoterms"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-logistics-planning",
+      "type": "specialized",
+      "titleFa": "برنامه‌ریزی لجستیک",
+      "titleEn": "Logistics Planning",
+      "descriptionFa": "مهارت حرفه‌ای «برنامه‌ریزی لجستیک» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "برنامه‌ریزی لجستیک",
+        "Logistics Planning",
+        "logistics",
+        "planning"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-capacity-planning",
+      "type": "specialized",
+      "titleFa": "برنامه‌ریزی ظرفیت",
+      "titleEn": "Capacity Planning",
+      "descriptionFa": "مهارت حرفه‌ای «برنامه‌ریزی ظرفیت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "برنامه‌ریزی ظرفیت",
+        "Capacity Planning",
+        "capacity",
+        "planning"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-inventory-operations",
+      "type": "specialized",
+      "titleFa": "عملیات موجودی",
+      "titleEn": "Inventory Operations",
+      "descriptionFa": "مهارت حرفه‌ای «عملیات موجودی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "عملیات موجودی",
+        "Inventory Operations",
+        "inventory",
+        "operations"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-sourcing",
+      "type": "specialized",
+      "titleFa": "جست‌وجوی استعداد",
+      "titleEn": "Talent Sourcing",
+      "descriptionFa": "مهارت حرفه‌ای «جست‌وجوی استعداد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "جست‌وجوی استعداد",
+        "Talent Sourcing",
+        "sourcing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-structured-interviewing",
+      "type": "specialized",
+      "titleFa": "مصاحبه ساختاریافته",
+      "titleEn": "Structured Interviewing",
+      "descriptionFa": "مهارت حرفه‌ای «مصاحبه ساختاریافته» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مصاحبه ساختاریافته",
+        "Structured Interviewing",
+        "structured",
+        "interviewing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-evidence-evaluation",
+      "type": "specialized",
+      "titleFa": "ارزیابی شواهد",
+      "titleEn": "Evidence Evaluation",
+      "descriptionFa": "مهارت حرفه‌ای «ارزیابی شواهد» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "ارزیابی شواهد",
+        "Evidence Evaluation",
+        "evidence",
+        "evaluation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-labor-law",
+      "type": "specialized",
+      "titleFa": "قانون کار",
+      "titleEn": "Labor Law",
+      "descriptionFa": "مهارت حرفه‌ای «قانون کار» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "قانون کار",
+        "Labor Law",
+        "labor",
+        "law"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-employee-relations",
+      "type": "specialized",
+      "titleFa": "روابط کارکنان",
+      "titleEn": "Employee Relations",
+      "descriptionFa": "مهارت حرفه‌ای «روابط کارکنان» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "روابط کارکنان",
+        "Employee Relations",
+        "employee",
+        "relations"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-compensation",
+      "type": "specialized",
+      "titleFa": "جبران خدمات",
+      "titleEn": "Compensation",
+      "descriptionFa": "مهارت حرفه‌ای «جبران خدمات» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "جبران خدمات",
+        "Compensation",
+        "compensation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-hr-operations",
+      "type": "specialized",
+      "titleFa": "عملیات منابع انسانی",
+      "titleEn": "HR Operations",
+      "descriptionFa": "مهارت حرفه‌ای «عملیات منابع انسانی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "عملیات منابع انسانی",
+        "HR Operations",
+        "hr",
+        "operations"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-payroll-processing",
+      "type": "specialized",
+      "titleFa": "پردازش حقوق",
+      "titleEn": "Payroll Processing",
+      "descriptionFa": "مهارت حرفه‌ای «پردازش حقوق» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "پردازش حقوق",
+        "Payroll Processing",
+        "payroll",
+        "processing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-user-research",
+      "type": "specialized",
+      "titleFa": "تحقیق کاربر",
+      "titleEn": "User Research",
+      "descriptionFa": "مهارت حرفه‌ای «تحقیق کاربر» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحقیق کاربر",
+        "User Research",
+        "user",
+        "research"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-interaction-design",
+      "type": "specialized",
+      "titleFa": "طراحی تعامل",
+      "titleEn": "Interaction Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی تعامل» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی تعامل",
+        "Interaction Design",
+        "interaction",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-user-interface-design",
+      "type": "specialized",
+      "titleFa": "طراحی رابط کاربری",
+      "titleEn": "User Interface Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی رابط کاربری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [
+        "طراحی UI"
+      ],
+      "aliasesEn": [
+        "UI design"
+      ],
+      "searchTerms": [
+        "طراحی رابط کاربری",
+        "User Interface Design",
+        "طراحی UI",
+        "UI design",
+        "user",
+        "interface",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [
+        "specialized-interaction-design",
+        "specialized-design-systems"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-prototyping",
+      "type": "specialized",
+      "titleFa": "نمونه‌سازی",
+      "titleEn": "Prototyping",
+      "descriptionFa": "مهارت حرفه‌ای «نمونه‌سازی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "نمونه‌سازی",
+        "Prototyping",
+        "prototyping"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-design-systems",
+      "type": "specialized",
+      "titleFa": "سیستم طراحی",
+      "titleEn": "Design Systems",
+      "descriptionFa": "مهارت حرفه‌ای «سیستم طراحی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "سیستم طراحی",
+        "Design Systems",
+        "design",
+        "systems"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-product-discovery",
+      "type": "specialized",
+      "titleFa": "کشف محصول",
+      "titleEn": "Product Discovery",
+      "descriptionFa": "مهارت حرفه‌ای «کشف محصول» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "کشف محصول",
+        "Product Discovery",
+        "product",
+        "discovery"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-prioritization",
+      "type": "specialized",
+      "titleFa": "اولویت‌بندی محصول",
+      "titleEn": "Product Prioritization",
+      "descriptionFa": "مهارت حرفه‌ای «اولویت‌بندی محصول» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "اولویت‌بندی محصول",
+        "Product Prioritization",
+        "prioritization"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-roadmap-management",
+      "type": "specialized",
+      "titleFa": "مدیریت نقشه راه",
+      "titleEn": "Roadmap Management",
+      "descriptionFa": "مهارت حرفه‌ای «مدیریت نقشه راه» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدیریت نقشه راه",
+        "Roadmap Management",
+        "roadmap",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-product-analytics",
+      "type": "specialized",
+      "titleFa": "تحلیل محصول",
+      "titleEn": "Product Analytics",
+      "descriptionFa": "مهارت حرفه‌ای «تحلیل محصول» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تحلیل محصول",
+        "Product Analytics",
+        "product",
+        "analytics"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-accounting",
+      "type": "specialized",
+      "titleFa": "حسابداری",
+      "titleEn": "Accounting",
+      "descriptionFa": "مهارت حرفه‌ای «حسابداری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "حسابداری",
+        "Accounting",
+        "accounting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-financial-reporting",
+      "type": "specialized",
+      "titleFa": "گزارشگری مالی",
+      "titleEn": "Financial Reporting",
+      "descriptionFa": "مهارت حرفه‌ای «گزارشگری مالی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "گزارشگری مالی",
+        "Financial Reporting",
+        "financial",
+        "reporting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-internal-audit",
+      "type": "specialized",
+      "titleFa": "حسابرسی داخلی",
+      "titleEn": "Internal Audit",
+      "descriptionFa": "مهارت حرفه‌ای «حسابرسی داخلی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "حسابرسی داخلی",
+        "Internal Audit",
+        "internal",
+        "audit"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-internal-controls",
+      "type": "specialized",
+      "titleFa": "کنترل داخلی",
+      "titleEn": "Internal Controls",
+      "descriptionFa": "مهارت حرفه‌ای «کنترل داخلی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "کنترل داخلی",
+        "Internal Controls",
+        "internal",
+        "controls"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-tax-accounting",
+      "type": "specialized",
+      "titleFa": "حسابداری مالیاتی",
+      "titleEn": "Tax Accounting",
+      "descriptionFa": "مهارت حرفه‌ای «حسابداری مالیاتی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "حسابداری مالیاتی",
+        "Tax Accounting",
+        "tax",
+        "accounting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-treasury-accounting",
+      "type": "specialized",
+      "titleFa": "حسابداری خزانه",
+      "titleEn": "Treasury Accounting",
+      "descriptionFa": "مهارت حرفه‌ای «حسابداری خزانه» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "حسابداری خزانه",
+        "Treasury Accounting",
+        "treasury",
+        "accounting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-budgeting",
+      "type": "specialized",
+      "titleFa": "بودجه‌ریزی",
+      "titleEn": "Budgeting",
+      "descriptionFa": "مهارت حرفه‌ای «بودجه‌ریزی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "بودجه‌ریزی",
+        "Budgeting",
+        "budgeting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-reconciliation",
+      "type": "specialized",
+      "titleFa": "تطبیق حساب",
+      "titleEn": "Account Reconciliation",
+      "descriptionFa": "مهارت حرفه‌ای «تطبیق حساب» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تطبیق حساب",
+        "Account Reconciliation",
+        "reconciliation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-regulatory-compliance",
+      "type": "specialized",
+      "titleFa": "انطباق مقرراتی",
+      "titleEn": "Regulatory Compliance",
+      "descriptionFa": "مهارت حرفه‌ای «انطباق مقرراتی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "انطباق مقرراتی",
+        "Regulatory Compliance",
+        "regulatory",
+        "compliance"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-visual-design",
+      "type": "specialized",
+      "titleFa": "طراحی بصری",
+      "titleEn": "Visual Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی بصری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی بصری",
+        "Visual Design",
+        "visual",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-typography",
+      "type": "specialized",
+      "titleFa": "تایپوگرافی",
+      "titleEn": "Typography",
+      "descriptionFa": "مهارت حرفه‌ای «تایپوگرافی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تایپوگرافی",
+        "Typography",
+        "typography"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-layout-design",
+      "type": "specialized",
+      "titleFa": "صفحه‌آرایی",
+      "titleEn": "Layout Design",
+      "descriptionFa": "مهارت حرفه‌ای «صفحه‌آرایی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "صفحه‌آرایی",
+        "Layout Design",
+        "layout",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-print-production",
+      "type": "specialized",
+      "titleFa": "آماده‌سازی چاپ",
+      "titleEn": "Print Production",
+      "descriptionFa": "مهارت حرفه‌ای «آماده‌سازی چاپ» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "آماده‌سازی چاپ",
+        "Print Production",
+        "print",
+        "production"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-video-editing",
+      "type": "specialized",
+      "titleFa": "تدوین ویدئو",
+      "titleEn": "Video Editing",
+      "descriptionFa": "مهارت حرفه‌ای «تدوین ویدئو» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تدوین ویدئو",
+        "Video Editing",
+        "video",
+        "editing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-visual-storytelling",
+      "type": "specialized",
+      "titleFa": "روایت‌گری بصری",
+      "titleEn": "Visual Storytelling",
+      "descriptionFa": "مهارت حرفه‌ای «روایت‌گری بصری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "روایت‌گری بصری",
+        "Visual Storytelling",
+        "visual",
+        "storytelling"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-audio-editing",
+      "type": "specialized",
+      "titleFa": "تدوین صدا",
+      "titleEn": "Audio Editing",
+      "descriptionFa": "مهارت حرفه‌ای «تدوین صدا» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تدوین صدا",
+        "Audio Editing",
+        "audio",
+        "editing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-color-grading",
+      "type": "specialized",
+      "titleFa": "اصلاح رنگ",
+      "titleEn": "Color Grading",
+      "descriptionFa": "مهارت حرفه‌ای «اصلاح رنگ» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "اصلاح رنگ",
+        "Color Grading",
+        "color",
+        "grading"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-illustration",
+      "type": "specialized",
+      "titleFa": "تصویرسازی",
+      "titleEn": "Illustration",
+      "descriptionFa": "مهارت حرفه‌ای «تصویرسازی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "تصویرسازی",
+        "Illustration",
+        "illustration"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-digital-painting",
+      "type": "specialized",
+      "titleFa": "نقاشی دیجیتال",
+      "titleEn": "Digital Painting",
+      "descriptionFa": "مهارت حرفه‌ای «نقاشی دیجیتال» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "نقاشی دیجیتال",
+        "Digital Painting",
+        "digital",
+        "painting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-character-design",
+      "type": "specialized",
+      "titleFa": "طراحی کاراکتر",
+      "titleEn": "Character Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی کاراکتر» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی کاراکتر",
+        "Character Design",
+        "character",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-three-dimensional-modeling",
+      "type": "specialized",
+      "titleFa": "مدل‌سازی سه‌بعدی",
+      "titleEn": "3D Modeling",
+      "descriptionFa": "مهارت حرفه‌ای «مدل‌سازی سه‌بعدی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "مدل‌سازی سه‌بعدی",
+        "3D Modeling",
+        "three",
+        "dimensional",
+        "modeling"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [
+        "specialized-texturing",
+        "specialized-lighting"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-texturing",
+      "type": "specialized",
+      "titleFa": "بافت‌پردازی",
+      "titleEn": "Texturing",
+      "descriptionFa": "مهارت حرفه‌ای «بافت‌پردازی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "بافت‌پردازی",
+        "Texturing",
+        "texturing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-lighting",
+      "type": "specialized",
+      "titleFa": "نورپردازی سه‌بعدی",
+      "titleEn": "3D Lighting",
+      "descriptionFa": "مهارت حرفه‌ای «نورپردازی سه‌بعدی» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "نورپردازی سه‌بعدی",
+        "3D Lighting",
+        "lighting"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-rendering",
+      "type": "specialized",
+      "titleFa": "رندرینگ",
+      "titleEn": "Rendering",
+      "descriptionFa": "مهارت حرفه‌ای «رندرینگ» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "رندرینگ",
+        "Rendering",
+        "rendering"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-motion-design",
+      "type": "specialized",
+      "titleFa": "طراحی حرکت",
+      "titleEn": "Motion Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی حرکت» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی حرکت",
+        "Motion Design",
+        "motion",
+        "design"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [
+        "specialized-visual-design"
+      ],
+      "relatedSkillIds": [
+        "specialized-animation"
+      ],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-animation",
+      "type": "specialized",
+      "titleFa": "انیمیشن",
+      "titleEn": "Animation",
+      "descriptionFa": "مهارت حرفه‌ای «انیمیشن» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "انیمیشن",
+        "Animation",
+        "animation"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-compositing",
+      "type": "specialized",
+      "titleFa": "کامپوزیت تصویر",
+      "titleEn": "Compositing",
+      "descriptionFa": "مهارت حرفه‌ای «کامپوزیت تصویر» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "کامپوزیت تصویر",
+        "Compositing",
+        "compositing"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-brand-identity",
+      "type": "specialized",
+      "titleFa": "طراحی هویت بصری",
+      "titleEn": "Visual Identity Design",
+      "descriptionFa": "مهارت حرفه‌ای «طراحی هویت بصری» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "طراحی هویت بصری",
+        "Visual Identity Design",
+        "brand",
+        "identity"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "specialized-brand-governance",
+      "type": "specialized",
+      "titleFa": "حاکمیت برند",
+      "titleEn": "Brand Governance",
+      "descriptionFa": "مهارت حرفه‌ای «حاکمیت برند» برای انجام وظایف تخصصی این حوزه.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "حاکمیت برند",
+        "Brand Governance",
+        "brand",
+        "governance"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-git",
+      "type": "tool",
+      "titleFa": "Git",
+      "titleEn": "Git",
+      "descriptionFa": "ثبت و مدیریت نسخه‌های کد و همکاری کنترل‌شده روی تغییرات.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "version control"
+      ],
+      "searchTerms": [
+        "Git",
+        "version control",
+        "git"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-docker",
+      "type": "tool",
+      "titleFa": "Docker",
+      "titleEn": "Docker",
+      "descriptionFa": "توانایی کار عملی با Docker در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Docker",
+        "docker"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-postman",
+      "type": "tool",
+      "titleFa": "Postman",
+      "titleEn": "Postman",
+      "descriptionFa": "توانایی کار عملی با Postman در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Postman",
+        "postman"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-sql",
+      "type": "tool",
+      "titleFa": "SQL",
+      "titleEn": "SQL",
+      "descriptionFa": "پرس‌وجو و کار با داده‌های ساخت‌یافته در پایگاه داده.",
+      "aliasesFa": [
+        "اس کیو ال"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "SQL",
+        "اس کیو ال",
+        "sql"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-postgresql",
+      "type": "tool",
+      "titleFa": "PostgreSQL",
+      "titleEn": "PostgreSQL",
+      "descriptionFa": "توانایی کار عملی با PostgreSQL در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "Postgres"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "PostgreSQL",
+        "Postgres",
+        "postgresql"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-sql-server",
+      "type": "tool",
+      "titleFa": "Microsoft SQL Server",
+      "titleEn": "Microsoft SQL Server",
+      "descriptionFa": "توانایی کار عملی با Microsoft SQL Server در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "SQL Server"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Microsoft SQL Server",
+        "SQL Server",
+        "sql",
+        "server"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-mysql",
+      "type": "tool",
+      "titleFa": "MySQL",
+      "titleEn": "MySQL",
+      "descriptionFa": "توانایی کار عملی با MySQL در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "MySQL",
+        "mysql"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-redis",
+      "type": "tool",
+      "titleFa": "Redis",
+      "titleEn": "Redis",
+      "descriptionFa": "توانایی کار عملی با Redis در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Redis",
+        "redis"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-mongodb",
+      "type": "tool",
+      "titleFa": "MongoDB",
+      "titleEn": "MongoDB",
+      "descriptionFa": "توانایی کار عملی با MongoDB در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "MongoDB",
+        "mongodb"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-kafka",
+      "type": "tool",
+      "titleFa": "Apache Kafka",
+      "titleEn": "Apache Kafka",
+      "descriptionFa": "توانایی کار عملی با Apache Kafka در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "کافکا"
+      ],
+      "aliasesEn": [
+        "Kafka"
+      ],
+      "searchTerms": [
+        "Apache Kafka",
+        "کافکا",
+        "Kafka",
+        "kafka"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-csharp",
+      "type": "tool",
+      "titleFa": "C#",
+      "titleEn": "C#",
+      "descriptionFa": "توانایی کار عملی با C# در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "سی شارپ"
+      ],
+      "aliasesEn": [
+        "C Sharp"
+      ],
+      "searchTerms": [
+        "C#",
+        "سی شارپ",
+        "C Sharp",
+        "csharp"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-aspnet-core",
+      "type": "tool",
+      "titleFa": "ASP.NET Core",
+      "titleEn": "ASP.NET Core",
+      "descriptionFa": "توانایی کار عملی با ASP.NET Core در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "ASP.NET Core",
+        "aspnet",
+        "core"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-entity-framework",
+      "type": "tool",
+      "titleFa": "Entity Framework Core",
+      "titleEn": "Entity Framework Core",
+      "descriptionFa": "توانایی کار عملی با Entity Framework Core در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "EF Core"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Entity Framework Core",
+        "EF Core",
+        "entity",
+        "framework"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-go",
+      "type": "tool",
+      "titleFa": "Go",
+      "titleEn": "Go",
+      "descriptionFa": "توانایی کار عملی با Go در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "گولنگ"
+      ],
+      "aliasesEn": [
+        "Golang"
+      ],
+      "searchTerms": [
+        "Go",
+        "گولنگ",
+        "Golang",
+        "go"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-java",
+      "type": "tool",
+      "titleFa": "Java",
+      "titleEn": "Java",
+      "descriptionFa": "توانایی کار عملی با Java در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "جاوا"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Java",
+        "جاوا",
+        "java"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-spring-boot",
+      "type": "tool",
+      "titleFa": "Spring Boot",
+      "titleEn": "Spring Boot",
+      "descriptionFa": "توانایی کار عملی با Spring Boot در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Spring Boot",
+        "spring",
+        "boot"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-jpa",
+      "type": "tool",
+      "titleFa": "JPA",
+      "titleEn": "Java Persistence API",
+      "descriptionFa": "توانایی کار عملی با JPA در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "JPA",
+        "Java Persistence API",
+        "jpa"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-nodejs",
+      "type": "tool",
+      "titleFa": "Node.js",
+      "titleEn": "Node.js",
+      "descriptionFa": "توانایی کار عملی با Node.js در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "نود جی‌اس"
+      ],
+      "aliasesEn": [
+        "Node"
+      ],
+      "searchTerms": [
+        "Node.js",
+        "نود جی‌اس",
+        "Node",
+        "nodejs"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-typescript",
+      "type": "tool",
+      "titleFa": "TypeScript",
+      "titleEn": "TypeScript",
+      "descriptionFa": "توانایی کار عملی با TypeScript در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "تایپ‌اسکریپت"
+      ],
+      "aliasesEn": [
+        "TS"
+      ],
+      "searchTerms": [
+        "TypeScript",
+        "تایپ‌اسکریپت",
+        "TS",
+        "typescript"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-php",
+      "type": "tool",
+      "titleFa": "PHP",
+      "titleEn": "PHP",
+      "descriptionFa": "توانایی کار عملی با PHP در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "PHP",
+        "php"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-laravel",
+      "type": "tool",
+      "titleFa": "Laravel",
+      "titleEn": "Laravel",
+      "descriptionFa": "توانایی کار عملی با Laravel در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "لاراول"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Laravel",
+        "لاراول",
+        "laravel"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-python",
+      "type": "tool",
+      "titleFa": "Python",
+      "titleEn": "Python",
+      "descriptionFa": "توانایی کار عملی با Python در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "پایتون"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Python",
+        "پایتون",
+        "python"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-django",
+      "type": "tool",
+      "titleFa": "Django",
+      "titleEn": "Django",
+      "descriptionFa": "توانایی کار عملی با Django در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "جنگو"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Django",
+        "جنگو",
+        "django"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-celery",
+      "type": "tool",
+      "titleFa": "Celery",
+      "titleEn": "Celery",
+      "descriptionFa": "توانایی کار عملی با Celery در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Celery",
+        "celery"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-angular",
+      "type": "tool",
+      "titleFa": "Angular",
+      "titleEn": "Angular",
+      "descriptionFa": "توانایی کار عملی با Angular در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "انگولار"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Angular",
+        "انگولار",
+        "angular"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-rxjs",
+      "type": "tool",
+      "titleFa": "RxJS",
+      "titleEn": "RxJS",
+      "descriptionFa": "توانایی کار عملی با RxJS در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "RxJS",
+        "rxjs"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-react",
+      "type": "tool",
+      "titleFa": "React",
+      "titleEn": "React",
+      "descriptionFa": "توانایی کار عملی با React در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "ری‌اکت"
+      ],
+      "aliasesEn": [
+        "React.js"
+      ],
+      "searchTerms": [
+        "React",
+        "ری‌اکت",
+        "React.js",
+        "react"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-nextjs",
+      "type": "tool",
+      "titleFa": "Next.js",
+      "titleEn": "Next.js",
+      "descriptionFa": "توانایی کار عملی با Next.js در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "نکست جی‌اس"
+      ],
+      "aliasesEn": [
+        "Next"
+      ],
+      "searchTerms": [
+        "Next.js",
+        "نکست جی‌اس",
+        "Next",
+        "nextjs"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-vue",
+      "type": "tool",
+      "titleFa": "Vue",
+      "titleEn": "Vue",
+      "descriptionFa": "توانایی کار عملی با Vue در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "ویو"
+      ],
+      "aliasesEn": [
+        "Vue.js"
+      ],
+      "searchTerms": [
+        "Vue",
+        "ویو",
+        "Vue.js",
+        "vue"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-nuxt",
+      "type": "tool",
+      "titleFa": "Nuxt",
+      "titleEn": "Nuxt",
+      "descriptionFa": "توانایی کار عملی با Nuxt در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "ناکست"
+      ],
+      "aliasesEn": [
+        "Nuxt.js"
+      ],
+      "searchTerms": [
+        "Nuxt",
+        "ناکست",
+        "Nuxt.js",
+        "nuxt"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-blazor",
+      "type": "tool",
+      "titleFa": "Blazor",
+      "titleEn": "Blazor",
+      "descriptionFa": "توانایی کار عملی با Blazor در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Blazor",
+        "blazor"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-kotlin",
+      "type": "tool",
+      "titleFa": "Kotlin",
+      "titleEn": "Kotlin",
+      "descriptionFa": "توانایی کار عملی با Kotlin در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "کاتلین"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Kotlin",
+        "کاتلین",
+        "kotlin"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-android-sdk",
+      "type": "tool",
+      "titleFa": "Android SDK",
+      "titleEn": "Android SDK",
+      "descriptionFa": "توانایی کار عملی با Android SDK در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Android SDK",
+        "android",
+        "sdk"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-jetpack-compose",
+      "type": "tool",
+      "titleFa": "Jetpack Compose",
+      "titleEn": "Jetpack Compose",
+      "descriptionFa": "توانایی کار عملی با Jetpack Compose در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "Compose"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Jetpack Compose",
+        "Compose",
+        "jetpack",
+        "compose"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-gradle",
+      "type": "tool",
+      "titleFa": "Gradle",
+      "titleEn": "Gradle",
+      "descriptionFa": "توانایی کار عملی با Gradle در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Gradle",
+        "gradle"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-linux",
+      "type": "tool",
+      "titleFa": "Linux",
+      "titleEn": "Linux",
+      "descriptionFa": "توانایی کار عملی با Linux در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "لینوکس"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Linux",
+        "لینوکس",
+        "linux"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-kubernetes",
+      "type": "tool",
+      "titleFa": "Kubernetes",
+      "titleEn": "Kubernetes",
+      "descriptionFa": "توانایی کار عملی با Kubernetes در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "کوبرنتیز"
+      ],
+      "aliasesEn": [
+        "K8s"
+      ],
+      "searchTerms": [
+        "Kubernetes",
+        "کوبرنتیز",
+        "K8s",
+        "kubernetes"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-terraform",
+      "type": "tool",
+      "titleFa": "Terraform",
+      "titleEn": "Terraform",
+      "descriptionFa": "توانایی کار عملی با Terraform در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Terraform",
+        "terraform"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-helm",
+      "type": "tool",
+      "titleFa": "Helm",
+      "titleEn": "Helm",
+      "descriptionFa": "توانایی کار عملی با Helm در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Helm",
+        "helm"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-argocd",
+      "type": "tool",
+      "titleFa": "Argo CD",
+      "titleEn": "Argo CD",
+      "descriptionFa": "توانایی کار عملی با Argo CD در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "آرگو سی‌دی"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Argo CD",
+        "آرگو سی‌دی",
+        "argocd"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-prometheus",
+      "type": "tool",
+      "titleFa": "Prometheus",
+      "titleEn": "Prometheus",
+      "descriptionFa": "توانایی کار عملی با Prometheus در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Prometheus",
+        "prometheus"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-grafana",
+      "type": "tool",
+      "titleFa": "Grafana",
+      "titleEn": "Grafana",
+      "descriptionFa": "توانایی کار عملی با Grafana در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Grafana",
+        "grafana"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-opentelemetry",
+      "type": "tool",
+      "titleFa": "OpenTelemetry",
+      "titleEn": "OpenTelemetry",
+      "descriptionFa": "توانایی کار عملی با OpenTelemetry در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "OTel"
+      ],
+      "searchTerms": [
+        "OpenTelemetry",
+        "OTel",
+        "opentelemetry"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-powershell",
+      "type": "tool",
+      "titleFa": "PowerShell",
+      "titleEn": "PowerShell",
+      "descriptionFa": "توانایی کار عملی با PowerShell در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "PowerShell",
+        "powershell"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-windows-server",
+      "type": "tool",
+      "titleFa": "Windows Server",
+      "titleEn": "Windows Server",
+      "descriptionFa": "توانایی کار عملی با Windows Server در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Windows Server",
+        "windows",
+        "server"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-active-directory",
+      "type": "tool",
+      "titleFa": "Active Directory",
+      "titleEn": "Active Directory",
+      "descriptionFa": "توانایی کار عملی با Active Directory در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "AD"
+      ],
+      "searchTerms": [
+        "Active Directory",
+        "AD",
+        "active",
+        "directory"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-entra",
+      "type": "tool",
+      "titleFa": "Microsoft Entra",
+      "titleEn": "Microsoft Entra",
+      "descriptionFa": "توانایی کار عملی با Microsoft Entra در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "Entra ID",
+        "Azure AD"
+      ],
+      "searchTerms": [
+        "Microsoft Entra",
+        "Entra ID",
+        "Azure AD",
+        "entra"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-microsoft-365",
+      "type": "tool",
+      "titleFa": "Microsoft 365",
+      "titleEn": "Microsoft 365",
+      "descriptionFa": "توانایی کار عملی با Microsoft 365 در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "آفیس ۳۶۵"
+      ],
+      "aliasesEn": [
+        "Office 365"
+      ],
+      "searchTerms": [
+        "Microsoft 365",
+        "آفیس ۳۶۵",
+        "Office 365",
+        "microsoft",
+        "365"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-cisco-ios",
+      "type": "tool",
+      "titleFa": "Cisco IOS",
+      "titleEn": "Cisco IOS",
+      "descriptionFa": "توانایی کار عملی با Cisco IOS در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Cisco IOS",
+        "cisco",
+        "ios"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-wireshark",
+      "type": "tool",
+      "titleFa": "Wireshark",
+      "titleEn": "Wireshark",
+      "descriptionFa": "توانایی کار عملی با Wireshark در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Wireshark",
+        "wireshark"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-zabbix",
+      "type": "tool",
+      "titleFa": "Zabbix",
+      "titleEn": "Zabbix",
+      "descriptionFa": "توانایی کار عملی با Zabbix در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Zabbix",
+        "zabbix"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-burp",
+      "type": "tool",
+      "titleFa": "Burp Suite",
+      "titleEn": "Burp Suite",
+      "descriptionFa": "توانایی کار عملی با Burp Suite در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Burp Suite",
+        "burp"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-nmap",
+      "type": "tool",
+      "titleFa": "Nmap",
+      "titleEn": "Nmap",
+      "descriptionFa": "توانایی کار عملی با Nmap در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Nmap",
+        "nmap"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-metasploit",
+      "type": "tool",
+      "titleFa": "Metasploit",
+      "titleEn": "Metasploit",
+      "descriptionFa": "توانایی کار عملی با Metasploit در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Metasploit",
+        "metasploit"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-sentinel",
+      "type": "tool",
+      "titleFa": "Microsoft Sentinel",
+      "titleEn": "Microsoft Sentinel",
+      "descriptionFa": "توانایی کار عملی با Microsoft Sentinel در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Microsoft Sentinel",
+        "sentinel"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-splunk",
+      "type": "tool",
+      "titleFa": "Splunk",
+      "titleEn": "Splunk",
+      "descriptionFa": "توانایی کار عملی با Splunk در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Splunk",
+        "splunk"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-defender",
+      "type": "tool",
+      "titleFa": "Microsoft Defender",
+      "titleEn": "Microsoft Defender",
+      "descriptionFa": "توانایی کار عملی با Microsoft Defender در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Microsoft Defender",
+        "defender"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-playwright",
+      "type": "tool",
+      "titleFa": "Playwright",
+      "titleEn": "Playwright",
+      "descriptionFa": "توانایی کار عملی با Playwright در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Playwright",
+        "playwright"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-jira",
+      "type": "tool",
+      "titleFa": "Jira",
+      "titleEn": "Jira",
+      "descriptionFa": "توانایی کار عملی با Jira در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "جیرا"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Jira",
+        "جیرا",
+        "jira"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-jira-service-management",
+      "type": "tool",
+      "titleFa": "Jira Service Management",
+      "titleEn": "Jira Service Management",
+      "descriptionFa": "توانایی کار عملی با Jira Service Management در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "JSM"
+      ],
+      "searchTerms": [
+        "Jira Service Management",
+        "JSM",
+        "jira",
+        "service",
+        "management"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-microsoft-excel",
+      "type": "tool",
+      "titleFa": "Microsoft Excel",
+      "titleEn": "Microsoft Excel",
+      "descriptionFa": "کار با داده، فرمول، جدول و گزارش در Microsoft Excel.",
+      "aliasesFa": [
+        "اکسل"
+      ],
+      "aliasesEn": [
+        "Excel"
+      ],
+      "searchTerms": [
+        "Microsoft Excel",
+        "اکسل",
+        "Excel",
+        "microsoft",
+        "excel"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-google-sheets",
+      "type": "tool",
+      "titleFa": "Google Sheets",
+      "titleEn": "Google Sheets",
+      "descriptionFa": "توانایی کار عملی با Google Sheets در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "گوگل شیت"
+      ],
+      "aliasesEn": [
+        "Sheets"
+      ],
+      "searchTerms": [
+        "Google Sheets",
+        "گوگل شیت",
+        "Sheets",
+        "google",
+        "sheets"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-power-bi",
+      "type": "tool",
+      "titleFa": "Microsoft Power BI",
+      "titleEn": "Microsoft Power BI",
+      "descriptionFa": "توانایی کار عملی با Microsoft Power BI در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "پاور بی‌آی"
+      ],
+      "aliasesEn": [
+        "Power BI"
+      ],
+      "searchTerms": [
+        "Microsoft Power BI",
+        "پاور بی‌آی",
+        "Power BI",
+        "power",
+        "bi"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-power-query",
+      "type": "tool",
+      "titleFa": "Power Query",
+      "titleEn": "Power Query",
+      "descriptionFa": "توانایی کار عملی با Power Query در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Power Query",
+        "power",
+        "query"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-dax",
+      "type": "tool",
+      "titleFa": "DAX",
+      "titleEn": "Data Analysis Expressions",
+      "descriptionFa": "توانایی کار عملی با DAX در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "DAX",
+        "Data Analysis Expressions",
+        "dax"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-r",
+      "type": "tool",
+      "titleFa": "R",
+      "titleEn": "R",
+      "descriptionFa": "توانایی کار عملی با R در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "R",
+        "r"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-spss",
+      "type": "tool",
+      "titleFa": "IBM SPSS",
+      "titleEn": "IBM SPSS",
+      "descriptionFa": "توانایی کار عملی با IBM SPSS در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "اس‌پی‌اس‌اس"
+      ],
+      "aliasesEn": [
+        "SPSS"
+      ],
+      "searchTerms": [
+        "IBM SPSS",
+        "اس‌پی‌اس‌اس",
+        "SPSS",
+        "spss"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-pandas",
+      "type": "tool",
+      "titleFa": "Pandas",
+      "titleEn": "Pandas",
+      "descriptionFa": "توانایی کار عملی با Pandas در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Pandas",
+        "pandas"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-airflow",
+      "type": "tool",
+      "titleFa": "Apache Airflow",
+      "titleEn": "Apache Airflow",
+      "descriptionFa": "توانایی کار عملی با Apache Airflow در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "ایرفلو"
+      ],
+      "aliasesEn": [
+        "Airflow"
+      ],
+      "searchTerms": [
+        "Apache Airflow",
+        "ایرفلو",
+        "Airflow",
+        "airflow"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-dbt",
+      "type": "tool",
+      "titleFa": "dbt",
+      "titleEn": "dbt",
+      "descriptionFa": "توانایی کار عملی با dbt در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "dbt"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-spark",
+      "type": "tool",
+      "titleFa": "Apache Spark",
+      "titleEn": "Apache Spark",
+      "descriptionFa": "توانایی کار عملی با Apache Spark در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "اسپارک"
+      ],
+      "aliasesEn": [
+        "Spark"
+      ],
+      "searchTerms": [
+        "Apache Spark",
+        "اسپارک",
+        "Spark",
+        "spark"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-pytorch",
+      "type": "tool",
+      "titleFa": "PyTorch",
+      "titleEn": "PyTorch",
+      "descriptionFa": "توانایی کار عملی با PyTorch در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "PyTorch",
+        "pytorch"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-hugging-face",
+      "type": "tool",
+      "titleFa": "Hugging Face",
+      "titleEn": "Hugging Face",
+      "descriptionFa": "توانایی کار عملی با Hugging Face در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Hugging Face",
+        "hugging",
+        "face"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-fastapi",
+      "type": "tool",
+      "titleFa": "FastAPI",
+      "titleEn": "FastAPI",
+      "descriptionFa": "توانایی کار عملی با FastAPI در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "FastAPI",
+        "fastapi"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-pgvector",
+      "type": "tool",
+      "titleFa": "pgvector",
+      "titleEn": "pgvector",
+      "descriptionFa": "توانایی کار عملی با pgvector در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "pgvector"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-ga4",
+      "type": "tool",
+      "titleFa": "Google Analytics 4",
+      "titleEn": "Google Analytics 4",
+      "descriptionFa": "توانایی کار عملی با Google Analytics 4 در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "گوگل آنالیتیکس"
+      ],
+      "aliasesEn": [
+        "GA4"
+      ],
+      "searchTerms": [
+        "Google Analytics 4",
+        "گوگل آنالیتیکس",
+        "GA4",
+        "ga4"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-gtm",
+      "type": "tool",
+      "titleFa": "Google Tag Manager",
+      "titleEn": "Google Tag Manager",
+      "descriptionFa": "توانایی کار عملی با Google Tag Manager در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "گوگل تگ منیجر"
+      ],
+      "aliasesEn": [
+        "GTM"
+      ],
+      "searchTerms": [
+        "Google Tag Manager",
+        "گوگل تگ منیجر",
+        "GTM",
+        "gtm"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-google-ads",
+      "type": "tool",
+      "titleFa": "Google Ads",
+      "titleEn": "Google Ads",
+      "descriptionFa": "توانایی کار عملی با Google Ads در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "گوگل ادز"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Google Ads",
+        "گوگل ادز",
+        "google",
+        "ads"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-meta-ads",
+      "type": "tool",
+      "titleFa": "Meta Ads Manager",
+      "titleEn": "Meta Ads Manager",
+      "descriptionFa": "توانایی کار عملی با Meta Ads Manager در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "متا ادز"
+      ],
+      "aliasesEn": [
+        "Facebook Ads"
+      ],
+      "searchTerms": [
+        "Meta Ads Manager",
+        "متا ادز",
+        "Facebook Ads",
+        "meta",
+        "ads"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-search-console",
+      "type": "tool",
+      "titleFa": "Google Search Console",
+      "titleEn": "Google Search Console",
+      "descriptionFa": "توانایی کار عملی با Google Search Console در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "سرچ کنسول"
+      ],
+      "aliasesEn": [
+        "GSC"
+      ],
+      "searchTerms": [
+        "Google Search Console",
+        "سرچ کنسول",
+        "GSC",
+        "search",
+        "console"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-screaming-frog",
+      "type": "tool",
+      "titleFa": "Screaming Frog",
+      "titleEn": "Screaming Frog",
+      "descriptionFa": "توانایی کار عملی با Screaming Frog در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Screaming Frog",
+        "screaming",
+        "frog"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-ahrefs",
+      "type": "tool",
+      "titleFa": "Ahrefs",
+      "titleEn": "Ahrefs",
+      "descriptionFa": "توانایی کار عملی با Ahrefs در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Ahrefs",
+        "ahrefs"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-wordpress",
+      "type": "tool",
+      "titleFa": "WordPress",
+      "titleEn": "WordPress",
+      "descriptionFa": "توانایی کار عملی با WordPress در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "وردپرس"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "WordPress",
+        "وردپرس",
+        "wordpress"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-hubspot",
+      "type": "tool",
+      "titleFa": "HubSpot",
+      "titleEn": "HubSpot",
+      "descriptionFa": "توانایی کار عملی با HubSpot در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "هاب‌اسپات"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "HubSpot",
+        "هاب‌اسپات",
+        "hubspot"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-salesforce",
+      "type": "tool",
+      "titleFa": "Salesforce",
+      "titleEn": "Salesforce",
+      "descriptionFa": "توانایی کار عملی با Salesforce در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "سیلزفورس"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Salesforce",
+        "سیلزفورس",
+        "salesforce"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-braze",
+      "type": "tool",
+      "titleFa": "Braze",
+      "titleEn": "Braze",
+      "descriptionFa": "توانایی کار عملی با Braze در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Braze",
+        "braze"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-mixpanel",
+      "type": "tool",
+      "titleFa": "Mixpanel",
+      "titleEn": "Mixpanel",
+      "descriptionFa": "توانایی کار عملی با Mixpanel در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Mixpanel",
+        "mixpanel"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-zendesk",
+      "type": "tool",
+      "titleFa": "Zendesk",
+      "titleEn": "Zendesk",
+      "descriptionFa": "توانایی کار عملی با Zendesk در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Zendesk",
+        "zendesk"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-canva",
+      "type": "tool",
+      "titleFa": "Canva",
+      "titleEn": "Canva",
+      "descriptionFa": "توانایی کار عملی با Canva در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "کانوا"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Canva",
+        "کانوا",
+        "canva"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-capcut",
+      "type": "tool",
+      "titleFa": "CapCut",
+      "titleEn": "CapCut",
+      "descriptionFa": "توانایی کار عملی با CapCut در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "کپ‌کات"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "CapCut",
+        "کپ‌کات",
+        "capcut"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-meta-business-suite",
+      "type": "tool",
+      "titleFa": "Meta Business Suite",
+      "titleEn": "Meta Business Suite",
+      "descriptionFa": "توانایی کار عملی با Meta Business Suite در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Meta Business Suite",
+        "meta",
+        "business",
+        "suite"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-linkedin-recruiter",
+      "type": "tool",
+      "titleFa": "LinkedIn Recruiter",
+      "titleEn": "LinkedIn Recruiter",
+      "descriptionFa": "توانایی کار عملی با LinkedIn Recruiter در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "لینکدین ریکروتر"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "LinkedIn Recruiter",
+        "لینکدین ریکروتر",
+        "linkedin",
+        "recruiter"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-bamboohr",
+      "type": "tool",
+      "titleFa": "BambooHR",
+      "titleEn": "BambooHR",
+      "descriptionFa": "توانایی کار عملی با BambooHR در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "BambooHR",
+        "bamboohr"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-zoom",
+      "type": "tool",
+      "titleFa": "Zoom",
+      "titleEn": "Zoom",
+      "descriptionFa": "توانایی کار عملی با Zoom در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "زوم"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Zoom",
+        "زوم",
+        "zoom"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-powerpoint",
+      "type": "tool",
+      "titleFa": "Microsoft PowerPoint",
+      "titleEn": "Microsoft PowerPoint",
+      "descriptionFa": "توانایی کار عملی با Microsoft PowerPoint در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "پاورپوینت"
+      ],
+      "aliasesEn": [
+        "PowerPoint"
+      ],
+      "searchTerms": [
+        "Microsoft PowerPoint",
+        "پاورپوینت",
+        "PowerPoint",
+        "powerpoint"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-miro",
+      "type": "tool",
+      "titleFa": "Miro",
+      "titleEn": "Miro",
+      "descriptionFa": "توانایی کار عملی با Miro در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "میرو"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Miro",
+        "میرو",
+        "miro"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-notion",
+      "type": "tool",
+      "titleFa": "Notion",
+      "titleEn": "Notion",
+      "descriptionFa": "توانایی کار عملی با Notion در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "نوشن"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Notion",
+        "نوشن",
+        "notion"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-productboard",
+      "type": "tool",
+      "titleFa": "Productboard",
+      "titleEn": "Productboard",
+      "descriptionFa": "توانایی کار عملی با Productboard در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Productboard",
+        "productboard"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-google-maps",
+      "type": "tool",
+      "titleFa": "Google Maps",
+      "titleEn": "Google Maps",
+      "descriptionFa": "توانایی کار عملی با Google Maps در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "گوگل مپس"
+      ],
+      "aliasesEn": [
+        "Maps"
+      ],
+      "searchTerms": [
+        "Google Maps",
+        "گوگل مپس",
+        "Maps",
+        "google",
+        "maps"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-rahkaran",
+      "type": "tool",
+      "titleFa": "راهکاران",
+      "titleEn": "Rahkaran ERP",
+      "descriptionFa": "توانایی کار عملی با راهکاران در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "ERP راهکاران"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "راهکاران",
+        "Rahkaran ERP",
+        "ERP راهکاران",
+        "rahkaran"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-outlook",
+      "type": "tool",
+      "titleFa": "Microsoft Outlook",
+      "titleEn": "Microsoft Outlook",
+      "descriptionFa": "توانایی کار عملی با Microsoft Outlook در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "اوت‌لوک"
+      ],
+      "aliasesEn": [
+        "Outlook"
+      ],
+      "searchTerms": [
+        "Microsoft Outlook",
+        "اوت‌لوک",
+        "Outlook",
+        "outlook"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-modian",
+      "type": "tool",
+      "titleFa": "سامانه مؤدیان",
+      "titleEn": "Iranian Taxpayer System",
+      "descriptionFa": "توانایی کار عملی با سامانه مؤدیان در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [
+        "Modian"
+      ],
+      "searchTerms": [
+        "سامانه مؤدیان",
+        "Iranian Taxpayer System",
+        "Modian",
+        "modian"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-tax-portal",
+      "type": "tool",
+      "titleFa": "درگاه مالیاتی",
+      "titleEn": "Iranian Tax Portal",
+      "descriptionFa": "توانایی کار عملی با درگاه مالیاتی در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "پرتال مالیات"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "درگاه مالیاتی",
+        "Iranian Tax Portal",
+        "پرتال مالیات",
+        "tax",
+        "portal"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-customs-portal",
+      "type": "tool",
+      "titleFa": "سامانه جامع تجارت",
+      "titleEn": "Iran Trade System",
+      "descriptionFa": "توانایی کار عملی با سامانه جامع تجارت در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "سامانه گمرک"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "سامانه جامع تجارت",
+        "Iran Trade System",
+        "سامانه گمرک",
+        "customs",
+        "portal"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-figma",
+      "type": "tool",
+      "titleFa": "Figma",
+      "titleEn": "Figma",
+      "descriptionFa": "طراحی، نمونه‌سازی و همکاری روی رابط‌های دیجیتال در Figma.",
+      "aliasesFa": [
+        "فیگما"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Figma",
+        "فیگما",
+        "figma"
+      ],
+      "isSelectable": true,
+      "isRecommended": true,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-figjam",
+      "type": "tool",
+      "titleFa": "FigJam",
+      "titleEn": "FigJam",
+      "descriptionFa": "توانایی کار عملی با FigJam در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "فیگ‌جم"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "FigJam",
+        "فیگ‌جم",
+        "figjam"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-photoshop",
+      "type": "tool",
+      "titleFa": "Adobe Photoshop",
+      "titleEn": "Adobe Photoshop",
+      "descriptionFa": "توانایی کار عملی با Adobe Photoshop در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "فتوشاپ"
+      ],
+      "aliasesEn": [
+        "Photoshop"
+      ],
+      "searchTerms": [
+        "Adobe Photoshop",
+        "فتوشاپ",
+        "Photoshop",
+        "photoshop"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-illustrator",
+      "type": "tool",
+      "titleFa": "Adobe Illustrator",
+      "titleEn": "Adobe Illustrator",
+      "descriptionFa": "توانایی کار عملی با Adobe Illustrator در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "ایلاستریتور"
+      ],
+      "aliasesEn": [
+        "Illustrator"
+      ],
+      "searchTerms": [
+        "Adobe Illustrator",
+        "ایلاستریتور",
+        "Illustrator",
+        "illustrator"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-indesign",
+      "type": "tool",
+      "titleFa": "Adobe InDesign",
+      "titleEn": "Adobe InDesign",
+      "descriptionFa": "توانایی کار عملی با Adobe InDesign در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "ایندیزاین"
+      ],
+      "aliasesEn": [
+        "InDesign"
+      ],
+      "searchTerms": [
+        "Adobe InDesign",
+        "ایندیزاین",
+        "InDesign",
+        "indesign"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-premiere",
+      "type": "tool",
+      "titleFa": "Adobe Premiere Pro",
+      "titleEn": "Adobe Premiere Pro",
+      "descriptionFa": "توانایی کار عملی با Adobe Premiere Pro در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "پریمیر"
+      ],
+      "aliasesEn": [
+        "Premiere"
+      ],
+      "searchTerms": [
+        "Adobe Premiere Pro",
+        "پریمیر",
+        "Premiere",
+        "premiere"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-after-effects",
+      "type": "tool",
+      "titleFa": "Adobe After Effects",
+      "titleEn": "Adobe After Effects",
+      "descriptionFa": "توانایی کار عملی با Adobe After Effects در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "افتر افکت"
+      ],
+      "aliasesEn": [
+        "After Effects"
+      ],
+      "searchTerms": [
+        "Adobe After Effects",
+        "افتر افکت",
+        "After Effects",
+        "after",
+        "effects"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-davinci-resolve",
+      "type": "tool",
+      "titleFa": "DaVinci Resolve",
+      "titleEn": "DaVinci Resolve",
+      "descriptionFa": "توانایی کار عملی با DaVinci Resolve در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "داوینچی ریزالو"
+      ],
+      "aliasesEn": [
+        "Resolve"
+      ],
+      "searchTerms": [
+        "DaVinci Resolve",
+        "داوینچی ریزالو",
+        "Resolve",
+        "davinci",
+        "resolve"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-audition",
+      "type": "tool",
+      "titleFa": "Adobe Audition",
+      "titleEn": "Adobe Audition",
+      "descriptionFa": "توانایی کار عملی با Adobe Audition در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "آدیشن"
+      ],
+      "aliasesEn": [
+        "Audition"
+      ],
+      "searchTerms": [
+        "Adobe Audition",
+        "آدیشن",
+        "Audition",
+        "audition"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-procreate",
+      "type": "tool",
+      "titleFa": "Procreate",
+      "titleEn": "Procreate",
+      "descriptionFa": "توانایی کار عملی با Procreate در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "پروکریت"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Procreate",
+        "پروکریت",
+        "procreate"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-clip-studio",
+      "type": "tool",
+      "titleFa": "Clip Studio Paint",
+      "titleEn": "Clip Studio Paint",
+      "descriptionFa": "توانایی کار عملی با Clip Studio Paint در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Clip Studio Paint",
+        "clip",
+        "studio"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-blender",
+      "type": "tool",
+      "titleFa": "Blender",
+      "titleEn": "Blender",
+      "descriptionFa": "توانایی کار عملی با Blender در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "بلندر"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Blender",
+        "بلندر",
+        "blender"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-maya",
+      "type": "tool",
+      "titleFa": "Autodesk Maya",
+      "titleEn": "Autodesk Maya",
+      "descriptionFa": "توانایی کار عملی با Autodesk Maya در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "مایا"
+      ],
+      "aliasesEn": [
+        "Maya"
+      ],
+      "searchTerms": [
+        "Autodesk Maya",
+        "مایا",
+        "Maya",
+        "maya"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-substance-3d",
+      "type": "tool",
+      "titleFa": "Adobe Substance 3D",
+      "titleEn": "Adobe Substance 3D",
+      "descriptionFa": "توانایی کار عملی با Adobe Substance 3D در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "سابستنس"
+      ],
+      "aliasesEn": [
+        "Substance Painter"
+      ],
+      "searchTerms": [
+        "Adobe Substance 3D",
+        "سابستنس",
+        "Substance Painter",
+        "substance",
+        "3d"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-unreal",
+      "type": "tool",
+      "titleFa": "Unreal Engine",
+      "titleEn": "Unreal Engine",
+      "descriptionFa": "توانایی کار عملی با Unreal Engine در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "آنریل"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Unreal Engine",
+        "آنریل",
+        "unreal"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-unity",
+      "type": "tool",
+      "titleFa": "Unity",
+      "titleEn": "Unity",
+      "descriptionFa": "توانایی کار عملی با Unity در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "یونیتی"
+      ],
+      "aliasesEn": [],
+      "searchTerms": [
+        "Unity",
+        "یونیتی",
+        "unity"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-cinema-4d",
+      "type": "tool",
+      "titleFa": "Cinema 4D",
+      "titleEn": "Cinema 4D",
+      "descriptionFa": "توانایی کار عملی با Cinema 4D در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "سینما فوردی"
+      ],
+      "aliasesEn": [
+        "C4D"
+      ],
+      "searchTerms": [
+        "Cinema 4D",
+        "سینما فوردی",
+        "C4D",
+        "cinema",
+        "4d"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    },
+    {
+      "id": "tool-media-encoder",
+      "type": "tool",
+      "titleFa": "Adobe Media Encoder",
+      "titleEn": "Adobe Media Encoder",
+      "descriptionFa": "توانایی کار عملی با Adobe Media Encoder در یک جریان کاری حرفه‌ای.",
+      "aliasesFa": [
+        "مدیا انکودر"
+      ],
+      "aliasesEn": [
+        "Media Encoder"
+      ],
+      "searchTerms": [
+        "Adobe Media Encoder",
+        "مدیا انکودر",
+        "Media Encoder",
+        "media",
+        "encoder"
+      ],
+      "isSelectable": true,
+      "isRecommended": false,
+      "prerequisiteSkillIds": [],
+      "relatedSkillIds": [],
+      "broaderSkillId": null,
+      "narrowerSkillIds": []
+    }
+  ]
+}

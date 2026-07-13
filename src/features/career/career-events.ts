@@ -14,7 +14,15 @@ export const careerEventNames = [
   "career_lead_submit_failed",
   "career_lead_sheet_dismissed",
   "career_search_used",
-  "career_filter_changed"
+  "career_filter_changed",
+  "career_skill_page_viewed",
+  "career_skill_selected",
+  "career_skill_state_changed",
+  "career_skill_removed",
+  "career_skill_results_requested",
+  "career_skill_match_viewed",
+  "career_skill_gap_viewed",
+  "career_skill_path_opened"
 ] as const;
 
 export type CareerEventName = (typeof careerEventNames)[number];
@@ -39,6 +47,8 @@ const eventNameSet = new Set<string>(careerEventNames);
 const allowedEntrySources = new Set(["root", "career", "unknown"]);
 const allowedLeadTriggers = new Set(["path_save", "comparison_save"]);
 const allowedLeadFailureReasons = new Set(["validation", "api", "rate_limited", "unknown"]);
+const allowedSkillTypes = new Set(["soft", "foundational", "specialized", "tool"]);
+const allowedSkillSelectionStates = new Set(["have", "interested"]);
 
 export function isCareerEventName(value: unknown): value is CareerEventName {
   return typeof value === "string" && eventNameSet.has(value);
@@ -151,6 +161,38 @@ export function sanitizeCareerEventPayload(
     case "career_filter_changed":
       setIfString(sanitized, "filterType", payload.filterType);
       setIfCount(sanitized, "selectedCount", payload.selectedCount);
+      break;
+    case "career_skill_page_viewed":
+      break;
+    case "career_skill_selected":
+    case "career_skill_state_changed": {
+      setIfString(sanitized, "skillId", payload.skillId);
+      const skillType = sanitizeText(payload.skillType, 30);
+      const selectionState = sanitizeText(payload.selectionState, 30);
+      if (skillType && allowedSkillTypes.has(skillType)) sanitized.skillType = skillType;
+      if (selectionState && allowedSkillSelectionStates.has(selectionState)) {
+        sanitized.selectionState = selectionState;
+      }
+      break;
+    }
+    case "career_skill_removed": {
+      setIfString(sanitized, "skillId", payload.skillId);
+      const skillType = sanitizeText(payload.skillType, 30);
+      if (skillType && allowedSkillTypes.has(skillType)) sanitized.skillType = skillType;
+      break;
+    }
+    case "career_skill_results_requested":
+      setIfCount(sanitized, "selectedCount", payload.selectedCount, 1_000);
+      setIfCount(sanitized, "haveCount", payload.haveCount, 1_000);
+      setIfCount(sanitized, "interestedCount", payload.interestedCount, 1_000);
+      break;
+    case "career_skill_match_viewed":
+    case "career_skill_gap_viewed":
+    case "career_skill_path_opened":
+      setIfString(sanitized, "careerSlug", payload.careerSlug);
+      setIfCount(sanitized, "resultRank", payload.resultRank, 58);
+      setIfCount(sanitized, "matchedCount", payload.matchedCount, 1_000);
+      setIfCount(sanitized, "missingCoreCount", payload.missingCoreCount, 1_000);
       break;
   }
 

@@ -1,11 +1,7 @@
 import type { CareerPathSeoEntry } from "./career-path-seo";
-import {
-  getCareerPathMainDuties,
-  getCareerPathSoftSkills,
-  getCareerPathTechnicalSkills,
-  getCareerPathTools
-} from "./career-path-seo";
+import { getCareerPathMainDuties } from "./career-path-seo";
 import { getCareerResearchByCardId } from "./career-research-content";
+import { getCareerRequirementSkills } from "./career-skill-requirements";
 import { getCareerPathVisualProfile, type CareerPathSceneType, type CareerPathVisualProfile } from "./career-path-visuals";
 
 export type Tone = "blue" | "teal" | "yellow" | "persimmon";
@@ -147,6 +143,14 @@ export function buildCareerPathProductContent(entry: CareerPathSeoEntry): Career
   const research = entry.path.cards
     .map((card) => getCareerResearchByCardId(card.id))
     .find((item) => item !== undefined);
+  const normalizedSoftSkills = getCareerRequirementSkills(entry.slug, "soft").slice(0, 8);
+  const normalizedFoundationalSkills = getCareerRequirementSkills(entry.slug, "foundational");
+  const normalizedSpecializedSkills = getCareerRequirementSkills(entry.slug, "specialized");
+  const normalizedTools = getCareerRequirementSkills(entry.slug, "tool").slice(0, 8);
+  const normalizedTechnicalSkills = unique([
+    ...normalizedFoundationalSkills.map((skill) => skill.titleFa),
+    ...normalizedSpecializedSkills.map((skill) => skill.titleFa)
+  ]);
 
   if (research) {
     const fitTones = ["teal", "blue", "yellow", "persimmon"] as const;
@@ -169,9 +173,9 @@ export function buildCareerPathProductContent(entry: CareerPathSeoEntry): Career
       })),
       reality: {
         workday: localizeList(research.reality.workday),
-        softSkills: localizeList(research.reality.softSkills),
-        technicalSkills: localizeList(research.reality.technicalSkills),
-        tools: localizeList(research.reality.tools)
+        softSkills: normalizedSoftSkills.map((skill) => skill.titleFa),
+        technicalSkills: normalizedTechnicalSkills,
+        tools: normalizedTools.map((skill) => skill.titleFa)
       },
       hardships: research.hardships.map((hardship, index) => ({
         title: hardship.title,
@@ -192,9 +196,6 @@ export function buildCareerPathProductContent(entry: CareerPathSeoEntry): Career
 
   const title = entry.path.name;
   const duties = getCareerPathMainDuties(entry.path);
-  const technicalSkills = getCareerPathTechnicalSkills(entry.path);
-  const tools = getCareerPathTools(entry.path);
-  const softSkills = getCareerPathSoftSkills(entry.path);
   const mainDuty = firstOrFallback(duties, profile.focusLabel);
 
   return {
@@ -210,13 +211,13 @@ export function buildCareerPathProductContent(entry: CareerPathSeoEntry): Career
     fitDimensions: buildFitDimensions(profile),
     reality: {
       workday: pick(duties, [profile.focusLabel, profile.pressureLabel, profile.collaborationLabel], 3),
-      softSkills: pick(softSkills, ["یادگیری‌پذیری", "ارتباط روشن", "مسئولیت‌پذیری"], 4),
-      technicalSkills: pick(technicalSkills, [profile.focusLabel], 4),
-      tools: pick(tools, ["ابزارهای اصلی همین مسیر شغلی"], 4)
+      softSkills: normalizedSoftSkills.map((skill) => skill.titleFa),
+      technicalSkills: normalizedTechnicalSkills,
+      tools: normalizedTools.map((skill) => skill.titleFa)
     },
-    hardships: buildHardships(profile, duties, tools),
-    intelligence: buildIntelligence(profile, duties, tools),
-    interviewQuestions: buildInterviewQuestions(title, technicalSkills, tools, duties),
+    hardships: buildHardships(profile, duties, normalizedTools.map((skill) => skill.titleFa)),
+    intelligence: buildIntelligence(profile, duties, normalizedTools.map((skill) => skill.titleFa)),
+    interviewQuestions: buildInterviewQuestions(title, normalizedTechnicalSkills, normalizedTools.map((skill) => skill.titleFa), duties),
     finalCtaText: "این مسیر را برای بررسی نگه دار"
   };
 }

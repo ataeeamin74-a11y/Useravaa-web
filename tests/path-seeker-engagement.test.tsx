@@ -145,14 +145,19 @@ describe("Path Seeker engagement", () => {
     expect(pathSource).toContain('trackCareerEvent("career_path_viewed"');
   });
 
-  it("keeps the guide available outside the three-item bottom navigation", () => {
+  it("keeps the guide available outside the four-item bottom navigation", () => {
     const html = renderToStaticMarkup(<GuideEntryCard />);
     const bottomNavSource = readFileSync("src/features/career/CareerBottomNav.tsx", "utf8");
 
     expect(html).toContain("نمی‌دونی از کدام مسیر شغلی شروع کنی؟");
     expect(html).toContain("راهنمای انتخاب مسیر شغلی را ببین.");
     expect(html).toContain('href="/career/guide"');
-    expect(navigationItems.map((item) => item.label)).toEqual(["مسیرها", "مقایسه", "مسیرهای من"]);
+    expect(navigationItems.map((item) => item.label)).toEqual([
+      "مسیرها",
+      "مهارت‌ها",
+      "مقایسه",
+      "مسیرهای من"
+    ]);
     expect(bottomNavSource).toContain('aria-label="ناوبری مسیرهای شغلی"');
   });
 
