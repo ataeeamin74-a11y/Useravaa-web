@@ -71,7 +71,7 @@ import {
 
 describe("career paths MVP shell", () => {
   it("normalizes the real career card JSON", () => {
-    expect(careerCards).toHaveLength(67);
+    expect(careerCards).toHaveLength(68);
     expect(careerCards[0]).toMatchObject({
       id: "CARD_001",
       domain: "Technology & Engineering",
@@ -100,32 +100,28 @@ describe("career paths MVP shell", () => {
 
     expect(careerHierarchy).toHaveLength(10);
     expect(categories).toHaveLength(18);
-    expect(subfamilies).toHaveLength(57);
-    expect(cards).toHaveLength(67);
+    expect(subfamilies).toHaveLength(58);
+    expect(cards).toHaveLength(68);
     expect(careerHierarchy.find((domain) => domain.name === "Technology & Engineering")).toMatchObject({
       subfamilyCount: 20,
       cardCount: 20
     });
   });
 
-  it("exposes only the merged social-media marketing career path", () => {
+  it("exposes one approved social-media marketing path", () => {
     const subfamilies = careerHierarchy
       .flatMap((domain) => domain.generalCategories)
       .flatMap((category) => category.subfamilies);
-    const socialMediaPaths = subfamilies.filter((path) => (
-      path.name === "بازاریابی شبکه‌های اجتماعی"
-      || path.name === "تولید محتوا برای شبکه‌های اجتماعی"
-      || path.name === "مدیریت شبکه‌های اجتماعی"
-    ));
+    const socialMediaPaths = subfamilies.filter((path) => path.name === "بازاریابی شبکه‌های اجتماعی");
 
     expect(socialMediaPaths).toHaveLength(1);
-    expect(socialMediaPaths[0]).toMatchObject({
-      name: "بازاریابی شبکه‌های اجتماعی",
-      midCategory: "Social Media Marketing"
-    });
     expect(socialMediaPaths[0].cards.map((card) => card.id)).toEqual(["CARD_032"]);
-    expect(searchCareerHierarchy(visibleCareerHierarchy, "بازاریابی شبکه‌های اجتماعی"))
-      .toHaveLength(1);
+    expect(subfamilies.map((path) => path.name)).not.toContain("تولید محتوا برای شبکه‌های اجتماعی");
+    expect(subfamilies.map((path) => path.name)).not.toContain("مدیریت شبکه‌های اجتماعی");
+    expect(searchCareerHierarchy(visibleCareerHierarchy, "بازاریابی شبکه‌های اجتماعی")
+      .some((result) => result.subfamily.name === "بازاریابی شبکه‌های اجتماعی"))
+      .toBe(true);
+    expect(subfamilies.map((path) => path.name)).toContain("طراحی گرافیک و محتوای بصری");
   });
 
   it("promotes sales and business development into its own presentation domain", () => {
@@ -269,9 +265,9 @@ describe("career paths MVP shell", () => {
     const digitalMarketing = subfamilies
       .find((subfamily) => subfamily.name === "دیجیتال مارکتینگ عمومی")!;
 
-    expect(visibleCareerCards).toHaveLength(53);
+    expect(visibleCareerCards).toHaveLength(54);
     expect(visibleCareerCards.every((card) => !isManagementCareerCard(card))).toBe(true);
-    expect(subfamilies).toHaveLength(53);
+    expect(subfamilies).toHaveLength(54);
     expect(subfamilies.every((subfamily) => subfamily.cards.length === 1)).toBe(true);
     expect(digitalMarketing.cards.map((card) => card.id)).toEqual(["CARD_034"]);
     expect(subfamilies.map((subfamily) => subfamily.name)).not.toContain("مدیریت منابع انسانی");
@@ -437,11 +433,18 @@ describe("career paths MVP shell", () => {
       "Seniority_Level"
     ] as const;
 
-    expect(v2CareerCards).toHaveLength(67);
-    expect(v2CareerCards.map((card) => card.Card_ID)).toEqual(oldCareerCards.map((card) => card.Card_ID));
-    oldCareerCards.forEach((oldCard, index) => {
-      const nextCard = v2CareerCards[index];
+    expect(v2CareerCards).toHaveLength(68);
+    expect(v2CareerCards.map((card) => card.Card_ID)).toEqual(expect.arrayContaining(
+      oldCareerCards.map((card) => card.Card_ID)
+    ));
+    const nextCardById = new Map(v2CareerCards.map((card) => [card.Card_ID, card]));
+    oldCareerCards.forEach((oldCard) => {
+      const nextCard = nextCardById.get(oldCard.Card_ID)!;
       hierarchyFields.forEach((field) => expect(nextCard[field]).toBe(oldCard[field]));
+    });
+    expect(nextCardById.get("CARD_069")).toMatchObject({
+      Final_Job_Subfamily: "طراحی گرافیک و محتوای بصری",
+      Seniority_Level: "سطح کارشناسی"
     });
     expect(v2CareerCards.every((card) => (
       Array.isArray(card.Main_Duties_List_FA)

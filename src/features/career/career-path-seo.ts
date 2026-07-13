@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { careerHierarchy } from "./career-data";
 import {
-  LEGACY_SOCIAL_MEDIA_SLUGS,
-  SOCIAL_MEDIA_MARKETING_CARD_ID,
+  LEGACY_SOCIAL_MEDIA_SLUG_REDIRECTS,
   SOCIAL_MEDIA_MARKETING_SLUG
 } from "./career-path-migration";
+import {
+  getCareerResearchIndexByCardId,
+  getCareerResearchIndexByResearchSlug
+} from "./career-research-index";
 import type { CareerCard, CareerSubfamilyNode } from "./career-types";
 import { normalizeSearchText } from "./career-utils";
 
@@ -45,9 +48,10 @@ function latinSlugPart(value: string) {
 }
 
 function createCareerPathSlugBase(path: CareerSubfamilyNode) {
-  if (path.cards.some((card) => card.id === SOCIAL_MEDIA_MARKETING_CARD_ID)) {
-    return SOCIAL_MEDIA_MARKETING_SLUG;
-  }
+  const research = path.cards
+    .map((card) => getCareerResearchIndexByCardId(card.id))
+    .find((item) => item !== undefined);
+  if (research) return research.appSlug;
 
   const candidates = [
     path.name,
@@ -90,7 +94,7 @@ export const careerPathSeoEntries = buildCareerPathSeoEntries();
 const careerPathSeoEntryBySlug = new Map(careerPathSeoEntries.map((entry) => [entry.slug, entry]));
 const careerPathSeoEntryByPathId = new Map(careerPathSeoEntries.map((entry) => [entry.path.id, entry]));
 const legacyCareerPathSlugRedirects = new Map<string, string>(
-  LEGACY_SOCIAL_MEDIA_SLUGS.map((slug) => [slug, SOCIAL_MEDIA_MARKETING_SLUG])
+  Object.entries(LEGACY_SOCIAL_MEDIA_SLUG_REDIRECTS)
 );
 
 export function getCareerPathSeoEntries() {
@@ -155,6 +159,9 @@ export function getCareerPathMainDuties(path: CareerSubfamilyNode) {
 export function getRelatedCareerPathSeoEntries(path: CareerSubfamilyNode, limit = 6) {
   const relatedEntries: CareerPathSeoEntry[] = [];
   const seenPathIds = new Set([path.id]);
+  const research = path.cards
+    .map((card) => getCareerResearchIndexByCardId(card.id))
+    .find((item) => item !== undefined);
 
   function appendMatchingEntries(matcher: (entry: CareerPathSeoEntry) => boolean) {
     for (const entry of careerPathSeoEntries) {
@@ -165,6 +172,15 @@ export function getRelatedCareerPathSeoEntries(path: CareerSubfamilyNode, limit 
     }
   }
 
+  for (const relatedResearchSlug of research?.relatedResearchSlugs ?? []) {
+    if (relatedEntries.length >= limit) break;
+    const relatedResearch = getCareerResearchIndexByResearchSlug(relatedResearchSlug);
+    const entry = relatedResearch ? careerPathSeoEntryBySlug.get(relatedResearch.appSlug) : undefined;
+    if (!entry || seenPathIds.has(entry.path.id)) continue;
+    relatedEntries.push(entry);
+    seenPathIds.add(entry.path.id);
+  }
+
   appendMatchingEntries((entry) => entry.path.generalCategory === path.generalCategory);
   appendMatchingEntries((entry) => entry.path.domain === path.domain);
   appendMatchingEntries(() => true);
@@ -173,7 +189,10 @@ export function getRelatedCareerPathSeoEntries(path: CareerSubfamilyNode, limit 
 }
 
 export function buildCareerPathTitle(path: CareerSubfamilyNode) {
-  return path.name;
+  return path.cards
+    .map((card) => getCareerResearchIndexByCardId(card.id))
+    .find((item) => item !== undefined)?.titleFa
+    ?? path.name;
 }
 
 export function buildCareerPathDescription(path: CareerSubfamilyNode) {

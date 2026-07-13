@@ -1,6 +1,6 @@
 # Useravaa Career Path Deep Research Ingestion Plan v1
 
-This document defines the future private source-material workflow for deep research Word files. It is documentation only. The current app does not parse DOCX files, import DOCX files, or change the build pipeline.
+This document defines the private source-material workflow for deep research Word files. The 59-report corpus was ingested on 2026-07-13 with `scripts/ingest-career-research.mjs` and reconciled to the approved 58-path product taxonomy; final DOCX files remain private source material and the product consumes a validated, generated appendix payload.
 
 ## Private Path Convention
 
@@ -17,13 +17,15 @@ These DOCX files are source material for future product-screen content generatio
 
 ## Ingestion Rules
 
-- Do not add a DOCX parsing package until ingestion is explicitly requested.
-- Do not import DOCX files into the app now.
-- Do not change the build pipeline now.
+- Do not add a DOCX parsing package. The ingestion script validates the source manifest and Markdown product appendix, then copies the matching final DOCX as private source material.
+- Do not expose DOCX files from `public/` or parse them at request/build time.
+- Keep ingestion an explicit, repeatable script rather than a build-pipeline dependency.
 - Ingestion must not happen blindly.
-- The current sitemap has 57 career path URLs after the social-media path merge.
-- Any future research under the legacy `social-media-and-community` or `social-media-and-community-13kpqt` folders must be reconciled into the canonical file; do not merge or overwrite DOCX files automatically.
-- Codex must first create a slug reconciliation report before ingestion.
+- The current sitemap has 58 career path URLs.
+- Social-media content creation and social-media management are separate source reports but one approved product path: `social-media-marketing` / «بازاریابی شبکه‌های اجتماعی».
+- The social-media merge must preserve production/craft evidence from the content-creation report and strategy/community/performance evidence from the management report, while deduplicating shared fit, hardship, workflow, and AI material by meaning.
+- Both social-media source files and checksums must remain in the generated record provenance. Every legacy social-media slug, card ID, and saved path ID resolves to the single canonical path.
+- A slug reconciliation report must be created or refreshed before ingestion.
 - Reconciliation must identify unmatched DOCX folders, missing DOCX files for existing slugs, and any duplicate or renamed paths.
 - Extracted research must be transformed into the product-screen sections, not copied as article text.
 - Research content must be filtered for Useravaa tone: clear, human, decision-oriented, non-hype.
@@ -46,7 +48,12 @@ Do not transform research into generic blog sections or long-form article paragr
 
 ## Expected DOCX Paths
 
-Each current sitemap career slug expects this private source path:
+The 58 current sitemap paths are backed by 59 private source files. Most canonical paths have one matching source; the social-media canonical record intentionally consumes the following two source-only folders, neither of which is a public route:
+
+- `content/career-research/social-media-content-creation/deep-research.docx`
+- `content/career-research/social-media-management/deep-research.docx`
+
+The remaining private source paths are:
 
 - `content/career-research/dotnet-c-sharp-backend/deep-research.docx`
 - `content/career-research/go-backend/deep-research.docx`
@@ -79,7 +86,6 @@ Each current sitemap career slug expects this private source path:
 - `content/career-research/growth-marketing/deep-research.docx`
 - `content/career-research/content-and-copywriting/deep-research.docx`
 - `content/career-research/market-research-and-insights/deep-research.docx`
-- `content/career-research/social-media-marketing/deep-research.docx`
 - `content/career-research/digital-marketing/deep-research.docx`
 - `content/career-research/seo/deep-research.docx`
 - `content/career-research/brand-pr-and-communications/deep-research.docx`
@@ -95,13 +101,14 @@ Each current sitemap career slug expects this private source path:
 - `content/career-research/business-development/deep-research.docx`
 - `content/career-research/commercial-trading-operations/deep-research.docx`
 - `content/career-research/market-development-merchant-acquisition/deep-research.docx`
-- `content/career-research/career-path-dloft3/deep-research.docx`
-- `content/career-research/career-path-83obo3/deep-research.docx`
-- `content/career-research/career-path-1vdnx4/deep-research.docx`
-- `content/career-research/career-path-19175m/deep-research.docx`
-- `content/career-research/career-path-vdw6zx/deep-research.docx`
-- `content/career-research/career-path-ij3k84/deep-research.docx`
-- `content/career-research/career-path-1pe3k9/deep-research.docx`
+- `content/career-research/career-path-1drths/deep-research.docx`
+- `content/career-research/career-path-fmhiml/deep-research.docx`
+- `content/career-research/career-path-1bed9m/deep-research.docx`
+- `content/career-research/career-path-1b5cj3/deep-research.docx`
+- `content/career-research/career-path-1gt2jj/deep-research.docx`
+- `content/career-research/graphic-design-and-visual-content/deep-research.docx`
+- `content/career-research/career-path-1w9y14/deep-research.docx`
+- `content/career-research/career-path-1u9xrl/deep-research.docx`
 - `content/career-research/3d-art/deep-research.docx`
-- `content/career-research/career-path-14w12j/deep-research.docx`
-- `content/career-research/career-path-18cutb/deep-research.docx`
+- `content/career-research/career-path-1lo6cj/deep-research.docx`
+- `content/career-research/career-path-1rtxp8/deep-research.docx`

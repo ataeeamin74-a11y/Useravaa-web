@@ -52,16 +52,18 @@ describe("Path Seeker engagement", () => {
     expect(SAVED_PATHS_STORAGE_KEY).toBe("useravaa:career:saved-paths");
   });
 
-  it("migrates both legacy social-media paths into one canonical saved path", () => {
-    const canonicalPath = getCareerPathByCardId(SOCIAL_MEDIA_MARKETING_CARD_ID)!;
+  it("migrates every legacy social-media identifier to one saved path", () => {
+    const socialMediaPath = getCareerPathByCardId(SOCIAL_MEDIA_MARKETING_CARD_ID)!;
     const storedIdentifiers = [
       SOCIAL_MEDIA_MARKETING_CARD_ID,
       ...LEGACY_SOCIAL_MEDIA_CARD_IDS,
       ...LEGACY_SOCIAL_MEDIA_PATH_IDS,
-      canonicalPath.id
+      socialMediaPath.id
     ];
     const migratedPaths = parseSavedCareerPathIds(JSON.stringify(storedIdentifiers));
-    const unrelatedPath = careerPaths.find((path) => path.id !== canonicalPath.id)!;
+    const unrelatedPath = careerPaths.find((path) => (
+      path.id !== socialMediaPath.id
+    ))!;
     const migratedComparisons = parseSavedCareerComparisons(JSON.stringify([
       [LEGACY_SOCIAL_MEDIA_PATH_IDS[0], LEGACY_SOCIAL_MEDIA_PATH_IDS[1], unrelatedPath.id],
       [SOCIAL_MEDIA_MARKETING_CARD_ID, unrelatedPath.id]
@@ -75,10 +77,15 @@ describe("Path Seeker engagement", () => {
       updatedAt: 1_800_000_000_000
     }), 1_800_000_000_001);
 
-    expect([...migratedPaths]).toEqual([canonicalPath.id]);
-    expect(migratedComparisons).toEqual([[canonicalPath.id, unrelatedPath.id].sort()]);
-    expect(migratedDraft).toEqual([canonicalPath.id, unrelatedPath.id]);
-    expect(getCareerPathByCardId(LEGACY_SOCIAL_MEDIA_CARD_IDS[0])?.id).toBe(canonicalPath.id);
+    expect([...migratedPaths]).toEqual([socialMediaPath.id]);
+    expect(migratedComparisons).toEqual([
+      [socialMediaPath.id, unrelatedPath.id].sort()
+    ]);
+    expect(migratedDraft).toEqual([socialMediaPath.id, unrelatedPath.id]);
+    expect(getCareerPathByCardId(LEGACY_SOCIAL_MEDIA_CARD_IDS[0])?.id).toBe(socialMediaPath.id);
+    LEGACY_SOCIAL_MEDIA_PATH_IDS.forEach((legacyId) => {
+      expect(parseSavedCareerPathIds(JSON.stringify([legacyId]))).toEqual(new Set([socialMediaPath.id]));
+    });
   });
 
   it("deduplicates saved comparisons regardless of selection order", () => {

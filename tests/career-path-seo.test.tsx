@@ -10,6 +10,7 @@ import CareerPathSeoPage, {
 import {
   CAREER_PATH_SEO_BASE_URL,
   CAREER_PATH_SHARE_IMAGE,
+  buildCareerPathTitle,
   buildCareerPathMetadata,
   getCareerPathRedirectSlug,
   getCareerPathSeoEntries,
@@ -20,10 +21,12 @@ import {
   getRelatedCareerPathSeoEntries
 } from "@/features/career/career-path-seo";
 import {
+  LEGACY_SOCIAL_MEDIA_SLUG_REDIRECTS,
   LEGACY_SOCIAL_MEDIA_SLUGS,
   SOCIAL_MEDIA_MARKETING_CARD_ID,
   SOCIAL_MEDIA_MARKETING_SLUG
 } from "@/features/career/career-path-migration";
+import { getCareerResearchByCardId } from "@/features/career/career-research-content";
 import { getCareerPathVisualAssetPaths } from "@/features/career/career-path-visual-assets";
 
 const forbiddenSeoLanguage = [
@@ -66,7 +69,7 @@ const representativeSharePreviewSlugs = [
 ] as const;
 
 const requiredProductScreenLabels = [
-  "کار اصلی",
+  "جذابیت اصلی",
   "مناسب‌تر برای",
   "سختی اصلی",
   "این شغل مناسب منه؟",
@@ -209,36 +212,39 @@ describe("Career path SEO pages", () => {
     expect(getCareerPathSeoEntryBySlug("not-a-real-career-path")).toBeUndefined();
   });
 
-  it("publishes one canonical social-media marketing path and redirects both legacy slugs", async () => {
-    const canonicalEntry = getRequiredCareerPathEntry(SOCIAL_MEDIA_MARKETING_SLUG);
+  it("publishes one researched social-media path and redirects every legacy slug", async () => {
+    const socialMediaEntry = getRequiredCareerPathEntry(SOCIAL_MEDIA_MARKETING_SLUG);
     const slugs = getCareerPathSlugs();
-    const canonicalHtml = renderToStaticMarkup(
+    const socialMediaHtml = renderToStaticMarkup(
       await CareerPathSeoPage({ params: Promise.resolve({ slug: SOCIAL_MEDIA_MARKETING_SLUG }) })
     );
 
-    expect(canonicalEntry.path.name).toBe("بازاریابی شبکه‌های اجتماعی");
-    expect(canonicalEntry.path.midCategory).toBe("Social Media Marketing");
-    expect(canonicalEntry.representativeCard.id).toBe(SOCIAL_MEDIA_MARKETING_CARD_ID);
-    expect(canonicalHtml).toContain("مسیر شغلی بازاریابی شبکه‌های اجتماعی");
-    expect(canonicalHtml).not.toContain("تولید محتوا برای شبکه‌های اجتماعی");
-    expect(canonicalHtml).not.toContain("مدیریت شبکه‌های اجتماعی - سطح کارشناسی");
+    expect(socialMediaEntry.representativeCard.id).toBe(SOCIAL_MEDIA_MARKETING_CARD_ID);
+    expect(socialMediaEntry.path.name).toBe("بازاریابی شبکه‌های اجتماعی");
+    expect(socialMediaHtml).toContain("مسیر شغلی بازاریابی شبکه‌های اجتماعی");
+    expect(socialMediaHtml).not.toContain("مسیر شغلی تولیدکننده محتوا برای شبکه‌های اجتماعی");
+    expect(socialMediaHtml).not.toContain("مسیر شغلی مدیر شبکه‌های اجتماعی");
     expect(slugs).toContain(SOCIAL_MEDIA_MARKETING_SLUG);
+    expect(slugs).not.toContain("social-media-content-creation");
+    expect(slugs).not.toContain("social-media-management");
 
     for (const legacySlug of LEGACY_SOCIAL_MEDIA_SLUGS) {
+      const redirectSlug = LEGACY_SOCIAL_MEDIA_SLUG_REDIRECTS[legacySlug];
+      const redirectEntry = getRequiredCareerPathEntry(redirectSlug);
       expect(slugs).not.toContain(legacySlug);
-      expect(getCareerPathRedirectSlug(legacySlug)).toBe(SOCIAL_MEDIA_MARKETING_SLUG);
+      expect(getCareerPathRedirectSlug(legacySlug)).toBe(redirectSlug);
       expect(getCareerPathSeoEntryBySlug(legacySlug)).toBeUndefined();
-      expect(getCareerPathSeoEntryBySlugOrLegacy(legacySlug)?.slug).toBe(SOCIAL_MEDIA_MARKETING_SLUG);
+      expect(getCareerPathSeoEntryBySlugOrLegacy(legacySlug)?.slug).toBe(redirectSlug);
       await expect(CareerPathSeoPage({ params: Promise.resolve({ slug: legacySlug }) }))
         .rejects.toMatchObject({
           digest: expect.stringContaining(
-            `NEXT_REDIRECT;replace;/career/paths/${SOCIAL_MEDIA_MARKETING_SLUG};308;`
+            `NEXT_REDIRECT;replace;/career/paths/${redirectSlug};308;`
           )
         });
       await expect(CareerPathsRoute({ searchParams: Promise.resolve({ path: legacySlug }) }))
         .rejects.toMatchObject({
           digest: expect.stringContaining(
-            `NEXT_REDIRECT;replace;/?card=${SOCIAL_MEDIA_MARKETING_CARD_ID};308;`
+            `NEXT_REDIRECT;replace;/?card=${redirectEntry.representativeCard.id};308;`
           )
         });
     }
@@ -286,7 +292,7 @@ describe("Career path SEO pages", () => {
     const h1Index = html.indexOf('<h1 id="career-path-seo-title"');
     const firstCtaIndex = html.indexOf("این مسیر را برای بررسی نگه دار");
 
-    expect(html).toContain(`مسیر شغلی ${entry.path.name}`);
+    expect(html).toContain(`مسیر شغلی ${buildCareerPathTitle(entry.path)}`);
     requiredProductScreenLabels.forEach((label) => expect(html).toContain(label));
     rejectedProductScreenLabels.forEach((label) => expect(html).not.toContain(label));
     expect(h2Texts).toEqual(expect.arrayContaining([
@@ -346,13 +352,9 @@ describe("Career path SEO pages", () => {
     relatedEntries.forEach((relatedEntry) => {
       expect(relatedEntry.path.id).not.toBe(entry.path.id);
       expect(relatedSection).toContain(`href="${relatedEntry.pageHref}"`);
-      expect(relatedText).toContain(relatedEntry.path.name);
-      if (
-        /[a-z]/iu.test(relatedEntry.path.midCategory)
-        && relatedEntry.path.midCategory.toLocaleLowerCase() !== relatedEntry.path.name.toLocaleLowerCase()
-      ) {
-        expect(relatedText).toContain(relatedEntry.path.midCategory);
-      }
+      expect(relatedText).toContain(buildCareerPathTitle(relatedEntry.path));
+      const researchTitle = getCareerResearchByCardId(relatedEntry.representativeCard.id)?.hero.titleEn;
+      if (researchTitle) expect(relatedText).toContain(researchTitle);
     });
   });
 
@@ -491,7 +493,7 @@ describe("Career path SEO pages", () => {
     const helperMetadata = buildCareerPathMetadata(entry);
     const serializedMetadata = JSON.stringify(metadata).toLowerCase();
 
-    expect(metadata.title).toBe(`${entry.path.name} | مسیر شغلی در Useravaa`);
+    expect(metadata.title).toBe(`${buildCareerPathTitle(entry.path)} | مسیر شغلی در Useravaa`);
     expect(metadata.description).toBe(helperMetadata.description);
     expect(metadata.alternates).toEqual({ canonical: entry.canonicalUrl });
     expect(metadata.robots).toEqual({ index: true, follow: true });
@@ -515,9 +517,10 @@ describe("Career path SEO pages", () => {
     for (const slug of representativeSharePreviewSlugs) {
       const entry = getRequiredCareerPathEntry(slug);
       const metadata = await generateMetadata({ params: Promise.resolve({ slug }) });
-      const expectedTitle = `${entry.path.name} | مسیر شغلی در Useravaa`;
+      const pathTitle = buildCareerPathTitle(entry.path);
+      const expectedTitle = `${pathTitle} | مسیر شغلی در Useravaa`;
       const expectedDescription =
-        `با مسیر شغلی ${entry.path.name} آشنا شو؛ سطح‌های شغلی، مهارت‌ها، ابزارها و نکته‌های تصمیم‌گیری را قبل از انتخاب مسیر بررسی کن.`;
+        `با مسیر شغلی ${pathTitle} آشنا شو؛ سطح‌های شغلی، مهارت‌ها، ابزارها و نکته‌های تصمیم‌گیری را قبل از انتخاب مسیر بررسی کن.`;
       const serializedMetadata = JSON.stringify(metadata).toLowerCase();
       const openGraphImages = (metadata.openGraph as { images?: unknown } | undefined)?.images;
       const twitterImages = (metadata.twitter as { images?: unknown } | undefined)?.images;
@@ -527,7 +530,7 @@ describe("Career path SEO pages", () => {
       expect(generateStaticParams()).toContainEqual({ slug });
       expect(renderToStaticMarkup(
         await CareerPathSeoPage({ params: Promise.resolve({ slug }) })
-      )).toContain(`مسیر شغلی ${entry.path.name}`);
+      )).toContain(`مسیر شغلی ${pathTitle}`);
       expect(metadata.title).toBe(expectedTitle);
       expect(metadata.description).toBe(expectedDescription);
       expect(metadata.alternates).toEqual({ canonical: entry.canonicalUrl });
@@ -563,11 +566,14 @@ describe("Career path SEO pages", () => {
     const pathUrls = getCareerPathSeoEntries().map((entry) => entry.canonicalUrl);
 
     expect(urls).toContain("https://useravaa.com");
-    expect(pathUrls).toHaveLength(57);
+    expect(pathUrls).toHaveLength(58);
     expect(new Set(urls).size).toBe(urls.length);
     expect(pathUrls.every((url) => urls.includes(url))).toBe(true);
     expect(urls).not.toContain("https://useravaa.com/career/paths/not-a-real-career-path");
     expect(urls).toContain("https://useravaa.com/career/paths/social-media-marketing");
+    expect(urls).not.toContain("https://useravaa.com/career/paths/social-media-content-creation");
+    expect(urls).not.toContain("https://useravaa.com/career/paths/social-media-management");
+    expect(urls).toContain("https://useravaa.com/career/paths/graphic-design-and-visual-content");
     LEGACY_SOCIAL_MEDIA_SLUGS.forEach((slug) => {
       expect(urls).not.toContain(`https://useravaa.com/career/paths/${slug}`);
     });

@@ -1,0 +1,3242 @@
+{
+  "schema_version": "1.0",
+  "research_date": "2026-07-13",
+  "locale": "fa-IR",
+  "primary_market": "Iran 1405",
+  "global_reference_period": "2026",
+  "role_count": 59,
+  "classification_policy": {
+    "fit_values": [
+      "direct",
+      "approximate"
+    ],
+    "note_fa": "O*NET-SOC و ISCO-08 شغل‌ها را بر پایه شباهت وظایف طبقه‌بندی می‌کنند، نه بر پایه نام آگهی یا ابزار. بنابراین جز مواردی که عنوان رسمی دقیقاً منطبق است، نگاشت‌ها تقریبی‌اند؛ انتخاب نهایی کد باید با وظایف واقعی هر آگهی انجام شود.",
+    "onet_source": "https://www.onetonline.org/",
+    "isco_source": "https://ilostat.ilo.org/methods/concepts-and-definitions/classification-occupation/"
+  },
+  "categories": [
+    {
+      "id": "technology_engineering",
+      "title_fa": "فناوری و مهندسی",
+      "title_en": "Technology & Engineering"
+    },
+    {
+      "id": "data_ai",
+      "title_fa": "داده و هوش مصنوعی",
+      "title_en": "Data & AI"
+    },
+    {
+      "id": "marketing_growth",
+      "title_fa": "بازاریابی و رشد",
+      "title_en": "Marketing & Growth"
+    },
+    {
+      "id": "revenue_customer_sales",
+      "title_fa": "درآمد، مشتری و فروش",
+      "title_en": "Revenue / Customer / Sales"
+    },
+    {
+      "id": "people_organization",
+      "title_fa": "افراد و سازمان",
+      "title_en": "People & Organization"
+    },
+    {
+      "id": "product_ux",
+      "title_fa": "محصول و تجربه کاربری",
+      "title_en": "Product & UX"
+    },
+    {
+      "id": "business_operations",
+      "title_fa": "عملیات کسب‌وکار",
+      "title_en": "Business Operations"
+    },
+    {
+      "id": "finance_accounting",
+      "title_fa": "مالی و حسابداری",
+      "title_en": "Finance & Accounting"
+    },
+    {
+      "id": "design_creative",
+      "title_fa": "طراحی و خلاقیت",
+      "title_en": "Design & Creative"
+    }
+  ],
+  "roles": [
+    {
+      "id": "tech_backend_dotnet_csharp",
+      "slug": "backend-dotnet-csharp",
+      "title_fa": "توسعه‌دهنده بک‌اند .NET/C#",
+      "title_en": ".NET/C# Backend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس دات‌نت",
+          "برنامه‌نویس C#",
+          "توسعه‌دهنده ASP.NET Core"
+        ],
+        "en": [
+          ".NET Developer",
+          "C# Developer",
+          "ASP.NET Core Developer"
+        ]
+      },
+      "scope_boundary_note_fa": "سرویس‌ها، APIها، منطق سمت سرور و یکپارچه‌سازی‌های مبتنی بر اکوسیستم .NET را می‌سازد؛ با توسعه‌دهنده عمومی نرم‌افزار یا فول‌استک یکی نیست.",
+      "adjacent_roles": [
+        "tech_fullstack_dotnet_blazor",
+        "tech_backend_java_jvm",
+        "tech_devops_kubernetes_platform",
+        "tech_qa_automation_sdet"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "backend_software_developer",
+        "note_fa": "یک تخصص پشته‌ای در شغل توسعه نرم‌افزار بک‌اند است، نه یک شغل آماری مستقل."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_backend_go",
+      "slug": "backend-go",
+      "title_fa": "توسعه‌دهنده بک‌اند Go",
+      "title_en": "Go Backend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس Go",
+          "توسعه‌دهنده Golang"
+        ],
+        "en": [
+          "Go Developer",
+          "Golang Developer",
+          "Backend Engineer (Go)"
+        ]
+      },
+      "scope_boundary_note_fa": "سرویس‌های سمت سرور، سامانه‌های هم‌زمان و زیرساخت‌محور را با Go توسعه می‌دهد؛ مهندس پلتفرم یا SRE محسوب نمی‌شود مگر مسئولیت عملیاتی غالب باشد.",
+      "adjacent_roles": [
+        "tech_devops_kubernetes_platform",
+        "tech_sre_reliability",
+        "tech_backend_java_jvm",
+        "tech_backend_node_typescript"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "backend_software_developer",
+        "note_fa": "تخصص زبان/اکوسیستم در توسعه بک‌اند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_backend_java_jvm",
+      "slug": "backend-java-jvm",
+      "title_fa": "توسعه‌دهنده بک‌اند Java/JVM",
+      "title_en": "Java/JVM Backend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس جاوا",
+          "توسعه‌دهنده Spring Boot",
+          "مهندس JVM"
+        ],
+        "en": [
+          "Java Developer",
+          "JVM Engineer",
+          "Spring Boot Developer"
+        ]
+      },
+      "scope_boundary_note_fa": "سرویس‌ها و سامانه‌های سمت سرور مبتنی بر Java، Kotlin یا دیگر فناوری‌های JVM را توسعه می‌دهد؛ Android و فرانت‌اند خارج از هسته نقش‌اند.",
+      "adjacent_roles": [
+        "tech_mobile_android_kotlin",
+        "tech_backend_dotnet_csharp",
+        "tech_devops_kubernetes_platform",
+        "tech_qa_automation_sdet"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "backend_software_developer",
+        "note_fa": "تخصص پشته JVM در توسعه بک‌اند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_backend_node_typescript",
+      "slug": "backend-nodejs-typescript",
+      "title_fa": "توسعه‌دهنده بک‌اند Node.js/TypeScript",
+      "title_en": "Node.js/TypeScript Backend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس Node.js",
+          "توسعه‌دهنده NestJS",
+          "برنامه‌نویس بک‌اند تایپ‌اسکریپت"
+        ],
+        "en": [
+          "Node.js Developer",
+          "TypeScript Backend Engineer",
+          "NestJS Developer"
+        ]
+      },
+      "scope_boundary_note_fa": "API، سرویس و منطق سمت سرور را در runtime نود می‌سازد؛ اشتراک زبان با فرانت‌اند آن را خودبه‌خود فول‌استک نمی‌کند.",
+      "adjacent_roles": [
+        "tech_fullstack_node_mern",
+        "tech_frontend_react_next",
+        "tech_backend_go",
+        "tech_devops_kubernetes_platform"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "backend_software_developer",
+        "note_fa": "تخصص پشته Node.js/TypeScript در توسعه بک‌اند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_backend_php_laravel",
+      "slug": "backend-php-laravel",
+      "title_fa": "توسعه‌دهنده بک‌اند PHP/Laravel",
+      "title_en": "PHP/Laravel Backend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس PHP",
+          "توسعه‌دهنده لاراول"
+        ],
+        "en": [
+          "PHP Developer",
+          "Laravel Developer",
+          "Backend PHP Engineer"
+        ]
+      },
+      "scope_boundary_note_fa": "برنامه‌ها، APIها و منطق سمت سرور را با PHP و غالباً Laravel می‌سازد؛ نگهداری CMS می‌تواند نقش متفاوتی باشد.",
+      "adjacent_roles": [
+        "tech_backend_python_django",
+        "tech_fullstack_node_mern",
+        "tech_frontend_vue_nuxt",
+        "tech_qa_automation_sdet"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "backend_software_developer",
+        "note_fa": "تخصص پشته PHP/Laravel در توسعه بک‌اند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1254.00",
+            "title": "Web Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2513",
+            "title": "Web and Multimedia Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_backend_python_django",
+      "slug": "backend-python-django",
+      "title_fa": "توسعه‌دهنده بک‌اند Python/Django",
+      "title_en": "Python/Django Backend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس پایتون",
+          "توسعه‌دهنده جنگو",
+          "توسعه‌دهنده FastAPI"
+        ],
+        "en": [
+          "Python Developer",
+          "Django Developer",
+          "Python Backend Engineer"
+        ]
+      },
+      "scope_boundary_note_fa": "سرویس‌ها و برنامه‌های سمت سرور را با Python و چارچوب‌هایی مانند Django می‌سازد؛ مهندسی داده و AI نقش‌های جدا با خروجی متفاوت‌اند.",
+      "adjacent_roles": [
+        "data_ai_engineering_llm_genai",
+        "data_engineering_platform",
+        "tech_backend_php_laravel",
+        "tech_qa_automation_sdet"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "backend_software_developer",
+        "note_fa": "تخصص پشته Python/Django در توسعه بک‌اند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_frontend_angular",
+      "slug": "frontend-angular",
+      "title_fa": "توسعه‌دهنده فرانت‌اند Angular",
+      "title_en": "Angular Frontend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس انگولار",
+          "توسعه‌دهنده Angular"
+        ],
+        "en": [
+          "Angular Developer",
+          "Frontend Engineer (Angular)",
+          "Angular UI Developer"
+        ]
+      },
+      "scope_boundary_note_fa": "رابط وب سمت کاربر را با Angular پیاده‌سازی و نگهداری می‌کند؛ طراحی UX و توسعه API نقش‌های مجاور اما جدا هستند.",
+      "adjacent_roles": [
+        "product_ui_ux_design",
+        "tech_frontend_react_next",
+        "tech_backend_node_typescript",
+        "tech_qa_automation_sdet"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "frontend_web_developer",
+        "note_fa": "تخصص چارچوب Angular در توسعه فرانت‌اند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1254.00",
+            "title": "Web Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2513",
+            "title": "Web and Multimedia Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_frontend_react_next",
+      "slug": "frontend-react-nextjs",
+      "title_fa": "توسعه‌دهنده فرانت‌اند React/Next.js",
+      "title_en": "React/Next.js Frontend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس React",
+          "توسعه‌دهنده Next.js"
+        ],
+        "en": [
+          "React Developer",
+          "Next.js Developer",
+          "Frontend Engineer (React)"
+        ]
+      },
+      "scope_boundary_note_fa": "رابط و تجربه فنی وب را با React و Next.js پیاده می‌کند؛ کد سمت سرور Next.js ممکن است مرز را به فول‌استک نزدیک کند اما نقش با مالکیت اصلی UI تعریف می‌شود.",
+      "adjacent_roles": [
+        "product_ui_ux_design",
+        "tech_fullstack_node_mern",
+        "tech_frontend_vue_nuxt",
+        "tech_backend_node_typescript"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "frontend_web_developer",
+        "note_fa": "تخصص React/Next.js در توسعه فرانت‌اند؛ Next.js می‌تواند بسته به دامنه وظایف فول‌استک شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1254.00",
+            "title": "Web Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2513",
+            "title": "Web and Multimedia Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_frontend_vue_nuxt",
+      "slug": "frontend-vue-nuxt",
+      "title_fa": "توسعه‌دهنده فرانت‌اند Vue/Nuxt",
+      "title_en": "Vue/Nuxt Frontend Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس Vue",
+          "توسعه‌دهنده Nuxt"
+        ],
+        "en": [
+          "Vue.js Developer",
+          "Nuxt Developer",
+          "Frontend Engineer (Vue)"
+        ]
+      },
+      "scope_boundary_note_fa": "رابط وب را با Vue و Nuxt می‌سازد؛ استفاده از قابلیت‌های سرور Nuxt فقط در صورت مالکیت بک‌اند نقش را فول‌استک می‌کند.",
+      "adjacent_roles": [
+        "product_ui_ux_design",
+        "tech_frontend_react_next",
+        "tech_backend_php_laravel",
+        "tech_qa_automation_sdet"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "frontend_web_developer",
+        "note_fa": "تخصص Vue/Nuxt در توسعه فرانت‌اند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1254.00",
+            "title": "Web Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2513",
+            "title": "Web and Multimedia Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_fullstack_dotnet_blazor",
+      "slug": "fullstack-dotnet-blazor",
+      "title_fa": "توسعه‌دهنده فول‌استک .NET/Blazor",
+      "title_en": ".NET/Blazor Full-Stack Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس فول‌استک دات‌نت",
+          "توسعه‌دهنده Blazor"
+        ],
+        "en": [
+          "Full-Stack .NET Developer",
+          "Blazor Developer",
+          "C# Full-Stack Engineer"
+        ]
+      },
+      "scope_boundary_note_fa": "هم بک‌اند .NET و هم رابط وب Blazor را تحویل می‌دهد؛ اگر یک سمت غالب باشد باید با نقش بک‌اند یا فرانت‌اند طبقه‌بندی شود.",
+      "adjacent_roles": [
+        "tech_backend_dotnet_csharp",
+        "tech_frontend_angular",
+        "product_ui_ux_design",
+        "tech_devops_kubernetes_platform"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "full_stack_web_developer",
+        "note_fa": "گونه پشته‌ای فول‌استک؛ خود Blazor شغل مستقل نیست."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1254.00",
+            "title": "Web Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2513",
+            "title": "Web and Multimedia Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_fullstack_node_mern",
+      "slug": "fullstack-node-mern",
+      "title_fa": "توسعه‌دهنده فول‌استک Node.js/MERN",
+      "title_en": "Node.js/MERN Full-Stack Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس MERN",
+          "فول‌استک جاوااسکریپت"
+        ],
+        "en": [
+          "MERN Stack Developer",
+          "JavaScript Full-Stack Developer",
+          "Node/React Full-Stack Engineer"
+        ]
+      },
+      "scope_boundary_note_fa": "کل مسیر رابط React تا API و داده در Node/MongoDB را پوشش می‌دهد؛ صرف آشنایی با هر دو سمت بدون مسئولیت تحویل کامل، فول‌استک نیست.",
+      "adjacent_roles": [
+        "tech_backend_node_typescript",
+        "tech_frontend_react_next",
+        "product_ui_ux_design",
+        "tech_devops_kubernetes_platform"
+      ],
+      "variant_relation": {
+        "kind": "technology_stack_variant",
+        "parent_occupation": "full_stack_web_developer",
+        "note_fa": "گونه پشته‌ای فول‌استک مبتنی بر JavaScript/TypeScript."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1254.00",
+            "title": "Web Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2513",
+            "title": "Web and Multimedia Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_mobile_android_kotlin",
+      "slug": "android-native-kotlin",
+      "title_fa": "توسعه‌دهنده اندروید نیتیو/Kotlin",
+      "title_en": "Native Android/Kotlin Developer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "برنامه‌نویس اندروید",
+          "توسعه‌دهنده Kotlin اندروید"
+        ],
+        "en": [
+          "Android Developer",
+          "Kotlin Android Engineer",
+          "Mobile Software Engineer (Android)"
+        ]
+      },
+      "scope_boundary_note_fa": "اپلیکیشن نیتیو Android را با Kotlin/Java و SDK اندروید می‌سازد؛ توسعه موبایل چندسکویی یا بک‌اند را شامل نمی‌شود.",
+      "adjacent_roles": [
+        "tech_backend_java_jvm",
+        "product_ui_ux_design",
+        "tech_qa_automation_sdet",
+        "product_management"
+      ],
+      "variant_relation": {
+        "kind": "platform_stack_variant",
+        "parent_occupation": "mobile_application_developer",
+        "note_fa": "تخصص پلتفرم Android در توسعه نرم‌افزار موبایل."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_devops_kubernetes_platform",
+      "slug": "kubernetes-platform-engineering",
+      "title_fa": "مهندس Kubernetes و پلتفرم",
+      "title_en": "Kubernetes / Platform Engineer",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "مهندس DevOps",
+          "مهندس پلتفرم",
+          "مهندس کلاد",
+          "ادمین Kubernetes"
+        ],
+        "en": [
+          "Platform Engineer",
+          "DevOps Engineer",
+          "Cloud Platform Engineer",
+          "Kubernetes Engineer"
+        ]
+      },
+      "scope_boundary_note_fa": "پلتفرم سلف‌سرویس، زیرساخت ابری، CI/CD و چرخه عمر Kubernetes را مهندسی می‌کند؛ پشتیبانی روزمره سیستم یا تضمین قابلیت اطمینان تمام‌وقت الزاماً همان نقش نیست.",
+      "adjacent_roles": [
+        "tech_sre_reliability",
+        "tech_it_network_admin",
+        "tech_it_windows_microsoft_infra",
+        "tech_backend_go",
+        "tech_cyber_soc_monitoring"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "computer_systems_and_cloud_engineer",
+        "note_fa": "عنوان بازارمحور و میان‌رشته‌ای است؛ کد آماری یگانه ندارد و ممکن است به توسعه نرم‌افزار یا مدیریت سیستم نزدیک‌تر باشد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1244.00",
+            "title": "Network and Computer Systems Administrators",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2522",
+            "title": "Systems Administrators",
+            "fit": "approximate"
+          },
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_sre_reliability",
+      "slug": "sre-reliability-engineering",
+      "title_fa": "مهندس قابلیت اطمینان سایت (SRE)",
+      "title_en": "Site Reliability Engineer (SRE)",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "مهندس پایداری",
+          "مهندس قابلیت اطمینان",
+          "مهندس عملیات تولید"
+        ],
+        "en": [
+          "Reliability Engineer",
+          "Production Engineer",
+          "Site Reliability Engineer"
+        ]
+      },
+      "scope_boundary_note_fa": "قابلیت اطمینان سرویس را با مهندسی نرم‌افزار، SLI/SLO، پاسخ به رخداد و حذف کار دستی بهبود می‌دهد؛ DevOps یک رویکرد گسترده‌تر و NOC/SOC نقش‌های پایش متفاوت‌اند.",
+      "adjacent_roles": [
+        "tech_devops_kubernetes_platform",
+        "tech_backend_go",
+        "tech_cyber_soc_monitoring",
+        "tech_it_network_admin",
+        "tech_qa_automation_sdet"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "software_and_systems_reliability_engineer",
+        "note_fa": "نقش میان توسعه نرم‌افزار و عملیات است و نگاشت آماری به ترکیب واقعی وظایف وابسته است."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1244.00",
+            "title": "Network and Computer Systems Administrators",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2522",
+            "title": "Systems Administrators",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_cyber_penetration_testing",
+      "slug": "penetration-testing",
+      "title_fa": "متخصص تست نفوذ",
+      "title_en": "Penetration Tester",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "پنتستر",
+          "هکر اخلاقی",
+          "کارشناس ارزیابی امنیت"
+        ],
+        "en": [
+          "Pentester",
+          "Ethical Hacker",
+          "Offensive Security Consultant"
+        ]
+      },
+      "scope_boundary_note_fa": "با مجوز و دامنه مشخص حمله شبیه‌سازی‌شده انجام و آسیب‌پذیری را اثبات و گزارش می‌کند؛ شکار تهدید، SOC و باگ‌بانتی بدون قرارداد معادل کامل آن نیستند.",
+      "adjacent_roles": [
+        "tech_cyber_soc_monitoring",
+        "tech_devops_kubernetes_platform",
+        "tech_it_network_admin",
+        "tech_qa_automation_sdet"
+      ],
+      "variant_relation": {
+        "kind": "occupation",
+        "parent_occupation": null,
+        "note_fa": "در O*NET عنوان مستقیم دارد؛ در ISCO-08 زیر گروه گسترده امنیت/پایگاه داده قرار می‌گیرد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1299.04",
+            "title": "Penetration Testers",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2529",
+            "title": "Database and Network Professionals Not Elsewhere Classified",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_cyber_soc_monitoring",
+      "slug": "soc-security-monitoring",
+      "title_fa": "کارشناس SOC و پایش امنیت",
+      "title_en": "SOC / Security Monitoring Analyst",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "تحلیلگر مرکز عملیات امنیت",
+          "کارشناس مانیتورینگ امنیت",
+          "تحلیلگر امنیت سطح ۱"
+        ],
+        "en": [
+          "SOC Analyst",
+          "Security Operations Analyst",
+          "Cybersecurity Monitoring Analyst"
+        ]
+      },
+      "scope_boundary_note_fa": "هشدارها، لاگ‌ها و رخدادهای امنیتی را پایش، تریاژ و تشدید می‌کند؛ تست نفوذ تهاجمی و مدیریت زیرساخت عمومی خارج از هسته نقش است.",
+      "adjacent_roles": [
+        "tech_cyber_penetration_testing",
+        "tech_sre_reliability",
+        "tech_it_network_admin",
+        "tech_devops_kubernetes_platform",
+        "tech_it_helpdesk"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "information_security_analyst",
+        "note_fa": "تخصص عملیات دفاعی/پایش در خانواده تحلیل امنیت اطلاعات."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1212.00",
+            "title": "Information Security Analysts",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2529",
+            "title": "Database and Network Professionals Not Elsewhere Classified",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_it_helpdesk",
+      "slug": "it-helpdesk",
+      "title_fa": "کارشناس هلپ‌دسک و پشتیبانی IT",
+      "title_en": "IT Helpdesk / User Support Specialist",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "کارشناس پشتیبانی فناوری اطلاعات",
+          "پشتیبان سیستم",
+          "کارشناس Service Desk"
+        ],
+        "en": [
+          "Help Desk Technician",
+          "IT Support Specialist",
+          "Service Desk Analyst",
+          "Desktop Support Technician"
+        ]
+      },
+      "scope_boundary_note_fa": "مشکلات کاربر، دستگاه، نرم‌افزار و دسترسی را در خط اول/دوم حل و ارجاع می‌کند؛ مالکیت معماری شبکه یا سرورها معمولاً با مدیر سیستم است.",
+      "adjacent_roles": [
+        "tech_it_network_admin",
+        "tech_it_windows_microsoft_infra",
+        "tech_cyber_soc_monitoring",
+        "revenue_contact_center_operations"
+      ],
+      "variant_relation": {
+        "kind": "occupation",
+        "parent_occupation": null,
+        "note_fa": "نقش پشتیبانی کاربر؛ سطح و دامنه بین Service Desk، Desktop Support و IT Support متفاوت است."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1232.00",
+            "title": "Computer User Support Specialists",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "3512",
+            "title": "Information and Communications Technology User Support Technicians",
+            "fit": "direct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_it_network_admin",
+      "slug": "network-administration",
+      "title_fa": "مدیر شبکه",
+      "title_en": "Network Administrator",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "کارشناس شبکه",
+          "ادمین شبکه",
+          "مهندس شبکه"
+        ],
+        "en": [
+          "Network Administrator",
+          "Network Engineer",
+          "Network Operations Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "شبکه سازمانی، تجهیزات، آدرس‌دهی، اتصال و عیب‌یابی را اداره می‌کند؛ طراحی معماری بزرگ‌مقیاس و امنیت شبکه می‌توانند نقش‌های تخصصی جدا باشند.",
+      "adjacent_roles": [
+        "tech_it_windows_microsoft_infra",
+        "tech_it_helpdesk",
+        "tech_devops_kubernetes_platform",
+        "tech_cyber_soc_monitoring"
+      ],
+      "variant_relation": {
+        "kind": "occupation",
+        "parent_occupation": null,
+        "note_fa": "عنوان «مهندس شبکه» گاهی طراحی پیشرفته را هم دربرمی‌گیرد؛ این واحد بر اداره عملیاتی شبکه تمرکز دارد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1244.00",
+            "title": "Network and Computer Systems Administrators",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2523",
+            "title": "Computer Network Professionals",
+            "fit": "approximate"
+          },
+          {
+            "code": "3513",
+            "title": "Computer Network and Systems Technicians",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_it_windows_microsoft_infra",
+      "slug": "windows-microsoft-infrastructure",
+      "title_fa": "کارشناس زیرساخت Windows/Microsoft",
+      "title_en": "Windows / Microsoft Infrastructure Administrator",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "ادمین ویندوز سرور",
+          "کارشناس اکتیودایرکتوری",
+          "کارشناس زیرساخت مایکروسافت"
+        ],
+        "en": [
+          "Windows System Administrator",
+          "Microsoft Infrastructure Engineer",
+          "Active Directory Administrator",
+          "M365 Administrator"
+        ]
+      },
+      "scope_boundary_note_fa": "سرویس‌های Windows Server، Active Directory، Microsoft 365 و نقاط پایانی را اداره می‌کند؛ شبکه، کلاد پلتفرم و هلپ‌دسک همپوشانی دارند اما خروجی اصلی متفاوت است.",
+      "adjacent_roles": [
+        "tech_it_network_admin",
+        "tech_it_helpdesk",
+        "tech_devops_kubernetes_platform",
+        "tech_cyber_soc_monitoring"
+      ],
+      "variant_relation": {
+        "kind": "vendor_stack_variant",
+        "parent_occupation": "systems_administrator",
+        "note_fa": "تخصص فروشنده/پلتفرم در مدیریت سیستم و زیرساخت."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1244.00",
+            "title": "Network and Computer Systems Administrators",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2522",
+            "title": "Systems Administrators",
+            "fit": "direct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "tech_qa_automation_sdet",
+      "slug": "qa-automation-sdet",
+      "title_fa": "مهندس اتوماسیون QA / SDET",
+      "title_en": "QA Automation Engineer / SDET",
+      "category_id": "technology_engineering",
+      "aliases": {
+        "fa": [
+          "مهندس تست نرم‌افزار",
+          "کارشناس تست اتوماتیک",
+          "توسعه‌دهنده تست"
+        ],
+        "en": [
+          "Test Automation Engineer",
+          "Software Development Engineer in Test",
+          "QA Engineer",
+          "Automation Tester"
+        ]
+      },
+      "scope_boundary_note_fa": "چارچوب و کد آزمون خودکار، پوشش کیفیت و بازخورد CI را می‌سازد؛ تست دستی صرف یا کنترل کیفیت غیرنرم‌افزاری در این دامنه نیست.",
+      "adjacent_roles": [
+        "tech_backend_node_typescript",
+        "tech_frontend_react_next",
+        "tech_mobile_android_kotlin",
+        "tech_sre_reliability",
+        "product_management"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "software_quality_assurance_analyst_tester",
+        "note_fa": "گونه مهندسی/کدنویسی‌محور تضمین کیفیت نرم‌افزار."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1253.00",
+            "title": "Software Quality Assurance Analysts and Testers",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2519",
+            "title": "Software and Applications Developers and Analysts Not Elsewhere Classified",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "data_analysis_business_insights",
+      "slug": "data-analysis-business-insights",
+      "title_fa": "تحلیلگر داده و بینش کسب‌وکار",
+      "title_en": "Data Analyst / Business Insights Analyst",
+      "category_id": "data_ai",
+      "aliases": {
+        "fa": [
+          "تحلیلگر داده",
+          "تحلیلگر کسب‌وکار داده‌محور",
+          "کارشناس بینش"
+        ],
+        "en": [
+          "Data Analyst",
+          "Insights Analyst",
+          "Business Data Analyst",
+          "Decision Support Analyst"
+        ]
+      },
+      "scope_boundary_note_fa": "داده را برای پاسخ به سؤال کسب‌وکار، تحلیل علّی/توصیفی و ارائه توصیه تفسیر می‌کند؛ ساخت زیرساخت داده یا گزارش‌سازی تکرارشونده BI هسته نقش نیست.",
+      "adjacent_roles": [
+        "data_business_intelligence_reporting",
+        "data_engineering_platform",
+        "data_ai_engineering_llm_genai",
+        "marketing_market_research_insights",
+        "product_management"
+      ],
+      "variant_relation": {
+        "kind": "occupation_family",
+        "parent_occupation": "data_and_business_analysis",
+        "note_fa": "عنوان بازار مبهم است؛ اگر تمرکز بر فرایند و نیازمندی باشد ممکن است Business Analyst غیر‌داده‌ای محسوب شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-2051.00",
+            "title": "Data Scientists",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1111.00",
+            "title": "Management Analysts",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2120",
+            "title": "Mathematicians, Actuaries and Statisticians",
+            "fit": "approximate"
+          },
+          {
+            "code": "2421",
+            "title": "Management and Organization Analysts",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "data_engineering_platform",
+      "slug": "data-engineering-platform",
+      "title_fa": "مهندس داده و پلتفرم داده",
+      "title_en": "Data Engineer / Data Platform Engineer",
+      "category_id": "data_ai",
+      "aliases": {
+        "fa": [
+          "مهندس داده",
+          "مهندس ETL",
+          "مهندس پلتفرم داده"
+        ],
+        "en": [
+          "Data Engineer",
+          "Data Platform Engineer",
+          "ETL Engineer",
+          "Analytics Engineer"
+        ]
+      },
+      "scope_boundary_note_fa": "خطوط لوله، مدل‌ها، ذخیره‌سازی و قابلیت اتکای پلتفرم داده را می‌سازد؛ تحلیل بینش و مدل‌سازی ML خروجی‌های نقش‌های دیگرند.",
+      "adjacent_roles": [
+        "data_analysis_business_insights",
+        "data_business_intelligence_reporting",
+        "data_ai_engineering_llm_genai",
+        "tech_devops_kubernetes_platform",
+        "tech_backend_python_django"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "database_architecture_and_software_engineering",
+        "note_fa": "عنوان جدیدتر بازار است و میان معماری پایگاه داده و توسعه نرم‌افزار توزیع می‌شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1243.00",
+            "title": "Database Architects",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2521",
+            "title": "Database Designers and Administrators",
+            "fit": "approximate"
+          },
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "data_ai_engineering_llm_genai",
+      "slug": "ai-engineering-llm-genai",
+      "title_fa": "مهندس هوش مصنوعی، LLM و GenAI",
+      "title_en": "AI / LLM / Generative AI Engineer",
+      "category_id": "data_ai",
+      "aliases": {
+        "fa": [
+          "مهندس هوش مصنوعی",
+          "مهندس یادگیری ماشین",
+          "مهندس LLM",
+          "مهندس هوش مصنوعی مولد"
+        ],
+        "en": [
+          "AI Engineer",
+          "Machine Learning Engineer",
+          "LLM Engineer",
+          "Generative AI Engineer",
+          "Applied AI Engineer"
+        ]
+      },
+      "scope_boundary_note_fa": "سامانه‌های AI تولیدی را با مدل، بازیابی، ارزیابی، داده و سروینگ مهندسی می‌کند؛ پژوهش مدل بنیادی، علم داده تحلیلی و پرامپت‌نویسی صرف نقش‌های متفاوت‌اند.",
+      "adjacent_roles": [
+        "data_engineering_platform",
+        "data_analysis_business_insights",
+        "tech_backend_python_django",
+        "tech_devops_kubernetes_platform",
+        "product_management"
+      ],
+      "variant_relation": {
+        "kind": "emerging_specialization",
+        "parent_occupation": "machine_learning_and_software_engineering",
+        "note_fa": "عنوان نوظهور و فاقد کد آماری یگانه است؛ نسبت پژوهش، ML و نرم‌افزار در هر شغل باید بررسی شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-2051.00",
+            "title": "Data Scientists",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1252.00",
+            "title": "Software Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1221.00",
+            "title": "Computer and Information Research Scientists",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2512",
+            "title": "Software Developers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2511",
+            "title": "Systems Analysts",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "data_business_intelligence_reporting",
+      "slug": "business-intelligence-dashboard-reporting",
+      "title_fa": "کارشناس هوش تجاری، داشبورد و گزارش‌سازی",
+      "title_en": "Business Intelligence / Dashboard & Reporting Analyst",
+      "category_id": "data_ai",
+      "aliases": {
+        "fa": [
+          "کارشناس BI",
+          "توسعه‌دهنده داشبورد",
+          "کارشناس گزارش‌سازی",
+          "توسعه‌دهنده Power BI"
+        ],
+        "en": [
+          "BI Analyst",
+          "Business Intelligence Developer",
+          "Reporting Analyst",
+          "Dashboard Developer"
+        ]
+      },
+      "scope_boundary_note_fa": "داده‌های تعریف‌شده را به شاخص، مدل معنایی، داشبورد و گزارش قابل اتکا تبدیل می‌کند؛ تحلیل اکتشافی عمیق یا مهندسی زیرساخت داده نقش‌های مجاورند.",
+      "adjacent_roles": [
+        "data_analysis_business_insights",
+        "data_engineering_platform",
+        "finance_financial_accounting_management",
+        "marketing_market_research_insights",
+        "product_management"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "business_intelligence_analyst",
+        "note_fa": "گزارش‌سازی و توسعه BI در آگهی‌ها گاهی از تحلیل بینش جدا و گاهی ادغام می‌شوند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-2051.01",
+            "title": "Business Intelligence Analysts",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2511",
+            "title": "Systems Analysts",
+            "fit": "approximate"
+          },
+          {
+            "code": "2421",
+            "title": "Management and Organization Analysts",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_growth",
+      "slug": "growth-marketing",
+      "title_fa": "بازاریاب رشد",
+      "title_en": "Growth Marketer",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "کارشناس رشد",
+          "مدیر رشد",
+          "هکر رشد"
+        ],
+        "en": [
+          "Growth Marketing Specialist",
+          "Growth Manager",
+          "Growth Hacker",
+          "Lifecycle Growth Marketer"
+        ]
+      },
+      "scope_boundary_note_fa": "با آزمایش میان‌کانالی و تحلیل قیف، جذب، فعال‌سازی و نگهداشت را رشد می‌دهد؛ صرف اجرای تبلیغات پولی یا مدیریت محصول معادل نقش نیست.",
+      "adjacent_roles": [
+        "marketing_performance",
+        "marketing_digital_general",
+        "revenue_crm_retention_operations",
+        "product_management",
+        "data_analysis_business_insights"
+      ],
+      "variant_relation": {
+        "kind": "cross_functional_specialization",
+        "parent_occupation": "marketing_strategy_and_analysis",
+        "note_fa": "عنوان بازارمحور و میان بازاریابی، محصول و داده است؛ سطح Specialist و Manager باید جدا شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          },
+          {
+            "code": "11-2021.00",
+            "title": "Marketing Managers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          },
+          {
+            "code": "1221",
+            "title": "Sales and Marketing Managers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_content",
+      "slug": "content-marketing",
+      "title_fa": "بازاریاب محتوا",
+      "title_en": "Content Marketer",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "کارشناس بازاریابی محتوا",
+          "کارشناس محتوا",
+          "استراتژیست محتوا"
+        ],
+        "en": [
+          "Content Marketing Specialist",
+          "Content Strategist",
+          "Content Marketer",
+          "Editorial Marketer"
+        ]
+      },
+      "scope_boundary_note_fa": "استراتژی، تولید، توزیع و سنجش محتوایی را برای هدف بازاریابی مالک می‌شود؛ کپی‌رایتر یا تولیدکننده صرف الزاماً بازاریاب محتوا نیست.",
+      "adjacent_roles": [
+        "marketing_social_content_creation",
+        "marketing_seo",
+        "marketing_brand_strategy",
+        "design_graphic_visual_content",
+        "marketing_digital_general"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "marketing_specialist",
+        "note_fa": "تخصص بازاریابی با رسانه محتوا؛ ممکن است با استراتژی محتوا یا سردبیری همپوشانی داشته باشد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          },
+          {
+            "code": "27-3043.00",
+            "title": "Writers and Authors",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          },
+          {
+            "code": "2641",
+            "title": "Authors and Related Writers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_market_research_insights",
+      "slug": "market-research-insights",
+      "title_fa": "تحلیلگر تحقیقات و بینش بازار",
+      "title_en": "Market Research & Market Insights Analyst",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "کارشناس تحقیقات بازار",
+          "تحلیلگر بازار",
+          "کارشناس بینش مشتری"
+        ],
+        "en": [
+          "Market Research Analyst",
+          "Consumer Insights Analyst",
+          "Market Insights Specialist",
+          "Research Executive"
+        ]
+      },
+      "scope_boundary_note_fa": "بازار، مشتری و رقبا را با پژوهش کمی/کیفی تحلیل می‌کند تا تصمیم تجاری پشتیبانی شود؛ تحلیل داده داخلی یا توسعه بازار فروش‌محور نقش دیگری است.",
+      "adjacent_roles": [
+        "data_analysis_business_insights",
+        "marketing_brand_strategy",
+        "marketing_generalist",
+        "revenue_market_development_merchant_acquisition",
+        "product_management"
+      ],
+      "variant_relation": {
+        "kind": "occupation",
+        "parent_occupation": null,
+        "note_fa": "بین تحقیقات بازار، بینش مصرف‌کننده و intelligence رقابتی گونه‌های نزدیک وجود دارد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_social_content_creation",
+      "slug": "social-media-content-creation",
+      "title_fa": "تولیدکننده محتوا برای شبکه‌های اجتماعی",
+      "title_en": "Social Media Content Creator",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "تولیدکننده محتوای سوشال",
+          "کریتور شبکه اجتماعی",
+          "کارشناس تولید محتوا"
+        ],
+        "en": [
+          "Social Content Creator",
+          "Content Creator",
+          "Social Media Producer",
+          "Short-Form Content Creator"
+        ]
+      },
+      "scope_boundary_note_fa": "محتوای متنی/تصویری/ویدیویی مناسب پلتفرم تولید می‌کند؛ تقویم، جامعه، پاسخ‌گویی و KPI کل کانال معمولاً با مدیر شبکه اجتماعی است.",
+      "adjacent_roles": [
+        "marketing_social_media_management",
+        "marketing_content",
+        "design_graphic_visual_content",
+        "design_video_editing_production",
+        "design_motion_graphics_animation"
+      ],
+      "variant_relation": {
+        "kind": "content_production_specialization",
+        "parent_occupation": "digital_content_creator",
+        "note_fa": "کد آماری واحد ندارد و بر حسب رسانه غالب به نویسنده، طراح یا تهیه‌کننده نزدیک می‌شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "27-3043.00",
+            "title": "Writers and Authors",
+            "fit": "approximate"
+          },
+          {
+            "code": "27-3031.00",
+            "title": "Public Relations Specialists",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2641",
+            "title": "Authors and Related Writers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2432",
+            "title": "Public Relations Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_digital_general",
+      "slug": "digital-marketing-general",
+      "title_fa": "کارشناس دیجیتال مارکتینگ عمومی",
+      "title_en": "Digital Marketing Specialist (General)",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "کارشناس دیجیتال مارکتینگ",
+          "کارشناس بازاریابی آنلاین",
+          "کارشناس بازاریابی اینترنتی"
+        ],
+        "en": [
+          "Digital Marketing Specialist",
+          "Online Marketing Specialist",
+          "Digital Marketer",
+          "Internet Marketing Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "ترکیبی از کانال‌های دیجیتال مانند تبلیغات، محتوا، ایمیل، وب و تحلیل را اجرا و هماهنگ می‌کند؛ نقش‌های SEO و Performance تخصص عمیق‌تر کانالی‌اند.",
+      "adjacent_roles": [
+        "marketing_performance",
+        "marketing_seo",
+        "marketing_content",
+        "marketing_social_media_management",
+        "marketing_generalist"
+      ],
+      "variant_relation": {
+        "kind": "channel_family_specialization",
+        "parent_occupation": "marketing_specialist",
+        "note_fa": "یک عنوان چتری است؛ دامنه دقیق کانال‌ها باید برای هر آگهی ثبت شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.01",
+            "title": "Search Marketing Strategists",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_seo",
+      "slug": "seo",
+      "title_fa": "متخصص سئو",
+      "title_en": "SEO Specialist",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "کارشناس سئو",
+          "متخصص بهینه‌سازی موتور جست‌وجو",
+          "SEO تکنیکال"
+        ],
+        "en": [
+          "SEO Specialist",
+          "SEO Strategist",
+          "Search Engine Optimization Consultant",
+          "Technical SEO Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "دیدپذیری ارگانیک جست‌وجو را با پژوهش تقاضا، محتوا، سئوی فنی و سنجش بهبود می‌دهد؛ تبلیغات جست‌وجوی پولی Performance Marketing است.",
+      "adjacent_roles": [
+        "marketing_content",
+        "marketing_performance",
+        "marketing_digital_general",
+        "tech_frontend_react_next",
+        "data_analysis_business_insights"
+      ],
+      "variant_relation": {
+        "kind": "channel_specialization",
+        "parent_occupation": "search_marketing_strategist",
+        "note_fa": "تخصص کانال جست‌وجوی ارگانیک؛ O*NET آن را در Search Marketing گسترده‌تر قرار می‌دهد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.01",
+            "title": "Search Marketing Strategists",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_social_media_management",
+      "slug": "social-media-management",
+      "title_fa": "مدیر شبکه‌های اجتماعی",
+      "title_en": "Social Media Manager",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "کارشناس شبکه‌های اجتماعی",
+          "ادمین سوشال مدیا",
+          "مدیر سوشال"
+        ],
+        "en": [
+          "Social Media Manager",
+          "Social Media Specialist",
+          "Community and Social Manager"
+        ]
+      },
+      "scope_boundary_note_fa": "استراتژی کانال، تقویم، انتشار، تعامل، پایش و گزارش عملکرد شبکه‌ها را مالک می‌شود؛ تولید همه دارایی‌ها یا روابط عمومی سازمانی الزاماً با او نیست.",
+      "adjacent_roles": [
+        "marketing_social_content_creation",
+        "marketing_content",
+        "marketing_brand_strategy",
+        "design_graphic_visual_content",
+        "marketing_digital_general"
+      ],
+      "variant_relation": {
+        "kind": "channel_management_specialization",
+        "parent_occupation": "public_relations_and_marketing_specialist",
+        "note_fa": "عنوان «مدیر» در ایران اغلب سطح کارشناس اجرایی است و لزوماً مدیریت افراد ندارد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "27-3031.00",
+            "title": "Public Relations Specialists",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1161.01",
+            "title": "Search Marketing Strategists",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2432",
+            "title": "Public Relations Professionals",
+            "fit": "approximate"
+          },
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_brand_strategy",
+      "slug": "brand-strategy-branding",
+      "title_fa": "استراتژیست برند و برندینگ",
+      "title_en": "Brand Strategist / Brand Manager",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "استراتژیست برند",
+          "مدیر برند",
+          "کارشناس برندینگ"
+        ],
+        "en": [
+          "Brand Strategist",
+          "Brand Manager",
+          "Brand Marketing Manager",
+          "Brand Consultant"
+        ]
+      },
+      "scope_boundary_note_fa": "جایگاه، معماری، وعده و انسجام تجربه برند را تعریف و هدایت می‌کند؛ طراحی هویت بصری اجرای طراحی است و مدیریت بازاریابی دامنه تجاری گسترده‌تری دارد.",
+      "adjacent_roles": [
+        "design_visual_identity_brand",
+        "marketing_market_research_insights",
+        "marketing_content",
+        "marketing_generalist",
+        "product_management"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "marketing_strategy",
+        "note_fa": "Brand Strategist و Brand Manager از نظر سطح تصمیم و مالکیت P&L یکسان نیستند؛ در گزارش باید تفکیک شوند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "11-2021.00",
+            "title": "Marketing Managers",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          },
+          {
+            "code": "1221",
+            "title": "Sales and Marketing Managers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_generalist",
+      "slug": "marketing-generalist",
+      "title_fa": "بازاریاب جنرالیست",
+      "title_en": "Marketing Generalist",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "کارشناس بازاریابی",
+          "کارشناس مارکتینگ",
+          "هماهنگ‌کننده بازاریابی"
+        ],
+        "en": [
+          "Marketing Specialist",
+          "Marketing Generalist",
+          "Marketing Coordinator",
+          "Marketing Executive"
+        ]
+      },
+      "scope_boundary_note_fa": "چند فعالیت بازاریابی از برنامه‌ریزی و کمپین تا محتوا و گزارش را در تیم کوچک پوشش می‌دهد؛ مدیر بازاریابی یا متخصص عمیق یک کانال محسوب نمی‌شود.",
+      "adjacent_roles": [
+        "marketing_digital_general",
+        "marketing_brand_strategy",
+        "marketing_content",
+        "marketing_market_research_insights",
+        "revenue_business_development"
+      ],
+      "variant_relation": {
+        "kind": "occupation_family",
+        "parent_occupation": "marketing_specialist",
+        "note_fa": "عنوان چتری و وابسته به اندازه سازمان است؛ دامنه واقعی باید از وظایف استخراج شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "marketing_performance",
+      "slug": "performance-marketing",
+      "title_fa": "بازاریاب عملکردی",
+      "title_en": "Performance Marketer",
+      "category_id": "marketing_growth",
+      "aliases": {
+        "fa": [
+          "کارشناس پرفورمنس مارکتینگ",
+          "کارشناس تبلیغات آنلاین",
+          "کارشناس جذب پولی"
+        ],
+        "en": [
+          "Performance Marketing Specialist",
+          "Paid Media Specialist",
+          "User Acquisition Specialist",
+          "PPC Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "بودجه رسانه پولی و جذب قابل‌اندازه‌گیری را بر پایه هزینه و بازده بهینه می‌کند؛ رشد کل قیف و SEO ارگانیک دامنه‌های گسترده‌تر/متفاوت‌اند.",
+      "adjacent_roles": [
+        "marketing_growth",
+        "marketing_digital_general",
+        "marketing_seo",
+        "data_analysis_business_insights",
+        "revenue_crm_retention_operations"
+      ],
+      "variant_relation": {
+        "kind": "channel_specialization",
+        "parent_occupation": "digital_marketing_specialist",
+        "note_fa": "تخصص رسانه پولی و سنجش عملکرد؛ عناوین UA، PPC و Paid Social زیرگونه‌اند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.01",
+            "title": "Search Marketing Strategists",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue_crm_operations",
+      "slug": "crm-operations",
+      "title_fa": "کارشناس عملیات CRM",
+      "title_en": "CRM Operations Specialist",
+      "category_id": "revenue_customer_sales",
+      "aliases": {
+        "fa": [
+          "کارشناس CRM",
+          "ادمین CRM",
+          "کارشناس عملیات ارتباط با مشتری"
+        ],
+        "en": [
+          "CRM Operations Specialist",
+          "CRM Administrator",
+          "CRM Analyst",
+          "Revenue Operations Specialist (CRM)"
+        ]
+      },
+      "scope_boundary_note_fa": "سامانه CRM، کیفیت داده، گردش‌کار، سگمنت و گزارش عملیاتی را اداره می‌کند؛ طراحی کمپین نگهداشت یا فروش مستقیم الزاماً مسئولیت اصلی نیست.",
+      "adjacent_roles": [
+        "revenue_crm_retention_operations",
+        "revenue_account_management",
+        "revenue_business_development",
+        "data_business_intelligence_reporting",
+        "marketing_growth"
+      ],
+      "variant_relation": {
+        "kind": "business_systems_specialization",
+        "parent_occupation": "business_operations_and_systems_analysis",
+        "note_fa": "نقش نوین عملیات درآمد/مشتری با کد آماری یگانه نیست؛ وزن ادمین سیستم و عملیات تجاری تعیین‌کننده است."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1199.00",
+            "title": "Business Operations Specialists, All Other",
+            "fit": "approximate"
+          },
+          {
+            "code": "15-1211.00",
+            "title": "Computer Systems Analysts",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2421",
+            "title": "Management and Organization Analysts",
+            "fit": "approximate"
+          },
+          {
+            "code": "2511",
+            "title": "Systems Analysts",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue_crm_retention_operations",
+      "slug": "crm-retention-operations",
+      "title_fa": "کارشناس عملیات CRM و نگهداشت",
+      "title_en": "CRM & Retention Operations Specialist",
+      "category_id": "revenue_customer_sales",
+      "aliases": {
+        "fa": [
+          "کارشناس باشگاه مشتریان",
+          "کارشناس وفاداری",
+          "کارشناس ریتنشن",
+          "کارشناس بازاریابی چرخه عمر"
+        ],
+        "en": [
+          "Retention Operations Specialist",
+          "Lifecycle Marketing Specialist",
+          "Loyalty Operations Specialist",
+          "CRM Campaign Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "کمپین‌ها و سفرهای چرخه عمر، وفاداری و بازگشت مشتری را با CRM اجرا و بهینه می‌کند؛ اداره فنی CRM یا خدمات مشتری روزمره نقش‌های جدا هستند.",
+      "adjacent_roles": [
+        "revenue_crm_operations",
+        "marketing_growth",
+        "marketing_performance",
+        "data_analysis_business_insights",
+        "revenue_contact_center_operations"
+      ],
+      "variant_relation": {
+        "kind": "lifecycle_marketing_specialization",
+        "parent_occupation": "marketing_and_customer_operations",
+        "note_fa": "مرز میان بازاریابی چرخه عمر و عملیات مشتری است و عنوان استاندارد آماری واحد ندارد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1199.00",
+            "title": "Business Operations Specialists, All Other",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          },
+          {
+            "code": "2421",
+            "title": "Management and Organization Analysts",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue_contact_center_operations",
+      "slug": "contact-center-operations",
+      "title_fa": "کارشناس/سرپرست عملیات مرکز تماس",
+      "title_en": "Contact Center Operations Specialist / Supervisor",
+      "category_id": "revenue_customer_sales",
+      "aliases": {
+        "fa": [
+          "کارشناس عملیات کال‌سنتر",
+          "سرپرست مرکز تماس",
+          "کارشناس کنترل تماس",
+          "کارشناس WFM مرکز تماس"
+        ],
+        "en": [
+          "Contact Center Operations Specialist",
+          "Call Center Supervisor",
+          "Contact Center Workforce Analyst",
+          "Quality Operations Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "ظرفیت، صف، کیفیت، SLA، نیروی شیفت و فرایند مرکز تماس را اداره می‌کند؛ اپراتور پاسخ‌گو یا مدیر تجربه مشتری سطح/نقش دیگری است.",
+      "adjacent_roles": [
+        "revenue_crm_operations",
+        "revenue_crm_retention_operations",
+        "revenue_account_management",
+        "tech_it_helpdesk",
+        "people_hr_operations_personnel_admin"
+      ],
+      "variant_relation": {
+        "kind": "operations_family",
+        "parent_occupation": "customer_service_operations",
+        "note_fa": "عنوان می‌تواند کارشناس WFM/QA یا سرپرست افراد باشد؛ سطح و مالکیت مدیریتی باید در گزارش تفکیک شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "43-1011.00",
+            "title": "First-Line Supervisors of Office and Administrative Support Workers",
+            "fit": "approximate"
+          },
+          {
+            "code": "43-4051.00",
+            "title": "Customer Service Representatives",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "3341",
+            "title": "Office Supervisors",
+            "fit": "approximate"
+          },
+          {
+            "code": "4222",
+            "title": "Contact Centre Information Clerks",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue_account_management",
+      "slug": "account-management",
+      "title_fa": "مدیر حساب مشتری",
+      "title_en": "Account Manager",
+      "category_id": "revenue_customer_sales",
+      "aliases": {
+        "fa": [
+          "اکانت منیجر",
+          "مدیر مشتریان کلیدی",
+          "کارشناس امور مشتریان سازمانی"
+        ],
+        "en": [
+          "Account Manager",
+          "Key Account Manager",
+          "Client Partner",
+          "Customer Account Executive"
+        ]
+      },
+      "scope_boundary_note_fa": "رابطه تجاری، رضایت، تمدید و رشد درآمد یک سبد مشتری را مالک می‌شود؛ شکار مشتری جدید و پشتیبانی خدماتی صرف نقش‌های متفاوت‌اند.",
+      "adjacent_roles": [
+        "revenue_b2b_corporate_sales",
+        "revenue_business_development",
+        "revenue_crm_operations",
+        "revenue_crm_retention_operations",
+        "revenue_contact_center_operations"
+      ],
+      "variant_relation": {
+        "kind": "sales_relationship_specialization",
+        "parent_occupation": "sales_representative_or_manager",
+        "note_fa": "عنوان از نقش فردی تا مدیریت کلیدی و حتی Customer Success استفاده می‌شود؛ مدل درآمد و مسئولیت تمدید باید روشن شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "41-3091.00",
+            "title": "Sales Representatives of Services, Except Advertising, Insurance, Financial Services, and Travel",
+            "fit": "approximate"
+          },
+          {
+            "code": "11-2022.00",
+            "title": "Sales Managers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "3322",
+            "title": "Commercial Sales Representatives",
+            "fit": "approximate"
+          },
+          {
+            "code": "2434",
+            "title": "Information and Communications Technology Sales Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue_b2b_corporate_sales",
+      "slug": "b2b-corporate-sales",
+      "title_fa": "کارشناس فروش B2B / سازمانی",
+      "title_en": "B2B / Corporate Sales Specialist",
+      "category_id": "revenue_customer_sales",
+      "aliases": {
+        "fa": [
+          "کارشناس فروش سازمانی",
+          "کارشناس فروش شرکتی",
+          "کارشناس فروش B2B",
+          "کارشناس فروش پروژه‌ای"
+        ],
+        "en": [
+          "B2B Sales Representative",
+          "Corporate Sales Executive",
+          "Enterprise Sales Representative",
+          "Business Sales Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "فرصت فروش سازمانی را از کشف نیاز تا مذاکره و بستن قرارداد پیش می‌برد؛ توسعه بازار پیش از فروش و مدیریت حساب پس از قرارداد نقش‌های مجاورند.",
+      "adjacent_roles": [
+        "revenue_account_management",
+        "revenue_business_development",
+        "revenue_market_development_merchant_acquisition",
+        "revenue_crm_operations",
+        "marketing_generalist"
+      ],
+      "variant_relation": {
+        "kind": "market_segment_specialization",
+        "parent_occupation": "sales_representative",
+        "note_fa": "تخصص فروش بر پایه نوع مشتری؛ کد دقیق به فروش کالا، خدمات یا ICT وابسته است."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "41-3091.00",
+            "title": "Sales Representatives of Services, Except Advertising, Insurance, Financial Services, and Travel",
+            "fit": "approximate"
+          },
+          {
+            "code": "41-4012.00",
+            "title": "Sales Representatives, Wholesale and Manufacturing, Except Technical and Scientific Products",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "3322",
+            "title": "Commercial Sales Representatives",
+            "fit": "approximate"
+          },
+          {
+            "code": "2434",
+            "title": "Information and Communications Technology Sales Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue_business_development",
+      "slug": "business-development",
+      "title_fa": "کارشناس توسعه کسب‌وکار",
+      "title_en": "Business Development Specialist",
+      "category_id": "revenue_customer_sales",
+      "aliases": {
+        "fa": [
+          "کارشناس توسعه تجاری",
+          "مدیر توسعه کسب‌وکار",
+          "کارشناس مشارکت‌ها"
+        ],
+        "en": [
+          "Business Development Representative",
+          "Business Development Manager",
+          "Partnerships Manager",
+          "Commercial Development Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "فرصت‌های جدید درآمد، بازار، شریک یا کانال را کشف، اعتبارسنجی و به توافق تبدیل می‌کند؛ فروش تکرارشونده و مدیریت محصول نقش‌های دیگرند.",
+      "adjacent_roles": [
+        "revenue_b2b_corporate_sales",
+        "revenue_account_management",
+        "revenue_market_development_merchant_acquisition",
+        "marketing_market_research_insights",
+        "product_management"
+      ],
+      "variant_relation": {
+        "kind": "cross_functional_specialization",
+        "parent_occupation": "sales_marketing_and_business_operations",
+        "note_fa": "یکی از مبهم‌ترین عناوین بازار است؛ ممکن است BDR فروش، شراکت، M&A سبک یا توسعه بازار باشد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          },
+          {
+            "code": "11-2022.00",
+            "title": "Sales Managers",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1199.00",
+            "title": "Business Operations Specialists, All Other",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          },
+          {
+            "code": "1221",
+            "title": "Sales and Marketing Managers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue_commercial_trading_operations",
+      "slug": "commercial-trading-operations",
+      "title_fa": "کارشناس عملیات تجاری و بازرگانی",
+      "title_en": "Commercial / Trading Operations Specialist",
+      "category_id": "revenue_customer_sales",
+      "aliases": {
+        "fa": [
+          "کارشناس بازرگانی",
+          "کارشناس عملیات فروش",
+          "کارشناس امور تجاری",
+          "کارشناس تریدینگ"
+        ],
+        "en": [
+          "Commercial Operations Specialist",
+          "Trading Operations Analyst",
+          "Sales Operations Specialist",
+          "Commercial Coordinator"
+        ]
+      },
+      "scope_boundary_note_fa": "اجرای سفارش/قرارداد، قیمت، هماهنگی تأمین و اسناد و تسویه عملیات تجاری را پیش می‌برد؛ معامله‌گری مالی، خرید تخصصی و فروش مذاکره‌ای باید جدا شوند.",
+      "adjacent_roles": [
+        "operations_logistics",
+        "revenue_b2b_corporate_sales",
+        "revenue_crm_operations",
+        "finance_treasury_accounting",
+        "revenue_market_development_merchant_acquisition"
+      ],
+      "variant_relation": {
+        "kind": "operations_family",
+        "parent_occupation": "commercial_and_business_operations",
+        "note_fa": "«Trading» در صنایع مختلف از عملیات تجارت کالا تا عملیات بازار مالی معنا دارد؛ این واحد بر عملیات تجاری غیرسرمایه‌گذاری تمرکز دارد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1199.00",
+            "title": "Business Operations Specialists, All Other",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1023.00",
+            "title": "Purchasing Agents, Except Wholesale, Retail, and Farm Products",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "3323",
+            "title": "Buyers",
+            "fit": "approximate"
+          },
+          {
+            "code": "3324",
+            "title": "Trade Brokers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2421",
+            "title": "Management and Organization Analysts",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revenue_market_development_merchant_acquisition",
+      "slug": "market-development-merchant-acquisition",
+      "title_fa": "کارشناس توسعه بازار و جذب پذیرنده",
+      "title_en": "Market Development / Merchant Acquisition Specialist",
+      "category_id": "revenue_customer_sales",
+      "aliases": {
+        "fa": [
+          "کارشناس جذب پذیرنده",
+          "کارشناس توسعه بازار",
+          "کارشناس فروش میدانی",
+          "کارشناس شبکه پذیرندگان"
+        ],
+        "en": [
+          "Merchant Acquisition Specialist",
+          "Market Development Representative",
+          "Field Sales Executive",
+          "Merchant Growth Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "پذیرندگان/فروشندگان یک بازار یا شبکه را شناسایی، متقاعد و فعال می‌کند؛ بازاریابی مصرف‌کننده و مدیریت حساب پس از جذب نقش‌های جدا هستند.",
+      "adjacent_roles": [
+        "revenue_business_development",
+        "revenue_b2b_corporate_sales",
+        "revenue_account_management",
+        "revenue_commercial_trading_operations",
+        "marketing_market_research_insights"
+      ],
+      "variant_relation": {
+        "kind": "industry_market_specialization",
+        "parent_occupation": "field_and_b2b_sales",
+        "note_fa": "در پرداخت، مارکت‌پلیس و پلتفرم‌ها رایج است؛ ماهیت آن غالباً فروش/توسعه شبکه است نه تحقیقات بازار."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "41-3091.00",
+            "title": "Sales Representatives of Services, Except Advertising, Insurance, Financial Services, and Travel",
+            "fit": "approximate"
+          },
+          {
+            "code": "13-1161.00",
+            "title": "Market Research Analysts and Marketing Specialists",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "3322",
+            "title": "Commercial Sales Representatives",
+            "fit": "approximate"
+          },
+          {
+            "code": "2431",
+            "title": "Advertising and Marketing Professionals",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "people_talent_acquisition_recruitment",
+      "slug": "talent-acquisition-recruitment",
+      "title_fa": "کارشناس جذب و استخدام",
+      "title_en": "Talent Acquisition / Recruitment Specialist",
+      "category_id": "people_organization",
+      "aliases": {
+        "fa": [
+          "کارشناس استخدام",
+          "ریکروتر",
+          "کارشناس جذب استعداد"
+        ],
+        "en": [
+          "Recruiter",
+          "Talent Acquisition Specialist",
+          "Recruitment Consultant",
+          "Technical Recruiter"
+        ]
+      },
+      "scope_boundary_note_fa": "نیاز استخدام را دریافت، منبع‌یابی، غربالگری و فرایند انتخاب و پیشنهاد را هماهنگ می‌کند؛ HR عمومی و برند کارفرمایی دامنه‌های جدا یا مجاورند.",
+      "adjacent_roles": [
+        "people_hr_management",
+        "people_hr_operations_personnel_admin",
+        "marketing_brand_strategy",
+        "revenue_account_management",
+        "data_analysis_business_insights"
+      ],
+      "variant_relation": {
+        "kind": "occupation",
+        "parent_occupation": null,
+        "note_fa": "Talent Acquisition معمولاً استراتژیک‌تر از Recruitment اجرایی است، ولی بازار این دو را جابه‌جا به‌کار می‌برد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1071.00",
+            "title": "Human Resources Specialists",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2423",
+            "title": "Personnel and Careers Professionals",
+            "fit": "direct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "people_hr_management",
+      "slug": "human-resources-management",
+      "title_fa": "مدیر منابع انسانی",
+      "title_en": "Human Resources Manager",
+      "category_id": "people_organization",
+      "aliases": {
+        "fa": [
+          "مدیر HR",
+          "رهبر منابع انسانی",
+          "HRBP ارشد"
+        ],
+        "en": [
+          "HR Manager",
+          "Human Resources Lead",
+          "People Manager",
+          "Head of People"
+        ]
+      },
+      "scope_boundary_note_fa": "سیاست و سیستم‌های چرخه عمر کارکنان، تیم HR و ریسک‌های نیروی انسانی را هدایت می‌کند؛ HRBP، مدیر اداری و کارشناس عملیات HR دقیقاً یک نقش نیستند.",
+      "adjacent_roles": [
+        "people_talent_acquisition_recruitment",
+        "people_hr_operations_personnel_admin",
+        "finance_payroll",
+        "marketing_brand_strategy",
+        "revenue_contact_center_operations"
+      ],
+      "variant_relation": {
+        "kind": "management_occupation",
+        "parent_occupation": null,
+        "note_fa": "این واحد سطح مدیریتی واقعی را هدف می‌گیرد؛ عنوان مدیر بدون اختیار سیاست/تیم باید به HR Generalist یا Operations بازطبقه‌بندی شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "11-3121.00",
+            "title": "Human Resources Managers",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "1212",
+            "title": "Human Resource Managers",
+            "fit": "direct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "people_hr_operations_personnel_admin",
+      "slug": "hr-operations-personnel-administration",
+      "title_fa": "کارشناس عملیات منابع انسانی، کارگزینی و امور پرسنلی",
+      "title_en": "HR Operations / Personnel Administration Specialist",
+      "category_id": "people_organization",
+      "aliases": {
+        "fa": [
+          "کارشناس کارگزینی",
+          "کارشناس امور پرسنلی",
+          "کارشناس عملیات HR",
+          "کارشناس اداری منابع انسانی"
+        ],
+        "en": [
+          "HR Operations Specialist",
+          "Personnel Administrator",
+          "HR Administrator",
+          "People Operations Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "پرونده، قرارداد، حضور، مزایا، فرایند ورود/خروج و انطباق اداری کارکنان را اجرا می‌کند؛ سیاست‌گذاری HR و محاسبه تخصصی حقوق جدا هستند.",
+      "adjacent_roles": [
+        "people_hr_management",
+        "people_talent_acquisition_recruitment",
+        "finance_payroll",
+        "revenue_contact_center_operations",
+        "revenue_crm_operations"
+      ],
+      "variant_relation": {
+        "kind": "operations_specialization",
+        "parent_occupation": "human_resources_specialist_and_personnel_clerk",
+        "note_fa": "بسته به سطح استقلال می‌تواند شغل حرفه‌ای HR یا کار دفتری پرسنلی باشد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1071.00",
+            "title": "Human Resources Specialists",
+            "fit": "approximate"
+          },
+          {
+            "code": "43-4161.00",
+            "title": "Human Resources Assistants, Except Payroll and Timekeeping",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2423",
+            "title": "Personnel and Careers Professionals",
+            "fit": "approximate"
+          },
+          {
+            "code": "4416",
+            "title": "Personnel Clerks",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "product_ui_ux_design",
+      "slug": "product-ui-ux-design",
+      "title_fa": "طراح محصول و تجربه کاربری UI/UX",
+      "title_en": "Product Designer / UI/UX Designer",
+      "category_id": "product_ux",
+      "aliases": {
+        "fa": [
+          "طراح UI/UX",
+          "طراح تجربه کاربری",
+          "طراح رابط کاربری",
+          "طراح محصول دیجیتال"
+        ],
+        "en": [
+          "Product Designer",
+          "UX Designer",
+          "UI Designer",
+          "Interaction Designer",
+          "UX/UI Designer"
+        ]
+      },
+      "scope_boundary_note_fa": "مسئله و جریان کاربر را پژوهش و به معماری تعامل، نمونه و رابط قابل‌استفاده تبدیل می‌کند؛ طراحی گرافیک برند و مدیریت محصول خروجی‌های دیگری دارند.",
+      "adjacent_roles": [
+        "product_management",
+        "design_graphic_visual_content",
+        "design_visual_identity_brand",
+        "tech_frontend_react_next",
+        "data_analysis_business_insights"
+      ],
+      "variant_relation": {
+        "kind": "occupation_family",
+        "parent_occupation": "digital_interface_and_experience_design",
+        "note_fa": "Product، UX و UI سه تمرکز متفاوت‌اند که در تیم‌های کوچک ادغام می‌شوند؛ گزارش باید تفاوت پژوهش، تعامل و craft بصری را روشن کند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "15-1255.00",
+            "title": "Web and Digital Interface Designers",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2166",
+            "title": "Graphic and Multimedia Designers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2513",
+            "title": "Web and Multimedia Developers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "product_management",
+      "slug": "product-management",
+      "title_fa": "مدیر محصول",
+      "title_en": "Product Manager",
+      "category_id": "product_ux",
+      "aliases": {
+        "fa": [
+          "پروداکت منیجر",
+          "مالک محصول",
+          "مدیر محصول دیجیتال"
+        ],
+        "en": [
+          "Product Manager",
+          "Digital Product Manager",
+          "Product Owner",
+          "Technical Product Manager"
+        ]
+      },
+      "scope_boundary_note_fa": "مسئله، نتیجه، اولویت و هم‌راستایی تیم محصول را مالک می‌شود؛ Project Manager زمان/تحویل و Product Owner نقش Scrum محدودتری دارد.",
+      "adjacent_roles": [
+        "product_ui_ux_design",
+        "data_analysis_business_insights",
+        "tech_qa_automation_sdet",
+        "marketing_growth",
+        "revenue_business_development"
+      ],
+      "variant_relation": {
+        "kind": "cross_functional_management_specialization",
+        "parent_occupation": "business_and_product_management",
+        "note_fa": "O*NET/ISCO کد مستقیم مدرن برای Product Manager ندارند؛ نگاشت با نوع محصول و وظایف تغییر می‌کند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "11-2021.00",
+            "title": "Marketing Managers",
+            "fit": "approximate"
+          },
+          {
+            "code": "11-1021.00",
+            "title": "General and Operations Managers",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2421",
+            "title": "Management and Organization Analysts",
+            "fit": "approximate"
+          },
+          {
+            "code": "1221",
+            "title": "Sales and Marketing Managers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "operations_logistics",
+      "slug": "logistics-operations",
+      "title_fa": "کارشناس عملیات لجستیک",
+      "title_en": "Logistics Operations Specialist",
+      "category_id": "business_operations",
+      "aliases": {
+        "fa": [
+          "کارشناس لجستیک",
+          "کارشناس عملیات ارسال",
+          "کارشناس زنجیره تأمین",
+          "هماهنگ‌کننده حمل"
+        ],
+        "en": [
+          "Logistics Specialist",
+          "Logistics Coordinator",
+          "Transport Operations Specialist",
+          "Supply Chain Operations Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "جریان کالا، حمل، انبار، تحویل، ظرفیت و استثناهای عملیاتی را هماهنگ و بهینه می‌کند؛ خرید، برنامه‌ریزی زنجیره تأمین و مدیریت انبار نقش‌های مجاورند.",
+      "adjacent_roles": [
+        "revenue_commercial_trading_operations",
+        "revenue_market_development_merchant_acquisition",
+        "data_analysis_business_insights",
+        "finance_treasury_accounting",
+        "revenue_contact_center_operations"
+      ],
+      "variant_relation": {
+        "kind": "occupation_family",
+        "parent_occupation": "logistics_and_supply_chain_operations",
+        "note_fa": "سطح Specialist، Coordinator و Manager و نیز تمرکز حمل/انبار باید در آگهی تفکیک شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-1081.00",
+            "title": "Logisticians",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "3331",
+            "title": "Clearing and Forwarding Agents",
+            "fit": "approximate"
+          },
+          {
+            "code": "1324",
+            "title": "Supply, Distribution and Related Managers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "finance_internal_audit",
+      "slug": "internal-audit",
+      "title_fa": "حسابرس داخلی",
+      "title_en": "Internal Auditor",
+      "category_id": "finance_accounting",
+      "aliases": {
+        "fa": [
+          "کارشناس حسابرسی داخلی",
+          "کارشناس کنترل داخلی",
+          "کارشناس ریسک و کنترل"
+        ],
+        "en": [
+          "Internal Auditor",
+          "Internal Audit Specialist",
+          "Controls Auditor",
+          "Risk and Controls Analyst"
+        ]
+      },
+      "scope_boundary_note_fa": "کنترل‌ها، فرایند، ریسک و انطباق داخلی را مستقل ارزیابی و پیشنهاد اصلاح می‌دهد؛ حسابرسی مستقل صورت‌های مالی و کنترل روزمره مالی متفاوت‌اند.",
+      "adjacent_roles": [
+        "finance_financial_accounting_management",
+        "finance_tax_accounting",
+        "finance_treasury_accounting",
+        "data_analysis_business_insights",
+        "revenue_commercial_trading_operations"
+      ],
+      "variant_relation": {
+        "kind": "specialization",
+        "parent_occupation": "accountants_and_auditors",
+        "note_fa": "تخصص assurance داخلی؛ در سازمان‌های بالغ از مالک فرایند مستقل است."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-2011.00",
+            "title": "Accountants and Auditors",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2411",
+            "title": "Accountants",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "finance_payroll",
+      "slug": "payroll",
+      "title_fa": "کارشناس حقوق و دستمزد",
+      "title_en": "Payroll Specialist",
+      "category_id": "finance_accounting",
+      "aliases": {
+        "fa": [
+          "حسابدار حقوق و دستمزد",
+          "کارشناس جبران خدمات اجرایی",
+          "کارشناس Payroll"
+        ],
+        "en": [
+          "Payroll Specialist",
+          "Payroll Accountant",
+          "Payroll Administrator",
+          "Payroll Clerk"
+        ]
+      },
+      "scope_boundary_note_fa": "حقوق، کسورات، مزایا، مالیات و بیمه دوره‌ای کارکنان را دقیق محاسبه و تسویه می‌کند؛ طراحی سیاست جبران خدمات و امور پرسنلی نقش‌های جدا هستند.",
+      "adjacent_roles": [
+        "people_hr_operations_personnel_admin",
+        "people_hr_management",
+        "finance_tax_accounting",
+        "finance_treasury_accounting",
+        "finance_financial_accounting_management"
+      ],
+      "variant_relation": {
+        "kind": "occupation",
+        "parent_occupation": null,
+        "note_fa": "بسته به پیچیدگی و قضاوت، از کارمند دفتری Payroll تا حسابدار تخصصی متغیر است."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "43-3051.00",
+            "title": "Payroll and Timekeeping Clerks",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "4313",
+            "title": "Payroll Clerks",
+            "fit": "direct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "finance_treasury_accounting",
+      "slug": "treasury-accounting",
+      "title_fa": "حسابدار خزانه",
+      "title_en": "Treasury Accountant",
+      "category_id": "finance_accounting",
+      "aliases": {
+        "fa": [
+          "حسابدار خزانه‌داری",
+          "کارشناس خزانه",
+          "کارشناس دریافت و پرداخت"
+        ],
+        "en": [
+          "Treasury Accountant",
+          "Treasury Specialist",
+          "Cash Accountant",
+          "Cash Management Specialist"
+        ]
+      },
+      "scope_boundary_note_fa": "نقد، بانک، دریافت/پرداخت، تطبیق و ثبت‌های خزانه را کنترل می‌کند؛ تأمین مالی و مدیریت ریسک نقدینگی در سطح Treasury Manager گسترده‌تر است.",
+      "adjacent_roles": [
+        "finance_financial_accounting_management",
+        "finance_tax_accounting",
+        "finance_payroll",
+        "revenue_commercial_trading_operations",
+        "operations_logistics"
+      ],
+      "variant_relation": {
+        "kind": "accounting_specialization",
+        "parent_occupation": "accountant",
+        "note_fa": "تخصص فرایندی حسابداری؛ در برخی شرکت‌ها «کارشناس خزانه» عملیاتی‌تر از Accountant است."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-2011.00",
+            "title": "Accountants and Auditors",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2411",
+            "title": "Accountants",
+            "fit": "approximate"
+          },
+          {
+            "code": "4311",
+            "title": "Accounting and Bookkeeping Clerks",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "finance_tax_accounting",
+      "slug": "tax-accounting",
+      "title_fa": "حسابدار مالیاتی",
+      "title_en": "Tax Accountant",
+      "category_id": "finance_accounting",
+      "aliases": {
+        "fa": [
+          "کارشناس مالیاتی",
+          "مشاور مالیاتی",
+          "حسابدار امور مالیاتی"
+        ],
+        "en": [
+          "Tax Accountant",
+          "Tax Specialist",
+          "Tax Analyst",
+          "Tax Consultant"
+        ]
+      },
+      "scope_boundary_note_fa": "محاسبه، اظهار، مستندسازی و دفاع مالیاتی را بر پایه قانون انجام می‌دهد؛ حسابداری مالی عمومی و وکالت مالیاتی دامنه‌های جدا دارند.",
+      "adjacent_roles": [
+        "finance_financial_accounting_management",
+        "finance_internal_audit",
+        "finance_payroll",
+        "finance_treasury_accounting",
+        "revenue_commercial_trading_operations"
+      ],
+      "variant_relation": {
+        "kind": "accounting_specialization",
+        "parent_occupation": "accountant",
+        "note_fa": "تخصص مقرراتی حسابداری؛ مرز با مشاوره حقوقی مالیاتی به مجوز و وظایف بستگی دارد."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "13-2011.00",
+            "title": "Accountants and Auditors",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2411",
+            "title": "Accountants",
+            "fit": "direct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "finance_financial_accounting_management",
+      "slug": "financial-accounting-management",
+      "title_fa": "مدیریت مالی و حسابداری",
+      "title_en": "Finance & Accounting Management",
+      "category_id": "finance_accounting",
+      "aliases": {
+        "fa": [
+          "مدیر مالی",
+          "مدیر حسابداری",
+          "سرپرست حسابداری",
+          "رئیس حسابداری"
+        ],
+        "en": [
+          "Finance Manager",
+          "Accounting Manager",
+          "Financial Controller",
+          "Head of Accounting"
+        ]
+      },
+      "scope_boundary_note_fa": "گزارش مالی، بستن حساب‌ها، کنترل، بودجه/نقد و تیم مالی را هدایت می‌کند؛ Finance Manager، Controller و Accounting Manager دامنه و سطح متفاوت دارند.",
+      "adjacent_roles": [
+        "finance_internal_audit",
+        "finance_tax_accounting",
+        "finance_treasury_accounting",
+        "finance_payroll",
+        "data_business_intelligence_reporting"
+      ],
+      "variant_relation": {
+        "kind": "management_family",
+        "parent_occupation": "financial_manager_and_accounting_manager",
+        "note_fa": "این عنوان دو مسیر حرفه‌ای و مدیریتی را جمع می‌کند؛ در گزارش باید مدیر مالی و مدیر حسابداری تفکیک شوند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "11-3031.00",
+            "title": "Financial Managers",
+            "fit": "direct"
+          },
+          {
+            "code": "13-2011.00",
+            "title": "Accountants and Auditors",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "1211",
+            "title": "Finance Managers",
+            "fit": "direct"
+          },
+          {
+            "code": "2411",
+            "title": "Accountants",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "design_graphic_visual_content",
+      "slug": "graphic-design-visual-content",
+      "title_fa": "طراح گرافیک و محتوای بصری",
+      "title_en": "Graphic & Visual Content Designer",
+      "category_id": "design_creative",
+      "aliases": {
+        "fa": [
+          "طراح گرافیک",
+          "گرافیست",
+          "طراح محتوای بصری",
+          "دیزاینر سوشال"
+        ],
+        "en": [
+          "Graphic Designer",
+          "Visual Designer",
+          "Marketing Designer",
+          "Social Media Designer"
+        ]
+      },
+      "scope_boundary_note_fa": "دارایی‌های بصری ثابت برای ارتباطات، کمپین و کانال‌های دیجیتال/چاپ طراحی می‌کند؛ هویت برند، تصویرسازی و موشن تخصص‌های مجاورند.",
+      "adjacent_roles": [
+        "design_visual_identity_brand",
+        "design_illustration_digital",
+        "design_motion_graphics_animation",
+        "marketing_social_content_creation",
+        "product_ui_ux_design"
+      ],
+      "variant_relation": {
+        "kind": "occupation_family",
+        "parent_occupation": "graphic_designer",
+        "note_fa": "«محتوای بصری» دامنه کاربرد است؛ اگر مالکیت سیستم برند غالب باشد به طراحی هویت نزدیک می‌شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "27-1024.00",
+            "title": "Graphic Designers",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2166",
+            "title": "Graphic and Multimedia Designers",
+            "fit": "direct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "design_video_editing_production",
+      "slug": "video-editing-production",
+      "title_fa": "تدوینگر و تولیدکننده ویدیو",
+      "title_en": "Video Editor / Video Producer",
+      "category_id": "design_creative",
+      "aliases": {
+        "fa": [
+          "تدوینگر",
+          "ادیتور ویدیو",
+          "فیلم‌بردار و تدوینگر",
+          "تولیدکننده ویدیو"
+        ],
+        "en": [
+          "Video Editor",
+          "Video Producer",
+          "Videographer-Editor",
+          "Post-Production Editor"
+        ]
+      },
+      "scope_boundary_note_fa": "ویدیو را از ضبط/گردآوری تا تدوین، صدا و خروجی تولید می‌کند؛ تهیه‌کنندگی مدیریتی، فیلم‌برداری تخصصی و موشن‌گرافیک حرفه‌های جدا هستند.",
+      "adjacent_roles": [
+        "design_motion_graphics_animation",
+        "marketing_social_content_creation",
+        "design_graphic_visual_content",
+        "design_3d_art",
+        "marketing_content"
+      ],
+      "variant_relation": {
+        "kind": "combined_role_family",
+        "parent_occupation": "video_editor_and_audiovisual_producer",
+        "note_fa": "درخواست دو حرفه را ترکیب می‌کند؛ Video Editor و Video Producer باید در گزارش به‌عنوان دو گونه با مالکیت متفاوت تفکیک شوند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "27-4032.00",
+            "title": "Film and Video Editors",
+            "fit": "direct"
+          },
+          {
+            "code": "27-2012.00",
+            "title": "Producers and Directors",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "3521",
+            "title": "Broadcasting and Audiovisual Technicians",
+            "fit": "approximate"
+          },
+          {
+            "code": "2654",
+            "title": "Film, Stage and Related Directors and Producers",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "design_illustration_digital",
+      "slug": "illustration-digital-design",
+      "title_fa": "تصویرگر و طراح دیجیتال",
+      "title_en": "Illustrator / Digital Artist",
+      "category_id": "design_creative",
+      "aliases": {
+        "fa": [
+          "تصویرساز",
+          "ایلوستریتور",
+          "هنرمند دیجیتال",
+          "طراح کاراکتر"
+        ],
+        "en": [
+          "Illustrator",
+          "Digital Artist",
+          "Concept Artist",
+          "Character Designer"
+        ]
+      },
+      "scope_boundary_note_fa": "تصویر اصیل، کاراکتر، کانسپت یا artwork دیجیتال خلق می‌کند؛ حل مسئله ارتباطی گرافیک و ساخت مدل سه‌بعدی خروجی‌های متفاوت‌اند.",
+      "adjacent_roles": [
+        "design_graphic_visual_content",
+        "design_3d_art",
+        "design_motion_graphics_animation",
+        "design_visual_identity_brand",
+        "marketing_social_content_creation"
+      ],
+      "variant_relation": {
+        "kind": "occupation_family",
+        "parent_occupation": "fine_and_digital_artist",
+        "note_fa": "تصویرسازی تجاری، کانسپت‌آرت و هنر دیجیتال بازارها و فرایندهای متفاوت دارند؛ رسانه غالب باید ثبت شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "27-1013.00",
+            "title": "Fine Artists, Including Painters, Sculptors, and Illustrators",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2651",
+            "title": "Visual Artists",
+            "fit": "direct"
+          }
+        ]
+      }
+    },
+    {
+      "id": "design_3d_art",
+      "slug": "3d-art-design",
+      "title_fa": "طراح سه‌بعدی و 3D Artist",
+      "title_en": "3D Artist / 3D Designer",
+      "category_id": "design_creative",
+      "aliases": {
+        "fa": [
+          "آرتیست سه‌بعدی",
+          "مدل‌ساز سه‌بعدی",
+          "طراح 3D",
+          "جنرالیست سه‌بعدی"
+        ],
+        "en": [
+          "3D Artist",
+          "3D Designer",
+          "3D Modeler",
+          "3D Generalist",
+          "Environment Artist"
+        ]
+      },
+      "scope_boundary_note_fa": "مدل، متریال، نور، رندر یا دارایی سه‌بعدی برای رسانه تعاملی/تبلیغاتی می‌سازد؛ CAD مهندسی، معماری و انیمیشن کاراکتر مسیرهای جدا هستند.",
+      "adjacent_roles": [
+        "design_motion_graphics_animation",
+        "design_illustration_digital",
+        "design_video_editing_production",
+        "design_graphic_visual_content",
+        "product_ui_ux_design"
+      ],
+      "variant_relation": {
+        "kind": "media_specialization",
+        "parent_occupation": "special_effects_artist_and_animator",
+        "note_fa": "عنوان چتری است؛ مدل‌سازی، look development، lighting، VFX و game art تخصص‌های جدا دارند."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "27-1014.00",
+            "title": "Special Effects Artists and Animators",
+            "fit": "approximate"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2166",
+            "title": "Graphic and Multimedia Designers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2651",
+            "title": "Visual Artists",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "design_motion_graphics_animation",
+      "slug": "motion-graphics-animation",
+      "title_fa": "طراح موشن گرافیک و انیمیشن",
+      "title_en": "Motion Graphics Designer / Animator",
+      "category_id": "design_creative",
+      "aliases": {
+        "fa": [
+          "موشن دیزاینر",
+          "موشن گرافیست",
+          "انیماتور دوبعدی",
+          "انیماتور"
+        ],
+        "en": [
+          "Motion Designer",
+          "Motion Graphics Artist",
+          "Animator",
+          "2D Animator"
+        ]
+      },
+      "scope_boundary_note_fa": "گرافیک و عناصر بصری را در زمان متحرک و روایت می‌کند؛ تدوین ویدیو بر انتخاب/ترکیب footage و انیمیشن کاراکتر بر بازی و rigging تمرکز متفاوت دارند.",
+      "adjacent_roles": [
+        "design_video_editing_production",
+        "design_graphic_visual_content",
+        "design_3d_art",
+        "design_illustration_digital",
+        "marketing_social_content_creation"
+      ],
+      "variant_relation": {
+        "kind": "occupation_family",
+        "parent_occupation": "special_effects_artist_and_animator",
+        "note_fa": "Motion Graphics و Animation همپوشان اما یکسان نیستند؛ رسانه 2D/3D و نوع حرکت باید تفکیک شود."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "27-1014.00",
+            "title": "Special Effects Artists and Animators",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2166",
+            "title": "Graphic and Multimedia Designers",
+            "fit": "approximate"
+          },
+          {
+            "code": "2651",
+            "title": "Visual Artists",
+            "fit": "approximate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "design_visual_identity_brand",
+      "slug": "visual-identity-brand-design",
+      "title_fa": "طراح هویت بصری و برند",
+      "title_en": "Visual Identity / Brand Designer",
+      "category_id": "design_creative",
+      "aliases": {
+        "fa": [
+          "طراح برند",
+          "طراح هویت بصری",
+          "طراح لوگو",
+          "برند دیزاینر"
+        ],
+        "en": [
+          "Brand Designer",
+          "Visual Identity Designer",
+          "Corporate Identity Designer",
+          "Logo Designer"
+        ]
+      },
+      "scope_boundary_note_fa": "سیستم نشانه، تایپوگرافی، رنگ، قواعد و دارایی‌های منسجم برند را طراحی می‌کند؛ استراتژی جایگاه برند و تولید محتوای روزمره نقش‌های مجاورند.",
+      "adjacent_roles": [
+        "marketing_brand_strategy",
+        "design_graphic_visual_content",
+        "design_illustration_digital",
+        "product_ui_ux_design",
+        "marketing_content"
+      ],
+      "variant_relation": {
+        "kind": "design_specialization",
+        "parent_occupation": "graphic_designer",
+        "note_fa": "تخصص سیستم‌محور در طراحی گرافیک؛ Brand Designer با Brand Strategist از نظر تحقیق و تصمیم تجاری متفاوت است."
+      },
+      "classifications": {
+        "onet_soc": [
+          {
+            "code": "27-1024.00",
+            "title": "Graphic Designers",
+            "fit": "direct"
+          }
+        ],
+        "isco08": [
+          {
+            "code": "2166",
+            "title": "Graphic and Multimedia Designers",
+            "fit": "direct"
+          }
+        ]
+      }
+    }
+  ]
+}

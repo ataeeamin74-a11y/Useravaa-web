@@ -5,10 +5,14 @@ import {
   buildCareerPathTitle,
   getRelatedCareerPathSeoEntries
 } from "@/features/career/career-path-seo";
+import { getCareerResearchIndexByCardId } from "@/features/career/career-research-index";
 import styles from "./CareerPathSeoPage.module.css";
 
 function getEnglishTitle(entry: CareerPathSeoEntry) {
-  const title = entry.path.midCategory.trim();
+  const researchTitle = entry.path.cards
+    .map((card) => getCareerResearchIndexByCardId(card.id))
+    .find((item) => item !== undefined)?.titleEn;
+  const title = (researchTitle ?? entry.path.midCategory).trim();
   const primaryTitle = entry.path.name.trim();
 
   if (!/[a-z]/iu.test(title) || title.toLocaleLowerCase() === primaryTitle.toLocaleLowerCase()) {

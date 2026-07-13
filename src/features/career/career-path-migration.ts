@@ -9,6 +9,15 @@ export const LEGACY_SOCIAL_MEDIA_PATH_IDS = [
 ] as const;
 
 export const LEGACY_SOCIAL_MEDIA_SLUGS = [
+  "social-media-content-creation",
+  "social-media-management",
   "social-media-and-community",
   "social-media-and-community-13kpqt"
 ] as const;
+
+export const LEGACY_SOCIAL_MEDIA_SLUG_REDIRECTS = {
+  "social-media-content-creation": SOCIAL_MEDIA_MARKETING_SLUG,
+  "social-media-management": SOCIAL_MEDIA_MARKETING_SLUG,
+  "social-media-and-community": SOCIAL_MEDIA_MARKETING_SLUG,
+  "social-media-and-community-13kpqt": SOCIAL_MEDIA_MARKETING_SLUG
+} as const;

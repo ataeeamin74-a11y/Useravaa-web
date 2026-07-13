@@ -17,14 +17,14 @@ const careerPathIdByCardId = new Map(
   )))
 );
 const socialMediaMarketingPathId = careerPathIdByCardId.get(SOCIAL_MEDIA_MARKETING_CARD_ID);
-const legacyCareerPathIdAliases = new Map<string, string>(
-  socialMediaMarketingPathId
-    ? [
-        ...LEGACY_SOCIAL_MEDIA_CARD_IDS,
-        ...LEGACY_SOCIAL_MEDIA_PATH_IDS
-      ].map((legacyId) => [legacyId, socialMediaMarketingPathId])
-    : []
-);
+const legacyCareerPathIdAliases = new Map<string, string>([
+  ...(socialMediaMarketingPathId
+    ? LEGACY_SOCIAL_MEDIA_CARD_IDS.map((legacyId) => [legacyId, socialMediaMarketingPathId] as const)
+    : []),
+  ...(socialMediaMarketingPathId
+    ? LEGACY_SOCIAL_MEDIA_PATH_IDS.map((legacyId) => [legacyId, socialMediaMarketingPathId] as const)
+    : [])
+]);
 
 export function getCareerPathById(pathId: string): CareerSubfamilyNode | undefined {
   return careerPathById.get(pathId);

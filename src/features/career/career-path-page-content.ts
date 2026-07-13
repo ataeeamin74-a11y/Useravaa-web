@@ -5,6 +5,7 @@ import {
   getCareerPathTechnicalSkills,
   getCareerPathTools
 } from "./career-path-seo";
+import { getCareerResearchByCardId } from "./career-research-content";
 import { getCareerPathVisualProfile, type CareerPathSceneType, type CareerPathVisualProfile } from "./career-path-visuals";
 
 export type Tone = "blue" | "teal" | "yellow" | "persimmon";
@@ -54,6 +55,14 @@ function pick(values: readonly string[], fallback: readonly string[], limit: num
 
 function firstOrFallback(items: readonly string[], fallback: string) {
   return unique(items)[0] ?? fallback;
+}
+
+function localizeArtificialIntelligence(value: string) {
+  return value.replace(/\bAI\b/gu, "هوش مصنوعی");
+}
+
+function localizeList(values: readonly string[]) {
+  return values.map(localizeArtificialIntelligence);
 }
 
 function getCreativityLevel(sceneType: CareerPathSceneType): QualitativeLevel {
@@ -134,8 +143,54 @@ function buildInterviewQuestions(
 }
 
 export function buildCareerPathProductContent(entry: CareerPathSeoEntry): CareerPathProductContent {
-  const title = entry.path.name;
   const profile = getCareerPathVisualProfile(entry.path);
+  const research = entry.path.cards
+    .map((card) => getCareerResearchByCardId(card.id))
+    .find((item) => item !== undefined);
+
+  if (research) {
+    const fitTones = ["teal", "blue", "yellow", "persimmon"] as const;
+    const hardshipTones = ["persimmon", "yellow", "persimmon", "persimmon", "yellow"] as const;
+
+    return {
+      title: research.hero.titleFa,
+      visualProfile: profile,
+      heroDescriptor: localizeArtificialIntelligence(research.hero.workNatureLabel),
+      intro: localizeArtificialIntelligence(research.hero.decisionDescription),
+      decisionCards: [
+        { label: "جذابیت اصلی", value: localizeArtificialIntelligence(research.hero.attraction), tone: "teal" },
+        { label: "مناسب‌تر برای", value: localizeArtificialIntelligence(research.hero.fitIndicator), tone: "yellow" },
+        { label: "سختی اصلی", value: localizeArtificialIntelligence(research.hero.mainDifficulty), tone: "persimmon" }
+      ],
+      fitDimensions: research.fitDimensions.map((dimension, index) => ({
+        label: dimension.label,
+        value: dimension.level,
+        tone: fitTones[index] ?? "teal"
+      })),
+      reality: {
+        workday: localizeList(research.reality.workday),
+        softSkills: localizeList(research.reality.softSkills),
+        technicalSkills: localizeList(research.reality.technicalSkills),
+        tools: localizeList(research.reality.tools)
+      },
+      hardships: research.hardships.map((hardship, index) => ({
+        title: hardship.title,
+        body: localizeArtificialIntelligence(
+          `${hardship.explanation} موقعیت رایج: ${hardship.context}`
+        ),
+        tone: hardshipTones[index] ?? "persimmon"
+      })),
+      intelligence: {
+        easier: localizeList(research.intelligence.easier),
+        harder: localizeList(research.intelligence.harder),
+        judgment: "قضاوت، کنترل منبع و مسئولیت نتیجه همچنان بخش مهم کار حرفه‌ای است."
+      },
+      interviewQuestions: localizeList(research.interviewQuestions),
+      finalCtaText: "این مسیر را برای بررسی نگه دار"
+    };
+  }
+
+  const title = entry.path.name;
   const duties = getCareerPathMainDuties(entry.path);
   const technicalSkills = getCareerPathTechnicalSkills(entry.path);
   const tools = getCareerPathTools(entry.path);

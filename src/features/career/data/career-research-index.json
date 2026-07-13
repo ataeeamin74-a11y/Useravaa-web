@@ -1,0 +1,1095 @@
+{
+  "schemaVersion": 2,
+  "sourceRoleCount": 59,
+  "roleCount": 58,
+  "roles": [
+    {
+      "roleId": "tech_backend_dotnet_csharp",
+      "researchSlug": "backend-dotnet-csharp",
+      "sourceResearchSlugs": [
+        "backend-dotnet-csharp"
+      ],
+      "appSlug": "dotnet-c-sharp-backend",
+      "cardId": "CARD_001",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده بک‌اند .NET/C#",
+      "titleEn": "Backend .NET/C# Developer",
+      "relatedResearchSlugs": [
+        "fullstack-dotnet-blazor",
+        "backend-java-jvm",
+        "kubernetes-platform-engineering",
+        "qa-automation-sdet"
+      ]
+    },
+    {
+      "roleId": "tech_backend_go",
+      "researchSlug": "backend-go",
+      "sourceResearchSlugs": [
+        "backend-go"
+      ],
+      "appSlug": "go-backend",
+      "cardId": "CARD_002",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده بک‌اند Go",
+      "titleEn": "Backend Go Developer",
+      "relatedResearchSlugs": [
+        "kubernetes-platform-engineering",
+        "sre-reliability-engineering",
+        "backend-java-jvm",
+        "backend-nodejs-typescript"
+      ]
+    },
+    {
+      "roleId": "tech_backend_java_jvm",
+      "researchSlug": "backend-java-jvm",
+      "sourceResearchSlugs": [
+        "backend-java-jvm"
+      ],
+      "appSlug": "java-jvm-backend",
+      "cardId": "CARD_003",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده بک‌اند Java/JVM",
+      "titleEn": "Backend Java/JVM Developer",
+      "relatedResearchSlugs": [
+        "android-native-kotlin",
+        "backend-dotnet-csharp",
+        "kubernetes-platform-engineering",
+        "qa-automation-sdet"
+      ]
+    },
+    {
+      "roleId": "tech_backend_node_typescript",
+      "researchSlug": "backend-nodejs-typescript",
+      "sourceResearchSlugs": [
+        "backend-nodejs-typescript"
+      ],
+      "appSlug": "node-js-typescript-backend",
+      "cardId": "CARD_004",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده بک‌اند Node.js/TypeScript",
+      "titleEn": "Backend Node.js/TypeScript Developer",
+      "relatedResearchSlugs": [
+        "fullstack-node-mern",
+        "frontend-react-nextjs",
+        "backend-go",
+        "kubernetes-platform-engineering"
+      ]
+    },
+    {
+      "roleId": "tech_backend_php_laravel",
+      "researchSlug": "backend-php-laravel",
+      "sourceResearchSlugs": [
+        "backend-php-laravel"
+      ],
+      "appSlug": "php-laravel-backend",
+      "cardId": "CARD_005",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده بک‌اند PHP/Laravel",
+      "titleEn": "Backend PHP/Laravel Developer",
+      "relatedResearchSlugs": [
+        "backend-python-django",
+        "fullstack-node-mern",
+        "frontend-vue-nuxt",
+        "qa-automation-sdet"
+      ]
+    },
+    {
+      "roleId": "tech_backend_python_django",
+      "researchSlug": "backend-python-django",
+      "sourceResearchSlugs": [
+        "backend-python-django"
+      ],
+      "appSlug": "python-django-backend",
+      "cardId": "CARD_006",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده بک‌اند Python/Django",
+      "titleEn": "Backend Python/Django Developer",
+      "relatedResearchSlugs": [
+        "ai-engineering-llm-genai",
+        "data-engineering-platform",
+        "backend-php-laravel",
+        "qa-automation-sdet"
+      ]
+    },
+    {
+      "roleId": "tech_frontend_angular",
+      "researchSlug": "frontend-angular",
+      "sourceResearchSlugs": [
+        "frontend-angular"
+      ],
+      "appSlug": "angular-frontend",
+      "cardId": "CARD_018",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده فرانت‌اند Angular",
+      "titleEn": "Frontend Angular Developer",
+      "relatedResearchSlugs": [
+        "product-ui-ux-design",
+        "frontend-react-nextjs",
+        "backend-nodejs-typescript",
+        "qa-automation-sdet"
+      ]
+    },
+    {
+      "roleId": "tech_frontend_react_next",
+      "researchSlug": "frontend-react-nextjs",
+      "sourceResearchSlugs": [
+        "frontend-react-nextjs"
+      ],
+      "appSlug": "react-next-js-frontend",
+      "cardId": "CARD_019",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده فرانت‌اند React/Next.js",
+      "titleEn": "React/Next.js Frontend Developer",
+      "relatedResearchSlugs": [
+        "product-ui-ux-design",
+        "fullstack-node-mern",
+        "frontend-vue-nuxt",
+        "backend-nodejs-typescript"
+      ]
+    },
+    {
+      "roleId": "tech_frontend_vue_nuxt",
+      "researchSlug": "frontend-vue-nuxt",
+      "sourceResearchSlugs": [
+        "frontend-vue-nuxt"
+      ],
+      "appSlug": "vue-nuxt-frontend",
+      "cardId": "CARD_020",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده فرانت‌اند Vue/Nuxt",
+      "titleEn": "Vue/Nuxt Frontend Developer",
+      "relatedResearchSlugs": [
+        "product-ui-ux-design",
+        "frontend-react-nextjs",
+        "backend-php-laravel",
+        "qa-automation-sdet"
+      ]
+    },
+    {
+      "roleId": "tech_fullstack_dotnet_blazor",
+      "researchSlug": "fullstack-dotnet-blazor",
+      "sourceResearchSlugs": [
+        "fullstack-dotnet-blazor"
+      ],
+      "appSlug": "full-stack-dotnet-blazor",
+      "cardId": "CARD_021",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده فول‌استک .NET/Blazor",
+      "titleEn": ".NET/Blazor Full-Stack Developer",
+      "relatedResearchSlugs": [
+        "backend-dotnet-csharp",
+        "frontend-angular",
+        "product-ui-ux-design",
+        "kubernetes-platform-engineering"
+      ]
+    },
+    {
+      "roleId": "tech_fullstack_node_mern",
+      "researchSlug": "fullstack-node-mern",
+      "sourceResearchSlugs": [
+        "fullstack-node-mern"
+      ],
+      "appSlug": "full-stack-node-js-mern",
+      "cardId": "CARD_022",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده فول‌استک Node.js/MERN",
+      "titleEn": "Node.js/MERN Full-Stack Developer",
+      "relatedResearchSlugs": [
+        "backend-nodejs-typescript",
+        "frontend-react-nextjs",
+        "product-ui-ux-design",
+        "kubernetes-platform-engineering"
+      ]
+    },
+    {
+      "roleId": "tech_mobile_android_kotlin",
+      "researchSlug": "android-native-kotlin",
+      "sourceResearchSlugs": [
+        "android-native-kotlin"
+      ],
+      "appSlug": "android-native-kotlin",
+      "cardId": "CARD_043",
+      "categoryId": "technology_engineering",
+      "titleFa": "توسعه‌دهنده اندروید نیتیو/Kotlin",
+      "titleEn": "Native Android/Kotlin Developer",
+      "relatedResearchSlugs": [
+        "backend-java-jvm",
+        "product-ui-ux-design",
+        "qa-automation-sdet",
+        "product-management"
+      ]
+    },
+    {
+      "roleId": "tech_devops_kubernetes_platform",
+      "researchSlug": "kubernetes-platform-engineering",
+      "sourceResearchSlugs": [
+        "kubernetes-platform-engineering"
+      ],
+      "appSlug": "kubernetes-platform-engineering",
+      "cardId": "CARD_016",
+      "categoryId": "technology_engineering",
+      "titleFa": "مهندس Kubernetes و پلتفرم",
+      "titleEn": "Kubernetes / Platform Engineer",
+      "relatedResearchSlugs": [
+        "sre-reliability-engineering",
+        "network-administration",
+        "windows-microsoft-infrastructure",
+        "backend-go",
+        "soc-security-monitoring"
+      ]
+    },
+    {
+      "roleId": "tech_sre_reliability",
+      "researchSlug": "sre-reliability-engineering",
+      "sourceResearchSlugs": [
+        "sre-reliability-engineering"
+      ],
+      "appSlug": "sre-reliability-engineering",
+      "cardId": "CARD_017",
+      "categoryId": "technology_engineering",
+      "titleFa": "مهندس قابلیت اطمینان سایت (SRE)",
+      "titleEn": "Site Reliability Engineer / Reliability Engineer",
+      "relatedResearchSlugs": [
+        "kubernetes-platform-engineering",
+        "backend-go",
+        "soc-security-monitoring",
+        "network-administration",
+        "qa-automation-sdet"
+      ]
+    },
+    {
+      "roleId": "tech_cyber_penetration_testing",
+      "researchSlug": "penetration-testing",
+      "sourceResearchSlugs": [
+        "penetration-testing"
+      ],
+      "appSlug": "offensive-security-penetration-testing",
+      "cardId": "CARD_010",
+      "categoryId": "technology_engineering",
+      "titleFa": "آزمون نفوذ",
+      "titleEn": "Penetration Tester",
+      "relatedResearchSlugs": [
+        "soc-security-monitoring",
+        "kubernetes-platform-engineering",
+        "network-administration",
+        "qa-automation-sdet"
+      ]
+    },
+    {
+      "roleId": "tech_cyber_soc_monitoring",
+      "researchSlug": "soc-security-monitoring",
+      "sourceResearchSlugs": [
+        "soc-security-monitoring"
+      ],
+      "appSlug": "soc-security-monitoring-and-incident-response",
+      "cardId": "CARD_011",
+      "categoryId": "technology_engineering",
+      "titleFa": "تحلیلگر SOC و پایش امنیت",
+      "titleEn": "SOC / Security Monitoring Analyst",
+      "relatedResearchSlugs": [
+        "penetration-testing",
+        "sre-reliability-engineering",
+        "network-administration",
+        "kubernetes-platform-engineering",
+        "it-helpdesk"
+      ]
+    },
+    {
+      "roleId": "tech_it_helpdesk",
+      "researchSlug": "it-helpdesk",
+      "sourceResearchSlugs": [
+        "it-helpdesk"
+      ],
+      "appSlug": "it-support-helpdesk",
+      "cardId": "CARD_026",
+      "categoryId": "technology_engineering",
+      "titleFa": "کارشناس Helpdesk و پشتیبانی IT",
+      "titleEn": "IT Helpdesk / User Support Specialist",
+      "relatedResearchSlugs": [
+        "network-administration",
+        "windows-microsoft-infrastructure",
+        "soc-security-monitoring",
+        "contact-center-operations"
+      ]
+    },
+    {
+      "roleId": "tech_it_network_admin",
+      "researchSlug": "network-administration",
+      "sourceResearchSlugs": [
+        "network-administration"
+      ],
+      "appSlug": "network-administration-and-infrastructure",
+      "cardId": "CARD_027",
+      "categoryId": "technology_engineering",
+      "titleFa": "مدیریت شبکه",
+      "titleEn": "Network Administrator",
+      "relatedResearchSlugs": [
+        "windows-microsoft-infrastructure",
+        "it-helpdesk",
+        "kubernetes-platform-engineering",
+        "soc-security-monitoring"
+      ]
+    },
+    {
+      "roleId": "tech_it_windows_microsoft_infra",
+      "researchSlug": "windows-microsoft-infrastructure",
+      "sourceResearchSlugs": [
+        "windows-microsoft-infrastructure"
+      ],
+      "appSlug": "windows-microsoft-infrastructure",
+      "cardId": "CARD_028",
+      "categoryId": "technology_engineering",
+      "titleFa": "زیرساخت Windows و Microsoft",
+      "titleEn": "Windows / Microsoft Infrastructure Administrator",
+      "relatedResearchSlugs": [
+        "network-administration",
+        "it-helpdesk",
+        "kubernetes-platform-engineering",
+        "soc-security-monitoring"
+      ]
+    },
+    {
+      "roleId": "tech_qa_automation_sdet",
+      "researchSlug": "qa-automation-sdet",
+      "sourceResearchSlugs": [
+        "qa-automation-sdet"
+      ],
+      "appSlug": "qa-automation-sdet",
+      "cardId": "CARD_047",
+      "categoryId": "technology_engineering",
+      "titleFa": "اتوماسیون QA و SDET",
+      "titleEn": "QA Automation Engineer / SDET",
+      "relatedResearchSlugs": [
+        "backend-nodejs-typescript",
+        "frontend-react-nextjs",
+        "android-native-kotlin",
+        "sre-reliability-engineering",
+        "product-management"
+      ]
+    },
+    {
+      "roleId": "data_analysis_business_insights",
+      "researchSlug": "data-analysis-business-insights",
+      "sourceResearchSlugs": [
+        "data-analysis-business-insights"
+      ],
+      "appSlug": "analytics-and-business-insights",
+      "cardId": "CARD_012",
+      "categoryId": "data_ai",
+      "titleFa": "تحلیلگر داده و بینش کسب‌وکار",
+      "titleEn": "Data Analyst / Business Insights Analyst",
+      "relatedResearchSlugs": [
+        "business-intelligence-dashboard-reporting",
+        "data-engineering-platform",
+        "ai-engineering-llm-genai",
+        "market-research-insights",
+        "product-management"
+      ]
+    },
+    {
+      "roleId": "data_engineering_platform",
+      "researchSlug": "data-engineering-platform",
+      "sourceResearchSlugs": [
+        "data-engineering-platform"
+      ],
+      "appSlug": "data-engineering-and-platform",
+      "cardId": "CARD_013",
+      "categoryId": "data_ai",
+      "titleFa": "مهندس داده و پلتفرم داده",
+      "titleEn": "Data Engineer / Data Platform Engineer",
+      "relatedResearchSlugs": [
+        "data-analysis-business-insights",
+        "business-intelligence-dashboard-reporting",
+        "ai-engineering-llm-genai",
+        "kubernetes-platform-engineering",
+        "backend-python-django"
+      ]
+    },
+    {
+      "roleId": "data_ai_engineering_llm_genai",
+      "researchSlug": "ai-engineering-llm-genai",
+      "sourceResearchSlugs": [
+        "ai-engineering-llm-genai"
+      ],
+      "appSlug": "llm-genai",
+      "cardId": "CARD_014",
+      "categoryId": "data_ai",
+      "titleFa": "مهندس هوش مصنوعی، LLM و GenAI",
+      "titleEn": "AI / LLM / Generative AI Engineer",
+      "relatedResearchSlugs": [
+        "data-engineering-platform",
+        "data-analysis-business-insights",
+        "backend-python-django",
+        "kubernetes-platform-engineering",
+        "product-management"
+      ]
+    },
+    {
+      "roleId": "data_business_intelligence_reporting",
+      "researchSlug": "business-intelligence-dashboard-reporting",
+      "sourceResearchSlugs": [
+        "business-intelligence-dashboard-reporting"
+      ],
+      "appSlug": "bi-dashboarding-and-reporting",
+      "cardId": "CARD_015",
+      "categoryId": "data_ai",
+      "titleFa": "کارشناس هوش تجاری، داشبورد و گزارش‌سازی",
+      "titleEn": "Business Intelligence / Dashboard & Reporting Analyst",
+      "relatedResearchSlugs": [
+        "data-analysis-business-insights",
+        "data-engineering-platform",
+        "financial-accounting-management",
+        "market-research-insights",
+        "product-management"
+      ]
+    },
+    {
+      "roleId": "marketing_growth",
+      "researchSlug": "growth-marketing",
+      "sourceResearchSlugs": [
+        "growth-marketing"
+      ],
+      "appSlug": "growth-marketing",
+      "cardId": "CARD_029",
+      "categoryId": "marketing_growth",
+      "titleFa": "بازاریاب رشد",
+      "titleEn": "Growth Marketer",
+      "relatedResearchSlugs": [
+        "performance-marketing",
+        "digital-marketing-general",
+        "crm-retention-operations",
+        "product-management",
+        "data-analysis-business-insights"
+      ]
+    },
+    {
+      "roleId": "marketing_content",
+      "researchSlug": "content-marketing",
+      "sourceResearchSlugs": [
+        "content-marketing"
+      ],
+      "appSlug": "content-and-copywriting",
+      "cardId": "CARD_030",
+      "categoryId": "marketing_growth",
+      "titleFa": "بازاریاب محتوا",
+      "titleEn": "Content Marketer",
+      "relatedResearchSlugs": [
+        "social-media-marketing",
+        "seo",
+        "brand-strategy-branding",
+        "graphic-design-visual-content",
+        "digital-marketing-general"
+      ]
+    },
+    {
+      "roleId": "marketing_market_research_insights",
+      "researchSlug": "market-research-insights",
+      "sourceResearchSlugs": [
+        "market-research-insights"
+      ],
+      "appSlug": "market-research-and-insights",
+      "cardId": "CARD_031",
+      "categoryId": "marketing_growth",
+      "titleFa": "تحلیلگر تحقیقات و بینش بازار",
+      "titleEn": "Market Research & Market Insights Analyst",
+      "relatedResearchSlugs": [
+        "data-analysis-business-insights",
+        "brand-strategy-branding",
+        "marketing-generalist",
+        "market-development-merchant-acquisition",
+        "product-management"
+      ]
+    },
+    {
+      "roleId": "marketing_digital_general",
+      "researchSlug": "digital-marketing-general",
+      "sourceResearchSlugs": [
+        "digital-marketing-general"
+      ],
+      "appSlug": "digital-marketing",
+      "cardId": "CARD_034",
+      "categoryId": "marketing_growth",
+      "titleFa": "کارشناس دیجیتال مارکتینگ عمومی",
+      "titleEn": "Digital Marketing Specialist (General)",
+      "relatedResearchSlugs": [
+        "performance-marketing",
+        "seo",
+        "content-marketing",
+        "social-media-marketing",
+        "marketing-generalist"
+      ]
+    },
+    {
+      "roleId": "marketing_seo",
+      "researchSlug": "seo",
+      "sourceResearchSlugs": [
+        "seo"
+      ],
+      "appSlug": "seo",
+      "cardId": "CARD_036",
+      "categoryId": "marketing_growth",
+      "titleFa": "متخصص سئو",
+      "titleEn": "SEO Specialist",
+      "relatedResearchSlugs": [
+        "content-marketing",
+        "performance-marketing",
+        "digital-marketing-general",
+        "frontend-react-nextjs",
+        "data-analysis-business-insights"
+      ]
+    },
+    {
+      "roleId": "marketing_brand_strategy",
+      "researchSlug": "brand-strategy-branding",
+      "sourceResearchSlugs": [
+        "brand-strategy-branding"
+      ],
+      "appSlug": "brand-pr-and-communications",
+      "cardId": "CARD_039",
+      "categoryId": "marketing_growth",
+      "titleFa": "استراتژیست برند و برندینگ",
+      "titleEn": "Brand Strategist / Brand Manager",
+      "relatedResearchSlugs": [
+        "visual-identity-brand-design",
+        "market-research-insights",
+        "content-marketing",
+        "marketing-generalist",
+        "product-management"
+      ]
+    },
+    {
+      "roleId": "marketing_generalist",
+      "researchSlug": "marketing-generalist",
+      "sourceResearchSlugs": [
+        "marketing-generalist"
+      ],
+      "appSlug": "marketing-generalist-and-strategy",
+      "cardId": "CARD_041",
+      "categoryId": "marketing_growth",
+      "titleFa": "بازاریاب جنرالیست",
+      "titleEn": "Marketing Generalist",
+      "relatedResearchSlugs": [
+        "digital-marketing-general",
+        "brand-strategy-branding",
+        "content-marketing",
+        "market-research-insights",
+        "business-development"
+      ]
+    },
+    {
+      "roleId": "marketing_performance",
+      "researchSlug": "performance-marketing",
+      "sourceResearchSlugs": [
+        "performance-marketing"
+      ],
+      "appSlug": "performance-marketing",
+      "cardId": "CARD_042",
+      "categoryId": "marketing_growth",
+      "titleFa": "بازاریاب عملکردی",
+      "titleEn": "Performance Marketer",
+      "relatedResearchSlugs": [
+        "growth-marketing",
+        "digital-marketing-general",
+        "seo",
+        "data-analysis-business-insights",
+        "crm-retention-operations"
+      ]
+    },
+    {
+      "roleId": "revenue_crm_operations",
+      "researchSlug": "crm-operations",
+      "sourceResearchSlugs": [
+        "crm-operations"
+      ],
+      "appSlug": "crm-operations",
+      "cardId": "CARD_007",
+      "categoryId": "revenue_customer_sales",
+      "titleFa": "کارشناس عملیات CRM",
+      "titleEn": "CRM Operations Specialist",
+      "relatedResearchSlugs": [
+        "crm-retention-operations",
+        "account-management",
+        "business-development",
+        "business-intelligence-dashboard-reporting",
+        "growth-marketing"
+      ]
+    },
+    {
+      "roleId": "revenue_crm_retention_operations",
+      "researchSlug": "crm-retention-operations",
+      "sourceResearchSlugs": [
+        "crm-retention-operations"
+      ],
+      "appSlug": "crm-and-retention-operations",
+      "cardId": "CARD_008",
+      "categoryId": "revenue_customer_sales",
+      "titleFa": "کارشناس عملیات CRM و نگهداشت",
+      "titleEn": "CRM & Retention Operations Specialist",
+      "relatedResearchSlugs": [
+        "crm-operations",
+        "growth-marketing",
+        "performance-marketing",
+        "data-analysis-business-insights",
+        "contact-center-operations"
+      ]
+    },
+    {
+      "roleId": "revenue_contact_center_operations",
+      "researchSlug": "contact-center-operations",
+      "sourceResearchSlugs": [
+        "contact-center-operations"
+      ],
+      "appSlug": "contact-center-operations",
+      "cardId": "CARD_009",
+      "categoryId": "revenue_customer_sales",
+      "titleFa": "کارشناس یا سرپرست عملیات مرکز تماس",
+      "titleEn": "Contact Center Operations",
+      "relatedResearchSlugs": [
+        "crm-operations",
+        "crm-retention-operations",
+        "account-management",
+        "it-helpdesk",
+        "hr-operations-personnel-administration"
+      ]
+    },
+    {
+      "roleId": "revenue_account_management",
+      "researchSlug": "account-management",
+      "sourceResearchSlugs": [
+        "account-management"
+      ],
+      "appSlug": "account-management",
+      "cardId": "CARD_048",
+      "categoryId": "revenue_customer_sales",
+      "titleFa": "مدیر حساب مشتری",
+      "titleEn": "Account Manager",
+      "relatedResearchSlugs": [
+        "b2b-corporate-sales",
+        "business-development",
+        "crm-operations",
+        "crm-retention-operations",
+        "contact-center-operations"
+      ]
+    },
+    {
+      "roleId": "revenue_b2b_corporate_sales",
+      "researchSlug": "b2b-corporate-sales",
+      "sourceResearchSlugs": [
+        "b2b-corporate-sales"
+      ],
+      "appSlug": "b2b-corporate-sales",
+      "cardId": "CARD_049",
+      "categoryId": "revenue_customer_sales",
+      "titleFa": "کارشناس فروش B2B و سازمانی",
+      "titleEn": "B2B / Corporate Sales",
+      "relatedResearchSlugs": [
+        "account-management",
+        "business-development",
+        "market-development-merchant-acquisition",
+        "crm-operations",
+        "marketing-generalist"
+      ]
+    },
+    {
+      "roleId": "revenue_business_development",
+      "researchSlug": "business-development",
+      "sourceResearchSlugs": [
+        "business-development"
+      ],
+      "appSlug": "business-development",
+      "cardId": "CARD_050",
+      "categoryId": "revenue_customer_sales",
+      "titleFa": "کارشناس توسعه کسب‌وکار",
+      "titleEn": "Business Development",
+      "relatedResearchSlugs": [
+        "b2b-corporate-sales",
+        "account-management",
+        "market-development-merchant-acquisition",
+        "market-research-insights",
+        "product-management"
+      ]
+    },
+    {
+      "roleId": "revenue_commercial_trading_operations",
+      "researchSlug": "commercial-trading-operations",
+      "sourceResearchSlugs": [
+        "commercial-trading-operations"
+      ],
+      "appSlug": "commercial-trading-operations",
+      "cardId": "CARD_051",
+      "categoryId": "revenue_customer_sales",
+      "titleFa": "کارشناس عملیات تجاری و بازرگانی",
+      "titleEn": "Commercial / Trading Operations",
+      "relatedResearchSlugs": [
+        "logistics-operations",
+        "b2b-corporate-sales",
+        "crm-operations",
+        "treasury-accounting",
+        "market-development-merchant-acquisition"
+      ]
+    },
+    {
+      "roleId": "revenue_market_development_merchant_acquisition",
+      "researchSlug": "market-development-merchant-acquisition",
+      "sourceResearchSlugs": [
+        "market-development-merchant-acquisition"
+      ],
+      "appSlug": "market-development-merchant-acquisition",
+      "cardId": "CARD_052",
+      "categoryId": "revenue_customer_sales",
+      "titleFa": "کارشناس توسعه بازار و جذب پذیرنده",
+      "titleEn": "Market Development / Merchant Acquisition",
+      "relatedResearchSlugs": [
+        "business-development",
+        "b2b-corporate-sales",
+        "account-management",
+        "commercial-trading-operations",
+        "market-research-insights"
+      ]
+    },
+    {
+      "roleId": "people_talent_acquisition_recruitment",
+      "researchSlug": "talent-acquisition-recruitment",
+      "sourceResearchSlugs": [
+        "talent-acquisition-recruitment"
+      ],
+      "appSlug": "talent-acquisition",
+      "cardId": "CARD_023",
+      "categoryId": "people_organization",
+      "titleFa": "کارشناس جذب و استخدام",
+      "titleEn": "Talent Acquisition / Recruitment",
+      "relatedResearchSlugs": [
+        "human-resources-management",
+        "hr-operations-personnel-administration",
+        "brand-strategy-branding",
+        "account-management",
+        "data-analysis-business-insights"
+      ]
+    },
+    {
+      "roleId": "people_hr_management",
+      "researchSlug": "human-resources-management",
+      "sourceResearchSlugs": [
+        "human-resources-management"
+      ],
+      "appSlug": "hr-management",
+      "cardId": "CARD_024",
+      "categoryId": "people_organization",
+      "titleFa": "مدیر منابع انسانی",
+      "titleEn": "Human Resources Manager",
+      "relatedResearchSlugs": [
+        "talent-acquisition-recruitment",
+        "hr-operations-personnel-administration",
+        "payroll",
+        "brand-strategy-branding",
+        "contact-center-operations"
+      ]
+    },
+    {
+      "roleId": "people_hr_operations_personnel_admin",
+      "researchSlug": "hr-operations-personnel-administration",
+      "sourceResearchSlugs": [
+        "hr-operations-personnel-administration"
+      ],
+      "appSlug": "hr-operations-and-personnel-administration",
+      "cardId": "CARD_025",
+      "categoryId": "people_organization",
+      "titleFa": "کارشناس عملیات منابع انسانی، کارگزینی و امور پرسنلی",
+      "titleEn": "HR Operations / Personnel Administration",
+      "relatedResearchSlugs": [
+        "human-resources-management",
+        "talent-acquisition-recruitment",
+        "payroll",
+        "contact-center-operations",
+        "crm-operations"
+      ]
+    },
+    {
+      "roleId": "product_ui_ux_design",
+      "researchSlug": "product-ui-ux-design",
+      "sourceResearchSlugs": [
+        "product-ui-ux-design"
+      ],
+      "appSlug": "ui-ux",
+      "cardId": "CARD_045",
+      "categoryId": "product_ux",
+      "titleFa": "طراح محصول و تجربه کاربری UI/UX",
+      "titleEn": "Product Designer / UI/UX",
+      "relatedResearchSlugs": [
+        "product-management",
+        "graphic-design-visual-content",
+        "visual-identity-brand-design",
+        "frontend-react-nextjs",
+        "data-analysis-business-insights"
+      ]
+    },
+    {
+      "roleId": "product_management",
+      "researchSlug": "product-management",
+      "sourceResearchSlugs": [
+        "product-management"
+      ],
+      "appSlug": "product-management-and-ownership",
+      "cardId": "CARD_046",
+      "categoryId": "product_ux",
+      "titleFa": "مدیر محصول",
+      "titleEn": "Product Manager",
+      "relatedResearchSlugs": [
+        "product-ui-ux-design",
+        "data-analysis-business-insights",
+        "qa-automation-sdet",
+        "growth-marketing",
+        "business-development"
+      ]
+    },
+    {
+      "roleId": "operations_logistics",
+      "researchSlug": "logistics-operations",
+      "sourceResearchSlugs": [
+        "logistics-operations"
+      ],
+      "appSlug": "logistics-operations",
+      "cardId": "CARD_044",
+      "categoryId": "business_operations",
+      "titleFa": "کارشناس عملیات لجستیک",
+      "titleEn": "Logistics Operations Specialist",
+      "relatedResearchSlugs": [
+        "commercial-trading-operations",
+        "market-development-merchant-acquisition",
+        "data-analysis-business-insights",
+        "treasury-accounting",
+        "contact-center-operations"
+      ]
+    },
+    {
+      "roleId": "finance_internal_audit",
+      "researchSlug": "internal-audit",
+      "sourceResearchSlugs": [
+        "internal-audit"
+      ],
+      "appSlug": "career-path-1drths",
+      "cardId": "CARD_054",
+      "categoryId": "finance_accounting",
+      "titleFa": "حسابرس داخلی",
+      "titleEn": "Internal Auditor",
+      "relatedResearchSlugs": [
+        "financial-accounting-management",
+        "tax-accounting",
+        "treasury-accounting",
+        "data-analysis-business-insights",
+        "commercial-trading-operations"
+      ]
+    },
+    {
+      "roleId": "finance_payroll",
+      "researchSlug": "payroll",
+      "sourceResearchSlugs": [
+        "payroll"
+      ],
+      "appSlug": "career-path-fmhiml",
+      "cardId": "CARD_056",
+      "categoryId": "finance_accounting",
+      "titleFa": "کارشناس حقوق و دستمزد",
+      "titleEn": "Payroll Specialist",
+      "relatedResearchSlugs": [
+        "hr-operations-personnel-administration",
+        "human-resources-management",
+        "tax-accounting",
+        "treasury-accounting",
+        "financial-accounting-management"
+      ]
+    },
+    {
+      "roleId": "finance_treasury_accounting",
+      "researchSlug": "treasury-accounting",
+      "sourceResearchSlugs": [
+        "treasury-accounting"
+      ],
+      "appSlug": "career-path-1bed9m",
+      "cardId": "CARD_058",
+      "categoryId": "finance_accounting",
+      "titleFa": "حسابدار خزانه",
+      "titleEn": "Treasury Accountant",
+      "relatedResearchSlugs": [
+        "financial-accounting-management",
+        "tax-accounting",
+        "payroll",
+        "commercial-trading-operations",
+        "logistics-operations"
+      ]
+    },
+    {
+      "roleId": "finance_tax_accounting",
+      "researchSlug": "tax-accounting",
+      "sourceResearchSlugs": [
+        "tax-accounting"
+      ],
+      "appSlug": "career-path-1b5cj3",
+      "cardId": "CARD_060",
+      "categoryId": "finance_accounting",
+      "titleFa": "حسابدار مالیاتی",
+      "titleEn": "Tax Accountant",
+      "relatedResearchSlugs": [
+        "financial-accounting-management",
+        "internal-audit",
+        "payroll",
+        "treasury-accounting",
+        "commercial-trading-operations"
+      ]
+    },
+    {
+      "roleId": "finance_financial_accounting_management",
+      "researchSlug": "financial-accounting-management",
+      "sourceResearchSlugs": [
+        "financial-accounting-management"
+      ],
+      "appSlug": "career-path-1gt2jj",
+      "cardId": "CARD_061",
+      "categoryId": "finance_accounting",
+      "titleFa": "مدیریت مالی و حسابداری",
+      "titleEn": "Finance & Accounting Management",
+      "relatedResearchSlugs": [
+        "internal-audit",
+        "tax-accounting",
+        "treasury-accounting",
+        "payroll",
+        "business-intelligence-dashboard-reporting"
+      ]
+    },
+    {
+      "roleId": "design_graphic_visual_content",
+      "researchSlug": "graphic-design-visual-content",
+      "sourceResearchSlugs": [
+        "graphic-design-visual-content"
+      ],
+      "appSlug": "graphic-design-and-visual-content",
+      "cardId": "CARD_069",
+      "categoryId": "design_creative",
+      "titleFa": "طراح گرافیک و محتوای بصری",
+      "titleEn": "Graphic & Visual Content Designer",
+      "relatedResearchSlugs": [
+        "visual-identity-brand-design",
+        "illustration-digital-design",
+        "motion-graphics-animation",
+        "social-media-marketing",
+        "product-ui-ux-design"
+      ]
+    },
+    {
+      "roleId": "design_video_editing_production",
+      "researchSlug": "video-editing-production",
+      "sourceResearchSlugs": [
+        "video-editing-production"
+      ],
+      "appSlug": "career-path-1w9y14",
+      "cardId": "CARD_063",
+      "categoryId": "design_creative",
+      "titleFa": "تدوینگر و تولیدکننده ویدیو",
+      "titleEn": "Video Editor / Video Producer",
+      "relatedResearchSlugs": [
+        "motion-graphics-animation",
+        "social-media-marketing",
+        "graphic-design-visual-content",
+        "3d-art-design",
+        "content-marketing"
+      ]
+    },
+    {
+      "roleId": "design_illustration_digital",
+      "researchSlug": "illustration-digital-design",
+      "sourceResearchSlugs": [
+        "illustration-digital-design"
+      ],
+      "appSlug": "career-path-1u9xrl",
+      "cardId": "CARD_064",
+      "categoryId": "design_creative",
+      "titleFa": "تصویرگر و طراح دیجیتال",
+      "titleEn": "Illustrator / Digital Artist",
+      "relatedResearchSlugs": [
+        "graphic-design-visual-content",
+        "3d-art-design",
+        "motion-graphics-animation",
+        "visual-identity-brand-design",
+        "social-media-marketing"
+      ]
+    },
+    {
+      "roleId": "design_3d_art",
+      "researchSlug": "3d-art-design",
+      "sourceResearchSlugs": [
+        "3d-art-design"
+      ],
+      "appSlug": "3d-art",
+      "cardId": "CARD_065",
+      "categoryId": "design_creative",
+      "titleFa": "طراح سه‌بعدی و 3D Artist",
+      "titleEn": "3D Artist / 3D Designer",
+      "relatedResearchSlugs": [
+        "motion-graphics-animation",
+        "illustration-digital-design",
+        "video-editing-production",
+        "graphic-design-visual-content",
+        "product-ui-ux-design"
+      ]
+    },
+    {
+      "roleId": "design_motion_graphics_animation",
+      "researchSlug": "motion-graphics-animation",
+      "sourceResearchSlugs": [
+        "motion-graphics-animation"
+      ],
+      "appSlug": "career-path-1lo6cj",
+      "cardId": "CARD_067",
+      "categoryId": "design_creative",
+      "titleFa": "طراح موشن گرافیک و انیمیشن",
+      "titleEn": "Motion Graphics Designer / Animator",
+      "relatedResearchSlugs": [
+        "video-editing-production",
+        "graphic-design-visual-content",
+        "3d-art-design",
+        "illustration-digital-design",
+        "social-media-marketing"
+      ]
+    },
+    {
+      "roleId": "design_visual_identity_brand",
+      "researchSlug": "visual-identity-brand-design",
+      "sourceResearchSlugs": [
+        "visual-identity-brand-design"
+      ],
+      "appSlug": "career-path-1rtxp8",
+      "cardId": "CARD_068",
+      "categoryId": "design_creative",
+      "titleFa": "طراح هویت بصری و برند",
+      "titleEn": "Visual Identity / Brand Designer",
+      "relatedResearchSlugs": [
+        "brand-strategy-branding",
+        "graphic-design-visual-content",
+        "illustration-digital-design",
+        "product-ui-ux-design",
+        "content-marketing"
+      ]
+    },
+    {
+      "roleId": "marketing_social_media_marketing",
+      "researchSlug": "social-media-marketing",
+      "sourceResearchSlugs": [
+        "social-media-content-creation",
+        "social-media-management"
+      ],
+      "appSlug": "social-media-marketing",
+      "cardId": "CARD_032",
+      "categoryId": "marketing_growth",
+      "titleFa": "بازاریابی شبکه‌های اجتماعی",
+      "titleEn": "Social Media Marketing",
+      "relatedResearchSlugs": [
+        "content-marketing",
+        "graphic-design-visual-content",
+        "video-editing-production",
+        "motion-graphics-animation",
+        "brand-strategy-branding",
+        "digital-marketing-general"
+      ]
+    }
+  ]
+}
