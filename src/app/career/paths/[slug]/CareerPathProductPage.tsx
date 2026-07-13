@@ -78,7 +78,7 @@ function SectionHeader({
   id: string;
   label: string;
   title: string;
-  description: string;
+  description?: string;
   icon: LucideIcon;
   tone: Tone;
 }>) {
@@ -91,7 +91,7 @@ function SectionHeader({
           <h2 id={id}>{title}</h2>
         </div>
       </div>
-      <p className={styles.sectionDescription}>{description}</p>
+      {description ? <p className={styles.sectionDescription}>{description}</p> : null}
     </div>
   );
 }
@@ -193,7 +193,6 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
             id="career-path-fit-title"
             label="تناسب سریع"
             title="این شغل مناسب منه؟"
-            description="چهار بُعد ساده برای اینکه بدون تست شخصیت و عددسازی، حس اولیه‌ات را با واقعیت کار مقایسه کنی."
             icon={Users}
             tone="teal"
           />
@@ -224,7 +223,6 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
             id="career-path-realities-title"
             label="داخل کار"
             title="واقعیت‌های شغلی"
-            description="روزمره، مهارت‌ها و ابزارها در یک قاب کوتاه؛ نه یک مقاله طولانی."
             icon={BriefcaseBusiness}
             tone="yellow"
           />
@@ -255,7 +253,6 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
             id="career-path-hardships-title"
             label="واقعیت سخت"
             title="سختی‌ها"
-            description="سختی‌ها برای ترساندن نیستند؛ برای این‌اند که قبل از انتخاب، تصویر کامل‌تری داشته باشی."
             icon={TriangleAlert}
             tone="persimmon"
           />
@@ -286,7 +283,6 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
             id="career-path-intelligence-title"
             label="آینده نزدیک"
             title="فرصت‌ها و تهدیدهای هوش مصنوعی"
-            description="نگاه آرام و عملی به اینکه چه چیزهایی سریع‌تر می‌شود و کجا قضاوت انسانی هنوز تعیین‌کننده است."
             icon={Bot}
             tone="blue"
           />
@@ -309,12 +305,11 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <article className={styles.intelligenceCardHarder}>
             <h3>
               <UiIcon icon={ShieldAlert} tone="persimmon" compact />
-              <span>هوش مصنوعی چه چیزهایی را سخت‌تر می‌کند؟</span>
+              <span>هوش مصنوعی چه چیزهایی را سخت‌تر یا حساس‌تر می‌کند؟</span>
             </h3>
             <ul>{content.intelligence.harder.map((item) => <li key={item}>{item}</li>)}</ul>
           </article>
         </div>
-        <p className={styles.judgmentNote}>{content.intelligence.judgment}</p>
       </section>
 
       <section id="career-path-interview" className={`${styles.section} ${styles.interviewSection}`} data-career-section="interview" data-career-interview-section aria-labelledby="career-path-interview-title">
@@ -323,7 +318,6 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
             id="career-path-interview-title"
             label="مصاحبه شغلی"
             title="سوالات متداول مصاحبه شغلی"
-            description="پنج سؤال عملی که کمک می‌کند بفهمی در شروع این مسیر شغلی از تو چه انتظاری می‌رود."
             icon={MessageCircleQuestion}
             tone="yellow"
           />
@@ -339,7 +333,7 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           {content.interviewQuestions.map((question, index) => (
             <article className={styles.interviewItem} data-interview-question key={question}>
               <span>{(index + 1).toLocaleString("fa-IR")}</span>
-              <h3>{question}</h3>
+              <h3 dir="rtl">{question}</h3>
             </article>
           ))}
         </div>

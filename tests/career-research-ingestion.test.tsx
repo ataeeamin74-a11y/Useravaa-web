@@ -4,6 +4,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import CareerPathSeoPage from "@/app/career/paths/[slug]/page";
 import { careerHierarchy } from "@/features/career/career-data";
+import { getCuratedCareerPageContent } from "@/features/career/career-page-curated-content";
 import { buildCareerPathProductContent } from "@/features/career/career-path-page-content";
 import { getCareerPathSeoEntries, getCareerPathSeoEntryBySlug } from "@/features/career/career-path-seo";
 import {
@@ -115,7 +116,7 @@ describe("career research ingestion", () => {
       expect(getCareerResearchByCardId(role.cardId)).toBe(role);
       expect(getCareerResearchByAppSlug(role.appSlug)).toBe(role);
       expect(content?.title).toBe(role.hero.titleFa);
-      expect(content?.intro).toBe(role.hero.decisionDescription.replace(/\bAI\b/gu, "هوش مصنوعی"));
+      expect(content?.intro).toBe(getCuratedCareerPageContent(role.appSlug)?.intro);
       const visibleProductCopy = content ? [
         content.intro,
         content.heroDescriptor,
@@ -155,7 +156,7 @@ describe("career research ingestion", () => {
       );
 
       expect(html).toContain(`مسیر شغلی ${role.hero.titleFa}`);
-      expect(html).toContain(role.hero.decisionDescription);
+      expect(html).toContain(getCuratedCareerPageContent(role.appSlug)?.intro ?? "");
       expect(html).toContain("این شغل مناسب منه؟");
       expect(html).toContain("واقعیت‌های شغلی");
       expect(html).toContain("سختی‌ها");

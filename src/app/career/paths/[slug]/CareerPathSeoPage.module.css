@@ -681,11 +681,14 @@
 }
 
 .interviewItem h3 {
+  direction: rtl;
   margin: 0;
   color: var(--career-navy);
   font-size: 13px;
   font-weight: 850;
   line-height: 1.7;
+  text-align: right;
+  unicode-bidi: plaintext;
 }
 
 .finalSection {
