@@ -1,0 +1,526 @@
+.page {
+  --internship-border: #dfe5ee;
+  --internship-muted: #5f6c82;
+  width: min(100%, 880px);
+  margin-inline: auto;
+  color: #091b49;
+}
+
+.intro {
+  display: grid;
+  gap: 12px;
+  padding: 10px 0 24px;
+  border-bottom: 1px solid var(--internship-border);
+}
+
+.eyebrow {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 999px;
+  background: #e9f8f7;
+  color: #076d69;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.intro h1 {
+  max-width: 680px;
+  margin: 0;
+  color: #091b49;
+  font-size: 36px;
+  line-height: 1.42;
+}
+
+.intro > p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--internship-muted);
+  font-size: 15px;
+  line-height: 1.95;
+}
+
+.freshnessLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  color: #4b5971;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.freshnessLine svg {
+  color: #245ffd;
+}
+
+.controlSection {
+  display: grid;
+  gap: 14px;
+  padding-block: 20px;
+}
+
+.modeControl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  border: 1px solid var(--internship-border);
+  border-radius: 8px;
+  background: #fff;
+  padding: 4px;
+}
+
+.modeButton,
+.modeActive {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #59667d;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.modeActive {
+  background: #245ffd;
+  color: #fff;
+}
+
+.modeButton:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+
+.savedPathHint {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border-inline-start: 3px solid #ffc801;
+  background: #fff9dc;
+  color: #5c4a04;
+  padding: 11px 12px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.savedPathHint a {
+  color: #245ffd;
+  font-weight: 800;
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.searchField,
+.pathField {
+  grid-column: span 3;
+}
+
+.provinceField,
+.cityField,
+.sourceField {
+  grid-column: span 2;
+}
+
+.searchField,
+.selectField {
+  min-width: 0;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid #cfd8e6;
+  border-radius: 8px;
+  background: #fff;
+  color: #66738a;
+  padding-inline: 12px;
+}
+
+.searchField:focus-within,
+.selectField:focus-within {
+  border-color: #245ffd;
+  box-shadow: 0 0 0 3px rgb(36 95 253 / 11%);
+}
+
+.searchField input,
+.selectField select {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  appearance: none;
+  background: transparent;
+  color: #091b49;
+  font: inherit;
+  font-size: 13px;
+}
+
+.searchField input {
+  font-size: 14px;
+}
+
+.searchField button {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  background: #f1f4f8;
+  color: #536178;
+  cursor: pointer;
+}
+
+.selectField > span {
+  color: #6a768b;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.resultsSection {
+  display: grid;
+  gap: 14px;
+  padding-bottom: 28px;
+}
+
+.resultsHeading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+.resultsHeading > div {
+  display: grid;
+  gap: 3px;
+}
+
+.resultsHeading > div > span {
+  color: #245ffd;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.resultsHeading h2 {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+.resultsHeading p {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: #66738a;
+  font-size: 11px;
+}
+
+.internshipList {
+  overflow: hidden;
+  border-block: 1px solid var(--internship-border);
+  background: #fff;
+}
+
+.internshipRow {
+  display: grid;
+  gap: 9px;
+  padding: 16px 2px;
+}
+
+.internshipRow + .internshipRow {
+  border-top: 1px solid #e8ecf2;
+}
+
+.rowTopline,
+.rowMain,
+.jobMeta,
+.pathMatches,
+.matchReason {
+  display: flex;
+  align-items: center;
+}
+
+.rowTopline {
+  justify-content: space-between;
+  gap: 12px;
+  padding-inline: 2px;
+}
+
+.rowTopline time {
+  color: #758096;
+  font-size: 11px;
+}
+
+.sourceBadge {
+  border-radius: 999px;
+  background: #eef3ff;
+  color: #2452c8;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.rowMain {
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.rowCopy {
+  min-width: 0;
+  display: grid;
+  gap: 9px;
+}
+
+.rowCopy h2 {
+  margin: 0;
+  color: #091b49;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.jobMeta {
+  flex-wrap: wrap;
+  gap: 7px 14px;
+  color: #5d6980;
+  font-size: 12px;
+}
+
+.jobMeta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.salary {
+  width: fit-content;
+  margin: 0;
+  border-inline-start: 3px solid #01c3b9;
+  background: #eefafa;
+  color: #076d69;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.pathMatches {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pathMatches span {
+  border-radius: 999px;
+  background: #f1f4f8;
+  color: #44516a;
+  padding: 5px 8px;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.matchReason {
+  width: fit-content;
+  gap: 6px;
+  margin: 0;
+  color: #076d69;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.openAction {
+  min-width: 100px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #cfd8e6;
+  border-radius: 8px;
+  background: #fff;
+  color: #245ffd;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.openAction:hover {
+  border-color: #245ffd;
+  background: #f5f7ff;
+}
+
+.loadMore {
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  justify-self: center;
+  border: 1px solid #cfd8e6;
+  border-radius: 8px;
+  background: #fff;
+  color: #245ffd;
+  padding: 9px 18px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.loadMore:hover {
+  border-color: #245ffd;
+  background: #f5f7ff;
+}
+
+.loadingRows {
+  min-height: 240px;
+  display: grid;
+  gap: 10px;
+  color: #66738a;
+  font-size: 13px;
+}
+
+.loadingRows i {
+  height: 72px;
+  border-radius: 6px;
+  background: #edf1f6;
+  animation: pulse 1.5s ease-in-out infinite alternate;
+}
+
+.emptyState,
+.errorState {
+  min-height: 160px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border-block: 1px solid var(--internship-border);
+  background: #fff;
+  padding: 20px 14px;
+}
+
+.emptyState > svg,
+.errorState > svg {
+  color: #f86e4b;
+}
+
+.emptyState h2,
+.errorState h2 {
+  margin: 0 0 4px;
+  font-size: 16px;
+}
+
+.emptyState p,
+.errorState p {
+  margin: 0;
+  color: #66738a;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.emptyState a,
+.errorState a {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #245ffd;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.errorState {
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+}
+
+.srOnly {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@keyframes pulse {
+  from { opacity: 0.5; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 680px) {
+  .intro h1 {
+    font-size: 28px;
+  }
+
+  .filterGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .searchField {
+    grid-column: 1 / -1;
+  }
+
+  .pathField,
+  .sourceField {
+    grid-column: 1 / -1;
+  }
+
+  .provinceField,
+  .cityField {
+    grid-column: span 1;
+  }
+
+  .selectField {
+    gap: 6px;
+    padding-inline: 9px;
+  }
+
+  .selectField > span {
+    display: none;
+  }
+
+  .resultsHeading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .rowMain {
+    display: grid;
+  }
+
+  .openAction {
+    width: 100%;
+  }
+
+  .savedPathHint,
+  .emptyState,
+  .errorState {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .savedPathHint a,
+  .emptyState a,
+  .errorState a {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loadingRows i {
+    animation: none;
+  }
+}

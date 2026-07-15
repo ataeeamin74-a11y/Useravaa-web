@@ -22,7 +22,10 @@ export const careerEventNames = [
   "career_skill_results_requested",
   "career_skill_match_viewed",
   "career_skill_gap_viewed",
-  "career_skill_path_opened"
+  "career_skill_path_opened",
+  "career_internship_page_viewed",
+  "career_internship_filter_changed",
+  "career_internship_opened"
 ] as const;
 
 export type CareerEventName = (typeof careerEventNames)[number];
@@ -49,6 +52,7 @@ const allowedLeadTriggers = new Set(["path_save", "comparison_save"]);
 const allowedLeadFailureReasons = new Set(["validation", "api", "rate_limited", "unknown"]);
 const allowedSkillTypes = new Set(["soft", "foundational", "specialized", "tool"]);
 const allowedSkillSelectionStates = new Set(["have", "interested"]);
+const allowedInternshipSources = new Set(["jobinja", "jobvision"]);
 
 export function isCareerEventName(value: unknown): value is CareerEventName {
   return typeof value === "string" && eventNameSet.has(value);
@@ -194,6 +198,20 @@ export function sanitizeCareerEventPayload(
       setIfCount(sanitized, "matchedCount", payload.matchedCount, 1_000);
       setIfCount(sanitized, "missingCoreCount", payload.missingCoreCount, 1_000);
       break;
+    case "career_internship_page_viewed":
+      setIfCount(sanitized, "savedPathCount", payload.savedPathCount, 58);
+      break;
+    case "career_internship_filter_changed":
+      setIfString(sanitized, "filterType", payload.filterType);
+      setIfString(sanitized, "careerSlug", payload.careerSlug);
+      setIfCount(sanitized, "selectedCount", payload.selectedCount, 58);
+      break;
+    case "career_internship_opened": {
+      const source = sanitizeText(payload.source, 20);
+      if (source && allowedInternshipSources.has(source)) sanitized.source = source;
+      setIfString(sanitized, "careerSlug", payload.careerSlug);
+      break;
+    }
   }
 
   return sanitized;

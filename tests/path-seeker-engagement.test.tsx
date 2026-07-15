@@ -145,7 +145,7 @@ describe("Path Seeker engagement", () => {
     expect(pathSource).toContain('trackCareerEvent("career_path_viewed"');
   });
 
-  it("keeps the guide available outside the four-item bottom navigation", () => {
+  it("keeps the guide available outside the five-item bottom navigation", () => {
     const html = renderToStaticMarkup(<GuideEntryCard />);
     const bottomNavSource = readFileSync("src/features/career/CareerBottomNav.tsx", "utf8");
 
@@ -155,6 +155,7 @@ describe("Path Seeker engagement", () => {
     expect(navigationItems.map((item) => item.label)).toEqual([
       "مسیرها",
       "مهارت‌ها",
+      "کارآموزی",
       "مقایسه",
       "مسیرهای من"
     ]);

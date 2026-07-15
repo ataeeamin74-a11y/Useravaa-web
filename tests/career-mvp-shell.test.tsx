@@ -363,13 +363,14 @@ describe("career paths MVP shell", () => {
     expect(managementOnlyHtml).toContain("هنوز مسیر شغلی‌ای ذخیره نکرده‌ای");
   });
 
-  it("keeps the four bottom tabs with their canonical destinations", () => {
+  it("keeps the five bottom tabs with their canonical destinations", () => {
     const labels: readonly string[] = navigationItems.map((item) => item.label);
 
-    expect(labels).toEqual(["مسیرها", "مهارت‌ها", "مقایسه", "مسیرهای من"]);
+    expect(labels).toEqual(["مسیرها", "مهارت‌ها", "کارآموزی", "مقایسه", "مسیرهای من"]);
     expect(navigationItems.map((item) => item.href)).toEqual([
       "/career",
       "/career/skills",
+      "/career/internships",
       "/career/compare",
       "/career/my-paths"
     ]);
@@ -379,6 +380,7 @@ describe("career paths MVP shell", () => {
     expect(getCareerTabClickAction("/", "/career")).toBe("reset");
     expect(getCareerTabClickAction("/career", "/career")).toBe("reset");
     expect(getCareerTabClickAction("/career/skills", "/career/skills")).toBe("reset");
+    expect(getCareerTabClickAction("/career/internships", "/career/internships")).toBe("reset");
     expect(getCareerTabClickAction("/career/compare", "/career/compare")).toBe("reset");
     expect(getCareerTabClickAction("/career/my-paths", "/career/my-paths")).toBe("reset");
     expect(getCareerTabClickAction("/", "/career/compare")).toBe("navigate");
