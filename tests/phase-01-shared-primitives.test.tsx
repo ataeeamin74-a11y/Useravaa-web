@@ -51,7 +51,8 @@ describe("Phase 01 shared primitives", () => {
     expect(html.indexOf("۲۴۸")).toBeLessThan(html.indexOf("بازدید پروفایل"));
     expect(html).not.toContain("248");
     expect(requestHtml.indexOf("۲")).toBeLessThan(requestHtml.indexOf("درخواست جدید"));
-    expect(insightHtml).toContain("lucide-sparkles");
+    expect(insightHtml).toContain('viewBox="0 0 256 256"');
+    expect(insightHtml).not.toContain("lucide-");
     expect(insightHtml.indexOf("۳")).toBeLessThan(insightHtml.indexOf("بینش منتشرشده"));
   });
 
@@ -72,7 +73,8 @@ describe("Phase 01 shared primitives", () => {
     expect(html).toContain("۴٫۷ از ۵");
     expect(html).toContain("۳ بازخورد");
     expect(html).toContain("ua-rating-star-filled");
-    expect(html).not.toContain("4.7");
+    expect(html).not.toContain(">4.7<");
+    expect(html).not.toContain("4.7 از 5");
     expect(html).not.toContain("3 بازخورد");
   });
 

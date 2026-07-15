@@ -72,7 +72,8 @@ describe("Comprehensive V51 consistency fix v7", () => {
     const html = renderToStaticMarkup(<DiscoverPage initialState="ready" />);
 
     expect(html).toContain('aria-label="ذخیره تجربه"');
-    expect(html).toContain("lucide-sparkles");
+    expect(html).toContain('viewBox="0 0 256 256"');
+    expect(html).not.toContain("lucide-");
     expect(html).toContain("ua-stat-chip");
     expect(html).toContain("ua-stat-value");
     const insightChipHtml = html.slice(html.indexOf("ua-stat-chip"), html.indexOf("مشاهده تجربه"));

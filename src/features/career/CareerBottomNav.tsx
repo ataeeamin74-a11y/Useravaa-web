@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BriefcaseBusiness, ListChecks } from "lucide-react";
+import { BriefcaseBusiness, ListChecks } from "./CareerIcons";
 import { CompareTabIcon, PathsTabIcon, SavedTabIcon } from "./CareerSoftIcons";
 import styles from "./CareerShell.module.css";
 
@@ -21,7 +21,12 @@ type CareerBottomNavProps = Readonly<{
 }>;
 
 export function isCareerTabActive(pathname: string, href: CareerTabHref): boolean {
-  if (href === "/career") return pathname === "/" || pathname === "/career";
+  if (href === "/career") {
+    return pathname === "/" || pathname === "/career" || pathname.startsWith("/career/paths/");
+  }
+  if (href === "/career/my-paths") {
+    return pathname === href || pathname === "/career/saved";
+  }
   return pathname === href;
 }
 

@@ -1,125 +1,131 @@
+import type { Icon, IconProps, IconWeight } from "@phosphor-icons/react";
 import {
   Archive,
-  ArrowLeftRight,
+  ArrowBendUpRight,
+  ArrowCounterClockwise,
   ArrowRight,
-  BadgeDollarSign,
-  BadgeInfo,
+  ArrowsLeftRight,
   Bell,
-  Bookmark,
-  BookmarkX,
-  BriefcaseBusiness,
-  Building2,
+  BookmarkSimple,
+  BriefcaseMetal,
+  Buildings,
+  CalendarBlank,
   CalendarCheck,
-  CalendarDays,
   CalendarPlus,
+  CaretDown,
+  CaretLeft,
+  ChatCircle,
   Check,
-  ChevronDown,
-  ChevronLeft,
-  CircleCheck,
-  CircleHelp,
-  CirclePlus,
-  Clock3,
+  CheckCircle,
+  Clock,
   CreditCard,
-  Download,
+  CurrencyDollar,
+  DownloadSimple,
   Eye,
-  EyeOff,
+  EyeSlash,
   FileText,
-  ImagePlus,
-  Inbox,
+  Funnel,
+  IdentificationBadge,
+  ImageSquare,
   Info,
-  Layers3,
-  Link2,
-  List,
-  ListFilter,
-  LockKeyhole,
-  LogOut,
-  MessageCircle,
-  Pencil,
-  ReceiptText,
-  Reply,
-  RotateCcw,
-  Search,
-  Send,
-  Settings2,
-  Share2,
-  Sparkles,
+  LinkSimple,
+  ListBullets,
+  LockKey,
+  MagnifyingGlass,
+  PaperPlaneTilt,
+  PencilSimple,
+  PlusCircle,
+  Question,
+  Receipt,
+  ShareNetwork,
+  SignOut,
+  SlidersHorizontal,
+  Sparkle,
+  Stack,
   Star,
-  Trash2,
-  TriangleAlert,
+  Trash,
+  Tray,
   User,
   UserCheck,
-  UserSearch,
+  UserFocus,
   Wallet,
-  X,
-  type LucideProps
-} from "lucide-react";
+  Warning,
+  X
+} from "@phosphor-icons/react/ssr";
 
 export const USERAVAA_ICON_DEFAULT_SIZE = 20;
-export const USERAVAA_ICON_DEFAULT_STROKE = 1.75;
 
-export const useravaaLucideIcons = {
-  insight: Sparkles,
-  discoverExperiences: Search,
+export const useravaaPhosphorIcons = {
+  insight: Sparkle,
+  discoverExperiences: MagnifyingGlass,
   profile: User,
   notification: Bell,
-  settings: Settings2,
-  logout: LogOut,
-  save: Bookmark,
-  unsave: BookmarkX,
-  share: Share2,
+  settings: SlidersHorizontal,
+  logout: SignOut,
+  save: BookmarkSimple,
+  unsave: BookmarkSimple,
+  share: ShareNetwork,
   view: Eye,
-  hidden: EyeOff,
-  download: Download,
-  link: Link2,
-  edit: Pencil,
-  delete: Trash2,
+  hidden: EyeSlash,
+  download: DownloadSimple,
+  link: LinkSimple,
+  edit: PencilSimple,
+  delete: Trash,
   archive: Archive,
-  send: Send,
-  inbox: Inbox,
-  search: Search,
-  filter: ListFilter,
-  dropdown: ChevronDown,
+  send: PaperPlaneTilt,
+  inbox: Tray,
+  search: MagnifyingGlass,
+  filter: Funnel,
+  dropdown: CaretDown,
   close: X,
   arrowBackRtl: ArrowRight,
-  openDetailsRtl: ChevronLeft,
+  openDetailsRtl: CaretLeft,
   check: Check,
-  add: CirclePlus,
-  reset: RotateCcw,
+  add: PlusCircle,
+  reset: ArrowCounterClockwise,
   sessionRequest: CalendarPlus,
   sessionBooking: CalendarCheck,
-  sessionTime: Clock3,
-  calendar: CalendarDays,
+  sessionTime: Clock,
+  calendar: CalendarBlank,
   provider: UserCheck,
-  seeker: UserSearch,
-  message: MessageCircle,
-  reply: Reply,
+  seeker: UserFocus,
+  message: ChatCircle,
+  reply: ArrowBendUpRight,
   wallet: Wallet,
-  cost: BadgeDollarSign,
-  payoutRequest: ReceiptText,
-  transaction: ArrowLeftRight,
+  cost: CurrencyDollar,
+  payoutRequest: Receipt,
+  transaction: ArrowsLeftRight,
   paymentCard: CreditCard,
-  privacyLock: LockKeyhole,
-  success: CircleCheck,
+  privacyLock: LockKey,
+  success: CheckCircle,
   info: Info,
-  warning: TriangleAlert,
+  warning: Warning,
   star: Star,
   user: User,
-  briefcase: BriefcaseBusiness,
-  company: Building2,
-  jobTitle: BriefcaseBusiness,
-  orgLevel: Layers3,
+  briefcase: BriefcaseMetal,
+  company: Buildings,
+  jobTitle: BriefcaseMetal,
+  orgLevel: Stack,
   description: FileText,
-  selfIntro: BadgeInfo,
-  imageUpload: ImagePlus,
-  help: CircleHelp,
-  details: List
-} as const;
+  selfIntro: IdentificationBadge,
+  imageUpload: ImageSquare,
+  help: Question,
+  details: ListBullets
+} satisfies Record<string, Icon>;
 
-export type UseravaaIconName = keyof typeof useravaaLucideIcons;
+export type UseravaaIconName = keyof typeof useravaaPhosphorIcons;
 
-export type UseravaaIconProps = Omit<LucideProps, "name"> & {
+export type UseravaaIconProps = Omit<IconProps, "name"> & {
   name: UseravaaIconName;
 };
+
+const FILLED_ICON_NAMES = new Set<UseravaaIconName>([
+  "check",
+  "insight",
+  "success",
+  "unsave",
+  "warning"
+]);
 
 function classNames(...classes: Array<string | false | undefined>) {
   return classes.filter(Boolean).join(" ");
@@ -129,23 +135,24 @@ export function UseravaaIcon({
   name,
   className,
   size = USERAVAA_ICON_DEFAULT_SIZE,
-  strokeWidth = USERAVAA_ICON_DEFAULT_STROKE,
   color = "currentColor",
+  weight,
   "aria-hidden": ariaHidden,
   "aria-label": ariaLabel,
   ...props
 }: UseravaaIconProps) {
-  const Icon = useravaaLucideIcons[name];
+  const IconComponent = useravaaPhosphorIcons[name];
+  const resolvedWeight: IconWeight = weight ?? (FILLED_ICON_NAMES.has(name) ? "fill" : "duotone");
 
   return (
-    <Icon
+    <IconComponent
       aria-hidden={ariaLabel ? ariaHidden : true}
       aria-label={ariaLabel}
       className={classNames("ua-inline-control-icon", className)}
       color={color}
       focusable="false"
       size={size}
-      strokeWidth={strokeWidth}
+      weight={resolvedWeight}
       {...props}
     />
   );

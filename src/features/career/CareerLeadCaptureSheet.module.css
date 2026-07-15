@@ -96,7 +96,7 @@
   background: #f8fafc;
   color: var(--ua-navy);
   font: inherit;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.7;
   padding: 11px 12px;
 }
@@ -170,7 +170,7 @@
   min-height: 18px;
   margin: -2px 0 0;
   color: #a2343d;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-semibold);
   line-height: 1.6;
 }
@@ -189,7 +189,7 @@
   min-height: 21px;
   margin: -3px 0 6px;
   color: #58657d;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-semibold);
   line-height: 1.75;
 }
@@ -293,4 +293,29 @@
 
 @media (prefers-reduced-motion: reduce) {
   .sheet { animation: none; }
+}
+
+/* Modal surface stays unchanged; only its controls use raised depth. */
+.closeButton,
+.primaryButton,
+.laterButton,
+.successState button {
+  min-height: 44px;
+  border-width: 2px;
+  border-radius: 8px;
+  box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+  transition: box-shadow var(--career-motion, 180ms ease-out), transform var(--career-motion, 180ms ease-out);
+}
+
+.primaryButton,
+.successState button {
+  box-shadow: 0 4px 0 var(--career-blue-shadow, #1748c5);
+}
+
+.closeButton:active,
+.primaryButton:active:not(:disabled),
+.laterButton:active,
+.successState button:active {
+  box-shadow: none;
+  transform: translateY(3px);
 }

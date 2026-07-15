@@ -1,4 +1,4 @@
-import { BriefcaseBusiness, ChevronLeft, FileText, GraduationCap, Route } from "lucide-react";
+import { BriefcaseBusiness, ChevronLeft, FileText, GraduationCap, Route } from "./CareerIcons";
 import { guideCategories, type GuideCategory } from "./career-data";
 import styles from "./CareerPages.module.css";
 
@@ -24,7 +24,7 @@ export function GuidePage() {
           return (
             <article className={styles.guideItem} key={category.id}>
               <span className={styles.guideIcon} aria-hidden>
-                <Icon size={23} strokeWidth={1.9} />
+                <Icon size={23} />
               </span>
               <div>
                 <h2>{category.title}</h2>

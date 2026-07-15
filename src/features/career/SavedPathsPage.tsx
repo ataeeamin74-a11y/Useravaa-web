@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bookmark } from "lucide-react";
+import { Bookmark } from "./CareerIcons";
 import { visibleCareerCards } from "./career-data";
 import { CareerSaveButton } from "./CareerSaveButton";
 import { SoftChevronIcon } from "./CareerSoftIcons";
@@ -24,7 +24,7 @@ export function SavedPathsList({ savedCardIds, hasLoaded, onToggleSaved }: Saved
   if (!savedCards.length) {
     return (
       <div className={styles.savedEmpty} aria-live="polite">
-        <span className={styles.savedEmptyIcon} aria-hidden><Bookmark size={28} fill="currentColor" strokeWidth={1.9} /></span>
+        <span className={styles.savedEmptyIcon} aria-hidden><Bookmark size={28} weight="fill" /></span>
         <h2>هنوز مسیر شغلی‌ای ذخیره نکرده‌ای</h2>
         <p>مسیرهای شغلی موردنظرت را ذخیره کن تا بعداً راحت‌تر به آن‌ها برگردی و بیشتر بررسی‌شان کنی.</p>
         <Link href="/" className={styles.savedEmptyAction}>مشاهده مسیرهای شغلی</Link>

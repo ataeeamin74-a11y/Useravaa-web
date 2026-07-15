@@ -65,7 +65,7 @@
   gap: 7px;
   margin-bottom: 8px;
   color: var(--ua-navy);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
 }
 
@@ -194,4 +194,26 @@
   .sheet {
     animation: none;
   }
+}
+
+/* Install-guide cards stay flat; only controls press down. */
+.closeButton,
+.primaryButton,
+.laterButton {
+  min-height: 44px;
+  border-width: 2px;
+  border-radius: 8px;
+  box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+  transition: box-shadow var(--career-motion, 180ms ease-out), transform var(--career-motion, 180ms ease-out);
+}
+
+.primaryButton {
+  box-shadow: 0 4px 0 var(--career-blue-shadow, #1748c5);
+}
+
+.closeButton:active,
+.primaryButton:active,
+.laterButton:active {
+  box-shadow: none;
+  transform: translateY(3px);
 }

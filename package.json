@@ -18,6 +18,7 @@
     "taxonomy:seed": "node tools/taxonomy/seed-mvp-job-categories.mjs"
   },
   "dependencies": {
+    "@phosphor-icons/react": "^2.1.10",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "latest",
     "lucide-react": "latest",

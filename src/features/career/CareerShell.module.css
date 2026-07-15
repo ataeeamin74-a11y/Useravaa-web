@@ -84,7 +84,7 @@
   gap: 3px;
   border-radius: 18px;
   color: #58657d;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: var(--weight-semibold);
   line-height: 1.4;
   transition: background-color 160ms ease, color 160ms ease;
@@ -143,10 +143,75 @@
   }
 }
 
+@media (min-width: 1024px) {
+  .shell {
+    padding-inline-start: 96px;
+    padding-bottom: 0;
+  }
+
+  .bottomNav {
+    inset-block-start: 50%;
+    inset-block-end: auto;
+    inset-inline-start: 14px;
+    inset-inline-end: auto;
+    width: 72px;
+    min-height: 0;
+    grid-template-columns: 1fr;
+    gap: 4px;
+    margin: 0;
+    padding: 8px 6px;
+    transform: translateY(-50%);
+  }
+
+  .navItem,
+  .navItemActive {
+    min-height: 60px;
+  }
+
+  .navItemActive::before {
+    width: 3px;
+    height: 26px;
+    inset-block-start: 50%;
+    inset-inline-start: 1px;
+    transform: translateY(-50%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .navItem,
   .navItemActive,
   .navIcon {
     transition: none;
   }
+}
+
+/* Raised depth belongs to controls, not content surfaces. */
+.shell {
+  --career-shadow: #c7d3e4;
+  --career-blue-shadow: #1748c5;
+  --career-teal-shadow: #009e96;
+  --career-yellow-shadow: #d6a900;
+  --career-motion: 180ms ease-out;
+}
+
+.header > a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.navItem,
+.navItemActive {
+  min-height: 54px;
+  touch-action: manipulation;
+  transition: background-color var(--career-motion), color var(--career-motion), transform var(--career-motion);
+}
+
+.navItemActive .navIcon {
+  box-shadow: 0 3px 0 var(--career-blue-shadow);
+}
+
+.navItem:active,
+.navItemActive:active {
+  transform: translateY(2px);
 }
