@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -16,7 +17,7 @@ import {
   Search,
   Sparkles,
   X
-} from "lucide-react";
+} from "./CareerIcons";
 import { trackCareerEvent } from "./career-events";
 import {
   careerInternshipPathOptions,
@@ -154,12 +155,14 @@ export function CareerInternshipsPage() {
   const [feed, setFeed] = useState<CareerInternshipFeed>();
   const [isStale, setIsStale] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
+  const [loadRequest, setLoadRequest] = useState(0);
   const [mode, setMode] = useState<ViewMode>("personalized");
   const [selectedPathSlug, setSelectedPathSlug] = useState("");
   const [source, setSource] = useState<CareerInternshipSource | "">("");
   const [province, setProvince] = useState("");
   const [city, setCity] = useState("");
   const [query, setQuery] = useState("");
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [visibleLimit, setVisibleLimit] = useState(30);
   const savedPathSlugs = useMemo(
     () => getCareerPathSlugsForSavedIds(savedPathIds),
@@ -188,6 +191,7 @@ export function CareerInternshipsPage() {
         if (!parsed) throw new Error("internship feed response was invalid");
         setFeed(parsed);
         setIsStale(Boolean(value.isStale));
+        setLoadFailed(false);
       })
       .catch(() => {
         if (isCurrent) setLoadFailed(true);
@@ -195,7 +199,7 @@ export function CareerInternshipsPage() {
     return () => {
       isCurrent = false;
     };
-  }, []);
+  }, [loadRequest]);
 
   useEffect(() => {
     if (!hasLoadedSavedPaths) return;
@@ -244,15 +248,33 @@ export function CareerInternshipsPage() {
     trackCareerEvent("career_internship_filter_changed", { filterType: "city" });
   }
 
+  function changeSource(nextSource: CareerInternshipSource | "") {
+    setSource(nextSource);
+    setVisibleLimit(30);
+    trackCareerEvent("career_internship_filter_changed", { filterType: "source" });
+  }
+
+  const activeAdvancedFilterCount = Number(Boolean(selectedPathSlug)) + Number(Boolean(source));
+
   return (
     <main className={styles.page} dir="rtl" data-career-internships-page>
       <header className={styles.intro}>
-        <span className={styles.eyebrow}><BriefcaseBusiness size={16} aria-hidden /> فرصت‌های شروع</span>
+        <div className={styles.introTopline}>
+          <span className={styles.eyebrow}><BriefcaseBusiness size={16} aria-hidden /> فرصت‌های شروع</span>
+          <Image
+            className={styles.introMascot}
+            src="/brand/Mascot/useravaa-mascot-magnifier-eye.webp"
+            width={76}
+            height={76}
+            alt=""
+            aria-hidden="true"
+          />
+        </div>
         <h1>کارآموزی‌های نزدیک به مسیر تو</h1>
         <p>آگهی‌های تازهٔ جابینجا و جاب‌ویژن را بر اساس مسیرهایی که دنبال می‌کنی یک‌جا ببین.</p>
         <div className={styles.freshnessLine}>
           <RefreshCw size={16} aria-hidden />
-          <span>تازه‌سازی هر ۳ روز</span>
+          <span>بعد از ۳ روز، با اولین بازدید تازه‌سازی می‌شود</span>
           <span aria-hidden>•</span>
           <span>فقط آگهی‌های ۴۵ روز اخیر</span>
         </div>
@@ -287,7 +309,24 @@ export function CareerInternshipsPage() {
           </div>
         ) : null}
 
-        <div className={styles.filterGrid}>
+        <button
+          type="button"
+          className={styles.filterToggle}
+          aria-expanded={showAdvancedFilters}
+          aria-controls="career-internship-advanced-filters"
+          data-open={showAdvancedFilters ? "true" : "false"}
+          onClick={() => setShowAdvancedFilters((current) => !current)}
+        >
+          <Filter size={18} aria-hidden />
+          <span>فیلترهای بیشتر</span>
+          {activeAdvancedFilterCount ? <strong>{activeAdvancedFilterCount.toLocaleString("fa-IR")}</strong> : null}
+          <ChevronDown size={17} aria-hidden />
+        </button>
+
+        <div
+          id="career-internship-advanced-filters"
+          className={`${styles.filterGrid} ${showAdvancedFilters ? styles.filterGridAdvanced : ""}`}
+        >
           <label className={styles.searchField}>
             <Search size={18} aria-hidden />
             <span className={styles.srOnly}>جست‌وجوی آگهی</span>
@@ -309,7 +348,7 @@ export function CareerInternshipsPage() {
             ) : null}
           </label>
 
-          <label className={`${styles.selectField} ${styles.pathField}`}>
+          <label className={`${styles.selectField} ${styles.pathField} ${styles.advancedField}`}>
             <Filter size={17} aria-hidden />
             <span>مسیر شغلی</span>
             <select
@@ -357,16 +396,13 @@ export function CareerInternshipsPage() {
             <ChevronDown size={16} aria-hidden />
           </label>
 
-          <label className={`${styles.selectField} ${styles.sourceField}`}>
+          <label className={`${styles.selectField} ${styles.sourceField} ${styles.advancedField}`}>
             <BriefcaseBusiness size={17} aria-hidden />
             <span>منبع</span>
             <select
               aria-label="فیلتر منبع آگهی"
               value={source}
-              onChange={(event) => {
-                setSource(event.target.value as CareerInternshipSource | "");
-                setVisibleLimit(30);
-              }}
+              onChange={(event) => changeSource(event.target.value as CareerInternshipSource | "")}
             >
               <option value="">هر دو سایت</option>
               <option value="jobinja">جابینجا</option>
@@ -407,6 +443,13 @@ export function CareerInternshipsPage() {
               <h2>فعلاً آگهی‌ها در دسترس نیستند</h2>
               <p>می‌توانی مستقیم سراغ فهرست کارآموزی منبع‌ها بروی.</p>
             </div>
+            <button type="button" onClick={() => {
+              setFeed(undefined);
+              setLoadFailed(false);
+              setLoadRequest((current) => current + 1);
+            }}>
+              تلاش دوباره
+            </button>
             <a href="https://jobinja.ir/jobs?filters%5Binternship%5D=1" target="_blank" rel="noopener noreferrer">جابینجا</a>
             <a href="https://jobvision.ir/jobs/type/internship" target="_blank" rel="noopener noreferrer">جاب‌ویژن</a>
           </div>

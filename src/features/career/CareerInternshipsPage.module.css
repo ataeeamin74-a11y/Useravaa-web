@@ -117,6 +117,10 @@
   font-weight: 800;
 }
 
+.filterToggle {
+  display: none;
+}
+
 .filterGrid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -164,16 +168,16 @@
   background: transparent;
   color: #091b49;
   font: inherit;
-  font-size: 13px;
+  font-size: 16px;
 }
 
 .searchField input {
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .searchField button {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border: 0;
@@ -185,7 +189,7 @@
 
 .selectField > span {
   color: #6a768b;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 750;
 }
 
@@ -226,7 +230,7 @@
   gap: 6px;
   margin: 0;
   color: #66738a;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .internshipList {
@@ -262,7 +266,7 @@
 
 .rowTopline time {
   color: #758096;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .sourceBadge {
@@ -270,7 +274,7 @@
   background: #eef3ff;
   color: #2452c8;
   padding: 4px 8px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 850;
 }
 
@@ -313,7 +317,7 @@
   background: #eefafa;
   color: #076d69;
   padding: 4px 8px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 750;
 }
 
@@ -327,7 +331,7 @@
   background: #f1f4f8;
   color: #44516a;
   padding: 5px 8px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 750;
 }
 
@@ -336,7 +340,7 @@
   gap: 6px;
   margin: 0;
   color: #076d69;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -441,8 +445,20 @@
   font-weight: 850;
 }
 
+.errorState button {
+  min-height: 40px;
+  border: 2px solid #245ffd;
+  border-radius: 8px;
+  background: #245ffd;
+  color: #fff;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 850;
+  padding-inline: 12px;
+}
+
 .errorState {
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto auto auto;
 }
 
 .srOnly {
@@ -466,6 +482,51 @@
 
   .filterGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .filterToggle {
+    min-height: 46px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid rgb(36 95 253 / 24%);
+    border-radius: 8px;
+    background: #fff;
+    color: #2452cb;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 850;
+    padding-inline: 12px;
+    text-align: right;
+    box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+  }
+
+  .filterToggle strong {
+    min-width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+    background: #edf2ff;
+    color: #2452cb;
+    font-size: 12px;
+  }
+
+  .filterToggle > svg:last-child {
+    transition: transform var(--career-motion, 180ms ease-out);
+  }
+
+  .filterToggle[data-open="true"] > svg:last-child {
+    transform: rotate(180deg);
+  }
+
+  .advancedField {
+    display: none;
+  }
+
+  .filterGridAdvanced .advancedField {
+    display: flex;
   }
 
   .searchField {
@@ -513,7 +574,8 @@
 
   .savedPathHint a,
   .emptyState a,
-  .errorState a {
+  .errorState a,
+  .errorState button {
     grid-column: 2;
     justify-self: start;
   }
@@ -522,5 +584,80 @@
 @media (prefers-reduced-motion: reduce) {
   .loadingRows i {
     animation: none;
+  }
+}
+
+/* The mascot adds identity; raised depth is reserved for controls. */
+.page button,
+.page a,
+.page select,
+.page input {
+  touch-action: manipulation;
+}
+
+.introTopline {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.introMascot {
+  width: 74px;
+  height: 74px;
+  display: block;
+  flex: none;
+  object-fit: contain;
+}
+
+.modeButton,
+.modeActive,
+.openAction,
+.loadMore,
+.savedPathHint a,
+.emptyState a,
+.errorState a {
+  min-height: 44px;
+  border-width: 2px;
+  border-radius: 8px;
+  box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+  transition: border-color var(--career-motion, 180ms ease-out), background-color var(--career-motion, 180ms ease-out), box-shadow var(--career-motion, 180ms ease-out), transform var(--career-motion, 180ms ease-out);
+}
+
+.filterToggle,
+.errorState button {
+  touch-action: manipulation;
+}
+
+.modeActive {
+  box-shadow: 0 3px 0 var(--career-blue-shadow, #1748c5);
+}
+
+.modeButton:active,
+.modeActive:active,
+.openAction:active,
+.loadMore:active,
+.savedPathHint a:active,
+.emptyState a:active,
+.errorState a:active {
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
+.filterToggle:active,
+.errorState button:active {
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
+@media (max-width: 680px) {
+  .introTopline {
+    min-height: 60px;
+  }
+
+  .introMascot {
+    width: 62px;
+    height: 62px;
   }
 }

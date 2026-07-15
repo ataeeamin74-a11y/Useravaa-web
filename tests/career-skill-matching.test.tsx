@@ -252,9 +252,17 @@ describe("career skills product integration", () => {
     expect(componentSource).toContain('aria-label="فیلتر نوع مهارت"');
     expect(componentSource).toContain('role="group"');
     expect(componentSource).toContain("aria-pressed");
+    expect(componentSource).toContain('href="/career"');
+    expect(componentSource).toContain("بازگشت به مسیرها");
+    expect(componentSource).toContain("برای دیدن مسیرها");
+    expect(componentSource).toContain('aria-live="polite"');
     expect(componentSource).toContain("data-career-skill-result");
     expect(componentSource).toContain("مشاهده کامل مسیر");
     expect(stylesSource).toContain("@media (max-width: 680px)");
+    expect(stylesSource).toContain("@media (max-width: 1023px)");
+    expect(stylesSource).toContain("position: fixed");
+    expect(stylesSource).toContain("inset-block-end: calc(94px + env(safe-area-inset-bottom))");
+    expect(stylesSource).toContain("padding-bottom: 132px");
     expect(stylesSource).toContain("minmax(0, 1fr)");
     expect(stylesSource).not.toContain("linear-gradient");
   });

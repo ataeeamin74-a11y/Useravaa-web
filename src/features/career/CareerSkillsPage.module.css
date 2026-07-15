@@ -6,6 +6,10 @@
   color: #091b49;
 }
 
+.selectionView {
+  display: grid;
+}
+
 .routeLoading {
   width: min(100%, 860px);
   min-height: 240px;
@@ -44,7 +48,7 @@
   max-width: 680px;
   margin: 0;
   color: #091b49;
-  font-size: clamp(27px, 4.5vw, 40px);
+  font-size: 38px;
   line-height: 1.42;
 }
 
@@ -172,7 +176,7 @@
   background: transparent;
   color: #091b49;
   font: inherit;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .searchField input::placeholder {
@@ -180,8 +184,8 @@
 }
 
 .searchField button {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border: 0;
@@ -249,7 +253,7 @@
   color: #526078;
   padding: 3px 8px;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -332,8 +336,8 @@
 .skillTitleLine small,
 .resultTitleLine span,
 .gapHeader > span:not(.eyebrow) {
-  color: #7a879b;
-  font-size: 11px;
+  color: #5f6c82;
+  font-size: 12px;
 }
 
 .skillIdentity p {
@@ -352,7 +356,7 @@
 .stateButton,
 .stateButtonHaveActive,
 .stateButtonInterestActive {
-  min-height: 38px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -363,7 +367,7 @@
   color: #526078;
   padding: 6px 9px;
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   cursor: pointer;
 }
@@ -381,8 +385,8 @@
 }
 
 .removeSelection {
-  width: 38px;
-  height: 38px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border: 0;
@@ -453,9 +457,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  border-top: 1px solid var(--skills-border);
+  margin-top: 20px;
+  border: 1px solid var(--skills-border);
+  border-radius: 8px;
   background: #fff;
-  padding: 18px 0 8px;
+  padding: 14px;
 }
 
 .resultRequest > div {
@@ -501,6 +507,11 @@
   justify-content: flex-start;
   color: #2452cb;
   padding-inline: 0;
+}
+
+.selectionBackButton {
+  margin-bottom: 8px;
+  text-decoration: none;
 }
 
 .preliminaryNote {
@@ -567,7 +578,7 @@
   background: #edf2ff;
   color: #2452cb;
   padding: 5px 9px;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .matchLabelStrong {
@@ -595,7 +606,7 @@
   background: #f0f4ff;
   color: #244ca8;
   padding: 5px 9px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 750;
 }
 
@@ -651,6 +662,39 @@
   background: #fff;
 }
 
+.moreGapItems {
+  display: grid;
+  gap: 10px;
+}
+
+.moreGapItems summary {
+  width: fit-content;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 10px;
+  border: 2px solid rgb(36 95 253 / 24%);
+  border-radius: 8px;
+  background: #fff;
+  color: #2452cb;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+  padding-inline: 12px;
+  box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+  list-style: none;
+}
+
+.moreGapItems summary::-webkit-details-marker {
+  display: none;
+}
+
+.moreGapItems[open] summary {
+  margin-bottom: 10px;
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
 .professionalGroups,
 .professionalGroup {
   display: grid;
@@ -694,7 +738,7 @@
 
 .gapRow > div:first-child span {
   color: #68758a;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.7;
 }
 
@@ -710,7 +754,7 @@
 .priorityLater {
   border-radius: 999px;
   padding: 4px 8px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 800;
 }
 
@@ -801,7 +845,7 @@
   .intro h1,
   .resultsHeader h1,
   .gapHeader h1 {
-    font-size: 27px;
+    font-size: 28px;
   }
 
   .sectionLead {
@@ -809,7 +853,7 @@
   }
 
   .resetButton {
-    width: 42px;
+    width: 44px;
     padding: 0;
   }
 
@@ -838,7 +882,7 @@
   .skillActions {
     grid-column: 1 / -1;
     display: grid;
-    grid-template-columns: minmax(68px, 0.7fr) minmax(142px, 1.3fr) 40px;
+    grid-template-columns: minmax(68px, 0.7fr) minmax(142px, 1.3fr) 44px;
   }
 
   .stateButton,
@@ -851,6 +895,8 @@
   .resultRequest {
     align-items: stretch;
     flex-direction: column;
+    gap: 8px;
+    padding: 10px;
   }
 
   .resultRequest button {
@@ -891,9 +937,85 @@
   }
 }
 
+@media (max-width: 1023px) {
+  .selectionView {
+    padding-bottom: 132px;
+  }
+
+  .resultRequest {
+    width: min(calc(100% - 40px), 760px);
+    position: fixed;
+    inset-inline: 20px;
+    inset-block-end: calc(94px + env(safe-area-inset-bottom));
+    z-index: 30;
+    margin: 0 auto;
+    box-shadow: 0 12px 30px rgb(9 27 73 / 14%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .searchField,
   .skillRow {
     transition: none;
   }
+}
+
+/* Only selectable controls use tactile depth; skill and result cards stay unchanged. */
+.page button,
+.page a,
+.page select,
+.page input {
+  touch-action: manipulation;
+}
+
+.filterButton,
+.filterActive,
+.stateButton,
+.stateButtonHaveActive,
+.stateButtonInterestActive,
+.showMoreButton,
+.detailButton,
+.secondaryAction,
+.resetButton,
+.backButton,
+.resultRequest button,
+.primaryAction,
+.noResults button {
+  min-height: 44px;
+  border-width: 2px;
+  border-radius: 8px;
+  box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+  transition: border-color var(--career-motion, 180ms ease-out), background-color var(--career-motion, 180ms ease-out), box-shadow var(--career-motion, 180ms ease-out), transform var(--career-motion, 180ms ease-out);
+}
+
+.stateButtonHaveActive {
+  box-shadow: 0 3px 0 var(--career-teal-shadow, #009e96);
+}
+
+.stateButtonInterestActive {
+  box-shadow: 0 3px 0 var(--career-yellow-shadow, #d6a900);
+}
+
+.resultRequest button,
+.primaryAction,
+.noResults button {
+  min-height: 50px;
+  box-shadow: 0 4px 0 var(--career-blue-shadow, #1748c5);
+}
+
+.filterButton:active,
+.filterActive:active,
+.stateButton:active,
+.stateButtonHaveActive:active,
+.stateButtonInterestActive:active,
+.showMoreButton:active,
+.detailButton:active,
+.secondaryAction:active,
+.resetButton:active,
+.backButton:active,
+.resultRequest button:active,
+.primaryAction:active,
+.noResults button:active {
+  box-shadow: none;
+  transform: translateY(3px);
 }

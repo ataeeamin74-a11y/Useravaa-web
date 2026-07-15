@@ -20,7 +20,7 @@ import {
   Users,
   Wrench,
   X
-} from "lucide-react";
+} from "./CareerIcons";
 import { getCareerPathSeoEntryBySlug } from "./career-path-seo";
 import { trackCareerEvent } from "./career-events";
 import {
@@ -100,7 +100,7 @@ function SkillRow({
   return (
     <article className={`${styles.skillRow} ${selectedState ? styles.skillRowSelected : ""}`} data-skill-id={item.id}>
       <span className={`${styles.skillTypeIcon} ${typeClass(item.type)}`} aria-hidden>
-        <Icon size={18} strokeWidth={2.2} />
+        <Icon size={18} />
       </span>
       <div className={styles.skillIdentity}>
         <div className={styles.skillTitleLine}>
@@ -173,6 +173,13 @@ function SkillSelectionView({
     type,
     items: visibleSkills.filter((item) => item.type === type)
   })).filter((group) => group.items.length);
+  const selectionCount = profile.selections.length;
+  const remainingSelectionCount = Math.max(0, 3 - selectionCount);
+  const resultGuidance = remainingSelectionCount > 0
+    ? `برای دیدن مسیرها، ${remainingSelectionCount.toLocaleString("fa-IR")} مورد دیگر را با «دارم» یا «می‌خواهم یاد بگیرم» مشخص کن.`
+    : (selectionCount < 5
+      ? "نتیجه آماده است؛ با انتخاب بیشتر، تفاوت مسیرها روشن‌تر می‌شود."
+      : "نتیجه آماده است؛ حالا مسیرهای نزدیک به انتخاب‌هایت را ببین.");
 
   function resetWithConfirmation() {
     if (!profile.selections.length) return;
@@ -180,12 +187,27 @@ function SkillSelectionView({
   }
 
   return (
-    <>
+    <div className={styles.selectionView}>
+      <Link href="/career" className={`${styles.backButton} ${styles.selectionBackButton}`}>
+        <ArrowRight size={18} aria-hidden /> بازگشت به مسیرها
+      </Link>
+
       <section className={styles.intro} aria-labelledby="career-skills-title">
         <span className={styles.eyebrow}><ListChecks size={16} aria-hidden /> تصمیم با شواهد بیشتر</span>
         <h1 id="career-skills-title">با مهارت‌ها و علاقه‌هات، مسیرهای نزدیک‌تر رو پیدا کن</h1>
         <p>مهارت‌هایی را که الان داری یا دوست داری یاد بگیری انتخاب کن. یوزراوا مسیرهایی را نشان می‌دهد که از نظر نوع کار و مهارت به انتخاب‌های تو نزدیک‌ترند.</p>
         <SelectionStats profile={profile} />
+      </section>
+
+      <section className={styles.resultRequest} aria-label="مشاهده مسیرهای نزدیک">
+        <div aria-live="polite">
+          <strong>{selectionCount.toLocaleString("fa-IR")} مورد انتخاب شده</strong>
+          <span>{resultGuidance}</span>
+        </div>
+        <button type="button" disabled={selectionCount < 3} onClick={onRequestResults}>
+          <Compass size={18} aria-hidden />
+          دیدن مسیرهای نزدیک
+        </button>
       </section>
 
       <section className={styles.explorer} aria-labelledby="skill-explorer-title">
@@ -271,17 +293,7 @@ function SkillSelectionView({
         ) : null}
       </section>
 
-      <section className={styles.resultRequest} aria-label="مشاهده مسیرهای نزدیک">
-        <div>
-          <strong>{profile.selections.length.toLocaleString("fa-IR")} انتخاب برای مقایسه</strong>
-          <span>{profile.selections.length < 5 && profile.selections.length > 0 ? "نتیجه فعلاً مقدماتی است؛ انتخاب بیشتر مقایسه را روشن‌تر می‌کند." : "نتیجه بر پایه مهارت‌های فعلی و علاقه‌های یادگیری توضیح داده می‌شود."}</span>
-        </div>
-        <button type="button" disabled={!profile.selections.length} onClick={onRequestResults}>
-          <Compass size={18} aria-hidden />
-          دیدن مسیرهای نزدیک
-        </button>
-      </section>
-    </>
+    </div>
   );
 }
 
@@ -292,12 +304,13 @@ function ResultCounts({ match }: Readonly<{ match: CareerSkillMatch }>) {
     mixed: "ترکیبی از مهارت فعلی و علاقه",
     limited: "شواهد مشترک محدود"
   }[match.basis];
+  const nextStepCount = Math.min(3, match.missingCore.length);
 
   return (
     <div className={styles.resultCounts}>
       <span><Check size={14} aria-hidden /> {match.matchedCurrent.length.toLocaleString("fa-IR")} مهارت فعلی</span>
       <span><Sparkles size={14} aria-hidden /> {match.matchedInterests.length.toLocaleString("fa-IR")} علاقه</span>
-      <span><CircleDot size={14} aria-hidden /> {match.missingCore.length.toLocaleString("fa-IR")} نیاز اصلی باقی‌مانده</span>
+      <span><CircleDot size={14} aria-hidden /> {nextStepCount.toLocaleString("fa-IR")} قدم پیشنهادی بعدی</span>
       <span data-match-basis={match.basis}>{basisLabel}</span>
     </div>
   );
@@ -313,6 +326,7 @@ function SkillResultsView({
   onOpenMatch: (match: CareerSkillMatch, rank: number) => void;
 }>) {
   const results = useMemo(() => rankCareerSkillMatches(profile, 10), [profile]);
+  const resultCountLabel = results.length.toLocaleString("fa-IR");
 
   return (
     <section className={styles.resultsPage} aria-labelledby="skill-results-title">
@@ -321,7 +335,7 @@ function SkillResultsView({
       </button>
       <div className={styles.resultsHeader}>
         <span className={styles.eyebrow}><Compass size={16} aria-hidden /> مقایسه توضیح‌پذیر</span>
-        <h1 id="skill-results-title">۱۰ مسیر نزدیک‌تر به انتخاب‌های تو</h1>
+        <h1 id="skill-results-title">{resultCountLabel} مسیر نزدیک‌تر به انتخاب‌های تو</h1>
         <p>این ترتیب یک ابزار تصمیم‌گیری است؛ شباهت مهارتی را نشان می‌دهد و درباره تناسب قطعی یا استعداد تو قضاوت نمی‌کند.</p>
         <SelectionStats profile={profile} />
       </div>
@@ -365,7 +379,7 @@ function SkillResultsView({
         <div className={styles.noResults}>
           <ListChecks size={28} aria-hidden />
           <h2>هنوز انتخابی ثبت نشده</h2>
-          <p>برای ساخت مقایسه، دست‌کم یک مهارت یا علاقه یادگیری را انتخاب کن.</p>
+          <p>برای ساخت مقایسه قابل اتکا، دست‌کم سه مهارت یا علاقه یادگیری را انتخاب کن.</p>
           <button type="button" onClick={onBack}>رفتن به انتخاب مهارت‌ها</button>
         </div>
       )}
@@ -373,25 +387,42 @@ function SkillResultsView({
   );
 }
 
+function GapRows({ items }: Readonly<{ items: readonly CareerGapItem[] }>) {
+  return (
+    <div className={styles.gapList}>
+      {items.map((item) => (
+        <article className={styles.gapRow} key={item.skill.id}>
+          <div>
+            <strong>{item.skill.titleFa}</strong>
+            <span>{item.skill.descriptionFa}</span>
+          </div>
+          <div className={styles.gapMeta}>
+            {item.selectedState === "interested" ? <span className={styles.interestHint}>در علاقه‌های تو</span> : null}
+            <span className={item.priority === "شروع از اینجا" ? styles.priorityStart : styles.priorityLater}>{item.priority}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function GapItems({ items }: Readonly<{ items: readonly CareerGapItem[] }>) {
+  if (!items.length) {
+    return <p className={styles.gapEmpty}>در این گروه، نیاز مهم پوشش‌داده‌نشده‌ای دیده نمی‌شود.</p>;
+  }
+
+  const firstSteps = items.slice(0, 3);
+  const laterSteps = items.slice(3);
+
   return (
     <>
-      {items.length ? (
-        <div className={styles.gapList}>
-          {items.map((item) => (
-            <article className={styles.gapRow} key={item.skill.id}>
-              <div>
-                <strong>{item.skill.titleFa}</strong>
-                <span>{item.skill.descriptionFa}</span>
-              </div>
-              <div className={styles.gapMeta}>
-                {item.selectedState === "interested" ? <span className={styles.interestHint}>در علاقه‌های تو</span> : null}
-                <span className={item.priority === "شروع از اینجا" ? styles.priorityStart : styles.priorityLater}>{item.priority}</span>
-              </div>
-            </article>
-          ))}
-        </div>
-      ) : <p className={styles.gapEmpty}>در این گروه، نیاز مهم پوشش‌داده‌نشده‌ای دیده نمی‌شود.</p>}
+      <GapRows items={firstSteps} />
+      {laterSteps.length ? (
+        <details className={styles.moreGapItems}>
+          <summary>{laterSteps.length.toLocaleString("fa-IR")} مورد بعدی</summary>
+          <GapRows items={laterSteps} />
+        </details>
+      ) : null}
     </>
   );
 }
@@ -512,7 +543,7 @@ function SkillGapView({
   return (
     <section className={styles.gapPage} aria-labelledby="skill-gap-title">
       <button type="button" className={styles.backButton} onClick={onBack}>
-        <ArrowRight size={18} aria-hidden /> بازگشت به ۱۰ مسیر
+        <ArrowRight size={18} aria-hidden /> بازگشت به مسیرها
       </button>
       <header className={styles.gapHeader}>
         <span className={styles.eyebrow}><CircleDot size={16} aria-hidden /> فاصله مهارتی قابل‌بررسی</span>
@@ -541,10 +572,10 @@ function SkillGapView({
           <Compass size={18} aria-hidden /> مشاهده کامل مسیر
         </Link>
         <button type="button" className={styles.secondaryAction} onClick={handleSave} disabled={isSaved}>
-          <Bookmark size={18} fill={isSaved ? "currentColor" : "none"} aria-hidden />
+          <Bookmark size={18} weight={isSaved ? "fill" : "duotone"} aria-hidden />
           {isSaved ? "مسیر ذخیره شده" : "ذخیره مسیر"}
         </button>
-        <Link className={styles.secondaryAction} href={`/career/compare?path=${encodeURIComponent(entry.path.id)}`}>
+        <Link className={styles.secondaryAction} href={`/career/compare?path=${encodeURIComponent(entry.slug)}`}>
           <GitCompareArrows size={18} aria-hidden /> مقایسه با مسیر دیگر
         </Link>
       </div>

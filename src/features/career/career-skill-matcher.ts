@@ -174,6 +174,7 @@ export function rankCareerSkillMatches(
 
   return careerSkillRequirements.records
     .map((record) => scoreCareer(record, selected))
+    .filter((match) => match.matchedCurrent.length + match.matchedInterests.length > 0)
     .sort((first, second) => (
       second.score - first.score
       || second.matchedCurrent.length - first.matchedCurrent.length
