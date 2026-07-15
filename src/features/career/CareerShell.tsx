@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { UseravaaLogo } from "@/components/logo/UseravaaLogo";
 import { IosInstallGuide } from "@/features/pwa/IosInstallGuide";
+import { CareerServiceWorker } from "@/features/pwa/CareerServiceWorker";
 import { CareerAnalyticsScript } from "./CareerAnalyticsScript";
 import { CareerEventBootstrap } from "./CareerEventBootstrap";
 import { CareerLeadCaptureSheet } from "./CareerLeadCaptureSheet";
@@ -26,6 +27,7 @@ export function CareerShell({ children }: CareerShellProps) {
       <CareerAnalyticsScript />
       <CareerLeadCaptureSheet />
       <IosInstallGuide />
+      <CareerServiceWorker />
     </div>
   );
 }
