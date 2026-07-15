@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Check, Layers3, Pencil, RotateCcw, Route } from "lucide-react";
+import { Check, Layers3, Pencil, RotateCcw, Route, Search, X } from "./CareerIcons";
 import { CompareTabIcon, SoftCloseIcon } from "./CareerSoftIcons";
 import { EssentialChip, getDisplayLabel } from "./PathsPage";
 import { useSavedCareerPaths } from "./career-saved-paths";
@@ -26,6 +26,8 @@ import {
   useRecentlyViewedCareerPaths
 } from "./career-compare-state";
 import { trackCareerEvent } from "./career-events";
+import { getCareerPathSeoEntryBySlugOrLegacy } from "./career-path-seo";
+import type { CareerComparisonContentItem } from "./career-comparison-content.server";
 import type { CareerCard, CareerSubfamilyNode } from "./career-types";
 import { normalizeSearchText } from "./career-utils";
 import styles from "./ComparePage.module.css";
@@ -155,7 +157,11 @@ export function getRecentlyViewedComparisonPaths(pathIds: readonly string[]): re
   return paths;
 }
 
-export function buildComparisonSections(paths: readonly CareerSubfamilyNode[]): readonly ComparisonSection[] {
+export function buildComparisonSections(
+  paths: readonly CareerSubfamilyNode[],
+  comparisonContent: readonly CareerComparisonContentItem[] = []
+): readonly ComparisonSection[] {
+  const contentByPathId = new Map(comparisonContent.map((item) => [item.pathId, item]));
   const sections: readonly ComparisonSection[] = [
     {
       id: "overview",
@@ -170,22 +176,36 @@ export function buildComparisonSections(paths: readonly CareerSubfamilyNode[]): 
       id: "duties",
       label: "شرح شغلی",
       rows: compactRows([
-        createComparisonRow(paths, "وظایف اصلی", (path) => textComparisonItems(valuesFromCards(path, (card) => card.mainDuties)))
+        createComparisonRow(paths, "وظایف اصلی", (path) => textComparisonItems(
+          contentByPathId.get(path.id)?.duties ?? valuesFromCards(path, (card) => card.mainDuties)
+        ))
       ])
     },
     {
       id: "skills",
       label: "مهارت‌ها",
       rows: compactRows([
-        createComparisonRow(paths, "مهارت‌های تخصصی", (path) => skillComparisonItems(path, "technical")),
-        createComparisonRow(paths, "مهارت‌های نرم", (path) => skillComparisonItems(path, "soft"))
+        createComparisonRow(paths, "مهارت‌های تخصصی", (path) => {
+          const curated = contentByPathId.get(path.id)?.technicalSkills;
+          return curated?.length
+            ? curated.map((text) => ({ text, essential: true, skillKind: "technical" as const }))
+            : skillComparisonItems(path, "technical");
+        }),
+        createComparisonRow(paths, "مهارت‌های نرم", (path) => {
+          const curated = contentByPathId.get(path.id)?.softSkills;
+          return curated?.length
+            ? curated.map((text) => ({ text, essential: true, skillKind: "soft" as const }))
+            : skillComparisonItems(path, "soft");
+        })
       ])
     },
     {
       id: "tools",
       label: "ابزارها",
       rows: compactRows([
-        createComparisonRow(paths, "ابزارها و تکنولوژی‌ها", (path) => textComparisonItems(valuesFromCards(path, (card) => card.keyTools)))
+        createComparisonRow(paths, "ابزارها و تکنولوژی‌ها", (path) => textComparisonItems(
+          contentByPathId.get(path.id)?.tools ?? valuesFromCards(path, (card) => card.keyTools)
+        ))
       ])
     }
   ];
@@ -210,7 +230,7 @@ export function ComparePathCard({ path, selected, onToggle }: ComparePathCardPro
       aria-pressed={selected}
       onClick={() => onToggle(path.id)}
     >
-      <span className={styles.pathCardIcon} aria-hidden><Route size={20} strokeWidth={2} /></span>
+      <span className={styles.pathCardIcon} aria-hidden><Route size={20} /></span>
       <span className={styles.pathCardCopy}>
         <span className={styles.pathHierarchy}>
           {getDisplayLabel(path.domain)} · {getDisplayLabel(path.generalCategory)}
@@ -223,7 +243,7 @@ export function ComparePathCard({ path, selected, onToggle }: ComparePathCardPro
         </strong>
       </span>
       <span className={styles.selectionMark} aria-hidden>
-        {selected ? <Check size={17} strokeWidth={2} /> : <span />}
+        {selected ? <Check size={17} /> : <span />}
       </span>
     </button>
   );
@@ -329,6 +349,7 @@ function ComparisonCell({ values }: Readonly<{ values: ComparisonValue }>) {
 
 type CareerComparisonTableProps = Readonly<{
   paths: readonly CareerSubfamilyNode[];
+  comparisonContent?: readonly CareerComparisonContentItem[];
   onEdit: () => void;
   onReset?: () => void;
   onSave?: () => void;
@@ -337,17 +358,23 @@ type CareerComparisonTableProps = Readonly<{
 
 export function CareerComparisonTable({
   paths,
+  comparisonContent = [],
   onEdit,
   onReset,
   onSave,
   saved = false
 }: CareerComparisonTableProps) {
-  const sections = useMemo(() => buildComparisonSections(paths), [paths]);
+  const sections = useMemo(
+    () => buildComparisonSections(paths, comparisonContent),
+    [comparisonContent, paths]
+  );
   const [activeSectionId, setActiveSectionId] = useState<ComparisonSectionId>("overview");
 
   function showSection(sectionId: ComparisonSectionId) {
     setActiveSectionId(sectionId);
-    document.getElementById(`compare-section-${sectionId}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    window.requestAnimationFrame(() => {
+      document.getElementById(`compare-section-${sectionId}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   return (
@@ -360,17 +387,17 @@ export function CareerComparisonTable({
         <div className={styles.comparisonActions}>
           {onSave ? (
             <button type="button" className={saved ? styles.saveComparisonSaved : styles.saveComparison} onClick={onSave}>
-              <Check size={17} strokeWidth={2} />
+              <Check size={17} />
               {saved ? "مقایسه ذخیره شد" : "ذخیره این مقایسه"}
             </button>
           ) : null}
           <button type="button" className={styles.editSelection} onClick={onEdit}>
-            <Pencil size={17} strokeWidth={1.9} />
+            <Pencil size={17} />
             ویرایش انتخاب‌ها
           </button>
           {onReset ? (
             <button type="button" className={styles.resetComparison} onClick={onReset}>
-              <RotateCcw size={17} strokeWidth={1.9} />
+              <RotateCcw size={17} />
               شروع مقایسه جدید
             </button>
           ) : null}
@@ -407,7 +434,12 @@ export function CareerComparisonTable({
             </tr>
           </thead>
           {sections.map((section) => (
-            <tbody id={`compare-section-${section.id}`} className={styles.comparisonTableSection} key={section.id}>
+            <tbody
+              id={`compare-section-${section.id}`}
+              className={styles.comparisonTableSection}
+              data-active={activeSectionId === section.id ? "true" : "false"}
+              key={section.id}
+            >
               <tr className={styles.sectionDivider}>
                 <th colSpan={paths.length + 1}>{section.label}</th>
               </tr>
@@ -430,18 +462,25 @@ export function CareerComparisonTable({
 }
 
 export function normalizeInitialComparePathIds(pathIds: readonly string[]): readonly string[] {
-  return [...new Set(pathIds)].filter((pathId) => subfamilyById.has(pathId)).slice(0, MAX_COMPARE_PATHS);
+  return [...new Set(pathIds.flatMap((value) => {
+    if (subfamilyById.has(value)) return [value];
+    const entry = getCareerPathSeoEntryBySlugOrLegacy(value);
+    return entry ? [entry.path.id] : [];
+  }))].slice(0, MAX_COMPARE_PATHS);
 }
 
 type ComparePageProps = Readonly<{
   initialPathIds?: readonly string[];
+  comparisonContent?: readonly CareerComparisonContentItem[];
 }>;
 
-export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
+export function ComparePage({ initialPathIds = [], comparisonContent = [] }: ComparePageProps) {
   const normalizedInitialPathIds = normalizeInitialComparePathIds(initialPathIds);
   const [activeSource, setActiveSource] = useState<CompareSource>("saved");
   const [selectedPathIds, setSelectedPathIds] = useState<readonly string[]>(() => normalizedInitialPathIds);
   const [limitMessage, setLimitMessage] = useState("");
+  const [candidateQuery, setCandidateQuery] = useState("");
+  const [candidateLimit, setCandidateLimit] = useState(12);
   const [view, setView] = useState<CompareView>(() => (
     normalizedInitialPathIds.length >= MIN_COMPARE_PATHS ? "table" : "selection"
   ));
@@ -465,9 +504,33 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
   );
   const hasInitialComparison = normalizedInitialPathIds.length >= MIN_COMPARE_PATHS;
   const hasSingleSelection = selectedPathIds.length === 1;
-  const candidatePaths = hasSingleSelection
-    ? allCareerSubfamilies
-    : (activeSource === "saved" ? savedPaths : recentPaths);
+  const candidatePaths = useMemo(() => {
+    const anchorPath = selectedPaths[0];
+    const basePaths = hasSingleSelection
+      ? allCareerSubfamilies
+      : (activeSource === "saved" ? savedPaths : recentPaths);
+    const normalizedQuery = normalizeSearchText(candidateQuery);
+
+    return [...basePaths]
+      .filter((path) => path.id !== anchorPath?.id)
+      .filter((path) => !normalizedQuery || normalizeSearchText([
+        path.name,
+        path.domain,
+        path.generalCategory,
+        path.midCategory
+      ].join(" ")).includes(normalizedQuery))
+      .sort((first, second) => {
+        if (!anchorPath) return 0;
+        const firstPriority = first.generalCategory === anchorPath.generalCategory
+          ? 0
+          : (first.domain === anchorPath.domain ? 1 : 2);
+        const secondPriority = second.generalCategory === anchorPath.generalCategory
+          ? 0
+          : (second.domain === anchorPath.domain ? 1 : 2);
+        return firstPriority - secondPriority;
+      });
+  }, [activeSource, candidateQuery, hasSingleSelection, recentPaths, savedPaths, selectedPaths]);
+  const visibleCandidatePaths = candidatePaths.slice(0, candidateLimit);
   const candidatesLoaded = hasSingleSelection
     || (activeSource === "saved" ? hasLoadedSavedPaths : hasLoadedRecentlyViewedPaths);
   const comparisonSaved = isComparisonSaved(selectedPathIds);
@@ -501,6 +564,7 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
   }, [compareDraftPathIds, hasInitialComparison, hasLoadedCompareDraft]);
 
   function togglePath(pathId: string) {
+    hasAppliedInitialDraftRef.current = true;
     const update = updateCompareSelection(selectedPathIds, pathId);
     setSelectedPathIds(update.selectedPathIds);
     saveCompareDraftPathIds(update.selectedPathIds);
@@ -522,6 +586,8 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
     setLimitMessage("");
     setView("selection");
     setActiveSource("saved");
+    setCandidateQuery("");
+    setCandidateLimit(12);
     window.history.replaceState(window.history.state, "", "/career/compare");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -546,6 +612,7 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
       <section className={styles.comparePage} data-career-paths aria-labelledby="career-compare-title">
         <CareerComparisonTable
           paths={selectedPaths}
+          comparisonContent={comparisonContent}
           onEdit={() => setView("selection")}
           onReset={resetComparison}
           onSave={saveCurrentComparison}
@@ -558,14 +625,14 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
   return (
     <section className={`${styles.comparePage} ${styles.selectionPage}`} data-career-paths aria-labelledby="career-compare-title">
       <div className={styles.selectionHeading}>
-        <span className={styles.headingIcon} aria-hidden><Layers3 size={24} strokeWidth={2} /></span>
+        <span className={styles.headingIcon} aria-hidden><Layers3 size={24} /></span>
         <div>
           <h1 id="career-compare-title">مقایسه مسیرها</h1>
           <p>{hasSingleSelection ? "مسیر شغلی دوم را برای مقایسه انتخاب کن" : "۲ تا ۵ مسیر شغلی را برای مقایسه انتخاب کن"}</p>
         </div>
         {selectedPathIds.length ? (
           <button type="button" className={styles.resetComparison} onClick={resetComparison}>
-            <RotateCcw size={17} strokeWidth={1.9} />
+            <RotateCcw size={17} />
             شروع مقایسه جدید
           </button>
         ) : null}
@@ -598,11 +665,30 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
       </div>
       )}
 
+      <label className={styles.candidateSearch}>
+        <Search size={19} aria-hidden />
+        <span className="sr-only">جست‌وجوی مسیر برای مقایسه</span>
+        <input
+          type="search"
+          value={candidateQuery}
+          placeholder="نام مسیر یا حوزه را جست‌وجو کن"
+          onChange={(event) => {
+            setCandidateQuery(event.target.value);
+            setCandidateLimit(12);
+          }}
+        />
+        {candidateQuery ? (
+          <button type="button" aria-label="پاک‌کردن جست‌وجوی مقایسه" onClick={() => setCandidateQuery("")}>
+            <X size={17} aria-hidden />
+          </button>
+        ) : null}
+      </label>
+
       <div className={styles.candidatePanel} role="tabpanel" aria-busy={!candidatesLoaded}>
         {!candidatesLoaded ? <div className={styles.loadingState}>در حال آماده‌سازی مسیرها...</div> : null}
         {candidatesLoaded && candidatePaths.length ? (
           <div className={styles.pathGrid}>
-            {candidatePaths.map((path) => (
+            {visibleCandidatePaths.map((path) => (
               <ComparePathCard
                 path={path}
                 selected={selectedPathIds.includes(path.id)}
@@ -612,9 +698,14 @@ export function ComparePage({ initialPathIds = [] }: ComparePageProps) {
             ))}
           </div>
         ) : null}
+        {candidatesLoaded && visibleCandidatePaths.length < candidatePaths.length ? (
+          <button type="button" className={styles.showMoreCandidates} onClick={() => setCandidateLimit((current) => current + 12)}>
+            نمایش مسیرهای بیشتر
+          </button>
+        ) : null}
         {candidatesLoaded && !candidatePaths.length ? (
           <div className={styles.emptyState}>
-            <span aria-hidden><Route size={26} strokeWidth={2} /></span>
+            <span aria-hidden><Route size={26} /></span>
             <h2>{activeSource === "saved" ? "هنوز مسیر ذخیره‌شده‌ای نداری" : "هنوز مسیری را ندیده‌ای"}</h2>
             <p>{activeSource === "saved" ? "مسیرهای موردنظرت را ذخیره کن و برای مقایسه به اینجا برگرد." : "یک مسیر شغلی را باز کن تا در این فهرست دیده شود."}</p>
             <Link href="/career">مشاهده مسیرهای شغلی</Link>

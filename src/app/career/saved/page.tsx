@@ -1,5 +1,5 @@
-import { SavedPathsPage } from "@/features/career/SavedPathsPage";
+import { permanentRedirect } from "next/navigation";
 
 export default function CareerSavedPathsRoute() {
-  return <SavedPathsPage />;
+  permanentRedirect("/career/my-paths");
 }

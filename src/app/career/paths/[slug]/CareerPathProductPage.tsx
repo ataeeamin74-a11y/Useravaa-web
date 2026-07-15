@@ -1,12 +1,10 @@
-import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
+import type { CareerIcon } from "@/features/career/CareerIcons";
 import {
   BarChart3,
   BookmarkPlus,
   Bot,
   BriefcaseBusiness,
   Code2,
-  GitCompareArrows,
   HeartHandshake,
   MessageCircleQuestion,
   PenTool,
@@ -16,10 +14,15 @@ import {
   TriangleAlert,
   Users,
   Wrench
-} from "lucide-react";
+} from "@/features/career/CareerIcons";
 import type { CareerPathSeoEntry } from "@/features/career/career-path-seo";
 import { buildCareerPathTitle } from "@/features/career/career-path-seo";
 import { buildCareerPathProductContent, type Tone } from "@/features/career/career-path-page-content";
+import {
+  CareerPathCompareAction,
+  CareerPathSaveAction,
+  CareerPathViewTracker
+} from "./CareerPathClientActions";
 import { CareerPathHeroMascot, CareerPathSectionImage } from "./CareerPathMascotScene";
 import { CareerPathRelatedPaths } from "./CareerPathRelatedPaths";
 import { CareerPathSectionNav } from "./CareerPathSectionNav";
@@ -29,10 +32,6 @@ import styles from "./CareerPathSeoPage.module.css";
 type CareerPathProductPageProps = Readonly<{
   entry: CareerPathSeoEntry;
 }>;
-
-function compareHref(currentPathId: string) {
-  return `/career/compare?path=${encodeURIComponent(currentPathId)}`;
-}
 
 function toneClass(tone: Tone) {
   return {
@@ -48,7 +47,7 @@ function UiIcon({
   tone,
   compact = false
 }: Readonly<{
-  icon: LucideIcon;
+  icon: CareerIcon;
   tone: Tone;
   compact?: boolean;
 }>) {
@@ -58,13 +57,9 @@ function UiIcon({
       data-career-ui-icon
       aria-hidden="true"
     >
-      <Icon size={compact ? 15 : 18} strokeWidth={2.4} />
+      <Icon size={compact ? 15 : 18} />
     </span>
   );
-}
-
-function ActionIcon({ icon: Icon }: Readonly<{ icon: LucideIcon }>) {
-  return <Icon className={styles.actionIcon} size={18} strokeWidth={2.5} aria-hidden="true" />;
 }
 
 function SectionHeader({
@@ -79,7 +74,7 @@ function SectionHeader({
   label: string;
   title: string;
   description?: string;
-  icon: LucideIcon;
+  icon: CareerIcon;
   tone: Tone;
 }>) {
   return (
@@ -96,7 +91,7 @@ function SectionHeader({
   );
 }
 
-function fitDimensionIcon(label: string): LucideIcon {
+function fitDimensionIcon(label: string): CareerIcon {
   if (label.includes("آدم")) return Users;
   if (label.includes("ابزار")) return Wrench;
   if (label.includes("خلاقیت")) return PenTool;
@@ -150,6 +145,7 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+      <CareerPathViewTracker pathId={entry.path.id} pathTitle={pathTitle} />
 
       <header className={styles.hero} data-career-product-hero>
         <p className={styles.eyebrow}>
@@ -162,14 +158,17 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           <p className={styles.heroDescriptor}>{content.heroDescriptor}</p>
           <p className={styles.intro}>{content.intro}</p>
           <div className={styles.actions} aria-label="اقدام‌های مسیر شغلی">
-            <Link className={styles.primaryAction} href={entry.pwaHref} data-career-hero-primary-action>
-              <ActionIcon icon={BookmarkPlus} />
-              <span>{content.finalCtaText}</span>
-            </Link>
-            <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>
-              <ActionIcon icon={GitCompareArrows} />
-              <span>مقایسه با مسیرهای دیگر</span>
-            </Link>
+            <CareerPathSaveAction
+              pathId={entry.path.id}
+              className={styles.primaryAction}
+              label={content.finalCtaText}
+              heroPrimary
+            />
+            <CareerPathCompareAction
+              pathId={entry.path.id}
+              slug={entry.slug}
+              className={styles.secondaryAction}
+            />
           </div>
         </div>
         <div className={styles.decisionSummary} aria-label="سه نکته تصمیم مسیر شغلی">
@@ -349,22 +348,24 @@ export function CareerPathProductPage({ entry }: CareerPathProductPageProps) {
           tone="blue"
         />
         <div className={styles.finalActions}>
-          <Link className={styles.primaryAction} href={entry.pwaHref}>
-            <ActionIcon icon={BookmarkPlus} />
-            <span>{content.finalCtaText}</span>
-          </Link>
-          <Link className={styles.secondaryAction} href={compareHref(entry.path.id)}>
-            <ActionIcon icon={GitCompareArrows} />
-            <span>مقایسه با مسیرهای دیگر</span>
-          </Link>
+          <CareerPathSaveAction
+            pathId={entry.path.id}
+            className={styles.primaryAction}
+            label={content.finalCtaText}
+          />
+          <CareerPathCompareAction
+            pathId={entry.path.id}
+            slug={entry.slug}
+            className={styles.secondaryAction}
+          />
         </div>
       </section>
 
       <CareerPathRelatedPaths entry={entry} />
 
       <CareerPathStickyActions
-        saveHref={entry.pwaHref}
-        compareHref={compareHref(entry.path.id)}
+        pathId={entry.path.id}
+        slug={entry.slug}
         saveLabel={content.finalCtaText}
       />
     </main>

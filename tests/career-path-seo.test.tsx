@@ -243,7 +243,7 @@ describe("Career path SEO pages", () => {
       await expect(CareerPathsRoute({ searchParams: Promise.resolve({ path: legacySlug }) }))
         .rejects.toMatchObject({
           digest: expect.stringContaining(
-            `NEXT_REDIRECT;replace;/?card=${redirectEntry.representativeCard.id};308;`
+            `NEXT_REDIRECT;replace;${redirectEntry.pageHref};308;`
           )
         });
     }

@@ -79,14 +79,15 @@ describe("Phase 17 SEO and share readiness", () => {
     );
   });
 
-  it("uses a permanent legacy redirect while preserving card query links", () => {
+  it("uses a permanent legacy redirect to the complete career decision page", () => {
     const source = projectFile("src/app/career/page.tsx");
 
     expect(source).toContain('import { permanentRedirect } from "next/navigation"');
-    expect(source).toContain("getCareerPathSeoEntryBySlug");
-    expect(source).toContain("permanentRedirect(rootDestination)");
+    expect(source).toContain("getCareerPathSeoEntryBySlugOrLegacy");
+    expect(source).toContain("getCareerPathSeoEntryByCardId");
+    expect(source).toContain('permanentRedirect(careerPathEntry?.pageHref ?? "/")');
     expect(source).toContain("initialPathSlug");
-    expect(source).toContain('`/?card=${encodeURIComponent(resolvedCardId)}`');
+    expect(source).not.toContain("/?card=");
   });
 
   it("keeps public metadata free of internal, forbidden, and offline claims", () => {

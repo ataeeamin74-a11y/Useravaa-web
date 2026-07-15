@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Bookmark, GitCompareArrows, Route } from "lucide-react";
+import { Bookmark, GitCompareArrows, Route } from "./CareerIcons";
 import { SoftChevronIcon } from "./CareerSoftIcons";
 import { getDisplayLabel } from "./PathsPage";
 import { trackCareerEvent } from "./career-events";
 import {
-  getCareerPathById,
-  getCareerPathDetailHref
+  getCareerPathById
 } from "./career-path-index";
+import { getCareerPathSeoEntryByPathId } from "./career-path-seo";
 import {
   useSavedCareerComparisons,
   type SavedCareerComparison
@@ -27,8 +27,14 @@ type MyPathsContentProps = Readonly<{
 
 function getComparisonHref(pathIds: readonly string[]): string {
   const params = new URLSearchParams();
-  pathIds.forEach((pathId) => params.append("path", pathId));
+  pathIds.forEach((pathId) => {
+    params.append("path", getCareerPathSeoEntryByPathId(pathId)?.slug ?? pathId);
+  });
   return `/career/compare?${params.toString()}`;
+}
+
+function getPathHref(pathId: string): string {
+  return getCareerPathSeoEntryByPathId(pathId)?.pageHref ?? "/career";
 }
 
 export function MyPathsContent({
@@ -38,7 +44,9 @@ export function MyPathsContent({
   onRemovePath = () => false,
   onRemoveComparison = () => false
 }: MyPathsContentProps) {
-  const [expandedSectionIds, setExpandedSectionIds] = useState<ReadonlySet<string>>(() => new Set());
+  const [expandedSectionIds, setExpandedSectionIds] = useState<ReadonlySet<string>>(
+    () => new Set(["saved-paths", "saved-comparisons"])
+  );
 
   function toggleSection(sectionId: string) {
     setExpandedSectionIds((currentSectionIds) => {
@@ -76,7 +84,7 @@ export function MyPathsContent({
           onClick={() => toggleSection("saved-paths")}
         >
           <span className={styles.sectionHeading}>
-            <Bookmark size={19} strokeWidth={1.9} aria-hidden />
+            <Bookmark size={19} aria-hidden />
             <span id="saved-career-paths-title">مسیرهای شغلی ذخیره‌شده</span>
           </span>
           <span
@@ -102,7 +110,7 @@ export function MyPathsContent({
                   <span className={styles.cardMeta}>{getDisplayLabel(path.domain)}</span>
                   <strong dir="auto">{getDisplayLabel(path.name)}</strong>
                   <div className={styles.cardActions}>
-                    <Link className={styles.primaryAction} href={getCareerPathDetailHref(path)}>
+                    <Link className={styles.primaryAction} href={getPathHref(path.id)}>
                       دیدن مسیر شغلی <SoftChevronIcon size={15} />
                     </Link>
                     <button type="button" className={styles.deleteAction} onClick={() => onRemovePath(path.id)}>
@@ -114,7 +122,7 @@ export function MyPathsContent({
             </div>
           ) : (
             <div className={styles.sectionEmptyState} aria-live="polite">
-              <span aria-hidden><Route size={26} strokeWidth={1.9} /></span>
+              <span aria-hidden><Route size={26} /></span>
               <h3>هنوز مسیر شغلی‌ای اضافه نکردی</h3>
               <p>از صفحه مسیرها شروع کن؛ هر مسیری را که برای ادامه بررسی مهم است اینجا نگه می‌داری.</p>
               <Link href="/career">افزودن مسیر شغلی</Link>
@@ -132,7 +140,7 @@ export function MyPathsContent({
           onClick={() => toggleSection("saved-comparisons")}
         >
           <span className={styles.sectionHeading}>
-            <GitCompareArrows size={19} strokeWidth={1.9} aria-hidden />
+            <GitCompareArrows size={19} aria-hidden />
             <span id="saved-comparisons-title">مقایسه‌های ذخیره‌شده</span>
           </span>
           <span
@@ -170,7 +178,7 @@ export function MyPathsContent({
             </div>
           ) : (
             <div className={styles.sectionEmptyState} aria-live="polite">
-              <span aria-hidden><GitCompareArrows size={26} strokeWidth={1.9} /></span>
+              <span aria-hidden><GitCompareArrows size={26} /></span>
               <h3>هنوز مقایسه‌ای ذخیره نکردی</h3>
               <p>وقتی دو مسیر یا بیشتر را کنار هم می‌گذاری، مقایسه ذخیره‌شده اینجا می‌ماند.</p>
               <Link href="/career/compare">ساخت مقایسه جدید</Link>
@@ -183,8 +191,17 @@ export function MyPathsContent({
 }
 
 export function MyPathsPage() {
-  const { savedPathIds, hasLoadedSavedPaths, removePath } = useSavedCareerPaths();
-  const { savedComparisons, hasLoadedSavedComparisons, removeComparison } = useSavedCareerComparisons();
+  const { savedPathIds, hasLoadedSavedPaths, removePath, savePath } = useSavedCareerPaths();
+  const {
+    savedComparisons,
+    hasLoadedSavedComparisons,
+    removeComparison,
+    saveComparison
+  } = useSavedCareerComparisons();
+  const [undoAction, setUndoAction] = useState<
+    | Readonly<{ type: "path"; pathId: string }>
+    | Readonly<{ type: "comparison"; pathIds: readonly string[] }>
+  >();
   const hasLoaded = hasLoadedSavedPaths && hasLoadedSavedComparisons;
 
   useEffect(() => {
@@ -194,6 +211,39 @@ export function MyPathsPage() {
       savedComparisonCount: savedComparisons.length
     });
   }, [hasLoaded, savedComparisons.length, savedPathIds.size]);
+
+  useEffect(() => {
+    if (!undoAction) return undefined;
+    const timeout = window.setTimeout(() => setUndoAction(undefined), 6000);
+    return () => window.clearTimeout(timeout);
+  }, [undoAction]);
+
+  function removeSavedPath(pathId: string) {
+    const removed = removePath(pathId);
+    if (removed) {
+      trackCareerEvent("career_path_removed", { pathId });
+      setUndoAction({ type: "path", pathId });
+    }
+    return removed;
+  }
+
+  function removeSavedComparison(pathIds: readonly string[]) {
+    const removed = removeComparison(pathIds);
+    if (removed) setUndoAction({ type: "comparison", pathIds });
+    return removed;
+  }
+
+  function undoRemoval() {
+    if (!undoAction) return;
+    if (undoAction.type === "path") {
+      if (savePath(undoAction.pathId)) {
+        trackCareerEvent("career_path_saved", { pathId: undoAction.pathId });
+      }
+    } else if (saveComparison(undoAction.pathIds)) {
+      trackCareerEvent("career_comparison_saved", { selectedCount: undoAction.pathIds.length });
+    }
+    setUndoAction(undefined);
+  }
 
   return (
     <section className={styles.page} data-career-paths aria-labelledby="my-career-paths-title">
@@ -205,9 +255,15 @@ export function MyPathsPage() {
         savedPathIds={savedPathIds}
         savedComparisons={savedComparisons}
         hasLoaded={hasLoaded}
-        onRemovePath={removePath}
-        onRemoveComparison={removeComparison}
+        onRemovePath={removeSavedPath}
+        onRemoveComparison={removeSavedComparison}
       />
+      {undoAction ? (
+        <div className={styles.undoToast} role="status" aria-live="polite">
+          <span>{undoAction.type === "path" ? "مسیر حذف شد." : "مقایسه حذف شد."}</span>
+          <button type="button" onClick={undoRemoval}>برگرداندن</button>
+        </div>
+      ) : null}
     </section>
   );
 }

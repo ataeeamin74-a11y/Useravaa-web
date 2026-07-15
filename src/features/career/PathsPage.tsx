@@ -4,16 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import type { UIEvent } from "react";
-import type { LucideIcon } from "lucide-react";
+import type { CareerIcon } from "./CareerIcons";
 import {
   BriefcaseBusiness,
-  BookmarkPlus,
   BookOpen,
   ChartNoAxesCombined,
   CircleDollarSign,
   Code2,
   Compass,
-  GitCompareArrows,
   Layers3,
   Megaphone,
   Palette,
@@ -22,9 +20,8 @@ import {
   Sparkles,
   Users,
   Waypoints
-} from "lucide-react";
+} from "./CareerIcons";
 import { visibleCareerHierarchy as careerHierarchy } from "./career-data";
-import { CareerImageCarousel } from "./CareerImageCarousel";
 import {
   SoftBackIcon,
   SoftChevronIcon,
@@ -32,20 +29,8 @@ import {
   SoftEssentialIcon,
   SoftSearchIcon
 } from "./CareerSoftIcons";
-import { useSavedCareerPaths } from "./career-saved-paths";
-import {
-  requestCareerLeadCapture,
-  shouldRequestCareerLeadCapture
-} from "./career-lead-capture";
-import {
-  recordRecentlyViewedCareerPath,
-  startCompareDraftFromPath
-} from "./career-compare-state";
-import { trackCareerEvent } from "./career-events";
 import { getCareerPathSeoEntryByPathId } from "./career-path-seo";
-import { getCareerSlides } from "./data/career-slide-manifest";
 import type {
-  CareerCard,
   CareerDomainNode,
   CareerGeneralCategoryNode,
   CareerHierarchySelection,
@@ -54,11 +39,8 @@ import type {
 } from "./career-types";
 import {
   getCategoryContextSelection,
-  getCareerDisplaySubtitle,
-  getCareerDisplayTitle,
   getDomainContextSelection,
   getMeaningfulParentSelection,
-  getRelatedCareerSubfamilies,
   resolveCategorySelection,
   resolveDomainSelection,
   searchCareerHierarchy
@@ -119,7 +101,7 @@ const approvedTaxonomyLabels: Readonly<Record<string, string>> = {
   "Growth Marketing": "بازاریابی رشد"
 };
 
-const domainIcons: Readonly<Record<string, LucideIcon>> = {
+const domainIcons: Readonly<Record<string, CareerIcon>> = {
   "Technology & Engineering": Code2,
   "Revenue & Customer Operations": Waypoints,
   "Sales & Business Development": BriefcaseBusiness,
@@ -134,7 +116,7 @@ const domainIcons: Readonly<Record<string, LucideIcon>> = {
 
 const levelLabels = [
   { full: "انتخاب حوزه شغلی", compact: "حوزه شغلی" },
-  { full: "انتخاب دسته شغلی", compact: "دسته شغلی" },
+  { full: "انتخاب دسته شغلی (اگر لازم بود)", compact: "دسته شغلی" },
   { full: "انتخاب مسیر شغلی", compact: "مسیر شغلی" },
   { full: "مشاهده مسیر شغلی", compact: "مشاهده مسیر" }
 ] as const;
@@ -273,7 +255,7 @@ export function DomainCard({ domain, onSelect, accent = "blue" }: DomainCardProp
       data-career-domain-card={domain.id}
       onClick={() => onSelect(domain)}
     >
-      <span className={`${styles.domainIcon} ${accentClass}`} data-career-domain-part="icon" data-domain-accent={accent} aria-hidden><Icon size={24} strokeWidth={2} /></span>
+      <span className={`${styles.domainIcon} ${accentClass}`} data-career-domain-part="icon" data-domain-accent={accent} aria-hidden><Icon size={24} /></span>
       <span className={styles.discoveryCardCopy} data-career-domain-part="title">
         <strong>{getDisplayLabel(domain.name)}</strong>
         <small>{domain.subfamilyCount.toLocaleString("fa-IR")} مسیر شغلی</small>
@@ -286,13 +268,32 @@ export function DomainCard({ domain, onSelect, accent = "blue" }: DomainCardProp
 type CategoryCardProps = Readonly<{
   category: CareerGeneralCategoryNode;
   onSelect: (category: CareerGeneralCategoryNode) => void;
+  accent?: DomainAccent;
 }>;
 
-export function CategoryCard({ category, onSelect }: CategoryCardProps) {
+export function getCategoryAccent(index: number): DomainAccent {
+  return domainAccentSequence[index % domainAccentSequence.length] ?? "blue";
+}
+
+export function CategoryCard({ category, onSelect, accent = "blue" }: CategoryCardProps) {
+  const accentClass = {
+    blue: styles.categoryAccentBlue,
+    teal: styles.categoryAccentTeal,
+    yellow: styles.categoryAccentYellow,
+    persimmon: styles.categoryAccentPersimmon,
+    connection: styles.categoryAccentConnection
+  }[accent];
+
   return (
-    <button type="button" className={styles.categoryCard} data-career-category-card={category.id} onClick={() => onSelect(category)}>
+    <button
+      type="button"
+      className={`${styles.categoryCard} ${accentClass}`}
+      data-career-category-card={category.id}
+      data-category-accent={accent}
+      onClick={() => onSelect(category)}
+    >
       <span className={styles.categoryCardTopline}>
-        <span className={styles.categoryIcon} aria-hidden><Layers3 size={21} strokeWidth={2} /></span>
+        <span className={styles.categoryIcon} aria-hidden><Layers3 size={21} /></span>
         <span className={styles.itemCount}>{category.subfamilies.length.toLocaleString("fa-IR")} مسیر شغلی</span>
       </span>
       <strong>{getDisplayLabel(category.name)}</strong>
@@ -312,7 +313,7 @@ type SubfamilyCardProps = Readonly<{
 export function SubfamilyCard({ subfamily, onSelect }: SubfamilyCardProps) {
   return (
     <button type="button" className={styles.subfamilyCard} data-career-subfamily-card={subfamily.id} onClick={() => onSelect(subfamily)}>
-      <span className={styles.subfamilyIcon} aria-hidden><Route size={19} strokeWidth={2} /></span>
+      <span className={styles.subfamilyIcon} aria-hidden><Route size={19} /></span>
       <span className={styles.subfamilyCopy}>
         <strong dir="auto">{getDisplayLabel(subfamily.name)}</strong>
         <small dir="auto">{getDisplayLabel(subfamily.midCategory)}</small>
@@ -321,11 +322,6 @@ export function SubfamilyCard({ subfamily, onSelect }: SubfamilyCardProps) {
     </button>
   );
 }
-
-type PathDetailCardProps = Readonly<{
-  card: CareerCard;
-  highlighted: boolean;
-}>;
 
 type PriorityGroupProps = Readonly<{
   primaryItems: readonly string[];
@@ -374,119 +370,6 @@ export function PriorityGroup({ primaryItems, supportingItems, kind }: PriorityG
           {supportingItems.map((item) => <span className={secondaryClass} key={item} dir="auto">{item}</span>)}
         </div>
       ) : null}
-    </div>
-  );
-}
-
-export function getDetailCardTitle(title: string) {
-  return getCareerDisplayTitle(title);
-}
-
-export function getDetailCardSubtitle(subtitle: string) {
-  return getCareerDisplaySubtitle(subtitle);
-}
-
-function PathDetailCard({ card, highlighted }: PathDetailCardProps) {
-  return (
-    <article className={highlighted ? styles.seniorityCardHighlighted : styles.seniorityCard}>
-      <div className={styles.seniorityCardHeader}>
-        <div>
-          <h3 dir="auto">{getDetailCardTitle(card.title)}</h3>
-          <p dir="auto">{getDetailCardSubtitle(card.subtitle)}</p>
-        </div>
-      </div>
-
-      <div className={styles.detailSections}>
-        {card.mainDuties.length ? (
-          <section className={styles.jobDescription}>
-            <h4>شرح شغلی</h4>
-            <ul>
-              {card.mainDuties.map((duty) => <li key={duty}>{duty}</li>)}
-            </ul>
-          </section>
-        ) : null}
-        <section>
-          <h4>مهارت‌های تخصصی</h4>
-          <PriorityGroup primaryItems={card.keyTechnicalSkills} supportingItems={card.supportingTechnicalSkills} kind="technical" />
-        </section>
-        <section>
-          <h4>ابزارها و تکنولوژی‌ها</h4>
-          <PriorityGroup primaryItems={card.keyTools} supportingItems={card.supportingTools} kind="tool" />
-        </section>
-        <section>
-          <h4>مهارت‌های نرم</h4>
-          <PriorityGroup primaryItems={card.keySoftSkills} supportingItems={card.supportingSoftSkills} kind="soft" />
-        </section>
-      </div>
-    </article>
-  );
-}
-
-type PathEngagementActionsProps = Readonly<{
-  path: CareerSubfamilyNode;
-  saved: boolean;
-  onSave: (pathId: string) => boolean;
-  onRemove: (pathId: string) => boolean;
-}>;
-
-export function PathEngagementActions({ path, saved, onSave, onRemove }: PathEngagementActionsProps) {
-  const seoEntry = getCareerPathSeoEntryByPathId(path.id);
-
-  function saveCurrentPath() {
-    const saveSucceeded = onSave(path.id);
-    if (saveSucceeded) trackCareerEvent("career_path_saved", { pathId: path.id });
-    if (shouldRequestCareerLeadCapture(saved, saveSucceeded)) {
-      requestCareerLeadCapture({ source: "path_save", currentPathId: path.id });
-    }
-  }
-
-  function removeCurrentPath() {
-    if (onRemove(path.id)) trackCareerEvent("career_path_removed", { pathId: path.id });
-  }
-
-  return (
-    <div className={styles.pathEngagementActions} aria-label="اقدام‌های مسیر شغلی">
-      <div className={styles.pathEngagementIntro}>
-        <span>قدم تصمیم‌گیری</span>
-        <p>{saved ? "این مسیر برای ادامه بررسی در مسیرهای شغلی من آماده است." : "اگر این مسیر به تصمیمت نزدیک است، آن را برای ادامه بررسی نگه دار."}</p>
-      </div>
-      <button
-        type="button"
-        className={saved ? styles.addPathActionSaved : styles.addPathAction}
-        aria-pressed={saved}
-        onClick={saveCurrentPath}
-      >
-        <BookmarkPlus size={19} aria-hidden />
-        {saved ? "به مسیرهای شغلی من اضافه شد" : "افزودن به مسیرهای شغلی من"}
-      </button>
-      {saved ? (
-        <button
-          type="button"
-          className={styles.removePathAction}
-          onClick={removeCurrentPath}
-        >
-          حذف از مسیرهای شغلی من
-        </button>
-      ) : null}
-      <div className={styles.pathSecondaryActions}>
-        <Link
-          href={`/career/compare?path=${encodeURIComponent(path.id)}`}
-          className={styles.comparePathAction}
-          onClick={() => {
-            startCompareDraftFromPath(path.id);
-            trackCareerEvent("career_compare_started", { fromPathId: path.id });
-          }}
-        >
-          <GitCompareArrows size={19} aria-hidden />
-          مقایسه با مسیرهای دیگر
-        </Link>
-        {seoEntry ? (
-          <Link href={seoEntry.pageHref} className={`${styles.comparePathAction} ${styles.pathSeoAction}`}>
-            <Route size={19} aria-hidden />
-            مشاهده صفحه مسیر
-          </Link>
-        ) : null}
-      </div>
     </div>
   );
 }
@@ -661,7 +544,7 @@ export function RelatedPathsSection({ paths, onSelect }: RelatedPathsSectionProp
         data-related-featured="true"
         onClick={() => onSelect(featuredPath)}
       >
-        <span className={styles.relatedFeaturedIcon} aria-hidden><Route size={20} strokeWidth={2} /></span>
+        <span className={styles.relatedFeaturedIcon} aria-hidden><Route size={20} /></span>
         <span className={styles.relatedFeaturedCopy}>
           <span className={styles.relatedFeaturedLabel}>پیشنهاد نزدیک</span>
           <RelatedPathCopy path={featuredPath} />
@@ -717,49 +600,55 @@ export function RelatedPathsSection({ paths, onSelect }: RelatedPathsSectionProp
 }
 
 type PathsPageProps = Readonly<{
-  initialCardId?: string;
+  initialDomainId?: string;
+  initialCategoryId?: string;
 }>;
 
-function getInitialCardSelection(cardId?: string) {
-  if (!cardId) return undefined;
+function getInitialExplorerSelection(
+  domainId?: string,
+  categoryId?: string
+): CareerHierarchySelection | undefined {
+  const domain = careerHierarchy.find((item) => item.id === domainId);
+  if (!domain) return undefined;
+  const category = domain.generalCategories.find((item) => item.id === categoryId);
 
-  for (const domain of careerHierarchy) {
-    for (const category of domain.generalCategories) {
-      const subfamily = category.subfamilies.find((item) => item.cards.some((card) => card.id === cardId));
-      if (subfamily) return { domainId: domain.id, categoryId: category.id, subfamilyId: subfamily.id };
-    }
-  }
+  return {
+    domainId: domain.id,
+    ...(category ? { categoryId: category.id } : {})
+  };
+}
 
-  return undefined;
+export function getCareerExplorerHref(selection: CareerHierarchySelection): string {
+  const params = new URLSearchParams();
+  if (selection.domainId) params.set("domain", selection.domainId);
+  if (selection.categoryId) params.set("category", selection.categoryId);
+  const query = params.toString();
+  return query ? `/?${query}` : "/";
 }
 
 export function isInitialExplorerState(selection: CareerHierarchySelection): boolean {
   return !selection.domainId && !selection.categoryId && !selection.subfamilyId;
 }
 
-export function PathsPage({ initialCardId }: PathsPageProps = {}) {
-  const initialSelection = getInitialCardSelection(initialCardId);
+export function PathsPage({
+  initialDomainId,
+  initialCategoryId
+}: PathsPageProps = {}) {
+  const initialSelection = getInitialExplorerSelection(initialDomainId, initialCategoryId);
   const [selectedDomainId, setSelectedDomainId] = useState<string | undefined>(() => initialSelection?.domainId);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(() => initialSelection?.categoryId);
-  const [selectedSubfamilyId, setSelectedSubfamilyId] = useState<string | undefined>(() => initialSelection?.subfamilyId);
   const [query, setQuery] = useState("");
   const [visibleSearchResults, setVisibleSearchResults] = useState(INITIAL_SEARCH_RESULTS);
-  const [highlightedCardIds, setHighlightedCardIds] = useState<ReadonlySet<string>>(
-    () => new Set(initialCardId ? [initialCardId] : [])
-  );
-  const { savedPathIds, savePath, removePath } = useSavedCareerPaths();
   const flowStartRef = useRef<HTMLDivElement>(null);
   const hasRenderedInitialLevel = useRef(false);
   const deferredQuery = useDeferredValue(query);
 
   const selectedDomain = careerHierarchy.find((domain) => domain.id === selectedDomainId);
   const selectedCategory = selectedDomain?.generalCategories.find((category) => category.id === selectedCategoryId);
-  const selectedSubfamily = selectedCategory?.subfamilies.find((subfamily) => subfamily.id === selectedSubfamilyId);
-  const currentLevel = selectedSubfamily ? 4 : (selectedCategory ? 3 : (selectedDomain ? 2 : 1));
+  const currentLevel = selectedCategory ? 3 : (selectedDomain ? 2 : 1);
   const isInitialExplorer = isInitialExplorerState({
     domainId: selectedDomainId,
-    categoryId: selectedCategoryId,
-    subfamilyId: selectedSubfamilyId
+    categoryId: selectedCategoryId
   });
   const categoryRepeatsDomain = Boolean(
     selectedDomain
@@ -767,9 +656,6 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
     && getDisplayLabel(selectedDomain.name) === getDisplayLabel(selectedCategory.name)
   );
   const searchResults = useMemo(() => searchCareerHierarchy(careerHierarchy, deferredQuery), [deferredQuery]);
-  const relatedSubfamilies = selectedSubfamily
-    ? getRelatedCareerSubfamilies(careerHierarchy, selectedSubfamily)
-    : [];
   const searching = Boolean(deferredQuery.trim());
   const domainContextSelection = selectedDomain ? getDomainContextSelection(selectedDomain) : undefined;
   const categoryContextSelection = selectedDomain && selectedCategory
@@ -782,16 +668,13 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
     && domainContextSelection.categoryId === categoryContextSelection.categoryId
   );
   const domainNavigable = categoryRepeatsDomain
-    ? Boolean(categoryContextSelection && selectedSubfamilyId)
+    ? false
     : Boolean(
       domainContextSelection
       && !contextTargetsMatch
-      && (
-        domainContextSelection.categoryId !== selectedCategoryId
-        || Boolean(selectedSubfamilyId)
-      )
+      && domainContextSelection.categoryId !== selectedCategoryId
     );
-  const categoryNavigable = !categoryRepeatsDomain && Boolean(categoryContextSelection && selectedSubfamilyId);
+  const categoryNavigable = false;
 
   useEffect(() => {
     if (!hasRenderedInitialLevel.current) {
@@ -804,88 +687,51 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [currentLevel, searching, selectedSubfamilyId]);
-
-  useEffect(() => {
-    if (!selectedSubfamily) return;
-
-    recordRecentlyViewedCareerPath(selectedSubfamily.id);
-    trackCareerEvent("career_path_viewed", {
-      pathId: selectedSubfamily.id,
-      pathTitle: getDisplayLabel(selectedSubfamily.name)
-    });
-  }, [selectedSubfamily]);
+  }, [currentLevel, searching]);
 
   function applyHierarchySelection(selection: CareerHierarchySelection) {
-    if (window.location.search) window.history.replaceState(window.history.state, "", window.location.pathname);
+    window.history.replaceState(window.history.state, "", getCareerExplorerHref(selection));
     setSelectedDomainId(selection.domainId);
     setSelectedCategoryId(selection.categoryId);
-    setSelectedSubfamilyId(selection.subfamilyId);
   }
 
   function selectDomain(domain: CareerDomainNode) {
-    applyHierarchySelection(resolveDomainSelection(domain));
-    setHighlightedCardIds(new Set());
+    const selection = resolveDomainSelection(domain);
+    if (openResolvedCareerPath(domain, selection)) return;
+    applyHierarchySelection(selection);
   }
 
   function selectCategory(category: CareerGeneralCategoryNode) {
     if (!selectedDomain) return;
-    applyHierarchySelection(resolveCategorySelection(selectedDomain, category));
-    setHighlightedCardIds(new Set());
+    const selection = resolveCategorySelection(selectedDomain, category);
+    if (openResolvedCareerPath(selectedDomain, selection)) return;
+    applyHierarchySelection(selection);
   }
 
   function openCareerDecisionPage(subfamily: CareerSubfamilyNode) {
     const seoEntry = getCareerPathSeoEntryByPathId(subfamily.id);
     if (!seoEntry) return false;
 
-    recordRecentlyViewedCareerPath(subfamily.id);
-    trackCareerEvent("career_path_viewed", {
-      pathId: subfamily.id,
-      pathTitle: getDisplayLabel(subfamily.name)
-    });
     window.location.assign(seoEntry.pageHref);
     return true;
   }
 
-  function selectSubfamily(subfamily: CareerSubfamilyNode) {
-    if (openCareerDecisionPage(subfamily)) return;
-    setSelectedSubfamilyId(subfamily.id);
-    setHighlightedCardIds(new Set());
+  function openResolvedCareerPath(
+    domain: CareerDomainNode,
+    selection: CareerHierarchySelection
+  ) {
+    if (!selection.categoryId || !selection.subfamilyId) return false;
+    const category = domain.generalCategories.find((item) => item.id === selection.categoryId);
+    const subfamily = category?.subfamilies.find((item) => item.id === selection.subfamilyId);
+    return subfamily ? openCareerDecisionPage(subfamily) : false;
   }
 
-  function selectRelatedSubfamily(subfamily: CareerSubfamilyNode) {
-    if (openCareerDecisionPage(subfamily)) return;
-
-    for (const domain of careerHierarchy) {
-      for (const category of domain.generalCategories) {
-        if (!category.subfamilies.some((item) => item.id === subfamily.id)) continue;
-
-        applyHierarchySelection({
-          domainId: domain.id,
-          categoryId: category.id,
-          subfamilyId: subfamily.id
-        });
-        setHighlightedCardIds(new Set());
-        setQuery("");
-        return;
-      }
-    }
+  function selectSubfamily(subfamily: CareerSubfamilyNode) {
+    openCareerDecisionPage(subfamily);
   }
 
   function selectSearchResult(result: CareerSearchResult) {
-    if (openCareerDecisionPage(result.subfamily)) return;
-
-    const domain = careerHierarchy.find((item) => item.name === result.subfamily.domain);
-    const category = domain?.generalCategories.find((item) => item.name === result.subfamily.generalCategory);
-
-    if (!domain || !category) return;
-
-    setSelectedDomainId(domain.id);
-    setSelectedCategoryId(category.id);
-    setSelectedSubfamilyId(result.subfamily.id);
-    setHighlightedCardIds(new Set(result.matchingCards.map((card) => card.id)));
-    setQuery("");
-    setVisibleSearchResults(INITIAL_SEARCH_RESULTS);
+    openCareerDecisionPage(result.subfamily);
   }
 
   function updateQuery(value: string) {
@@ -895,26 +741,22 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
 
   function startOver() {
     applyHierarchySelection({});
-    setHighlightedCardIds(new Set());
     setQuery("");
   }
 
   function backOneLevel() {
-    applyHierarchySelection(getMeaningfulParentSelection(selectedDomain, selectedCategory, selectedSubfamily));
-    setHighlightedCardIds(new Set());
+    applyHierarchySelection(getMeaningfulParentSelection(selectedDomain, selectedCategory));
   }
 
   function goToDomainContext() {
     const selection = categoryRepeatsDomain ? categoryContextSelection : domainContextSelection;
     if (!selection) return;
     applyHierarchySelection(selection);
-    setHighlightedCardIds(new Set());
   }
 
   function goToCategoryContext() {
     if (!categoryContextSelection) return;
     applyHierarchySelection(categoryContextSelection);
-    setHighlightedCardIds(new Set());
   }
 
   return (
@@ -958,7 +800,6 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
             currentLevel={currentLevel}
             domain={selectedDomain}
             category={selectedCategory}
-            subfamily={selectedSubfamily}
             onBack={backOneLevel}
             onStartOver={startOver}
             onGoToDomain={goToDomainContext}
@@ -1003,45 +844,24 @@ export function PathsPage({ initialCardId }: PathsPageProps = {}) {
             <div><span>مرحله دوم · {getDisplayLabel(selectedDomain.name)}</span><h2 id="career-category-title">دسته شغلی را انتخاب کن</h2><p>{selectedDomain.generalCategories.length.toLocaleString("fa-IR")} دسته در این حوزه قرار دارد.</p></div>
             <Layers3 size={24} aria-hidden />
           </div>
-          <div className={styles.categoryGrid}>{selectedDomain.generalCategories.map((category) => <CategoryCard category={category} onSelect={selectCategory} key={category.id} />)}</div>
+          <div className={styles.categoryGrid}>{selectedDomain.generalCategories.map((category, index) => <CategoryCard category={category} onSelect={selectCategory} accent={getCategoryAccent(index)} key={category.id} />)}</div>
         </section>
       ) : null}
 
       {!searching && currentLevel === 3 && selectedCategory ? (
         <section className={styles.levelSection} aria-labelledby="career-subfamily-title">
           <div className={styles.levelHeading}>
-            <div><span>مرحله سوم · {getDisplayLabel(selectedCategory.name)}</span><h2 id="career-subfamily-title">مسیر تخصصی را انتخاب کن</h2><p>یکی از مسیرها را انتخاب کن تا جزئیات آن را ببینی.</p></div>
+            <div>
+              <span>{categoryRepeatsDomain ? "انتخاب مسیر" : "مرحله سوم"} · {getDisplayLabel(selectedCategory.name)}</span>
+              <h2 id="career-subfamily-title">مسیر تخصصی را انتخاب کن</h2>
+              <p>یکی از مسیرها را انتخاب کن تا جزئیات آن را ببینی.</p>
+            </div>
             <Route size={24} aria-hidden />
           </div>
           <div className={styles.subfamilyGrid}>{selectedCategory.subfamilies.map((subfamily) => <SubfamilyCard subfamily={subfamily} onSelect={selectSubfamily} key={subfamily.id} />)}</div>
         </section>
       ) : null}
 
-      {!searching && currentLevel === 4 && selectedSubfamily ? (
-        <section className={styles.levelSection} aria-labelledby="career-path-detail-title">
-          <div className={styles.levelHeading}>
-            <div><span>مرحله چهارم</span><h2 id="career-path-detail-title" dir="auto">{getDisplayLabel(selectedSubfamily.name)}</h2><p dir="auto">{getDisplayLabel(selectedSubfamily.midCategory)}</p></div>
-            <Sparkles size={24} aria-hidden />
-          </div>
-          <CareerImageCarousel slides={getCareerSlides(selectedSubfamily.name)} key={`slides-${selectedSubfamily.id}`} />
-          <PathEngagementActions
-            path={selectedSubfamily}
-            saved={savedPathIds.has(selectedSubfamily.id)}
-            onSave={savePath}
-            onRemove={removePath}
-          />
-          <div className={styles.seniorityGrid}>
-            {selectedSubfamily.cards.map((card) => (
-              <PathDetailCard card={card} highlighted={highlightedCardIds.has(card.id)} key={card.id} />
-            ))}
-          </div>
-          <RelatedPathsSection
-            paths={relatedSubfamilies}
-            onSelect={selectRelatedSubfamily}
-            key={selectedSubfamily.id}
-          />
-        </section>
-      ) : null}
     </section>
   );
 }

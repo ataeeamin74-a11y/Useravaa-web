@@ -20,6 +20,7 @@ import {
   EssentialChip,
   DomainCard,
   groupRelatedCareerPaths,
+  getCategoryAccent,
   getDomainAccent,
   getDisplayLabel,
   isInitialExplorerState,
@@ -29,6 +30,7 @@ import {
   SearchResults,
   SubfamilyCard
 } from "@/features/career/PathsPage";
+import { getCareerPathSeoEntryByPathId } from "@/features/career/career-path-seo";
 import { SavedPathsList } from "@/features/career/SavedPathsPage";
 import { toggleSavedCareerPathId } from "@/features/career/career-saved-paths";
 import {
@@ -325,15 +327,16 @@ describe("career paths MVP shell", () => {
     expect([...removed]).toEqual([]);
   });
 
-  it("uses heart controls and the exact save-for-review labels", () => {
+  it("uses playful bookmark controls and the exact save-for-review labels", () => {
     const unsavedHtml = renderToStaticMarkup(<CareerSaveButton saved={false} onToggle={() => undefined} />);
     const savedHtml = renderToStaticMarkup(<CareerSaveButton saved onToggle={() => undefined} />);
 
     expect(unsavedHtml).toContain('aria-label="ذخیره برای بررسی"');
     expect(savedHtml).toContain('aria-label="حذف از ذخیره‌شده‌ها"');
     expect(savedHtml).toContain("ذخیره‌شده");
-    expect(unsavedHtml).toContain("lucide-bookmark");
-    expect(unsavedHtml).not.toContain("lucide-heart");
+    expect(unsavedHtml).toContain('viewBox="0 0 256 256"');
+    expect(unsavedHtml).toContain('opacity="0.2"');
+    expect(savedHtml).not.toContain('opacity="0.2"');
   });
 
   it("renders saved paths and the empty saved-paths state", () => {
@@ -633,18 +636,47 @@ describe("career paths MVP shell", () => {
     expect(onSubfamilySelect).toHaveBeenCalledWith(subfamily);
   });
 
+  it("cycles category cards through the full discovery palette", () => {
+    const accents = Array.from({ length: 10 }, (_, index) => getCategoryAccent(index));
+    const category = careerHierarchy[0].generalCategories[0];
+    const html = renderToStaticMarkup(
+      <CategoryCard category={category} accent="yellow" onSelect={() => undefined} />
+    );
+
+    expect(new Set(accents)).toEqual(new Set(["blue", "teal", "yellow", "persimmon", "connection"]));
+    expect(html).toContain('data-category-accent="yellow"');
+  });
+
   it("opens the decision page immediately after every career-path selection entry point", () => {
     const source = readFileSync("src/features/career/PathsPage.tsx", "utf8");
+    const decisionPageActions = readFileSync(
+      "src/app/career/paths/[slug]/CareerPathClientActions.tsx",
+      "utf8"
+    );
     const directNavigation = source.match(
       /function openCareerDecisionPage[\s\S]*?window\.location\.assign\(seoEntry\.pageHref\);[\s\S]*?return true;/u
     )?.[0] ?? "";
 
     expect(directNavigation).toContain("getCareerPathSeoEntryByPathId(subfamily.id)");
-    expect(directNavigation).toContain("recordRecentlyViewedCareerPath(subfamily.id)");
-    expect(directNavigation).toContain('trackCareerEvent("career_path_viewed"');
+    expect(directNavigation).not.toContain("recordRecentlyViewedCareerPath");
+    expect(directNavigation).not.toContain('trackCareerEvent("career_path_viewed"');
+    expect(decisionPageActions).toContain("recordRecentlyViewedCareerPath(pathId)");
+    expect(decisionPageActions).toContain('trackCareerEvent("career_path_viewed"');
     expect(source).toMatch(/function selectSubfamily[\s\S]*?openCareerDecisionPage\(subfamily\)/u);
-    expect(source).toMatch(/function selectRelatedSubfamily[\s\S]*?openCareerDecisionPage\(subfamily\)/u);
     expect(source).toMatch(/function selectSearchResult[\s\S]*?openCareerDecisionPage\(result\.subfamily\)/u);
+    expect(source).toMatch(/function selectDomain[\s\S]*?openResolvedCareerPath\(domain, selection\)/u);
+    expect(source).toMatch(/function selectCategory[\s\S]*?openResolvedCareerPath\(selectedDomain, selection\)/u);
+
+    const canonicalPaths = careerHierarchy.flatMap((domain) => (
+      domain.generalCategories.flatMap((category) => category.subfamilies)
+    ));
+    expect(canonicalPaths).toHaveLength(58);
+    expect(canonicalPaths.every((path) => getCareerPathSeoEntryByPathId(path.id)?.pageHref.startsWith("/career/paths/"))).toBe(true);
+
+    const selectablePaths = visibleCareerHierarchy.flatMap((domain) => (
+      domain.generalCategories.flatMap((category) => category.subfamilies)
+    ));
+    expect(selectablePaths.every((path) => getCareerPathSeoEntryByPathId(path.id)?.pageHref.startsWith("/career/paths/"))).toBe(true);
   });
 
   it("keeps the mascot visible at all breakpoints and decorative layers non-interactive", () => {
@@ -658,42 +690,14 @@ describe("career paths MVP shell", () => {
     expect(persimmonRule).toContain("color: #fff");
   });
 
-  it("hides explorer chrome and full stepper in path detail focus mode", () => {
-    const html = renderToStaticMarkup(<PathsPage initialCardId="CARD_034" />);
+  it("does not render the retired intermediate career preview", () => {
+    const html = renderToStaticMarkup(<PathsPage />);
+    const source = readFileSync("src/features/career/PathsPage.tsx", "utf8");
 
-    expect(html).not.toContain("مسیر مناسب خودت");
-    expect(html).not.toContain("هزاران آگهی شغلی بررسی شده");
-    expect(html).not.toContain("عنوان، مهارت یا ابزار را جست‌وجو کن");
-    expect(html).not.toContain("مراحل انتخاب مسیر شغلی");
-    expect(html).toContain("همه مسیرها");
-    expect(html).toContain("مرحله قبل");
-    expect(html).not.toContain("شروع مجدد");
-    expect(html).not.toContain("شروع دوباره");
-    expect(html).not.toContain("به مرحله قبل");
-    expect(html).not.toContain("یک مرحله قبل");
-    expect(html).toContain("مسیرهای مشابه برای بررسی");
-    expect(html.indexOf("مسیرهای مشابه برای بررسی")).toBeGreaterThan(html.lastIndexOf("مهارت‌های نرم"));
-  });
-
-  it("hides unapproved slides on a path that previously exposed them", () => {
-    const html = renderToStaticMarkup(<PathsPage initialCardId="CARD_045" />);
-
-    expect(html).toContain("طراحی محصول و تجربه کاربری (UI/UX)");
-    expect(html).not.toContain('data-career-image-carousel="true"');
-    expect(html).not.toContain("career-slides/");
-  });
-
-  it("keeps path details clean and hides management variants", () => {
-    const expertHtml = renderToStaticMarkup(<PathsPage initialCardId="CARD_015" />);
-    const managementHtml = renderToStaticMarkup(<PathsPage initialCardId="CARD_033" />);
-    const managementOnlyHtml = renderToStaticMarkup(<PathsPage initialCardId="CARD_024" />);
-
-    expect(expertHtml).toContain(getCareerDisplayTitle(careerCards.find((card) => card.id === "CARD_015")!.title));
-    expect(expertHtml).not.toContain("سطح کارشناسی");
-    expect(expertHtml).not.toContain("سطح مدیریت");
-    expect(expertHtml).not.toContain("سطح‌های موجود");
-    expect(managementHtml).not.toContain("دیجیتال مارکتینگ عمومی - سطح مدیریت");
-    expect(managementOnlyHtml).not.toContain("مدیریت منابع انسانی - سطح مدیریت");
+    expect(source).not.toContain("currentLevel === 4");
+    expect(source).not.toContain("<PathEngagementActions");
+    expect(html).not.toContain("قدم تصمیم‌گیری");
+    expect(html).not.toContain("مشاهده صفحه مسیر");
   });
 
   it("renders the compare selection shell with two sources and five slots", () => {

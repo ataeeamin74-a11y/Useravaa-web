@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronLeft, Route } from "lucide-react";
+import { ChevronLeft, Route } from "@/features/career/CareerIcons";
 import type { CareerPathSeoEntry } from "@/features/career/career-path-seo";
 import {
   buildCareerPathTitle,
@@ -35,7 +35,7 @@ export function CareerPathRelatedPaths({ entry }: Readonly<{ entry: CareerPathSe
     >
       <div className={styles.relatedHeading}>
         <span className={styles.relatedHeadingIcon} aria-hidden="true">
-          <Route size={17} strokeWidth={2.4} />
+          <Route size={17} />
         </span>
         <h2 id="career-path-related-title">مسیرهای مشابه</h2>
       </div>
@@ -55,7 +55,7 @@ export function CareerPathRelatedPaths({ entry }: Readonly<{ entry: CareerPathSe
                 <strong dir="auto">{buildCareerPathTitle(relatedEntry.path)}</strong>
                 {englishTitle ? <small dir="ltr">{englishTitle}</small> : null}
               </span>
-              <ChevronLeft className={styles.relatedPathArrow} size={20} strokeWidth={2.4} aria-hidden="true" />
+              <ChevronLeft className={styles.relatedPathArrow} size={20} aria-hidden="true" />
             </Link>
           );
         })}

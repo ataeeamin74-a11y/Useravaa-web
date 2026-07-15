@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 import { CareerShell } from "@/features/career/CareerShell";
 import { PathsPage } from "@/features/career/PathsPage";
+import { getCareerPathSeoEntryByCardId } from "@/features/career/career-path-seo";
 import { isSiteIndexingEnabled } from "@/lib/deployment/safety";
 
 const rootTitle = "مسیرهای شغلی | Useravaa";
@@ -56,14 +58,27 @@ type HomePageProps = Readonly<{
 }>;
 
 export default async function HomePage({ searchParams }: HomePageProps) {
-  const cardParam = (await searchParams).card;
+  const params = await searchParams;
+  const cardParam = params.card;
+  const domainParam = params.domain;
+  const categoryParam = params.category;
   const initialCardId = Array.isArray(cardParam) ? cardParam[0] : cardParam;
+  const initialDomainId = Array.isArray(domainParam) ? domainParam[0] : domainParam;
+  const initialCategoryId = Array.isArray(categoryParam) ? categoryParam[0] : categoryParam;
+
+  if (initialCardId) {
+    const careerPathEntry = getCareerPathSeoEntryByCardId(initialCardId);
+    if (careerPathEntry) permanentRedirect(careerPathEntry.pageHref);
+  }
 
   // CareerShell marks the root as the launch PWA, allowing AppShell to hide
   // the legacy marketplace navigation without changing those future routes.
   return (
     <CareerShell>
-      <PathsPage initialCardId={initialCardId} />
+      <PathsPage
+        initialDomainId={initialDomainId}
+        initialCategoryId={initialCategoryId}
+      />
     </CareerShell>
   );
 }

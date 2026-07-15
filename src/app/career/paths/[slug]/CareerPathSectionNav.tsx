@@ -7,14 +7,14 @@ import {
   MessageCircleQuestion,
   TriangleAlert,
   UserRoundCheck,
-  type LucideIcon
-} from "lucide-react";
+  type CareerIcon
+} from "@/features/career/CareerIcons";
 import styles from "./CareerPathSeoPage.module.css";
 
 const sectionItems: readonly Readonly<{
   id: string;
   label: string;
-  icon: LucideIcon;
+  icon: CareerIcon;
 }>[] = [
   { id: "career-path-fit", label: "مناسب منه؟", icon: UserRoundCheck },
   { id: "career-path-realities", label: "واقعیت‌ها", icon: BriefcaseBusiness },
@@ -67,7 +67,7 @@ export function CareerPathSectionNav() {
                 setActiveSection(item.id);
               }}
             >
-              <Icon size={15} strokeWidth={2.3} aria-hidden="true" />
+              <Icon size={15} aria-hidden="true" />
               <span>{item.label}</span>
             </a>
           );

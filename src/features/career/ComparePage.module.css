@@ -105,7 +105,7 @@
   border-radius: 8px;
   background: #f8fafc;
   color: var(--compare-muted);
-  font-size: 9px;
+  font-size: 12px;
 }
 
 .sourceTabActive {
@@ -118,6 +118,46 @@
   color: #fff;
 }
 
+.candidateSearch {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 14px;
+  border: 1px solid #cfd8e6;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--compare-muted);
+  padding-inline: 12px;
+}
+
+.candidateSearch:focus-within {
+  border-color: var(--ua-blue);
+  box-shadow: 0 0 0 3px rgb(36 95 253 / 11%);
+}
+
+.candidateSearch input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ua-navy);
+  font: inherit;
+  font-size: 16px;
+}
+
+.candidateSearch button {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: #f1f4f8;
+  color: var(--compare-muted);
+}
+
 .candidatePanel {
   min-height: 330px;
   margin-top: 17px;
@@ -126,6 +166,25 @@
 .pathGrid {
   display: grid;
   gap: 10px;
+}
+
+.showMoreCandidates {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 12px;
+  border: 2px solid rgb(36 95 253 / 24%);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ua-blue);
+  font: inherit;
+  font-size: 13px;
+  font-weight: var(--weight-bold);
+  box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+}
+
+.showMoreCandidates:active {
+  box-shadow: none;
+  transform: translateY(3px);
 }
 
 .pathCard,
@@ -186,7 +245,7 @@
 .pathHierarchy {
   overflow: hidden;
   color: var(--compare-muted);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: var(--weight-semibold);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -217,7 +276,7 @@
 
 .pathCardCopy small {
   color: var(--compare-muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -297,7 +356,7 @@
   border-radius: 13px;
   background: var(--ua-blue);
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
   padding-inline: 16px;
 }
@@ -331,13 +390,13 @@
 .traySummary strong {
   flex: none;
   color: var(--ua-navy);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .traySummary span {
   overflow: hidden;
   color: var(--compare-muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.55;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -352,7 +411,7 @@
 .filledSlot,
 .emptySlot {
   min-width: 0;
-  height: 42px;
+  height: 44px;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -379,13 +438,13 @@
   border-radius: 6px;
   background: #fff;
   color: var(--compare-muted);
-  font-size: 8px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
 }
 
 .filledSlot strong {
   overflow: hidden;
-  font-size: 8px;
+  font-size: 12px;
   text-overflow: ellipsis;
   unicode-bidi: plaintext;
   white-space: nowrap;
@@ -407,7 +466,7 @@
   min-height: 19px;
   margin: 0;
   color: var(--ua-navy);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
   text-align: center;
 }
@@ -461,7 +520,7 @@
   background: var(--ua-blue);
   color: #fff;
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
   padding-inline: 14px;
 }
@@ -502,7 +561,7 @@
   background: #fff;
   color: var(--ua-blue);
   font: inherit;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
   padding-inline: 14px;
 }
@@ -541,7 +600,7 @@
   background: #fff;
   color: var(--compare-muted);
   font: inherit;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
   padding-inline: 13px;
 }
@@ -555,7 +614,7 @@
 .tableHint {
   margin: 12px 0 8px;
   color: var(--compare-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .compareTableViewport {
@@ -609,7 +668,7 @@
   min-height: 96px;
   padding: 12px 6px;
   color: var(--ua-navy);
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.55;
   vertical-align: middle !important;
 }
@@ -634,7 +693,7 @@
   border-radius: 8px;
   background: var(--ua-blue);
   color: #fff;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
 }
 
@@ -653,7 +712,7 @@
 .pathHeader small {
   margin-top: 4px;
   color: var(--compare-muted);
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.6;
 }
 
@@ -670,7 +729,7 @@
 
 .criteriaCell {
   color: var(--ua-navy);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
   line-height: 1.7;
   padding: 10px 6px;
@@ -682,7 +741,7 @@
   min-width: var(--compare-path-col-width);
   max-width: var(--compare-path-col-width);
   color: var(--compare-muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.8;
   padding: 11px;
   overflow-wrap: anywhere;
@@ -747,7 +806,7 @@
   border-radius: 999px;
   background: #f8fafc;
   color: var(--ua-navy);
-  font-size: 9px;
+  font-size: 12px;
   font-weight: var(--weight-semibold);
   line-height: 1.5;
   padding: 5px 8px;
@@ -823,7 +882,7 @@
   }
 
   .filledSlot strong {
-    font-size: 9px;
+    font-size: 12px;
   }
 
 }
@@ -891,6 +950,12 @@
   }
 }
 
+@media (max-width: 680px) {
+  .comparisonTableSection[data-active="false"] {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .pathCard,
   .pathCardSelected {
@@ -900,5 +965,80 @@
   .pathCard:hover,
   .pathCardSelected:hover {
     transform: none;
+  }
+}
+
+/* Keep the result cards flat; only comparison controls press down. */
+.comparePage button,
+.comparePage a {
+  touch-action: manipulation;
+}
+
+.selectionPage {
+  padding-bottom: 32px;
+}
+
+.candidatePanel {
+  min-height: 0;
+}
+
+.selectionTray {
+  width: 100%;
+  position: sticky;
+  inset-inline: auto;
+  inset-block-end: calc(92px + env(safe-area-inset-bottom));
+  margin: 18px 0 4px;
+}
+
+.sourceTab,
+.sourceTabActive,
+.compareCta,
+.saveComparison,
+.saveComparisonSaved,
+.resetComparison,
+.editSelection,
+.emptyState a,
+.sectionTab,
+.sectionTabActive {
+  min-height: 44px;
+  border-width: 2px;
+  border-radius: 8px;
+  box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+  transition: box-shadow var(--career-motion, 180ms ease-out), transform var(--career-motion, 180ms ease-out), background-color var(--career-motion, 180ms ease-out);
+}
+
+.sourceTabActive,
+.compareCta,
+.saveComparison,
+.emptyState a,
+.sectionTabActive {
+  box-shadow: 0 4px 0 var(--career-blue-shadow, #1748c5);
+}
+
+.saveComparisonSaved {
+  box-shadow: 0 4px 0 var(--career-teal-shadow, #009e96);
+}
+
+.sourceTab:active,
+.sourceTabActive:active,
+.compareCta:active:not(:disabled),
+.saveComparison:active,
+.saveComparisonSaved:active,
+.resetComparison:active,
+.editSelection:active,
+.emptyState a:active,
+.sectionTab:active,
+.sectionTabActive:active {
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
+.compareCta:disabled {
+  box-shadow: 0 3px 0 #c6cfdd;
+}
+
+@media (max-width: 479px) {
+  .selectionTray {
+    inset-block-end: calc(88px + env(safe-area-inset-bottom));
   }
 }

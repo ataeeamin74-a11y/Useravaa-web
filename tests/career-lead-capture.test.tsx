@@ -32,7 +32,7 @@ describe("career path-seeker lead capture", () => {
     expect(shouldRequestCareerLeadCapture(false, false)).toBe(false);
     expect(shouldRequestCareerLeadCapture(true, true)).toBe(false);
 
-    const pathSource = readFileSync("src/features/career/PathsPage.tsx", "utf8");
+    const pathSource = readFileSync("src/app/career/paths/[slug]/CareerPathClientActions.tsx", "utf8");
     const compareSource = readFileSync("src/features/career/ComparePage.tsx", "utf8");
     expect(pathSource).toContain('source: "path_save"');
     expect(compareSource).toContain('source: "comparison_save"');
@@ -132,12 +132,12 @@ describe("career path-seeker lead capture", () => {
   });
 
   it("keeps lead failure isolated and coordinates with the iOS guide", () => {
-    const pathSource = readFileSync("src/features/career/PathsPage.tsx", "utf8");
+    const pathSource = readFileSync("src/app/career/paths/[slug]/CareerPathClientActions.tsx", "utf8");
     const compareSource = readFileSync("src/features/career/ComparePage.tsx", "utf8");
     const sheetSource = readFileSync("src/features/career/CareerLeadCaptureSheet.tsx", "utf8");
     const iosSource = readFileSync("src/features/pwa/IosInstallGuide.tsx", "utf8");
 
-    expect(pathSource.indexOf("onSave(path.id)")).toBeLessThan(pathSource.lastIndexOf("requestCareerLeadCapture"));
+    expect(pathSource.indexOf("savePath(pathId)")).toBeLessThan(pathSource.lastIndexOf("requestCareerLeadCapture"));
     expect(compareSource.indexOf("saveComparison(selectedPathIds)")).toBeLessThan(compareSource.lastIndexOf("requestCareerLeadCapture"));
     expect(sheetSource).toContain("الان ذخیره نشد. کمی بعد دوباره امتحان کن.");
     expect(sheetSource).toContain("[data-ios-install-guide-dialog]");

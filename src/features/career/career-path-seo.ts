@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { careerHierarchy } from "./career-data";
 import {
+  LEGACY_SOCIAL_MEDIA_CARD_IDS,
   LEGACY_SOCIAL_MEDIA_SLUG_REDIRECTS,
   SOCIAL_MEDIA_MARKETING_SLUG
 } from "./career-path-migration";
@@ -93,6 +94,10 @@ export const careerPathSeoEntries = buildCareerPathSeoEntries();
 
 const careerPathSeoEntryBySlug = new Map(careerPathSeoEntries.map((entry) => [entry.slug, entry]));
 const careerPathSeoEntryByPathId = new Map(careerPathSeoEntries.map((entry) => [entry.path.id, entry]));
+const careerPathSeoEntryByCardId = new Map(
+  careerPathSeoEntries.flatMap((entry) => entry.path.cards.map((card) => [card.id, entry] as const))
+);
+const legacySocialMediaCardIds = new Set<string>(LEGACY_SOCIAL_MEDIA_CARD_IDS);
 const legacyCareerPathSlugRedirects = new Map<string, string>(
   Object.entries(LEGACY_SOCIAL_MEDIA_SLUG_REDIRECTS)
 );
@@ -120,6 +125,15 @@ export function getCareerPathSeoEntryBySlugOrLegacy(slug: string) {
 
 export function getCareerPathSeoEntryByPathId(pathId: string) {
   return careerPathSeoEntryByPathId.get(pathId);
+}
+
+export function getCareerPathSeoEntryByCardId(cardId: string) {
+  const directEntry = careerPathSeoEntryByCardId.get(cardId);
+  if (directEntry) return directEntry;
+  if (legacySocialMediaCardIds.has(cardId)) {
+    return careerPathSeoEntryBySlug.get(SOCIAL_MEDIA_MARKETING_SLUG);
+  }
+  return undefined;
 }
 
 function uniqueOrdered(values: readonly string[]) {

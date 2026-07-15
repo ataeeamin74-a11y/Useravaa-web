@@ -1,17 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { BookmarkPlus, GitCompareArrows } from "lucide-react";
+import { CareerPathCompareAction, CareerPathSaveAction } from "./CareerPathClientActions";
 import styles from "./CareerPathSeoPage.module.css";
 
 export function CareerPathStickyActions({
-  saveHref,
-  compareHref,
+  pathId,
+  slug,
   saveLabel
 }: Readonly<{
-  saveHref: string;
-  compareHref: string;
+  pathId: string;
+  slug: string;
   saveLabel: string;
 }>) {
   const [isVisible, setIsVisible] = useState(false);
@@ -35,14 +34,21 @@ export function CareerPathStickyActions({
       aria-hidden={isVisible ? undefined : "true"}
       data-visible={isVisible ? "true" : "false"}
     >
-      <Link className={styles.primaryAction} href={saveHref} tabIndex={isVisible ? undefined : -1}>
-        <BookmarkPlus className={styles.actionIcon} size={18} strokeWidth={2.5} aria-hidden="true" />
-        <span>{saveLabel}</span>
-      </Link>
-      <Link className={styles.secondaryAction} href={compareHref} tabIndex={isVisible ? undefined : -1}>
-        <GitCompareArrows className={styles.actionIcon} size={18} strokeWidth={2.5} aria-hidden="true" />
-        <span>مقایسه</span>
-      </Link>
+      <CareerPathSaveAction
+        pathId={pathId}
+        className={styles.primaryAction}
+        label={saveLabel}
+        compact
+        tabIndex={isVisible ? undefined : -1}
+      />
+      <CareerPathCompareAction
+        pathId={pathId}
+        slug={slug}
+        className={styles.secondaryAction}
+        label="مقایسه"
+        compact
+        tabIndex={isVisible ? undefined : -1}
+      />
     </aside>
   );
 }

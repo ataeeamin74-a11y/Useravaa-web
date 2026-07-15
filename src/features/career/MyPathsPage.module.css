@@ -94,7 +94,7 @@
   border-radius: 10px;
   background: rgb(36 95 253 / 10%);
   color: var(--ua-blue);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
 }
 
@@ -138,7 +138,7 @@
   border-radius: 12px;
   background: var(--ua-blue);
   color: #fff;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
   padding-inline: 14px;
 }
@@ -171,7 +171,7 @@
 
 .cardMeta {
   color: #58657d;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: var(--weight-semibold);
 }
 
@@ -191,7 +191,7 @@
   gap: 4px;
   border-radius: 11px;
   font: inherit;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: var(--weight-bold);
   padding-inline: 11px;
 }
@@ -279,4 +279,74 @@
   .accordionIconExpanded {
     display: none;
   }
+}
+
+/* Accordion and saved cards retain their original surface; actions get depth. */
+.page button,
+.page a {
+  touch-action: manipulation;
+}
+
+.sectionTools a,
+.sectionEmptyState > a,
+.primaryAction,
+.deleteAction {
+  min-height: 44px;
+  border-width: 2px;
+  border-radius: 8px;
+  box-shadow: 0 3px 0 var(--career-shadow, #c7d3e4);
+  transition: box-shadow var(--career-motion, 180ms ease-out), transform var(--career-motion, 180ms ease-out), background-color var(--career-motion, 180ms ease-out);
+}
+
+.sectionTools a,
+.sectionEmptyState > a {
+  box-shadow: 0 4px 0 var(--career-blue-shadow, #1748c5);
+}
+
+.sectionTools a:active,
+.sectionEmptyState > a:active,
+.primaryAction:active,
+.deleteAction:active {
+  box-shadow: none;
+  transform: translateY(3px);
+}
+
+.undoToast {
+  position: fixed;
+  inset-inline: 14px;
+  inset-block-end: calc(96px + env(safe-area-inset-bottom));
+  z-index: calc(var(--z-header) + 1);
+  width: min(calc(100% - 28px), 420px);
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-inline: auto;
+  border: 1px solid rgb(255 255 255 / 18%);
+  border-radius: 8px;
+  background: var(--ua-navy);
+  color: #fff;
+  padding: 8px 10px 8px 14px;
+  box-shadow: 0 14px 34px rgb(9 27 73 / 22%);
+  font-size: 13px;
+  font-weight: var(--weight-semibold);
+}
+
+.undoToast button {
+  min-height: 44px;
+  border: 2px solid #fff;
+  border-radius: 7px;
+  background: #ffc801;
+  color: var(--ua-navy);
+  font: inherit;
+  font-size: 13px;
+  font-weight: var(--weight-bold);
+  padding-inline: 13px;
+  box-shadow: 0 3px 0 #c49b00;
+}
+
+.undoToast button:active {
+  box-shadow: none;
+  transform: translateY(3px);
 }

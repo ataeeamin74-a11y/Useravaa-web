@@ -6,7 +6,7 @@ import {
   ComparePage,
   normalizeInitialComparePathIds
 } from "@/features/career/ComparePage";
-import { GuideEntryCard, PathEngagementActions } from "@/features/career/PathsPage";
+import { getDisplayLabel, GuideEntryCard } from "@/features/career/PathsPage";
 import { MyPathsContent } from "@/features/career/MyPathsPage";
 import {
   addSavedCareerComparison,
@@ -116,33 +116,19 @@ describe("Path Seeker engagement", () => {
     expect(COMPARE_DRAFT_STORAGE_KEY).toBe("useravaa:career:compare-draft");
   });
 
-  it("renders detail engagement actions before the long-form content contract", () => {
-    const unsavedHtml = renderToStaticMarkup(
-      <PathEngagementActions path={firstPath} saved={false} onSave={() => true} onRemove={() => true} />
-    );
-    const savedHtml = renderToStaticMarkup(
-      <PathEngagementActions path={firstPath} saved onSave={() => true} onRemove={() => true} />
-    );
-
-    expect(unsavedHtml).toContain("افزودن به مسیرهای شغلی من");
-    expect(unsavedHtml).not.toContain("حذف از مسیرهای شغلی من");
-    expect(unsavedHtml).toContain('aria-pressed="false"');
-    expect(unsavedHtml).toContain("قدم تصمیم‌گیری");
-    expect(unsavedHtml).toContain("اگر این مسیر به تصمیمت نزدیک است، آن را برای ادامه بررسی نگه دار.");
-    expect(savedHtml).toContain("به مسیرهای شغلی من اضافه شد");
-    expect(savedHtml).toContain("حذف از مسیرهای شغلی من");
-    expect(savedHtml).toContain('aria-pressed="true"');
-    expect(savedHtml).toContain("این مسیر برای ادامه بررسی در مسیرهای شغلی من آماده است.");
-    expect(unsavedHtml).toContain("مقایسه با مسیرهای دیگر");
-    expect(unsavedHtml).toContain("مشاهده صفحه مسیر");
-    expect(unsavedHtml).toContain(`/career/compare?path=${encodeURIComponent(firstPath.id)}`);
-
+  it("keeps engagement behavior on the complete career decision page", () => {
     const pathSource = readFileSync("src/features/career/PathsPage.tsx", "utf8");
-    expect(pathSource).toContain("startCompareDraftFromPath(path.id)");
-    expect(pathSource).toContain('trackCareerEvent("career_path_saved"');
-    expect(pathSource).toContain('trackCareerEvent("career_path_removed"');
-    expect(pathSource).toContain('trackCareerEvent("career_compare_started"');
-    expect(pathSource).toContain('trackCareerEvent("career_path_viewed"');
+    const actionSource = readFileSync(
+      "src/app/career/paths/[slug]/CareerPathClientActions.tsx",
+      "utf8"
+    );
+
+    expect(pathSource).not.toContain("PathEngagementActions");
+    expect(pathSource).not.toContain("مشاهده صفحه مسیر");
+    expect(actionSource).toContain("startCompareDraftFromPath(pathId)");
+    expect(actionSource).toContain('trackCareerEvent("career_path_saved"');
+    expect(actionSource).toContain('trackCareerEvent("career_compare_started"');
+    expect(actionSource).toContain('trackCareerEvent("career_path_viewed"');
   });
 
   it("keeps the guide available outside the five-item bottom navigation", () => {
@@ -170,7 +156,7 @@ describe("Path Seeker engagement", () => {
     expect(html).toContain("این مسیر شغلی برای مقایسه انتخاب شده است. مسیر دوم را از فهرست زیر انتخاب کن.");
     expect(html).toContain("یک مسیر دیگر انتخاب کن تا مقایسه فعال شود.");
     expect(html).toContain("شروع مقایسه جدید");
-    expect(html).toContain('aria-pressed="true"');
+    expect(html).toContain(`حذف ${getDisplayLabel(firstPath.name)} از مقایسه`);
     expect(html).toContain('aria-live="polite"');
   });
 
@@ -211,14 +197,14 @@ describe("Path Seeker engagement", () => {
     expect(emptyHtml).toContain("ساخت مقایسه جدید");
     expect(emptyHtml).toContain('href="/career"');
     expect(emptyHtml).toContain('href="/career/compare"');
-    expect(populatedHtml).toContain('aria-expanded="false"');
+    expect(populatedHtml).toContain('aria-expanded="true"');
     expect(populatedHtml).toContain('aria-label="۱ مسیر ذخیره‌شده"');
     expect(populatedHtml).toContain('aria-label="۱ مقایسه ذخیره‌شده"');
-    expect(populatedHtml).toContain('hidden=""');
+    expect(populatedHtml).not.toContain('hidden=""');
     expect(populatedHtml).toContain("مسیرهای شغلی ذخیره‌شده");
     expect(populatedHtml).toContain("مقایسه‌های ذخیره‌شده");
     expect(populatedHtml).toContain("حذف");
-    expect(populatedHtml).toContain("/career?card=");
+    expect(populatedHtml).toContain("/career/paths/");
     expect(populatedHtml).toContain("/career/compare?path=");
 
     const myPathsSource = readFileSync("src/features/career/MyPathsPage.tsx", "utf8");
@@ -243,8 +229,9 @@ describe("Path Seeker engagement", () => {
     expect(careerUiSources).not.toMatch(/منتور|تجربه‌آفرین|مشاوره|جلسه|رزرو|پرداخت|استخدام تضمینی|تضمین موفقیت|موفقیت قطعی|دوره آموزشی|کلاس|job board|course|mentor|advisor|session|booking|payment/i);
   });
 
-  it("uses refined Career UI icon strokes while preserving filled tab states", () => {
+  it("uses one playful Phosphor icon family with duotone and filled states", () => {
     const softIcons = readFileSync("src/features/career/CareerSoftIcons.tsx", "utf8");
+    const iconAdapter = readFileSync("src/features/career/CareerIcons.tsx", "utf8");
     const careerIcons = [
       "src/features/career/PathsPage.tsx",
       "src/features/career/ComparePage.tsx",
@@ -254,10 +241,11 @@ describe("Path Seeker engagement", () => {
     ].map((file) => readFileSync(file, "utf8")).join("\n");
     const leadSheet = readFileSync("src/features/career/CareerLeadCaptureSheet.tsx", "utf8");
 
-    expect(softIcons).not.toMatch(/strokeWidth="(?:2\.[1-9]|[3-9](?:\.\d+)?)"/);
-    expect(careerIcons).not.toMatch(/strokeWidth=\{(?:2\.[1-9]|[3-9](?:\.\d+)?)\}/);
-    expect(softIcons).toContain('strokeWidth="2"');
-    expect(softIcons).toContain('fill="currentColor"');
+    expect(`${softIcons}\n${iconAdapter}`).toContain("@phosphor-icons/react/ssr");
+    expect(`${softIcons}\n${iconAdapter}`).toContain('weight="duotone"');
+    expect(`${softIcons}\n${iconAdapter}`).toContain('weight="fill"');
+    expect(`${softIcons}\n${iconAdapter}\n${careerIcons}`).not.toContain("lucide-react");
+    expect(softIcons).not.toContain("<svg");
     expect(leadSheet).toContain("<SoftCloseIcon size={18} />");
   });
 

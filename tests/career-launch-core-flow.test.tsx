@@ -84,14 +84,13 @@ describe("Career PWA launch core flow regression", () => {
   it("protects the path-save, lead, My Paths, compare, and event funnel flow", async () => {
     const firstPath = careerPaths[0];
     const secondPath = careerPaths[1];
-    const firstCard = firstPath.cards[0];
     const landingHtml = renderToStaticMarkup(<PathsPage />);
-    const pathDetailHtml = renderToStaticMarkup(<PathsPage initialCardId={firstCard.id} />);
+    const explorerSource = readFileSync("src/features/career/PathsPage.tsx", "utf8");
 
     expect(landingHtml).toContain("مسیر مناسب خودت");
     expect(landingHtml).toContain("حوزه‌ای که کنجکاوت می‌کند");
-    expect(pathDetailHtml).toContain(firstPath.name);
-    expect(pathDetailHtml).toContain("افزودن به مسیرهای شغلی من");
+    expect(explorerSource).toContain("window.location.assign(seoEntry.pageHref)");
+    expect(explorerSource).not.toContain("currentLevel === 4");
 
     const { sendBeacon } = installEventCapture();
     const leadApi = vi.fn(() => Promise.resolve(Response.json({ ok: true })));
@@ -270,6 +269,7 @@ describe("Career PWA launch core flow regression", () => {
   it("pins passive event hooks to the central Career flow components", () => {
     const source = [
       "src/features/career/PathsPage.tsx",
+      "src/app/career/paths/[slug]/CareerPathClientActions.tsx",
       "src/features/career/ComparePage.tsx",
       "src/features/career/MyPathsPage.tsx",
       "src/features/career/CareerLeadCaptureSheet.tsx",
