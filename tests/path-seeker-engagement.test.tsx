@@ -142,7 +142,7 @@ describe("Path Seeker engagement", () => {
       "مسیرها",
       "مهارت‌ها",
       "کارآموزی",
-      "مقایسه",
+      "یادگیری",
       "مسیرهای من"
     ]);
     expect(bottomNavSource).toContain('aria-label="ناوبری مسیرهای شغلی"');

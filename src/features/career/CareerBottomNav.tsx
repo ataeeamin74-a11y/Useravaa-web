@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BriefcaseBusiness, ListChecks } from "./CareerIcons";
-import { CompareTabIcon, PathsTabIcon, SavedTabIcon } from "./CareerSoftIcons";
+import { BriefcaseBusiness, GraduationCap, ListChecks } from "./CareerIcons";
+import { PathsTabIcon, SavedTabIcon } from "./CareerSoftIcons";
 import styles from "./CareerShell.module.css";
 
 export const navigationItems = [
   { href: "/career", label: "مسیرها", icon: PathsTabIcon },
   { href: "/career/skills", label: "مهارت‌ها", icon: ListChecks },
   { href: "/career/internships", label: "کارآموزی", icon: BriefcaseBusiness },
-  { href: "/career/compare", label: "مقایسه", icon: CompareTabIcon },
+  { href: "/career/learn", label: "یادگیری", icon: GraduationCap },
   { href: "/career/my-paths", label: "مسیرهای من", icon: SavedTabIcon }
 ] as const;
 

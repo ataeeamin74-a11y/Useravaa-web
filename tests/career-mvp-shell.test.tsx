@@ -369,12 +369,12 @@ describe("career paths MVP shell", () => {
   it("keeps the five bottom tabs with their canonical destinations", () => {
     const labels: readonly string[] = navigationItems.map((item) => item.label);
 
-    expect(labels).toEqual(["مسیرها", "مهارت‌ها", "کارآموزی", "مقایسه", "مسیرهای من"]);
+    expect(labels).toEqual(["مسیرها", "مهارت‌ها", "کارآموزی", "یادگیری", "مسیرهای من"]);
     expect(navigationItems.map((item) => item.href)).toEqual([
       "/career",
       "/career/skills",
       "/career/internships",
-      "/career/compare",
+      "/career/learn",
       "/career/my-paths"
     ]);
   });
@@ -384,9 +384,9 @@ describe("career paths MVP shell", () => {
     expect(getCareerTabClickAction("/career", "/career")).toBe("reset");
     expect(getCareerTabClickAction("/career/skills", "/career/skills")).toBe("reset");
     expect(getCareerTabClickAction("/career/internships", "/career/internships")).toBe("reset");
-    expect(getCareerTabClickAction("/career/compare", "/career/compare")).toBe("reset");
+    expect(getCareerTabClickAction("/career/learn", "/career/learn")).toBe("reset");
     expect(getCareerTabClickAction("/career/my-paths", "/career/my-paths")).toBe("reset");
-    expect(getCareerTabClickAction("/", "/career/compare")).toBe("navigate");
+    expect(getCareerTabClickAction("/", "/career/learn")).toBe("navigate");
 
     const resetBoundary = readFileSync("src/features/career/CareerTabRoot.tsx", "utf8");
     const bottomNav = readFileSync("src/features/career/CareerBottomNav.tsx", "utf8");

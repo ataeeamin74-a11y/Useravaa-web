@@ -25,7 +25,12 @@ export const careerEventNames = [
   "career_skill_path_opened",
   "career_internship_page_viewed",
   "career_internship_filter_changed",
-  "career_internship_opened"
+  "career_internship_opened",
+  "career_learning_page_viewed",
+  "career_learning_skill_opened",
+  "career_learning_filter_changed",
+  "career_learning_compare_changed",
+  "career_learning_course_opened"
 ] as const;
 
 export type CareerEventName = (typeof careerEventNames)[number];
@@ -53,6 +58,20 @@ const allowedLeadFailureReasons = new Set(["validation", "api", "rate_limited", 
 const allowedSkillTypes = new Set(["soft", "foundational", "specialized", "tool"]);
 const allowedSkillSelectionStates = new Set(["have", "interested"]);
 const allowedInternshipSources = new Set(["jobinja", "jobvision"]);
+const allowedLearningProviders = new Set([
+  "maktabkhooneh",
+  "faradars",
+  "hamrah-academy",
+  "inverse",
+  "novin-academy",
+  "quera-college",
+  "roocket",
+  "sabzlearn",
+  "toplearn",
+  "bozhan-school",
+  "coursera",
+  "pact"
+]);
 
 export function isCareerEventName(value: unknown): value is CareerEventName {
   return typeof value === "string" && eventNameSet.has(value);
@@ -210,6 +229,31 @@ export function sanitizeCareerEventPayload(
       const source = sanitizeText(payload.source, 20);
       if (source && allowedInternshipSources.has(source)) sanitized.source = source;
       setIfString(sanitized, "careerSlug", payload.careerSlug);
+      break;
+    }
+    case "career_learning_page_viewed":
+      setIfCount(sanitized, "savedPathCount", payload.savedPathCount, 58);
+      setIfCount(sanitized, "courseCount", payload.courseCount, 10_000);
+      break;
+    case "career_learning_skill_opened": {
+      setIfString(sanitized, "skillId", payload.skillId);
+      const skillType = sanitizeText(payload.skillType, 30);
+      if (skillType && allowedSkillTypes.has(skillType)) sanitized.skillType = skillType;
+      setIfCount(sanitized, "courseCount", payload.courseCount, 10_000);
+      break;
+    }
+    case "career_learning_filter_changed":
+      setIfString(sanitized, "filterType", payload.filterType);
+      setIfCount(sanitized, "selectedCount", payload.selectedCount, 1_000);
+      break;
+    case "career_learning_compare_changed":
+      setIfString(sanitized, "skillId", payload.skillId);
+      setIfCount(sanitized, "selectedCount", payload.selectedCount, 3);
+      break;
+    case "career_learning_course_opened": {
+      setIfString(sanitized, "skillId", payload.skillId);
+      const provider = sanitizeText(payload.provider, 40);
+      if (provider && allowedLearningProviders.has(provider)) sanitized.provider = provider;
       break;
     }
   }

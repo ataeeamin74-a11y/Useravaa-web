@@ -1,0 +1,1353 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-16T09:39:38.448Z",
+  "totalCourseCount": 5367,
+  "providerCount": 23,
+  "sources": [
+    {
+      "provider": "maktabkhooneh",
+      "status": "ok",
+      "discoveredUrlCount": 4194
+    },
+    {
+      "provider": "faradars",
+      "status": "ok",
+      "discoveredUrlCount": 3443
+    },
+    {
+      "provider": "hamrah-academy",
+      "status": "ok",
+      "discoveredUrlCount": 258
+    },
+    {
+      "provider": "inverse",
+      "status": "ok",
+      "discoveredUrlCount": 106
+    },
+    {
+      "provider": "novin-academy",
+      "status": "ok",
+      "discoveredUrlCount": 59
+    },
+    {
+      "provider": "quera-college",
+      "status": "ok",
+      "discoveredUrlCount": 72
+    },
+    {
+      "provider": "roocket",
+      "status": "ok",
+      "discoveredUrlCount": 106
+    },
+    {
+      "provider": "sabzlearn",
+      "status": "ok",
+      "discoveredUrlCount": 98,
+      "archivePageCount": 203
+    },
+    {
+      "provider": "toplearn",
+      "status": "ok",
+      "discoveredUrlCount": 1218
+    },
+    {
+      "provider": "bozhan-school",
+      "status": "ok",
+      "discoveredUrlCount": 21,
+      "archivePageCount": 3
+    },
+    {
+      "provider": "pact",
+      "status": "ok",
+      "discoveredUrlCount": 199
+    },
+    {
+      "provider": "coursera",
+      "status": "ok",
+      "discoveredUrlCount": 20569,
+      "selectedUrlCount": 2443
+    }
+  ],
+  "skills": {
+    "soft-effective-communication": {
+      "courseCount": 30,
+      "providerCount": 4
+    },
+    "soft-active-listening": {
+      "courseCount": 6,
+      "providerCount": 2
+    },
+    "soft-teamwork": {
+      "courseCount": 32,
+      "providerCount": 3
+    },
+    "soft-feedback-reception": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "soft-time-management": {
+      "courseCount": 60,
+      "providerCount": 5
+    },
+    "soft-negotiation": {
+      "courseCount": 34,
+      "providerCount": 3
+    },
+    "soft-stakeholder-management": {
+      "courseCount": 19,
+      "providerCount": 1
+    },
+    "soft-conflict-management": {
+      "courseCount": 25,
+      "providerCount": 4
+    },
+    "soft-adaptability": {
+      "courseCount": 6,
+      "providerCount": 2
+    },
+    "soft-attention-to-detail": {
+      "courseCount": 4,
+      "providerCount": 3
+    },
+    "soft-empathy": {
+      "courseCount": 11,
+      "providerCount": 2
+    },
+    "soft-ethical-judgment": {
+      "courseCount": 24,
+      "providerCount": 2
+    },
+    "soft-leadership": {
+      "courseCount": 49,
+      "providerCount": 2
+    },
+    "soft-presentation": {
+      "courseCount": 6,
+      "providerCount": 1
+    },
+    "soft-resilience": {
+      "courseCount": 31,
+      "providerCount": 3
+    },
+    "soft-curiosity": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "soft-ownership": {
+      "courseCount": 13,
+      "providerCount": 1
+    },
+    "foundational-problem-solving": {
+      "courseCount": 36,
+      "providerCount": 5
+    },
+    "foundational-critical-thinking": {
+      "courseCount": 25,
+      "providerCount": 4
+    },
+    "foundational-research": {
+      "courseCount": 116,
+      "providerCount": 6
+    },
+    "foundational-documentation": {
+      "courseCount": 10,
+      "providerCount": 2
+    },
+    "foundational-report-writing": {
+      "courseCount": 4,
+      "providerCount": 3
+    },
+    "foundational-data-analysis": {
+      "courseCount": 104,
+      "providerCount": 5
+    },
+    "foundational-statistical-literacy": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "foundational-presentation-design": {
+      "courseCount": 32,
+      "providerCount": 4
+    },
+    "foundational-project-planning": {
+      "courseCount": 23,
+      "providerCount": 3
+    },
+    "foundational-requirements-analysis": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "foundational-process-analysis": {
+      "courseCount": 9,
+      "providerCount": 2
+    },
+    "foundational-root-cause-analysis": {
+      "courseCount": 5,
+      "providerCount": 1
+    },
+    "foundational-experimentation": {
+      "courseCount": 11,
+      "providerCount": 2
+    },
+    "foundational-data-visualization": {
+      "courseCount": 29,
+      "providerCount": 4
+    },
+    "foundational-spreadsheet-analysis": {
+      "courseCount": 5,
+      "providerCount": 3
+    },
+    "foundational-business-literacy": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "foundational-financial-literacy": {
+      "courseCount": 10,
+      "providerCount": 3
+    },
+    "foundational-risk-assessment": {
+      "courseCount": 5,
+      "providerCount": 2
+    },
+    "foundational-quality-assurance": {
+      "courseCount": 9,
+      "providerCount": 3
+    },
+    "foundational-workflow-design": {
+      "courseCount": 22,
+      "providerCount": 2
+    },
+    "foundational-decision-making": {
+      "courseCount": 40,
+      "providerCount": 4
+    },
+    "foundational-professional-writing": {
+      "courseCount": 64,
+      "providerCount": 5
+    },
+    "foundational-professional-english": {
+      "courseCount": 72,
+      "providerCount": 3
+    },
+    "foundational-security-literacy": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-software-design": {
+      "courseCount": 258,
+      "providerCount": 7
+    },
+    "specialized-debugging": {
+      "courseCount": 21,
+      "providerCount": 3
+    },
+    "specialized-automated-testing": {
+      "courseCount": 12,
+      "providerCount": 2
+    },
+    "specialized-application-security": {
+      "courseCount": 16,
+      "providerCount": 2
+    },
+    "specialized-backend-development": {
+      "courseCount": 12,
+      "providerCount": 1
+    },
+    "specialized-api-design": {
+      "courseCount": 70,
+      "providerCount": 7
+    },
+    "specialized-database-design": {
+      "courseCount": 56,
+      "providerCount": 6
+    },
+    "specialized-performance-optimization": {
+      "courseCount": 14,
+      "providerCount": 2
+    },
+    "specialized-object-oriented-programming": {
+      "courseCount": 34,
+      "providerCount": 4
+    },
+    "specialized-concurrency": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "specialized-event-driven-architecture": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-queue-processing": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "specialized-caching": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-frontend-development": {
+      "courseCount": 170,
+      "providerCount": 7
+    },
+    "specialized-ui-implementation": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "specialized-responsive-design": {
+      "courseCount": 20,
+      "providerCount": 2
+    },
+    "specialized-accessibility": {
+      "courseCount": 10,
+      "providerCount": 1
+    },
+    "specialized-state-management": {
+      "courseCount": 22,
+      "providerCount": 2
+    },
+    "specialized-form-design": {
+      "courseCount": 7,
+      "providerCount": 3
+    },
+    "specialized-frontend-performance": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-mobile-development": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "specialized-mobile-architecture": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-offline-data": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-container-orchestration": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-infrastructure-as-code": {
+      "courseCount": 11,
+      "providerCount": 1
+    },
+    "specialized-release-automation": {
+      "courseCount": 14,
+      "providerCount": 3
+    },
+    "specialized-observability": {
+      "courseCount": 17,
+      "providerCount": 1
+    },
+    "specialized-incident-response": {
+      "courseCount": 20,
+      "providerCount": 1
+    },
+    "specialized-reliability-engineering": {
+      "courseCount": 10,
+      "providerCount": 1
+    },
+    "specialized-service-level-objectives": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-networking": {
+      "courseCount": 124,
+      "providerCount": 9
+    },
+    "specialized-system-administration": {
+      "courseCount": 38,
+      "providerCount": 3
+    },
+    "specialized-identity-management": {
+      "courseCount": 35,
+      "providerCount": 6
+    },
+    "specialized-access-control": {
+      "courseCount": 10,
+      "providerCount": 1
+    },
+    "specialized-penetration-testing": {
+      "courseCount": 11,
+      "providerCount": 2
+    },
+    "specialized-vulnerability-assessment": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-security-monitoring": {
+      "courseCount": 5,
+      "providerCount": 1
+    },
+    "specialized-log-analysis": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "specialized-threat-intelligence": {
+      "courseCount": 14,
+      "providerCount": 2
+    },
+    "specialized-incident-triage": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-troubleshooting": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-knowledge-management": {
+      "courseCount": 36,
+      "providerCount": 5
+    },
+    "specialized-test-design": {
+      "courseCount": 4,
+      "providerCount": 3
+    },
+    "specialized-api-testing": {
+      "courseCount": 7,
+      "providerCount": 1
+    },
+    "specialized-ui-testing": {
+      "courseCount": 3,
+      "providerCount": 2
+    },
+    "specialized-performance-testing": {
+      "courseCount": 5,
+      "providerCount": 2
+    },
+    "specialized-sql-querying": {
+      "courseCount": 7,
+      "providerCount": 2
+    },
+    "specialized-statistical-analysis": {
+      "courseCount": 20,
+      "providerCount": 3
+    },
+    "specialized-analytics-design": {
+      "courseCount": 195,
+      "providerCount": 8
+    },
+    "specialized-data-storytelling": {
+      "courseCount": 22,
+      "providerCount": 2
+    },
+    "specialized-data-modeling": {
+      "courseCount": 20,
+      "providerCount": 1
+    },
+    "specialized-data-pipelines": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-data-quality": {
+      "courseCount": 18,
+      "providerCount": 1
+    },
+    "specialized-distributed-systems": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "specialized-data-governance": {
+      "courseCount": 21,
+      "providerCount": 1
+    },
+    "specialized-bi-dashboarding": {
+      "courseCount": 3,
+      "providerCount": 2
+    },
+    "specialized-machine-learning-engineering": {
+      "courseCount": 11,
+      "providerCount": 2
+    },
+    "specialized-natural-language-processing": {
+      "courseCount": 29,
+      "providerCount": 4
+    },
+    "specialized-retrieval-augmented-generation": {
+      "courseCount": 21,
+      "providerCount": 3
+    },
+    "specialized-model-evaluation": {
+      "courseCount": 15,
+      "providerCount": 1
+    },
+    "specialized-mlops": {
+      "courseCount": 89,
+      "providerCount": 7
+    },
+    "specialized-marketing-strategy": {
+      "courseCount": 30,
+      "providerCount": 4
+    },
+    "specialized-audience-research": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-campaign-planning": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-marketing-measurement": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-growth-experimentation": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-funnel-analysis": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-attribution": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-lifecycle-marketing": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-content-strategy": {
+      "courseCount": 18,
+      "providerCount": 5
+    },
+    "specialized-copywriting": {
+      "courseCount": 12,
+      "providerCount": 4
+    },
+    "specialized-editorial-planning": {
+      "courseCount": 3,
+      "providerCount": 2
+    },
+    "specialized-search-engine-optimization": {
+      "courseCount": 80,
+      "providerCount": 9
+    },
+    "specialized-keyword-research": {
+      "courseCount": 10,
+      "providerCount": 4
+    },
+    "specialized-technical-seo": {
+      "courseCount": 4,
+      "providerCount": 3
+    },
+    "specialized-on-page-seo": {
+      "courseCount": 4,
+      "providerCount": 3
+    },
+    "specialized-paid-advertising": {
+      "courseCount": 15,
+      "providerCount": 5
+    },
+    "specialized-conversion-optimization": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-creative-testing": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-market-research": {
+      "courseCount": 19,
+      "providerCount": 2
+    },
+    "specialized-survey-design": {
+      "courseCount": 7,
+      "providerCount": 1
+    },
+    "specialized-qualitative-research": {
+      "courseCount": 6,
+      "providerCount": 2
+    },
+    "specialized-brand-strategy": {
+      "courseCount": 16,
+      "providerCount": 2
+    },
+    "specialized-positioning": {
+      "courseCount": 4,
+      "providerCount": 1
+    },
+    "specialized-creative-briefing": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-public-relations": {
+      "courseCount": 8,
+      "providerCount": 3
+    },
+    "specialized-social-media-strategy": {
+      "courseCount": 11,
+      "providerCount": 6
+    },
+    "specialized-social-content-production": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-community-management": {
+      "courseCount": 23,
+      "providerCount": 4
+    },
+    "specialized-social-listening": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-crm-operations": {
+      "courseCount": 28,
+      "providerCount": 5
+    },
+    "specialized-crm-automation": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-cohort-analysis": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-contact-center-operations": {
+      "courseCount": 4,
+      "providerCount": 2
+    },
+    "specialized-workforce-management": {
+      "courseCount": 12,
+      "providerCount": 1
+    },
+    "specialized-service-quality-monitoring": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-account-management": {
+      "courseCount": 14,
+      "providerCount": 2
+    },
+    "specialized-account-health-analysis": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-sales-discovery": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-consultative-selling": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-proposal-writing": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-contract-management": {
+      "courseCount": 21,
+      "providerCount": 5
+    },
+    "specialized-partnership-development": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-field-sales": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-territory-analysis": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "specialized-customer-verification": {
+      "courseCount": 3,
+      "providerCount": 2
+    },
+    "specialized-trade-documentation": {
+      "courseCount": 4,
+      "providerCount": 3
+    },
+    "specialized-incoterms": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "specialized-logistics-planning": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-capacity-planning": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-inventory-operations": {
+      "courseCount": 21,
+      "providerCount": 3
+    },
+    "specialized-sourcing": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-structured-interviewing": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-evidence-evaluation": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "specialized-labor-law": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "specialized-employee-relations": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-compensation": {
+      "courseCount": 15,
+      "providerCount": 3
+    },
+    "specialized-hr-operations": {
+      "courseCount": 67,
+      "providerCount": 5
+    },
+    "specialized-payroll-processing": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-user-research": {
+      "courseCount": 7,
+      "providerCount": 3
+    },
+    "specialized-interaction-design": {
+      "courseCount": 30,
+      "providerCount": 3
+    },
+    "specialized-user-interface-design": {
+      "courseCount": 65,
+      "providerCount": 8
+    },
+    "specialized-prototyping": {
+      "courseCount": 21,
+      "providerCount": 2
+    },
+    "specialized-design-systems": {
+      "courseCount": 127,
+      "providerCount": 4
+    },
+    "specialized-product-discovery": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "specialized-prioritization": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-roadmap-management": {
+      "courseCount": 12,
+      "providerCount": 5
+    },
+    "specialized-product-analytics": {
+      "courseCount": 6,
+      "providerCount": 3
+    },
+    "specialized-accounting": {
+      "courseCount": 62,
+      "providerCount": 4
+    },
+    "specialized-financial-reporting": {
+      "courseCount": 19,
+      "providerCount": 1
+    },
+    "specialized-internal-audit": {
+      "courseCount": 4,
+      "providerCount": 2
+    },
+    "specialized-internal-controls": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "specialized-tax-accounting": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-treasury-accounting": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "specialized-budgeting": {
+      "courseCount": 20,
+      "providerCount": 2
+    },
+    "specialized-reconciliation": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-regulatory-compliance": {
+      "courseCount": 5,
+      "providerCount": 1
+    },
+    "specialized-visual-design": {
+      "courseCount": 36,
+      "providerCount": 4
+    },
+    "specialized-typography": {
+      "courseCount": 9,
+      "providerCount": 3
+    },
+    "specialized-layout-design": {
+      "courseCount": 17,
+      "providerCount": 3
+    },
+    "specialized-print-production": {
+      "courseCount": 3,
+      "providerCount": 2
+    },
+    "specialized-video-editing": {
+      "courseCount": 17,
+      "providerCount": 2
+    },
+    "specialized-visual-storytelling": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-audio-editing": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-color-grading": {
+      "courseCount": 8,
+      "providerCount": 3
+    },
+    "specialized-illustration": {
+      "courseCount": 5,
+      "providerCount": 3
+    },
+    "specialized-digital-painting": {
+      "courseCount": 8,
+      "providerCount": 4
+    },
+    "specialized-character-design": {
+      "courseCount": 35,
+      "providerCount": 4
+    },
+    "specialized-three-dimensional-modeling": {
+      "courseCount": 18,
+      "providerCount": 4
+    },
+    "specialized-texturing": {
+      "courseCount": 5,
+      "providerCount": 1
+    },
+    "specialized-lighting": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "specialized-rendering": {
+      "courseCount": 27,
+      "providerCount": 4
+    },
+    "specialized-motion-design": {
+      "courseCount": 31,
+      "providerCount": 4
+    },
+    "specialized-animation": {
+      "courseCount": 69,
+      "providerCount": 6
+    },
+    "specialized-compositing": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "specialized-brand-identity": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "specialized-brand-governance": {
+      "courseCount": 37,
+      "providerCount": 2
+    },
+    "tool-git": {
+      "courseCount": 28,
+      "providerCount": 5
+    },
+    "tool-docker": {
+      "courseCount": 30,
+      "providerCount": 8
+    },
+    "tool-postman": {
+      "courseCount": 11,
+      "providerCount": 4
+    },
+    "tool-sql": {
+      "courseCount": 107,
+      "providerCount": 5
+    },
+    "tool-postgresql": {
+      "courseCount": 16,
+      "providerCount": 3
+    },
+    "tool-sql-server": {
+      "courseCount": 46,
+      "providerCount": 4
+    },
+    "tool-mysql": {
+      "courseCount": 22,
+      "providerCount": 4
+    },
+    "tool-redis": {
+      "courseCount": 10,
+      "providerCount": 5
+    },
+    "tool-mongodb": {
+      "courseCount": 20,
+      "providerCount": 5
+    },
+    "tool-kafka": {
+      "courseCount": 17,
+      "providerCount": 2
+    },
+    "tool-csharp": {
+      "courseCount": 110,
+      "providerCount": 6
+    },
+    "tool-aspnet-core": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-entity-framework": {
+      "courseCount": 4,
+      "providerCount": 2
+    },
+    "tool-go": {
+      "courseCount": 32,
+      "providerCount": 5
+    },
+    "tool-java": {
+      "courseCount": 71,
+      "providerCount": 5
+    },
+    "tool-spring-boot": {
+      "courseCount": 21,
+      "providerCount": 2
+    },
+    "tool-jpa": {
+      "courseCount": 4,
+      "providerCount": 2
+    },
+    "tool-nodejs": {
+      "courseCount": 36,
+      "providerCount": 7
+    },
+    "tool-typescript": {
+      "courseCount": 33,
+      "providerCount": 7
+    },
+    "tool-php": {
+      "courseCount": 72,
+      "providerCount": 7
+    },
+    "tool-laravel": {
+      "courseCount": 63,
+      "providerCount": 7
+    },
+    "tool-python": {
+      "courseCount": 347,
+      "providerCount": 8
+    },
+    "tool-django": {
+      "courseCount": 49,
+      "providerCount": 7
+    },
+    "tool-celery": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-angular": {
+      "courseCount": 42,
+      "providerCount": 5
+    },
+    "tool-rxjs": {
+      "courseCount": 5,
+      "providerCount": 1
+    },
+    "tool-react": {
+      "courseCount": 80,
+      "providerCount": 7
+    },
+    "tool-nextjs": {
+      "courseCount": 30,
+      "providerCount": 5
+    },
+    "tool-vue": {
+      "courseCount": 18,
+      "providerCount": 6
+    },
+    "tool-nuxt": {
+      "courseCount": 4,
+      "providerCount": 3
+    },
+    "tool-blazor": {
+      "courseCount": 20,
+      "providerCount": 3
+    },
+    "tool-kotlin": {
+      "courseCount": 24,
+      "providerCount": 4
+    },
+    "tool-android-sdk": {
+      "courseCount": 10,
+      "providerCount": 2
+    },
+    "tool-jetpack-compose": {
+      "courseCount": 4,
+      "providerCount": 2
+    },
+    "tool-gradle": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-linux": {
+      "courseCount": 67,
+      "providerCount": 7
+    },
+    "tool-kubernetes": {
+      "courseCount": 26,
+      "providerCount": 2
+    },
+    "tool-terraform": {
+      "courseCount": 19,
+      "providerCount": 2
+    },
+    "tool-helm": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "tool-argocd": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "tool-prometheus": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "tool-grafana": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "tool-opentelemetry": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-powershell": {
+      "courseCount": 10,
+      "providerCount": 2
+    },
+    "tool-windows-server": {
+      "courseCount": 11,
+      "providerCount": 2
+    },
+    "tool-active-directory": {
+      "courseCount": 12,
+      "providerCount": 5
+    },
+    "tool-entra": {
+      "courseCount": 7,
+      "providerCount": 1
+    },
+    "tool-microsoft-365": {
+      "courseCount": 32,
+      "providerCount": 2
+    },
+    "tool-cisco-ios": {
+      "courseCount": 4,
+      "providerCount": 1
+    },
+    "tool-wireshark": {
+      "courseCount": 4,
+      "providerCount": 3
+    },
+    "tool-zabbix": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-burp": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "tool-nmap": {
+      "courseCount": 5,
+      "providerCount": 3
+    },
+    "tool-metasploit": {
+      "courseCount": 4,
+      "providerCount": 1
+    },
+    "tool-sentinel": {
+      "courseCount": 3,
+      "providerCount": 1
+    },
+    "tool-splunk": {
+      "courseCount": 20,
+      "providerCount": 3
+    },
+    "tool-defender": {
+      "courseCount": 4,
+      "providerCount": 1
+    },
+    "tool-playwright": {
+      "courseCount": 4,
+      "providerCount": 1
+    },
+    "tool-jira": {
+      "courseCount": 26,
+      "providerCount": 4
+    },
+    "tool-jira-service-management": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "tool-microsoft-excel": {
+      "courseCount": 135,
+      "providerCount": 6
+    },
+    "tool-google-sheets": {
+      "courseCount": 24,
+      "providerCount": 3
+    },
+    "tool-power-bi": {
+      "courseCount": 45,
+      "providerCount": 5
+    },
+    "tool-power-query": {
+      "courseCount": 4,
+      "providerCount": 1
+    },
+    "tool-dax": {
+      "courseCount": 10,
+      "providerCount": 3
+    },
+    "tool-r": {
+      "courseCount": 151,
+      "providerCount": 7
+    },
+    "tool-spss": {
+      "courseCount": 29,
+      "providerCount": 5
+    },
+    "tool-pandas": {
+      "courseCount": 22,
+      "providerCount": 3
+    },
+    "tool-airflow": {
+      "courseCount": 5,
+      "providerCount": 1
+    },
+    "tool-dbt": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "tool-spark": {
+      "courseCount": 21,
+      "providerCount": 4
+    },
+    "tool-pytorch": {
+      "courseCount": 21,
+      "providerCount": 3
+    },
+    "tool-hugging-face": {
+      "courseCount": 13,
+      "providerCount": 2
+    },
+    "tool-fastapi": {
+      "courseCount": 6,
+      "providerCount": 2
+    },
+    "tool-pgvector": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "tool-ga4": {
+      "courseCount": 21,
+      "providerCount": 4
+    },
+    "tool-gtm": {
+      "courseCount": 12,
+      "providerCount": 4
+    },
+    "tool-google-ads": {
+      "courseCount": 15,
+      "providerCount": 4
+    },
+    "tool-meta-ads": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-search-console": {
+      "courseCount": 8,
+      "providerCount": 4
+    },
+    "tool-screaming-frog": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-ahrefs": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-wordpress": {
+      "courseCount": 109,
+      "providerCount": 7
+    },
+    "tool-hubspot": {
+      "courseCount": 8,
+      "providerCount": 1
+    },
+    "tool-salesforce": {
+      "courseCount": 20,
+      "providerCount": 1
+    },
+    "tool-braze": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-mixpanel": {
+      "courseCount": 4,
+      "providerCount": 1
+    },
+    "tool-zendesk": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-canva": {
+      "courseCount": 26,
+      "providerCount": 4
+    },
+    "tool-capcut": {
+      "courseCount": 6,
+      "providerCount": 3
+    },
+    "tool-meta-business-suite": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-linkedin-recruiter": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-bamboohr": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-zoom": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "tool-powerpoint": {
+      "courseCount": 41,
+      "providerCount": 5
+    },
+    "tool-miro": {
+      "courseCount": 4,
+      "providerCount": 1
+    },
+    "tool-notion": {
+      "courseCount": 6,
+      "providerCount": 1
+    },
+    "tool-productboard": {
+      "courseCount": 2,
+      "providerCount": 1
+    },
+    "tool-google-maps": {
+      "courseCount": 9,
+      "providerCount": 2
+    },
+    "tool-rahkaran": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-outlook": {
+      "courseCount": 10,
+      "providerCount": 2
+    },
+    "tool-modian": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-tax-portal": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-customs-portal": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-figma": {
+      "courseCount": 34,
+      "providerCount": 4
+    },
+    "tool-figjam": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-photoshop": {
+      "courseCount": 88,
+      "providerCount": 6
+    },
+    "tool-illustrator": {
+      "courseCount": 19,
+      "providerCount": 5
+    },
+    "tool-indesign": {
+      "courseCount": 11,
+      "providerCount": 5
+    },
+    "tool-premiere": {
+      "courseCount": 27,
+      "providerCount": 5
+    },
+    "tool-after-effects": {
+      "courseCount": 38,
+      "providerCount": 5
+    },
+    "tool-davinci-resolve": {
+      "courseCount": 16,
+      "providerCount": 3
+    },
+    "tool-audition": {
+      "courseCount": 1,
+      "providerCount": 1
+    },
+    "tool-procreate": {
+      "courseCount": 7,
+      "providerCount": 2
+    },
+    "tool-clip-studio": {
+      "courseCount": 2,
+      "providerCount": 2
+    },
+    "tool-blender": {
+      "courseCount": 43,
+      "providerCount": 5
+    },
+    "tool-maya": {
+      "courseCount": 26,
+      "providerCount": 4
+    },
+    "tool-substance-3d": {
+      "courseCount": 3,
+      "providerCount": 3
+    },
+    "tool-unreal": {
+      "courseCount": 40,
+      "providerCount": 4
+    },
+    "tool-unity": {
+      "courseCount": 92,
+      "providerCount": 4
+    },
+    "tool-cinema-4d": {
+      "courseCount": 17,
+      "providerCount": 5
+    },
+    "tool-media-encoder": {
+      "courseCount": 1,
+      "providerCount": 1
+    }
+  }
+}
